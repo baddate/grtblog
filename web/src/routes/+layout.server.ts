@@ -1,3 +1,5 @@
+import type { SupportedLang } from '$lib/i18n';
+import type { TranslateFn } from '$lib/i18n/types';
 import { fetchNavMenuTree } from '$lib/features/navigation/api';
 import type { NavMenuItem } from '$lib/features/navigation/types';
 import type { HealthSSRData } from '$lib/features/site-health/store.svelte';
@@ -17,6 +19,7 @@ function resolveInternalBaseURL(): string {
 }
 
 export const load: LayoutServerLoad = async (event) => {
+	const parentData = await event.parent() as { lang: SupportedLang; t: TranslateFn };
 	const { fetch } = event;
 	trackISRDeps(event, 'layout:nav', 'layout:website-info');
 
@@ -55,6 +58,8 @@ export const load: LayoutServerLoad = async (event) => {
 	return {
 		navMenus,
 		websiteInfo,
-		healthData
+		healthData,
+		lang: parentData.lang,
+		t: parentData.t
 	};
 };
