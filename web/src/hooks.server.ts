@@ -1,5 +1,8 @@
 import type { Handle, HandleServerError } from '@sveltejs/kit';
 import { ISR_DEPS_HEADER } from '$lib/server/isr-deps';
+import { detectLanguage, loadTranslations, createTranslateFn } from '$lib/i18n/server';
+import { setLangCookie } from '$lib/i18n/locale';
+import type { SupportedLang } from '$lib/i18n/server';
 
 const STATIC_FALLBACK_HEADER = 'x-grt-static-fallback';
 const STATIC_MISS_WARN_TTL_MS = 5 * 60 * 1000;
@@ -50,6 +53,30 @@ export const handleError: HandleServerError = ({ error, event, status, message }
 };
 
 export const handle: Handle = async ({ event, resolve }) => {
+	// --- i18n language detection ---
+	let lang: SupportedLang;
+	const pathname = event.url.pathname;
+	const LANG_PREFIX_RE = /^\/(zh|en)(\/|$)/;
+	const langMatch = pathname.match(LANG_PREFIX_RE);
+
+	if (!langMatch) {
+		const cookieLang = event.cookies.get('lang') ?? null;
+		const acceptLang = event.request.headers.get('Accept-Language') ?? null;
+		const detected = detectLanguage(undefined, cookieLang, acceptLang);
+		const redirectPath = `/${detected}${pathname === '/' ? '' : pathname}`;
+		return new Response(null, {
+			status: 302,
+			headers: {
+				Location: redirectPath,
+				'Set-Cookie': setLangCookie(detected),
+			},
+		});
+	}
+	lang = langMatch[1] as SupportedLang;
+	event.locals.lang = lang;
+	event.locals.t = createTranslateFn(loadTranslations(lang));
+	// --- end i18n ---
+
 	event.locals.isrDeps = new Set<string>();
 
 	const response = await resolve(event);
@@ -71,15 +98,21 @@ export const handle: Handle = async ({ event, resolve }) => {
 			);
 		}
 	}
+	// Prepare final response with ISR headers if needed
+	let finalResponse: Response;
 	if (event.locals.isrDeps.size === 0) {
-		return response;
+		finalResponse = response;
+	} else {
+		const headers = new Headers(response.headers);
+		headers.set(ISR_DEPS_HEADER, JSON.stringify(depList));
+		finalResponse = new Response(response.body, {
+			status: response.status,
+			statusText: response.statusText,
+			headers
+		});
 	}
 
-	const headers = new Headers(response.headers);
-	headers.set(ISR_DEPS_HEADER, JSON.stringify(depList));
-	return new Response(response.body, {
-		status: response.status,
-		statusText: response.statusText,
-		headers
-	});
+	// Set lang cookie on every response (after all other response modifications)
+	finalResponse.headers.append('Set-Cookie', setLangCookie(lang));
+	return finalResponse;
 };
