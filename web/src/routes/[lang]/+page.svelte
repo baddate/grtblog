@@ -89,5 +89,5 @@
 </div>
 
 <style lang="postcss">
-	@reference "./layout.css";
+	@reference "$routes/layout.css";
 </style>
