@@ -2,10 +2,14 @@
 	import { resolvePath } from '$lib/shared/utils/resolve-path';
 	import type { MomentSummary } from '$lib/features/moment/types';
 	import { ArrowRight, Pin } from 'lucide-svelte';
-	import { formatRelativeTime } from '$lib/shared/utils/date';
+	import { createFormatRelativeTime } from '$lib/shared/utils/date';
 	import { buildMomentPath } from '$lib/shared/utils/content-path';
+	import { page } from '$app/state';
 
 	let { moment } = $props<{ moment: MomentSummary }>();
+
+	const t = $derived(page.data.t);
+	const formatRelativeTime = $derived(createFormatRelativeTime(t));
 
 	let mouseX = $state('50%');
 	let mouseY = $state('50%');

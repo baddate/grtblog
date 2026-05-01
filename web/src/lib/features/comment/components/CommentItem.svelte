@@ -1,7 +1,8 @@
 <script lang="ts">
 	import SafeMarkdownView from '$lib/shared/markdown/SafeMarkdownView.svelte';
 	import type { CommentNode } from '$lib/features/comment/types';
-	import { createRelativeTimeTicker, formatRelativeTimeWithSeconds } from '$lib/shared/utils/date';
+	import { createRelativeTimeTicker, createFormatRelativeTimeWithSeconds } from '$lib/shared/utils/date';
+	import { page } from '$app/state';
 	import { MessageSquare, Monitor, MapPin, Pin, Pencil, Trash2, Check, X } from 'lucide-svelte';
 	import CommentItem from './CommentItem.svelte';
 	import CommentForm from './CommentForm.svelte';
@@ -26,6 +27,8 @@
 	const { updateModelData } = commentAreaCtx.useModelActions();
 	const queryClient = useQueryClient();
 
+	const t = $derived(page.data.t);
+
 	const editMutation = createMutation(() => ({
 		mutationFn: async () => {
 			const visitorId = getOrCreateVisitorId();
@@ -35,12 +38,12 @@
 			});
 		},
 		onSuccess: () => {
-			toast.success('评论已更新');
+			toast.success(t('web.comment.updated_ok'));
 			isEditing = false;
 			queryClient.invalidateQueries({ queryKey: ['comments', $areaIdStore] });
 		},
 		onError: (error: Error) => {
-			toast.error(error.message || '编辑失败');
+			toast.error(error.message || t('web.comment.edit_failed'));
 		}
 	}));
 
@@ -50,12 +53,12 @@
 			await deleteOwnComment(undefined, comment.id, visitorId || undefined);
 		},
 		onSuccess: () => {
-			toast.success('评论已删除');
+			toast.success(t('web.comment.deleted_ok'));
 			isConfirmingDelete = false;
 			queryClient.invalidateQueries({ queryKey: ['comments', $areaIdStore] });
 		},
 		onError: (error: Error) => {
-			toast.error(error.message || '删除失败');
+			toast.error(error.message || t('web.comment.delete_failed'));
 			isConfirmingDelete = false;
 		}
 	}));
@@ -71,7 +74,7 @@
 
 	const handleSaveEdit = () => {
 		if (!editContent.trim()) {
-			toast.error('评论内容不能为空');
+			toast.error(t('web.comment.empty_content'));
 			return;
 		}
 		editMutation.mutate();
@@ -144,11 +147,14 @@
 
 	const websiteHref = $derived.by(() => normalizeWebsiteUrl(comment.website));
 
+	const formatRelativeTimeWithSeconds = $derived(createFormatRelativeTimeWithSeconds(page.data.t));
+
 	$effect(() => {
-		relativeTime = formatRelativeTimeWithSeconds(comment.createdAt);
+		const fmtFn = formatRelativeTimeWithSeconds;
+		relativeTime = fmtFn(comment.createdAt);
 		const stop = createRelativeTimeTicker(comment.createdAt, (value) => {
 			relativeTime = value;
-		});
+		}, fmtFn);
 		return () => stop();
 	});
 </script>
@@ -187,29 +193,29 @@
 
 			<div class="flex items-center gap-1.5">
 				{#if comment.isOwner}
-					<CommentVerifiedIcon type="owner" content="这位是本站的主人呀" />
+					<CommentVerifiedIcon type="owner" content={t("web.comment.site_owner")} />
 				{/if}
 
 				{#if comment.isAuthor}
-					<CommentVerifiedIcon type="author" content="此篇文章的创作者" />
+					<CommentVerifiedIcon type="author" content={t("web.comment.article_author")} />
 				{/if}
 
 				{#if comment.isFriend}
-					<CommentVerifiedIcon type="friend" content="博主的友链小伙伴" />
+					<CommentVerifiedIcon type="friend" content={t("web.comment.friend_link")} />
 				{/if}
 			</div>
 			{#if comment.isMy && comment.status !== 'approved'}
 				<span
 					class="text-[10px] rounded-sm px-1.5 py-0.5 bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
 				>
-					{comment.status === 'pending' ? '审核中，仅自己可见' : '未通过，仅自己可见'}
+					{comment.status === 'pending' ? t('web.comment.pending_review') : t('web.comment.rejected')}
 				</span>
 			{/if}
 			{#if comment.isFederated}
 				<span
 					class="text-[10px] rounded-sm px-1.5 py-0.5 bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-300"
 				>
-					来自联邦 · {formatFederatedProtocol(comment.federatedProtocol)}
+					{t('web.comment.from_federation')} · {formatFederatedProtocol(comment.federatedProtocol)}
 					{#if parseFederatedHost(comment.federatedActor)}
 						@{parseFederatedHost(comment.federatedActor)}
 					{/if}
@@ -225,7 +231,7 @@
 				{/if}
 				{relativeTime}
 				{#if comment.isEdited}
-					<span class="text-ink-300 dark:text-ink-600">（已编辑）</span>
+					<span class="text-ink-300 dark:text-ink-600">（{t('web.comment.edited')}）</span>
 				{/if}
 			</span>
 		</div>
@@ -233,7 +239,7 @@
 		<div class="relative">
 			{#if comment.isTop}
 				<div class="absolute -top-1.5 -right-1.5 z-10 pointer-events-auto">
-					<Tooltip content="一定要看到的置顶回响">
+					<Tooltip content={t("web.comment.pinned_tooltip")}>
 						<Pin
 							size={16}
 							class="text-amber-500 opacity-60 hover:opacity-100 transition-opacity rotate-45"
@@ -251,7 +257,7 @@
 				)}
 			>
 				{#if comment.isDeleted}
-					<p class="text-ink-400 dark:text-ink-500">该评论已被删除</p>
+					<p class="text-ink-400 dark:text-ink-500">{t("web.comment.deleted")}</p>
 				{:else if isEditing}
 					<div class="space-y-2">
 						<textarea
@@ -265,7 +271,7 @@
 								class="flex items-center gap-1 text-xs text-ink-400 hover:text-ink-600 dark:hover:text-ink-300 transition-colors px-2 py-1"
 							>
 								<X size={12} />
-								<span>取消</span>
+								<span>{t("web.comment.cancel")}</span>
 							</button>
 							<button
 								onclick={handleSaveEdit}
@@ -273,7 +279,7 @@
 								class="flex items-center gap-1 text-xs text-ink-50 bg-ink-900 dark:bg-ink-200 dark:text-ink-900 hover:bg-jade-600 dark:hover:bg-jade-600 dark:hover:text-white px-3 py-1 rounded-sm transition-colors disabled:opacity-50"
 							>
 								<Check size={12} />
-								<span>{editMutation.isPending ? '保存中...' : '保存'}</span>
+								<span>{editMutation.isPending ? t('web.comment.saving') : t('web.comment.save')}</span>
 							</button>
 						</div>
 					</div>
@@ -290,7 +296,7 @@
 					class="flex items-center gap-1.5 text-xs text-ink-400 hover:text-jade-600 transition-colors font-medium"
 				>
 					<MessageSquare size={14} />
-					<span>回复</span>
+					<span>{t("web.comment.reply")}</span>
 				</button>
 			{/if}
 			{#if comment.isMy && !comment.isDeleted}
@@ -299,7 +305,7 @@
 					class="flex items-center gap-1.5 text-xs text-ink-400 dark:text-ink-500 opacity-70 hover:opacity-100 transition-opacity font-medium"
 				>
 					<Pencil size={12} />
-					<span>编辑</span>
+					<span>{t("web.comment.edit")}</span>
 				</button>
 				{#if isConfirmingDelete}
 					<span class="flex items-center gap-1.5 text-xs" in:fly={{ x: -10, duration: 150 }}>
@@ -308,7 +314,7 @@
 							disabled={deleteMutation.isPending}
 							class="text-red-500 hover:text-red-600 transition-colors font-medium disabled:opacity-50"
 						>
-							{deleteMutation.isPending ? '删除中...' : '确认删除'}
+							{deleteMutation.isPending ? t('web.comment.deleting') : t('web.comment.confirm_delete')}
 						</button>
 						<button
 							onclick={handleCancelDelete}
@@ -323,7 +329,7 @@
 						class="flex items-center gap-1.5 text-xs text-ink-400 dark:text-ink-500 opacity-70 hover:opacity-100 transition-opacity font-medium"
 					>
 						<Trash2 size={12} />
-						<span>删除</span>
+						<span>{t("web.comment.delete")}</span>
 					</button>
 				{/if}
 			{/if}

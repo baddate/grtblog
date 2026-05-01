@@ -80,7 +80,7 @@ export const createFormatRelativeTime = (t: TranslateFn) => (dateStr: string): s
 	return t('web.date.year_format', { year: date.getFullYear() });
 };
 
-export const formatRelativeTimeWithSeconds = (dateStr: string, now = new Date()): string => {
+export const createFormatRelativeTimeWithSeconds = (t: TranslateFn) => (dateStr: string, now = new Date()): string => {
 	const date = new Date(dateStr);
 	const diffMs = now.getTime() - date.getTime();
 
@@ -92,17 +92,17 @@ export const formatRelativeTimeWithSeconds = (dateStr: string, now = new Date())
 
 	if (days < 1) {
 		if (hours < 1) {
-			if (minutes < 1) return seconds <= 0 ? '刚刚' : `${seconds} 秒前`;
-			return `${minutes} 分钟前`;
+			if (minutes < 1) return seconds <= 0 ? t('web.date.just_now') : t('web.date.seconds_ago', { n: seconds });
+			return t('web.date.minutes_ago', { n: minutes });
 		}
-		return `${hours} 小时前`;
+		return t('web.date.hours_ago', { n: hours });
 	}
 
-	if (days < 7) return `${days} 天前`;
-	if (days < 30) return `大约 ${Math.ceil(days / 7)} 周前`;
-	if (days < 365) return `大约 ${Math.floor(days / 30)} 个月前`;
+	if (days < 7) return t('web.date.days_ago', { n: days });
+	if (days < 30) return t('web.date.weeks_ago', { n: Math.ceil(days / 7) });
+	if (days < 365) return t('web.date.months_ago', { n: Math.floor(days / 30) });
 
-	return `${date.getFullYear()}年`;
+	return t('web.date.year_format', { year: date.getFullYear() });
 };
 
 const getNextDelay = (diffMs: number): number | null => {
@@ -113,7 +113,8 @@ const getNextDelay = (diffMs: number): number | null => {
 
 export const createRelativeTimeTicker = (
 	dateStr: string,
-	onTick: (value: string) => void
+	onTick: (value: string) => void,
+	formatFn: (dateStr: string, now?: Date) => string
 ): (() => void) => {
 	if (typeof window === 'undefined') return () => {};
 
@@ -122,7 +123,7 @@ export const createRelativeTimeTicker = (
 	const tick = () => {
 		const now = new Date();
 		const diffMs = now.getTime() - new Date(dateStr).getTime();
-		onTick(formatRelativeTimeWithSeconds(dateStr, now));
+		onTick(formatFn(dateStr, now));
 		const delay = getNextDelay(Math.max(diffMs, 0));
 		if (delay !== null) {
 			timeoutId = setTimeout(tick, delay);

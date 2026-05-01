@@ -32,6 +32,8 @@
 	import { userStore } from '$lib/shared/stores/userStore';
 	import { get } from 'svelte/store';
 
+	const t = $derived(page.data.t);
+
 	function logClientRuntimeError(
 		kind: 'error' | 'unhandledrejection',
 		message: string,
@@ -269,7 +271,7 @@
 	const theme = themeManager;
 
 	function openPresenceWindow() {
-		windowStore.open('在线页面', null, 'presence-pages');
+		windowStore.open(t('web.presence.online_pages'), null, 'presence-pages');
 	}
 
 	onMount(() => {
@@ -441,7 +443,7 @@
 		aria-live="polite"
 		aria-busy="true"
 	>
-		<Loading size="w-8 h-8" duration={900} class="gap-0" text="正在玩命加载中...莫慌" />
+		<Loading size="w-8 h-8" duration={900} class="gap-0" text={t("web.loading.text")} />
 	</div>
 {/if}
 
@@ -459,7 +461,7 @@
 			loader={() => import('$lib/features/tag/components/TagContentsWindow.svelte')}
 			loaderProps={{ tagId: windowStore.data?.id, tagName: windowStore.data?.name }}
 		/>
-	{:else if windowStore.title === '申请友链'}
+	{:else if windowStore.title === t('web.friend.apply_title')}
 		<QueryRoot
 			loader={() => import('$lib/features/friend-link/components/ApplyFriendForm.svelte')}
 		/>

@@ -7,6 +7,7 @@ import { getPageDetail } from '$lib/features/page/api';
 import { resolveSeoMeta, resolveOgTag } from '$lib/shared/seo/metadata';
 import { renderOgImage } from '$lib/server/og-image-renderer';
 import { error } from '@sveltejs/kit';
+import type { TranslateFn } from '$lib/i18n/types';
 
 export const trailingSlash = 'never';
 
@@ -71,6 +72,9 @@ export const GET: RequestHandler = async ({ params, fetch, url }) => {
 	const path = params.path;
 	if (!path) error(404, 'Not found');
 
+	// No-op fallback for server endpoints without page.data
+	const serverT: TranslateFn = ((key: string) => key) as TranslateFn;
+
 	const websiteInfo: WebsiteInfoMap = await fetchWebsiteInfo(fetch).catch(() => ({}));
 	const { pathname, routeData } = await fetchRouteData(path, fetch);
 
@@ -78,7 +82,8 @@ export const GET: RequestHandler = async ({ params, fetch, url }) => {
 		pathname,
 		routeData,
 		websiteInfo,
-		origin: url.origin
+		origin: url.origin,
+		t: serverT
 	});
 
 	// If the page has a content image (e.g. article cover), no generated OG image is needed

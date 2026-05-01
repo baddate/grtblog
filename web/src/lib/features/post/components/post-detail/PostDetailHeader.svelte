@@ -2,8 +2,9 @@
 	import { resolvePath } from '$lib/shared/utils/resolve-path';
 	import { postDetailCtx } from '$lib/features/post/context';
 	import { sameMetrics } from './selector-equals';
-	import { formatDateCN, isDifferentDay } from '$lib/shared/utils/date';
-	import { calculateReadingTime, formatReadingTime } from '$lib/shared/utils/reading-time';
+	import { createFormatDateCN, isDifferentDay } from '$lib/shared/utils/date';
+	import { calculateReadingTime, createFormatReadingTime } from '$lib/shared/utils/reading-time';
+	import { page } from '$app/state';
 	import { ArrowLeft, Calendar, Clock } from 'lucide-svelte';
 	import Icon from '@iconify/svelte';
 	import Button from '$lib/ui/primitives/button/Button.svelte';
@@ -20,6 +21,9 @@
 		(data) => data?.contentUpdatedAt ?? ''
 	);
 	const contentStore = postDetailCtx.selectModelData((data) => data?.content ?? '');
+	const t = $derived(page.data.t);
+	const formatDateCN = $derived(createFormatDateCN(t));
+	const formatReadingTime = $derived(createFormatReadingTime(t));
 	const showUpdated = $derived(isDifferentDay($createdAtStore, $contentUpdatedAtStore));
 	const isHotStore = postDetailCtx.selectModelData((data) => data?.isHot ?? false);
 	const metricsStore = postDetailCtx.selectModelData((data) => data?.metrics ?? null, {
@@ -32,7 +36,7 @@
 	);
 	const categoryLabelStore = $derived.by(() => {
 		const categoryName = ($categoryNameStore || '').trim();
-		return categoryName || '未分类';
+		return categoryName || t('web.ui.uncategorized');
 	});
 	const readingTime = $derived(calculateReadingTime($contentStore));
 
@@ -43,7 +47,7 @@
 
 {#snippet backContent()}
 	<ArrowLeft size={14} class="group-hover:-translate-x-1 transition-transform" />
-	<span>返回</span>
+	<span>{t("web.ui.go_back")}</span>
 {/snippet}
 
 <header class="max-w-4xl space-y-6">
@@ -59,7 +63,7 @@
 
 	<div class="space-y-4">
 		<div class="flex items-center gap-3">
-			<Badge variant="soft">文章</Badge>
+			<Badge variant="soft">{t("web.ui.article")}</Badge>
 			{#if $categoryShortUrlStore}
 				<a
 					href={resolvePath(buildCategoryPath($categoryShortUrlStore))}
@@ -93,20 +97,20 @@
 						class="!border-red-500/20 !bg-red-500/5 !text-red-600 dark:!text-red-400"
 						icon={hotIcon}
 					>
-						热门
+						{t("web.ui.hot")}
 					</Badge>
 				{/if}
 				<span class="flex items-center gap-1.5">
 					<Calendar size={12} />
 					{formatDateCN($createdAtStore)}{#if showUpdated}<span class="text-ink-400/70"
-							>（更新于 {formatDateCN($contentUpdatedAtStore)}）</span
+							>（{t("web.ui.updated_at")} {formatDateCN($contentUpdatedAtStore)}）</span
 						>{/if}
 				</span>
 				<span class="flex items-center gap-1.5"
 					><Clock size={12} /> {formatReadingTime(readingTime)}</span
 				>
 				<span class="flex items-center gap-1.5"
-					>浏览 <RollingNumber value={$metricsStore?.views ?? 0} /></span
+					>{t("web.ui.views")} <RollingNumber value={$metricsStore?.views ?? 0} /></span
 				>
 				<span aria-hidden="true" class="opacity-40">·</span>
 				<ContentLikeButton
@@ -117,7 +121,7 @@
 				/>
 				<span aria-hidden="true" class="opacity-40">·</span>
 				<span class="flex items-center gap-1.5"
-					>评论 <RollingNumber value={$metricsStore?.comments ?? 0} /></span
+					>{t("web.ui.comments")} <RollingNumber value={$metricsStore?.comments ?? 0} /></span
 				>
 			</div>
 

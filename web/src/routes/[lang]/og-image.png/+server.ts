@@ -3,8 +3,12 @@ import { fetchWebsiteInfo } from '$lib/features/website-info/api';
 import type { WebsiteInfoMap } from '$lib/features/website-info/types';
 import { resolveSeoMeta, resolveOgTag } from '$lib/shared/seo/metadata';
 import { renderOgImage } from '$lib/server/og-image-renderer';
+import type { TranslateFn } from '$lib/i18n/types';
 
 export const trailingSlash = 'never';
+
+// No-op fallback for server endpoints without page.data
+const serverT: TranslateFn = ((key: string) => key) as TranslateFn;
 
 export const GET: RequestHandler = async ({ fetch, url }) => {
 	const websiteInfo: WebsiteInfoMap = await fetchWebsiteInfo(fetch).catch(() => ({}));
@@ -13,7 +17,8 @@ export const GET: RequestHandler = async ({ fetch, url }) => {
 		pathname: '/',
 		routeData: {},
 		websiteInfo,
-		origin: url.origin
+		origin: url.origin,
+		t: serverT
 	});
 
 	const png = await renderOgImage(

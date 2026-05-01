@@ -4,7 +4,8 @@
 	import DetailCommentSection from '$lib/ui/detail/DetailCommentSection.svelte';
 	import DetailMarkdownContent from '$lib/ui/detail/DetailMarkdownContent.svelte';
 	import DetailActionBar from '$lib/ui/detail/DetailActionBar.svelte';
-	import { formatDateCN, isDifferentDay } from '$lib/shared/utils/date';
+	import { createFormatDateCN, isDifferentDay } from '$lib/shared/utils/date';
+	import { page } from '$app/state';
 	import { Sun } from 'lucide-svelte';
 	import ContentLikeButton from '$lib/features/analytics/components/ContentLikeButton.svelte';
 	import TagList from '$lib/features/tag/components/TagList.svelte';
@@ -20,6 +21,8 @@
 
 	let { moment, dateStr, dateNo, onActiveAnchorChange, onContentRootChange }: Props = $props();
 
+	const t = $derived(page.data.t);
+	const formatDateCN = $derived(createFormatDateCN(t));
 	const showUpdated = $derived(isDifferentDay(moment.createdAt, moment.contentUpdatedAt));
 </script>
 
@@ -42,11 +45,11 @@
 				>
 					<span>NO. {dateNo}</span>
 					<span>—</span>
-					<span class="font-serif text-cinnabar-500">手记</span>
+					<span class="font-serif text-cinnabar-500">{t("web.ui.moment")}</span>
 					<span>—</span>
 					<span>{dateStr}</span>
 					{#if showUpdated}<span class="text-ink-400/70"
-							>（更新于 {formatDateCN(moment.contentUpdatedAt)}）</span
+							>（{t("web.ui.updated_at")} {formatDateCN(moment.contentUpdatedAt)}）</span
 						>{/if}
 				</div>
 				<div class="shrink-0 text-ink-800/40 dark:text-ink-200/40">
@@ -63,7 +66,7 @@
 				class="flex flex-wrap items-center gap-3 text-[11px] font-mono tracking-[0.16em] text-ink-800/45 dark:text-ink-200/45 uppercase"
 			>
 				<span class="flex items-center gap-1.5"
-					>浏览 <RollingNumber value={moment.metrics?.views ?? 0} /></span
+					>{t("web.ui.views")} <RollingNumber value={moment.metrics?.views ?? 0} /></span
 				>
 				<span aria-hidden="true" class="opacity-40">·</span>
 				<ContentLikeButton
@@ -74,7 +77,7 @@
 				/>
 				<span aria-hidden="true" class="opacity-40">·</span>
 				<span class="flex items-center gap-1.5"
-					>评论 <RollingNumber value={moment.metrics?.comments ?? 0} /></span
+					>{t("web.ui.comments")} <RollingNumber value={moment.metrics?.comments ?? 0} /></span
 				>
 			</div>
 

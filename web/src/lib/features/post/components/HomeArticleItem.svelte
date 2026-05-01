@@ -2,10 +2,14 @@
 	import { resolvePath } from '$lib/shared/utils/resolve-path';
 	import type { PostSummary } from '$lib/features/post/types';
 	import { ArrowRight, Pin } from 'lucide-svelte';
-	import { formatRelativeTime } from '$lib/shared/utils/date';
+	import { createFormatRelativeTime } from '$lib/shared/utils/date';
 	import { buildPostPath } from '$lib/shared/utils/content-path';
+	import { page } from '$app/state';
 
 	let { post } = $props<{ post: PostSummary }>();
+
+	const t = $derived(page.data.t);
+	const formatRelativeTime = $derived(createFormatRelativeTime(t));
 
 	let mouseX = $state('50%');
 	let mouseY = $state('50%');

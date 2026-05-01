@@ -8,15 +8,18 @@
 	import MomentDetailPaper from './moment-detail/MomentDetailPaper.svelte';
 	import MomentDetailTocSidebar from './moment-detail/MomentDetailTocSidebar.svelte';
 	import { detailHeroBgSrc } from '$lib/shared/stores/detailHeroBg';
+	import { page } from '$app/state';
 	import { onDestroy } from 'svelte';
 
 	let { moment }: { moment: MomentDetail } = $props();
+
+	const t = $derived(page.data.t);
 
 	const dateStr = $derived(formatDateDotted(moment.createdAt));
 	const dateNo = $derived(formatDateCompact(moment.createdAt));
 	const columnLabel = $derived.by(() => {
 		const name = (moment.columnName || '').trim();
-		return name || '未分类手记';
+		return name || t('web.ui.uncategorized_moment');
 	});
 	const columnSlug = $derived(moment.columnShortUrl ?? '');
 	const toc = $derived(moment.toc ?? []);
@@ -83,7 +86,7 @@
 				class="group flex items-center gap-2 text-xs font-serif text-ink-800 dark:text-ink-200 hover:text-cinnabar-500 transition-colors"
 			>
 				<ArrowLeft size={14} class="transition-transform group-hover:-translate-x-1" />
-				<span class="tracking-widest">收起这一页</span>
+				<span class="tracking-widest">{t('web.ui.collapse_page')}</span>
 			</button>
 		</div>
 

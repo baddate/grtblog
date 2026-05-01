@@ -1,3 +1,5 @@
+import type { TranslateFn } from '$lib/i18n/types';
+
 /**
  * Calculate reading time based on content
  * @param content - The markdown or HTML content
@@ -42,6 +44,11 @@ export function calculateReadingTime(content: string): number {
  * @param minutes - Reading time in minutes
  * @returns Formatted string like "5 分钟阅读"
  */
-export function formatReadingTime(minutes: number): string {
-	return `${minutes} 分钟阅读`;
-}
+export const createFormatReadingTime = (t: TranslateFn) => (minutes: number): string => {
+	return t('web.date.reading_time', { n: minutes });
+};
+
+/** @deprecated Use createFormatReadingTime(t) instead */
+export const formatReadingTime = (minutes: number): string => {
+	return `${minutes} min read`;
+};
