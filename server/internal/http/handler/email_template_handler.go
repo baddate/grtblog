@@ -7,10 +7,10 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/email"
-	domainemail "github.com/grtsinry43/grtblog-v2/server/internal/domain/email"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog-v2/server/internal/app/email"
+	domainemail "github.com/baddate/sanblog-v2/server/internal/domain/email"
+	"github.com/baddate/sanblog-v2/server/internal/http/contract"
+	"github.com/baddate/sanblog-v2/server/internal/http/response"
 )
 
 type EmailTemplateHandler struct {

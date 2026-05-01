@@ -11,7 +11,7 @@ import (
 	"errors"
 	"strings"
 
-	domainconfig "github.com/grtsinry43/grtblog-v2/server/internal/domain/config"
+	domainconfig "github.com/baddate/sanblog-v2/server/internal/domain/config"
 )
 
 // ensureKeyPairs checks whether federation/activitypub keys need auto-generation

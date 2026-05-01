@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	domainconfig "github.com/grtsinry43/grtblog-v2/server/internal/domain/config"
+	domainconfig "github.com/baddate/sanblog-v2/server/internal/domain/config"
 )
 
 // FederationSettings aggregates federation configuration values.
@@ -62,22 +62,22 @@ func (s *Service) FederationSettings(ctx context.Context) (FederationSettings, e
 
 // ActivityPubSettings aggregates ActivityPub configuration values.
 type ActivityPubSettings struct {
-	Enabled                bool
-	InstanceName           string
-	InstanceURL            string
-	ActorUsername          string
-	PublicKey              string
-	PrivateKey             string
-	SignatureAlg           string
-	RequireHTTPS           bool
-	AllowInbound           bool
-	AllowOutbound          bool
-	AutoAcceptFollow       bool
-	AcceptInboundComment   bool
-	MentionToAdmin         bool
-	PublishTypes           json.RawMessage
-	PublishTemplate  string
-	ActorHeaderImage string
+	Enabled              bool
+	InstanceName         string
+	InstanceURL          string
+	ActorUsername        string
+	PublicKey            string
+	PrivateKey           string
+	SignatureAlg         string
+	RequireHTTPS         bool
+	AllowInbound         bool
+	AllowOutbound        bool
+	AutoAcceptFollow     bool
+	AcceptInboundComment bool
+	MentionToAdmin       bool
+	PublishTypes         json.RawMessage
+	PublishTemplate      string
+	ActorHeaderImage     string
 }
 
 // ActivityPubSettings returns aggregated ActivityPub config from sys_config.
@@ -112,22 +112,22 @@ func (s *Service) ActivityPubSettings(ctx context.Context) (ActivityPubSettings,
 	}
 
 	return ActivityPubSettings{
-		Enabled:                cfgParseBool(lookup["activitypub.enabled"], false),
-		InstanceName:           cfgParseString(lookup["activitypub.instanceName"], ""),
-		InstanceURL:            cfgParseString(lookup["activitypub.instanceURL"], ""),
-		ActorUsername:          actorUsername,
-		PublicKey:              cfgParseString(lookup["activitypub.publicKey"], ""),
-		PrivateKey:             cfgParseString(lookup["activitypub.privateKey"], ""),
-		SignatureAlg:           cfgParseString(lookup["activitypub.signatureAlg"], "rsa-sha256"),
-		RequireHTTPS:           cfgParseBool(lookup["activitypub.requireHTTPS"], true),
-		AllowInbound:           cfgParseBool(lookup["activitypub.allowInbound"], true),
-		AllowOutbound:          cfgParseBool(lookup["activitypub.allowOutbound"], true),
-		AutoAcceptFollow:       cfgParseBool(lookup["activitypub.autoAcceptFollow"], true),
-		AcceptInboundComment:   cfgParseBool(lookup["activitypub.acceptInboundComment"], true),
-		MentionToAdmin:         cfgParseBool(lookup["activitypub.mentionToAdmin"], true),
-		PublishTypes:           cfgParseJSON(lookup["activitypub.publishTypes"], json.RawMessage(`["article","moment","thinking"]`)),
-		PublishTemplate:        cfgParseString(lookup["activitypub.publishTemplate"], defaultActivityPubPublishTemplate),
-		ActorHeaderImage: cfgParseString(lookup["activitypub.actorHeaderImage"], ""),
+		Enabled:              cfgParseBool(lookup["activitypub.enabled"], false),
+		InstanceName:         cfgParseString(lookup["activitypub.instanceName"], ""),
+		InstanceURL:          cfgParseString(lookup["activitypub.instanceURL"], ""),
+		ActorUsername:        actorUsername,
+		PublicKey:            cfgParseString(lookup["activitypub.publicKey"], ""),
+		PrivateKey:           cfgParseString(lookup["activitypub.privateKey"], ""),
+		SignatureAlg:         cfgParseString(lookup["activitypub.signatureAlg"], "rsa-sha256"),
+		RequireHTTPS:         cfgParseBool(lookup["activitypub.requireHTTPS"], true),
+		AllowInbound:         cfgParseBool(lookup["activitypub.allowInbound"], true),
+		AllowOutbound:        cfgParseBool(lookup["activitypub.allowOutbound"], true),
+		AutoAcceptFollow:     cfgParseBool(lookup["activitypub.autoAcceptFollow"], true),
+		AcceptInboundComment: cfgParseBool(lookup["activitypub.acceptInboundComment"], true),
+		MentionToAdmin:       cfgParseBool(lookup["activitypub.mentionToAdmin"], true),
+		PublishTypes:         cfgParseJSON(lookup["activitypub.publishTypes"], json.RawMessage(`["article","moment","thinking"]`)),
+		PublishTemplate:      cfgParseString(lookup["activitypub.publishTemplate"], defaultActivityPubPublishTemplate),
+		ActorHeaderImage:     cfgParseString(lookup["activitypub.actorHeaderImage"], ""),
 	}, nil
 }
 

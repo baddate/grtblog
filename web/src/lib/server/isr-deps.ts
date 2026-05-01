@@ -1,6 +1,6 @@
 import type { RequestEvent } from '@sveltejs/kit';
 
-export const ISR_DEPS_HEADER = 'x-grt-deps';
+export const ISR_DEPS_HEADER = 'x-mks-deps';
 
 export const trackISRDeps = (
 	event: RequestEvent,

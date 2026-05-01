@@ -1,0 +1,3 @@
+[tools]
+"aqua:pressly/goose" = "latest"
+"aqua:swaggo/swag" = "latest"

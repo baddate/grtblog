@@ -7,14 +7,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jinzhu/copier"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/auth"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/setupstate"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/sysconfig"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/identity"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/middleware"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
-	"github.com/grtsinry43/grtblog-v2/server/internal/security/turnstile"
+	"github.com/baddate/sanblog-v2/server/internal/app/auth"
+	"github.com/baddate/sanblog-v2/server/internal/app/setupstate"
+	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
+	"github.com/baddate/sanblog-v2/server/internal/domain/identity"
+	"github.com/baddate/sanblog-v2/server/internal/http/contract"
+	"github.com/baddate/sanblog-v2/server/internal/http/middleware"
+	"github.com/baddate/sanblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog-v2/server/internal/security/turnstile"
 )
 
 type AuthHandler struct {

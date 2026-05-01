@@ -5,11 +5,11 @@ import (
 	"strconv"
 	"strings"
 
+	appnav "github.com/baddate/sanblog-v2/server/internal/app/navigation"
+	"github.com/baddate/sanblog-v2/server/internal/domain/navigation"
+	"github.com/baddate/sanblog-v2/server/internal/http/contract"
+	"github.com/baddate/sanblog-v2/server/internal/http/response"
 	"github.com/gofiber/fiber/v2"
-	appnav "github.com/grtsinry43/grtblog-v2/server/internal/app/navigation"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/navigation"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
 )
 
 type NavMenuHandler struct {

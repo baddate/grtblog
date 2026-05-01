@@ -6,11 +6,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/contentutil"
+	"github.com/baddate/sanblog-v2/server/internal/app/contentutil"
 	"gorm.io/gorm"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/thinking"
-	"github.com/grtsinry43/grtblog-v2/server/internal/infra/persistence/model"
+	"github.com/baddate/sanblog-v2/server/internal/domain/thinking"
+	"github.com/baddate/sanblog-v2/server/internal/infra/persistence/model"
 )
 
 type ThinkingRepository struct {

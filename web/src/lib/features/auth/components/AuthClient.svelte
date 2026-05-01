@@ -55,7 +55,7 @@
 
 	let turnstileToken = $state('');
 
-	const websiteName = websiteInfoCtx.selectModelData((data) => data?.website_name || 'grtBlog');
+	const websiteName = websiteInfoCtx.selectModelData((data) => data?.website_name || 'sanblog');
 
 	const hasOAuthProviders = $derived.by(() => ($authModel?.oauth.providers ?? []).length > 0);
 	const showPasswordLogin = $derived.by(() => $authModel?.showPasswordLogin ?? false);

@@ -9,7 +9,7 @@
 	const defaultTitleTemplate: HomeHeroTemplateNode[] = [
 		{ type: 'h1', text: 'Hi! 👋', variant: 'hero_h1_highlight' },
 		{ type: 'br' },
-		{ type: 'h1', text: "I'm grtsinry43", variant: 'hero_h1_primary' }
+		{ type: 'h1', text: "I'm baddate", variant: 'hero_h1_primary' }
 	];
 	const defaultDescription =
 		'Java & JavaScript full-stack developer committed to crafting excellent software.';
@@ -19,8 +19,8 @@
 		'也许，代码是现代的诗歌，而文字是思想的快照。'
 	];
 	const defaultSocials: HomeHeroSocialLink[] = [
-		{ icon: 'github', name: 'GitHub', href: 'https://github.com/grtinry43' },
-		{ icon: 'mail', name: 'Email', href: 'mailto:grtsinry43@outlook.com' },
+		{ icon: 'github', name: 'GitHub', href: 'https://github.com/baddate' },
+		{ icon: 'mail', name: 'Email', href: 'mailto:baddate@outlook.com' },
 		{ icon: 'rss', name: 'RSS', href: '/feed' }
 	];
 

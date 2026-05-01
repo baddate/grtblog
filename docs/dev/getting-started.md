@@ -3,7 +3,7 @@
 ## 项目结构
 
 ```
-grtblog-v2/
+sanblog-v2/
 ├── server/         # Go Fiber 后端 (控制平面)
 ├── web/            # SvelteKit 前端 (渲染平面)
 ├── admin/          # Vue 3 管理后台

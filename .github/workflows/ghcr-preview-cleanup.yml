@@ -10,7 +10,7 @@ permissions:
   packages: write
 
 env:
-  GHCR_OWNER: grtsinry43
+  GHCR_OWNER: baddate
   KEEP_PREVIEW_COUNT: "5"
   KEEP_STABLE_PATCHES_PER_MINOR: "2"
   UNTAGGED_MIN_AGE_DAYS: "3"
@@ -22,8 +22,8 @@ jobs:
       fail-fast: false
       matrix:
         package:
-          - grtblog-server
-          - grtblog-renderer
+          - sanblog-server
+          - sanblog-renderer
 
     steps:
       - name: Set up Docker Buildx

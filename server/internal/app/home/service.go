@@ -17,14 +17,14 @@ import (
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/infra/persistence/model"
+	"github.com/baddate/sanblog-v2/server/internal/infra/persistence/model"
 )
 
 const (
-	defaultRangeDays      = 365
-	maxRangeDays          = 730
-	githubBaseURL         = "https://api.github.com"
-	githubStatsCacheTTL   = time.Hour
+	defaultRangeDays    = 365
+	maxRangeDays        = 730
+	githubBaseURL       = "https://api.github.com"
+	githubStatsCacheTTL = time.Hour
 )
 
 var (
@@ -504,7 +504,7 @@ func (s *Service) fetchGitHubJSON(ctx context.Context, endpoint string, target a
 	}
 	req.Header.Set("Accept", "application/vnd.github+json")
 	req.Header.Set("X-GitHub-Api-Version", "2022-11-28")
-	req.Header.Set("User-Agent", "grtblog-v2-home")
+	req.Header.Set("User-Agent", "sanblog-v2-home")
 
 	resp, err := client.Do(req)
 	if err != nil {

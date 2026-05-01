@@ -9,10 +9,10 @@ import (
 
 	"gorm.io/gorm"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/htmlsnapshot"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/sysconfig"
-	"github.com/grtsinry43/grtblog-v2/server/internal/infra/metrics"
-	"github.com/grtsinry43/grtblog-v2/server/internal/ws"
+	"github.com/baddate/sanblog-v2/server/internal/app/htmlsnapshot"
+	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
+	"github.com/baddate/sanblog-v2/server/internal/infra/metrics"
+	"github.com/baddate/sanblog-v2/server/internal/ws"
 )
 
 // Service ties together error collection and runtime metrics into a

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/buildinfo"
+	"github.com/baddate/sanblog-v2/server/internal/buildinfo"
 )
 
 // ---------------------------------------------------------------------------
@@ -77,14 +77,14 @@ type FullTelemetrySnapshot struct {
 
 // InstanceInfo contains anonymous, non-PII environment metadata.
 type InstanceInfo struct {
-	InstanceID     string       `json:"instanceId"`
-	Version        string       `json:"version"`
-	GoVersion      string       `json:"goVersion"`
-	OS             string       `json:"os"`
-	Arch           string       `json:"arch"`
-	UptimeSeconds  int64        `json:"uptimeSeconds,omitempty"`
-	DeployMode     string       `json:"deployMode,omitempty"`     // "docker" | "binary" | "unknown"
-	Features       FeatureFlags `json:"features,omitempty"`
+	InstanceID    string       `json:"instanceId"`
+	Version       string       `json:"version"`
+	GoVersion     string       `json:"goVersion"`
+	OS            string       `json:"os"`
+	Arch          string       `json:"arch"`
+	UptimeSeconds int64        `json:"uptimeSeconds,omitempty"`
+	DeployMode    string       `json:"deployMode,omitempty"` // "docker" | "binary" | "unknown"
+	Features      FeatureFlags `json:"features,omitempty"`
 }
 
 // FeatureFlags captures which optional features are enabled.
@@ -176,7 +176,7 @@ func anonymousInstanceID(extraSalt string) string {
 	if hostname == "" {
 		hostname = "unknown"
 	}
-	h := sha256.Sum256([]byte("grtblog-telemetry:" + hostname + ":" + extraSalt))
+	h := sha256.Sum256([]byte("sanblog-telemetry:" + hostname + ":" + extraSalt))
 	return fmt.Sprintf("%x", h[:8]) // 16-char hex
 }
 

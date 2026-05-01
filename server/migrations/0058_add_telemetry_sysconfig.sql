@@ -9,7 +9,7 @@ ON CONFLICT (config_key) DO NOTHING;
 UPDATE sys_config
 SET group_path    = 'telemetry',
     label         = '帮助我们变得更好',
-    description   = '匿名发送脱敏后的错误摘要和运行指标，帮助开发团队发现并修复问题。不包含任何个人信息、文章内容或访客数据。GrtBlog 是开源项目，遥测相关的所有代码均可在 GitHub 上查看和审计。',
+    description   = '匿名发送脱敏后的错误摘要和运行指标，帮助开发团队发现并修复问题。不包含任何个人信息、文章内容或访客数据。sanblog 是开源项目，遥测相关的所有代码均可在 GitHub 上查看和审计。',
     value_type    = 'bool',
     default_value = 'false',
     sort          = 10,

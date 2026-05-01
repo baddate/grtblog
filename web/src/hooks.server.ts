@@ -1,7 +1,7 @@
 import type { Handle, HandleServerError } from '@sveltejs/kit';
 import { ISR_DEPS_HEADER } from '$lib/server/isr-deps';
 
-const STATIC_FALLBACK_HEADER = 'x-grt-static-fallback';
+const STATIC_FALLBACK_HEADER = 'x-mks-static-fallback';
 const STATIC_MISS_WARN_TTL_MS = 5 * 60 * 1000;
 const recentStaticMissWarnAt = new Map<string, number>();
 

@@ -8,8 +8,8 @@ import (
 
 	"gorm.io/gorm"
 
-	domainwebhook "github.com/grtsinry43/grtblog-v2/server/internal/domain/webhook"
-	"github.com/grtsinry43/grtblog-v2/server/internal/infra/persistence/model"
+	domainwebhook "github.com/baddate/sanblog-v2/server/internal/domain/webhook"
+	"github.com/baddate/sanblog-v2/server/internal/infra/persistence/model"
 )
 
 type WebhookRepository struct {

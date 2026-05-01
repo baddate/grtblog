@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	appEvent "github.com/grtsinry43/grtblog-v2/server/internal/app/event"
-	appfed "github.com/grtsinry43/grtblog-v2/server/internal/app/federation"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/content"
+	appEvent "github.com/baddate/sanblog-v2/server/internal/app/event"
+	appfed "github.com/baddate/sanblog-v2/server/internal/app/federation"
+	"github.com/baddate/sanblog-v2/server/internal/domain/content"
 )
 
 func publishFederationSignals(ctx context.Context, bus appEvent.Bus, article *content.Article, contentBody string) {

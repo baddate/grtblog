@@ -18,9 +18,9 @@ import (
 )
 
 const (
-	sessionTTL         = 7 * 24 * time.Hour
-	sessionCookieName  = "telemetry_session"
-	ceremonyTTL        = 5 * time.Minute
+	sessionTTL        = 7 * 24 * time.Hour
+	sessionCookieName = "telemetry_session"
+	ceremonyTTL       = 5 * time.Minute
 )
 
 // adminUser implements webauthn.User for the single admin account.
@@ -35,16 +35,16 @@ func (u *adminUser) WebAuthnCredentials() []webauthn.Credential { return u.crede
 
 // PasskeyService manages WebAuthn registration/login and app sessions.
 type PasskeyService struct {
-	store      *Store
-	cfg        Config
-	wa         *webauthn.WebAuthn
+	store         *Store
+	cfg           Config
+	wa            *webauthn.WebAuthn
 	hasCredCached atomic.Bool // cache to avoid DB hit on every request
 }
 
 func NewPasskeyService(store *Store, cfg Config) *PasskeyService {
 	wa, err := webauthn.New(&webauthn.Config{
 		RPID:          cfg.WebAuthnRPID,
-		RPDisplayName: "GrtBlog Telemetry",
+		RPDisplayName: "sanblog Telemetry",
 		RPOrigins:     []string{cfg.WebAuthnOrigin},
 	})
 	if err != nil {
@@ -173,8 +173,8 @@ func (ps *PasskeyService) RegisterFinishHandler() fiber.Handler {
 		token := mustRandomHex(32)
 		expiresAt := time.Now().Add(sessionTTL)
 		if err := ps.store.SaveAdminSession(ctx, token, expiresAt); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "session creation failed"})
-	}
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "session creation failed"})
+		}
 
 		c.Cookie(&fiber.Cookie{
 			Name:     sessionCookieName,
@@ -269,8 +269,8 @@ func (ps *PasskeyService) LoginFinishHandler() fiber.Handler {
 		token := mustRandomHex(32)
 		expiresAt := time.Now().Add(sessionTTL)
 		if err := ps.store.SaveAdminSession(ctx, token, expiresAt); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "session creation failed"})
-	}
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "session creation failed"})
+		}
 
 		c.Cookie(&fiber.Cookie{
 			Name:     sessionCookieName,

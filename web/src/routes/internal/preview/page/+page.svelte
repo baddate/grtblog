@@ -49,13 +49,13 @@
 		if (!browser) return;
 		if (event.source !== window.parent) return;
 		const data = event.data as { type?: string; payload?: PreviewPagePayload } | null;
-		if (!data || data.type !== 'grtblog-preview:page') return;
+		if (!data || data.type !== 'sanblog-preview:page') return;
 		applyPayload(data.payload ?? {});
 	};
 
 	onMount(() => {
 		if (!browser) return;
-		window.parent?.postMessage({ type: 'grtblog-preview:ready' }, '*');
+		window.parent?.postMessage({ type: 'sanblog-preview:ready' }, '*');
 	});
 </script>
 

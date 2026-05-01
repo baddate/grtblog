@@ -11,9 +11,9 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/contentutil"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/content"
-	"github.com/grtsinry43/grtblog-v2/server/internal/infra/persistence/model"
+	"github.com/baddate/sanblog-v2/server/internal/app/contentutil"
+	"github.com/baddate/sanblog-v2/server/internal/domain/content"
+	"github.com/baddate/sanblog-v2/server/internal/infra/persistence/model"
 )
 
 type ContentRepository struct {
@@ -1040,24 +1040,24 @@ func (r *ContentRepository) UpdateMoment(ctx context.Context, moment *content.Mo
 
 	now := time.Now()
 	updates := map[string]any{
-		"title":                        moment.Title,
-		"summary":                      moment.Summary,
-		"ai_summary":                   moment.AISummary,
-		"toc":                          tocBytes,
-		"content":                      moment.Content,
-		"content_hash":                 moment.ContentHash,
-		"column_id":                    moment.ColumnID,
-		"img":                          moment.Image,
-		"short_url":                    moment.ShortURL,
-		"activitypub_object_id":        moment.ActivityPubObjectID,
+		"title":                         moment.Title,
+		"summary":                       moment.Summary,
+		"ai_summary":                    moment.AISummary,
+		"toc":                           tocBytes,
+		"content":                       moment.Content,
+		"content_hash":                  moment.ContentHash,
+		"column_id":                     moment.ColumnID,
+		"img":                           moment.Image,
+		"short_url":                     moment.ShortURL,
+		"activitypub_object_id":         moment.ActivityPubObjectID,
 		"activitypub_last_published_at": moment.ActivityPubLastPublishedAt,
-		"is_published":                 moment.IsPublished,
-		"is_top":                       moment.IsTop,
-		"is_hot":                       moment.IsHot,
-		"is_original":                  moment.IsOriginal,
-		"ext_info":                     moment.ExtInfo,
-		"content_updated_at":           moment.ContentUpdatedAt,
-		"updated_at":                   now,
+		"is_published":                  moment.IsPublished,
+		"is_top":                        moment.IsTop,
+		"is_hot":                        moment.IsHot,
+		"is_original":                   moment.IsOriginal,
+		"ext_info":                      moment.ExtInfo,
+		"content_updated_at":            moment.ContentUpdatedAt,
+		"updated_at":                    now,
 	}
 	if err := r.db.WithContext(ctx).
 		Model(&model.Moment{}).

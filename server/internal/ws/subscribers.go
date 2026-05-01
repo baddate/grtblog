@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/article"
-	appEvent "github.com/grtsinry43/grtblog-v2/server/internal/app/event"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/globalnotification"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/moment"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/page"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/content"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
+	"github.com/baddate/sanblog-v2/server/internal/app/article"
+	appEvent "github.com/baddate/sanblog-v2/server/internal/app/event"
+	"github.com/baddate/sanblog-v2/server/internal/app/globalnotification"
+	"github.com/baddate/sanblog-v2/server/internal/app/moment"
+	"github.com/baddate/sanblog-v2/server/internal/app/page"
+	"github.com/baddate/sanblog-v2/server/internal/domain/content"
+	"github.com/baddate/sanblog-v2/server/internal/http/contract"
 )
 
 type handlerFunc func(ctx context.Context, event appEvent.Event) error

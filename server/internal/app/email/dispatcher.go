@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	appEvent "github.com/grtsinry43/grtblog-v2/server/internal/app/event"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/sysconfig"
-	domainemail "github.com/grtsinry43/grtblog-v2/server/internal/domain/email"
+	appEvent "github.com/baddate/sanblog-v2/server/internal/app/event"
+	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
+	domainemail "github.com/baddate/sanblog-v2/server/internal/domain/email"
 )
 
 type Dispatcher struct {

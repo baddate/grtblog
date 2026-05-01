@@ -35,12 +35,12 @@ const allowedInspirationSourceTypes = new Set([
 const defaultHeroTemplate: HomeHeroTemplateNode[] = [
 	{ type: 'h1', text: 'Hi! 👋', variant: 'hero_h1_highlight' },
 	{ type: 'br' },
-	{ type: 'h1', text: "I'm grtsinry43", variant: 'hero_h1_primary' }
+	{ type: 'h1', text: "I'm baddate", variant: 'hero_h1_primary' }
 ];
 
 const defaultHeroSocials: HomeHeroSocialLink[] = [
-	{ icon: 'github', name: 'GitHub', href: 'https://github.com/grtinry43' },
-	{ icon: 'mail', name: 'Email', href: 'mailto:grtsinry43@outlook.com' },
+	{ icon: 'github', name: 'GitHub', href: 'https://github.com/baddate' },
+	{ icon: 'mail', name: 'Email', href: 'mailto:baddate@outlook.com' },
 	{ icon: 'rss', name: 'RSS', href: '/feed' }
 ];
 
@@ -77,7 +77,7 @@ const defaultThemeConfig: HomeThemeConfig = {
 		now: {
 			title: 'Now / 正在',
 			items: [
-				{ id: 'coding', label: 'Coding', value: 'grtblog-v2', icon: 'code2' },
+				{ id: 'coding', label: 'Coding', value: 'sanblog-v2', icon: 'code2' },
 				{
 					id: 'reading',
 					label: 'Reading',
@@ -121,7 +121,7 @@ const defaultThemeConfig: HomeThemeConfig = {
 			icons: ['code2', 'gamepad2']
 		},
 		github: {
-			username: 'grtsinry43'
+			username: 'baddate'
 		}
 	}
 };

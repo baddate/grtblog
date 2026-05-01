@@ -8,9 +8,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/sysconfig"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/content"
-	domainthinking "github.com/grtsinry43/grtblog-v2/server/internal/domain/thinking"
+	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
+	"github.com/baddate/sanblog-v2/server/internal/domain/content"
+	domainthinking "github.com/baddate/sanblog-v2/server/internal/domain/thinking"
 )
 
 const (

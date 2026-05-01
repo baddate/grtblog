@@ -8,16 +8,16 @@ import (
 
 	"github.com/jinzhu/copier"
 
+	domaincomment "github.com/baddate/sanblog-v2/server/internal/domain/comment"
+	"github.com/baddate/sanblog-v2/server/internal/domain/content"
+	"github.com/baddate/sanblog-v2/server/internal/domain/identity"
 	"github.com/gofiber/fiber/v2"
-	domaincomment "github.com/grtsinry43/grtblog-v2/server/internal/domain/comment"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/content"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/identity"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/moment"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/sysconfig"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/middleware"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog-v2/server/internal/app/moment"
+	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
+	"github.com/baddate/sanblog-v2/server/internal/http/contract"
+	"github.com/baddate/sanblog-v2/server/internal/http/middleware"
+	"github.com/baddate/sanblog-v2/server/internal/http/response"
 )
 
 type MomentHandler struct {

@@ -57,7 +57,7 @@ const releaseNotesMd = createMarkdownIt({
   },
 })
 
-const UPDATE_DIALOG_ACK_KEY = 'grtblog:update-dialog:last-seen'
+const UPDATE_DIALOG_ACK_KEY = 'sanblog:update-dialog:last-seen'
 
 const { data: updateInfo } = useQuery({
   queryKey: ['system-update-check'],
@@ -168,7 +168,7 @@ function openUpdateDialog() {
   if (!info || !shouldShowUpdateDialog()) return
 
   const tag = info.targetRelease?.tag || info.latestRelease?.tag || ''
-  const releaseNotesUrl = tag ? `https://grtblog.js.org/releases/${tag}` : ''
+  const releaseNotesUrl = tag ? `https://sanblog.js.org/releases/${tag}` : ''
 
   dialog.info({
     title: `发现新版本 ${tag}`.trim(),

@@ -18,22 +18,22 @@ const defaultFooterConfig: FooterThemeConfig = {
 				{ name: '友链', href: '/friends' },
 				{ name: 'RSS', href: '/feed' },
 				{ name: '时间线', href: '/timeline' },
-				{ name: '监控', href: 'https://status.grtsinry43.com' }
+				{ name: '监控', href: 'https://status.baddate.com' }
 			]
 		},
 		{
 			title: '联系我叭',
 			links: [
 				{ name: '写留言', href: '/message' },
-				{ name: '发邮件', href: 'mailto:grtsinry43@outlook.com' },
-				{ name: 'GitHub', href: 'https://github.com/grtsinry43' }
+				{ name: '发邮件', href: 'mailto:baddate@outlook.com' },
+				{ name: 'GitHub', href: 'https://github.com/baddate' }
 			]
 		}
 	],
 	brandName: "Grtsinry43's Blog.",
 	brandTagline: '总之岁月漫长，然而值得等待',
 	copyrightStartYear: 2022,
-	copyrightOwner: 'grtsinry43',
+	copyrightOwner: 'baddate',
 	beianText: '',
 	beianUrl: 'https://beian.miit.gov.cn/',
 	beianGongAnText: '',

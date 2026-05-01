@@ -6,10 +6,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/contentutil"
-	appEvent "github.com/grtsinry43/grtblog-v2/server/internal/app/event"
-	domainalbum "github.com/grtsinry43/grtblog-v2/server/internal/domain/album"
-	domaincomment "github.com/grtsinry43/grtblog-v2/server/internal/domain/comment"
+	"github.com/baddate/sanblog-v2/server/internal/app/contentutil"
+	appEvent "github.com/baddate/sanblog-v2/server/internal/app/event"
+	domainalbum "github.com/baddate/sanblog-v2/server/internal/domain/album"
+	domaincomment "github.com/baddate/sanblog-v2/server/internal/domain/comment"
 )
 
 type Service struct {

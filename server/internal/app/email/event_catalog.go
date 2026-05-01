@@ -1,6 +1,6 @@
 package email
 
-import appEvent "github.com/grtsinry43/grtblog-v2/server/internal/app/event"
+import appEvent "github.com/baddate/sanblog-v2/server/internal/app/event"
 
 type EventField = appEvent.EventField
 type EventDescriptor = appEvent.EventDescriptor

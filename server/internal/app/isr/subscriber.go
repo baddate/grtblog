@@ -6,12 +6,12 @@ import (
 	"log"
 	"strings"
 
-	appalbum "github.com/grtsinry43/grtblog-v2/server/internal/app/album"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/article"
-	appEvent "github.com/grtsinry43/grtblog-v2/server/internal/app/event"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/federation"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/moment"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/page"
+	appalbum "github.com/baddate/sanblog-v2/server/internal/app/album"
+	"github.com/baddate/sanblog-v2/server/internal/app/article"
+	appEvent "github.com/baddate/sanblog-v2/server/internal/app/event"
+	"github.com/baddate/sanblog-v2/server/internal/app/federation"
+	"github.com/baddate/sanblog-v2/server/internal/app/moment"
+	"github.com/baddate/sanblog-v2/server/internal/app/page"
 	"github.com/redis/go-redis/v9"
 )
 

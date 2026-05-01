@@ -20,7 +20,7 @@ import (
 
 	"github.com/redis/go-redis/v9"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/content"
+	"github.com/baddate/sanblog-v2/server/internal/domain/content"
 )
 
 const (
@@ -28,7 +28,7 @@ const (
 	pageSize       = 100
 	listPageSize   = 10
 
-	depsHeader = "x-grt-deps"
+	depsHeader = "x-mks-deps"
 
 	defaultRecentActivityLimit = 200
 )

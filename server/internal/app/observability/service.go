@@ -16,11 +16,11 @@ import (
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 
-	appEvent "github.com/grtsinry43/grtblog-v2/server/internal/app/event"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/htmlsnapshot"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/isr"
-	"github.com/grtsinry43/grtblog-v2/server/internal/infra/metrics"
-	"github.com/grtsinry43/grtblog-v2/server/internal/ws"
+	appEvent "github.com/baddate/sanblog-v2/server/internal/app/event"
+	"github.com/baddate/sanblog-v2/server/internal/app/htmlsnapshot"
+	"github.com/baddate/sanblog-v2/server/internal/app/isr"
+	"github.com/baddate/sanblog-v2/server/internal/infra/metrics"
+	"github.com/baddate/sanblog-v2/server/internal/ws"
 )
 
 type Service struct {

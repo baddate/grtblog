@@ -6,7 +6,7 @@
 
 	let { isOpen = $bindable(false) } = $props<{ isOpen?: boolean }>();
 
-	const STORAGE_KEY = 'grtblog_timeline_intro_shown';
+	const STORAGE_KEY = 'sanblog_timeline_intro_shown';
 
 	onMount(() => {
 		// Only auto-open if explicitly requested by redirect AND not shown before
