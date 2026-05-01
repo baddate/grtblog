@@ -3,6 +3,8 @@
 	import { resolveFooterThemeConfig } from '$lib/features/footer/theme';
 	import { websiteInfoCtx } from '$lib/features/website-info/context';
 	import { onMount } from 'svelte';
+	import LanguageSwitcher from './footer/LanguageSwitcher.svelte';
+	import { page } from '$app/state';
 
 	type Props = {
 		onlineCount?: number;
@@ -15,6 +17,7 @@
 	const currentYear = new Date().getFullYear();
 	const footerThemeStore = websiteInfoCtx.selectModelData((data) => resolveFooterThemeConfig(data));
 	let nowMs = $state(0);
+	const currentLang = $derived(page.data.lang ?? 'en');
 
 	const formatPresenceText = (template: string, count: number): string =>
 		template.replaceAll('{count}', String(count));
@@ -127,6 +130,9 @@
 						{/if}
 					</span>
 				</button>
+				<div class="flex items-center gap-2 pt-2">
+					<LanguageSwitcher currentLang={currentLang} />
+				</div>
 			</div>
 		</div>
 
@@ -234,6 +240,8 @@
 
 			<div class="hidden md:flex items-center gap-4 text-[11px] font-mono text-ink-300">
 				<span>{$footerThemeStore.designedWithText}</span>
+				<span class="text-ink-200 dark:text-ink-800">|</span>
+				<LanguageSwitcher currentLang={currentLang} />
 			</div>
 		</div>
 	</div>
