@@ -260,7 +260,8 @@
 			routeData: page.data,
 			websiteInfo: $websiteInfoStore,
 			origin: page.url.origin,
-			fallbackSiteIcon: siteFavicon
+			fallbackSiteIcon: siteFavicon,
+			t: data.t
 		})
 	);
 
