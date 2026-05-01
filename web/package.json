@@ -4,8 +4,10 @@
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build",
+		"dev": "node scripts/merge-locales.mjs && vite dev",
+		"build": "node scripts/merge-locales.mjs && vite build",
+		"i18n:merge": "node scripts/merge-locales.mjs",
+		"i18n:check": "node scripts/merge-locales.mjs",
 		"preview": "vite preview",
 		"serve": "node build/index.js",
 		"prepare": "svelte-kit sync || echo ''",

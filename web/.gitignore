@@ -31,6 +31,9 @@ pnpm-debug.log*
 # Design System
 design-system/
 
+# Generated i18n files
+src/lib/i18n/generated/
+
 # ridiculous AIs
 .agent/
 .agents/
