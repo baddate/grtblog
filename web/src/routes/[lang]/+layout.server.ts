@@ -1,8 +1,9 @@
 import type { LayoutServerLoad } from './$types';
+import { loadTranslations } from '$lib/i18n/server';
 
 export const load: LayoutServerLoad = async ({ locals }) => {
   return {
     lang: locals.lang,
-    t: locals.t,
+    translations: loadTranslations(locals.lang),
   };
 };

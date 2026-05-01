@@ -7,13 +7,14 @@
 	import ContentLikeButton from '$lib/features/analytics/components/ContentLikeButton.svelte';
 	import { RollingNumber } from '$lib/ui/animation';
 	import { page as pageStore } from '$app/state';
+	import { createTranslateFn } from '$lib/i18n/server';
 
 	interface Props {
 		page: PageDetail;
 	}
 
 	let { page }: Props = $props();
-	const t = $derived(pageStore.data.t);
+	const t = $derived(createTranslateFn(pageStore.data.translations ?? {}));
 	const formatDateCN = $derived(createFormatDateCN(t));
 	const formatReadingTime = $derived(createFormatReadingTime(t));
 	const readingTime = $derived(calculateReadingTime(page.content));

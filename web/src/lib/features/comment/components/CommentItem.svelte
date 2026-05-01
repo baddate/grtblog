@@ -3,6 +3,7 @@
 	import type { CommentNode } from '$lib/features/comment/types';
 	import { createRelativeTimeTicker, createFormatRelativeTimeWithSeconds } from '$lib/shared/utils/date';
 	import { page } from '$app/state';
+	import { createTranslateFn } from '$lib/i18n/server';
 	import { MessageSquare, Monitor, MapPin, Pin, Pencil, Trash2, Check, X } from 'lucide-svelte';
 	import CommentItem from './CommentItem.svelte';
 	import CommentForm from './CommentForm.svelte';
@@ -27,7 +28,7 @@
 	const { updateModelData } = commentAreaCtx.useModelActions();
 	const queryClient = useQueryClient();
 
-	const t = $derived(page.data.t);
+	const t = $derived(createTranslateFn(page.data.translations ?? {}));
 
 	const editMutation = createMutation(() => ({
 		mutationFn: async () => {
@@ -147,7 +148,7 @@
 
 	const websiteHref = $derived.by(() => normalizeWebsiteUrl(comment.website));
 
-	const formatRelativeTimeWithSeconds = $derived(createFormatRelativeTimeWithSeconds(page.data.t));
+	const formatRelativeTimeWithSeconds = $derived(createFormatRelativeTimeWithSeconds(createTranslateFn(page.data.translations ?? {})));
 
 	$effect(() => {
 		const fmtFn = formatRelativeTimeWithSeconds;

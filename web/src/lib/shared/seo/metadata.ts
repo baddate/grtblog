@@ -28,7 +28,7 @@ export type ResolveSeoMetaInput = {
 	websiteInfo?: WebsiteInfoMap | null;
 	origin?: string;
 	fallbackSiteIcon?: string;
-	t: TranslateFn;
+	t?: TranslateFn;
 };
 
 type PageMeta = {
@@ -302,7 +302,8 @@ export const resolveSeoMeta = (input: ResolveSeoMetaInput): ResolvedSeoMeta => {
 	const homeTitle = readString(websiteInfo?.home_title);
 	const defaultDescription = readString(websiteInfo?.description) || DEFAULT_DESCRIPTION;
 	const keywords = readString(websiteInfo?.keywords) || DEFAULT_KEYWORDS;
-	const pageMeta = resolvePageMeta(pathname, search, routeData, input.t);
+	const t = (input.t ?? ((key: string) => key)) as TranslateFn;
+	const pageMeta = resolvePageMeta(pathname, search, routeData, t);
 
 	const pageTitle = readString(pageMeta.pageTitle);
 	const resolvedHomeTitle = homeTitle || siteName;

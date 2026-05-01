@@ -32,7 +32,8 @@
 	import { userStore } from '$lib/shared/stores/userStore';
 	import { get } from 'svelte/store';
 
-	const t = $derived(page.data.t);
+	import { createTranslateFn } from '$lib/i18n/server';
+	const t = $derived(createTranslateFn(page.data.translations ?? {}));
 
 	function logClientRuntimeError(
 		kind: 'error' | 'unhandledrejection',
@@ -263,7 +264,7 @@
 			websiteInfo: $websiteInfoStore,
 			origin: page.url.origin,
 			fallbackSiteIcon: siteFavicon,
-			t: data.t
+			t: createTranslateFn(data.translations ?? {})
 		})
 	);
 

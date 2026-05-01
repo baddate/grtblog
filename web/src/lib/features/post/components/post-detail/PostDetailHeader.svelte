@@ -5,6 +5,7 @@
 	import { createFormatDateCN, isDifferentDay } from '$lib/shared/utils/date';
 	import { calculateReadingTime, createFormatReadingTime } from '$lib/shared/utils/reading-time';
 	import { page } from '$app/state';
+	import { createTranslateFn } from '$lib/i18n/server';
 	import { ArrowLeft, Calendar, Clock } from 'lucide-svelte';
 	import Icon from '@iconify/svelte';
 	import Button from '$lib/ui/primitives/button/Button.svelte';
@@ -21,7 +22,7 @@
 		(data) => data?.contentUpdatedAt ?? ''
 	);
 	const contentStore = postDetailCtx.selectModelData((data) => data?.content ?? '');
-	const t = $derived(page.data.t);
+	const t = $derived(createTranslateFn(page.data.translations ?? {}));
 	const formatDateCN = $derived(createFormatDateCN(t));
 	const formatReadingTime = $derived(createFormatReadingTime(t));
 	const showUpdated = $derived(isDifferentDay($createdAtStore, $contentUpdatedAtStore));

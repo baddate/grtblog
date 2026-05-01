@@ -5,10 +5,11 @@
 	import { createFormatRelativeTime } from '$lib/shared/utils/date';
 	import { buildMomentPath } from '$lib/shared/utils/content-path';
 	import { page } from '$app/state';
+	import { createTranslateFn } from '$lib/i18n/server';
 
 	let { moment } = $props<{ moment: MomentSummary }>();
 
-	const t = $derived(page.data.t);
+	const t = $derived(createTranslateFn(page.data.translations ?? {}));
 	const formatRelativeTime = $derived(createFormatRelativeTime(t));
 
 	let mouseX = $state('50%');

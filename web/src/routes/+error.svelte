@@ -3,11 +3,12 @@
 	import { page } from '$app/state';
 	import { resolvePath } from '$lib/shared/utils/resolve-path';
 	import { ArrowLeft, Compass, RefreshCw } from 'lucide-svelte';
+	import { createTranslateFn } from '$lib/i18n/server';
 
 	const status = $derived(page.status);
 	const error = $derived(page.error);
 
-	const t = $derived(page.data.t);
+	const t = $derived(createTranslateFn(page.data?.translations ?? {}));
 	const isNotFound = $derived(status === 404);
 	const title = $derived(isNotFound ? t('web.error.page_not_found_title') : t('web.error.server_error_title'));
 	const summary = $derived(

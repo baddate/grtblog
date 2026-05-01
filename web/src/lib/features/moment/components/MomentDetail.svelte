@@ -10,10 +10,11 @@
 	import { detailHeroBgSrc } from '$lib/shared/stores/detailHeroBg';
 	import { page } from '$app/state';
 	import { onDestroy } from 'svelte';
+	import { createTranslateFn } from '$lib/i18n/server';
 
 	let { moment }: { moment: MomentDetail } = $props();
 
-	const t = $derived(page.data.t);
+	const t = $derived(createTranslateFn(page.data.translations ?? {}));
 
 	const dateStr = $derived(formatDateDotted(moment.createdAt));
 	const dateNo = $derived(formatDateCompact(moment.createdAt));

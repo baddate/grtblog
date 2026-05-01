@@ -5,10 +5,11 @@
 	import { createFormatRelativeTime } from '$lib/shared/utils/date';
 	import { buildPostPath } from '$lib/shared/utils/content-path';
 	import { page } from '$app/state';
+	import { createTranslateFn } from '$lib/i18n/server';
 
 	let { post } = $props<{ post: PostSummary }>();
 
-	const t = $derived(page.data.t);
+	const t = $derived(createTranslateFn(page.data.translations ?? {}));
 	const formatRelativeTime = $derived(createFormatRelativeTime(t));
 
 	let mouseX = $state('50%');
