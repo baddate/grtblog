@@ -8,10 +8,10 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	mediaapp "github.com/grtsinry43/grtblog-v2/server/internal/app/media"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/media"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	mediaapp "github.com/baddate/sanblog-v2/server/internal/app/media"
+	"github.com/baddate/sanblog-v2/server/internal/domain/media"
+	"github.com/baddate/sanblog-v2/server/internal/http/contract"
+	"github.com/baddate/sanblog-v2/server/internal/http/response"
 )
 
 type UploadHandler struct {

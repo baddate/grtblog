@@ -2,7 +2,7 @@
 
 ## 为什么从 v1 到 v2？
 
-GrtBlog v1 基于 **Spring Boot (Java 17) + Next.js 15 + Umi.js 4** 构建，另有 Python 推荐服务、Elasticsearch、MongoDB 等多个组件。在一年多的迭代中，系统积累了以下问题：
+sanblog v1 基于 **Spring Boot (Java 17) + Next.js 15 + Umi.js 4** 构建，另有 Python 推荐服务、Elasticsearch、MongoDB 等多个组件。在一年多的迭代中，系统积累了以下问题：
 
 ### v1 的痛点
 
@@ -39,7 +39,7 @@ v2 不是简单重写，而是基于 v1 所有经验的架构重新设计：
 
 ## 注水静态架构 (Rehydrated Static Architecture)
 
-GrtBlog v2 的核心架构在静态站点的极致性能和动态应用的实时交互之间取得平衡：
+sanblog v2 的核心架构在静态站点的极致性能和动态应用的实时交互之间取得平衡：
 
 1. **静态先行 (Static First)** - 所有公开页面默认为纯静态 HTML，由 Nginx 直接分发，实现极致首屏速度与 0 CPU 占用
 2. **增量生成 (Incremental Generation)** - 仅在内容变更时，由 Go 控制平面驱动 SvelteKit 渲染器生成受影响的页面
@@ -176,12 +176,12 @@ Go 异步触发静态文件重新生成（为后来者服务）
 
 ### 自有联合协议（核心）
 
-GrtBlog 定义了自有的联合协议，用于 GrtBlog 实例之间以及与支持该协议的平台之间的内容分发、订阅和互动。这是 GrtBlog 社交能力的核心基础。
+sanblog 定义了自有的联合协议，用于 sanblog 实例之间以及与支持该协议的平台之间的内容分发、订阅和互动。这是 sanblog 社交能力的核心基础。
 
 ### ActivityPub 兼容（兼容层）
 
-为了让博客能融入更广泛的 Fediverse 生态，GrtBlog 同时兼容 ActivityPub 协议。Mastodon、Misskey 等平台的用户可以通过 ActivityPub 关注博客、接收更新。
+为了让博客能融入更广泛的 Fediverse 生态，sanblog 同时兼容 ActivityPub 协议。Mastodon、Misskey 等平台的用户可以通过 ActivityPub 关注博客、接收更新。
 
 ::: info 设计定位
-联合协议是 GrtBlog 的「一等公民」，ActivityPub 是「兼容适配器」。两者在后端有独立的模块（`union` / `federation`），在管理后台也分别独立配置。
+联合协议是 sanblog 的「一等公民」，ActivityPub 是「兼容适配器」。两者在后端有独立的模块（`union` / `federation`），在管理后台也分别独立配置。
 :::

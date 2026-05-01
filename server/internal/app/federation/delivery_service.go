@@ -13,10 +13,10 @@ import (
 
 	"github.com/google/uuid"
 
-	appEvent "github.com/grtsinry43/grtblog-v2/server/internal/app/event"
-	domainfed "github.com/grtsinry43/grtblog-v2/server/internal/domain/federation"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/social"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
+	appEvent "github.com/baddate/sanblog-v2/server/internal/app/event"
+	domainfed "github.com/baddate/sanblog-v2/server/internal/domain/federation"
+	"github.com/baddate/sanblog-v2/server/internal/domain/social"
+	"github.com/baddate/sanblog-v2/server/internal/http/contract"
 )
 
 type CallbackResultCmd struct {
@@ -29,7 +29,7 @@ type CallbackResultCmd struct {
 }
 
 var (
-	ErrTargetInstanceEmpty            = errors.New("target instance is empty")
+	ErrTargetInstanceEmpty           = errors.New("target instance is empty")
 	ErrTargetFriendLinkNotFederation = errors.New("target friend link is not federation type")
 	ErrFederationInstanceNotBound    = errors.New("federation instance not bound")
 	ErrFederationInstanceNotActive   = errors.New("federation instance not active")
@@ -447,4 +447,3 @@ func (s *DeliveryService) resolveCitationTarget(ctx context.Context, target stri
 	}
 	return "unknown"
 }
-

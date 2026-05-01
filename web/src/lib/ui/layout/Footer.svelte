@@ -207,8 +207,8 @@
 				<div class="flex flex-wrap justify-center md:justify-start gap-x-3 mt-1">
 					<span class="hidden md:inline"
 						>Powered by <a
-							href="https://grtblog.js.org/"
-							class="text-jade-500 hover:text-jade-600 transition-colors">Grtblog-v2</a
+							href="https://sanblog.js.org/"
+							class="text-jade-500 hover:text-jade-600 transition-colors">Sanblog-v2</a
 						></span
 					>
 					{#if uptimeText}

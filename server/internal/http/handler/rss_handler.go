@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"github.com/aclr/feeds"
+	apprss "github.com/baddate/sanblog-v2/server/internal/app/rss"
+	"github.com/baddate/sanblog-v2/server/internal/buildinfo"
 	"github.com/gofiber/fiber/v2"
-	apprss "github.com/grtsinry43/grtblog-v2/server/internal/app/rss"
-	"github.com/grtsinry43/grtblog-v2/server/internal/buildinfo"
 )
 
 type RSSHandler struct {
@@ -91,7 +91,7 @@ func (h *RSSHandler) GetFeed(c *fiber.Ctx) error {
 
 	channel := (&feeds.Rss{Feed: rssFeed}).RssFeed()
 	channel.Language = "zh-CN"
-	channel.Generator = "grtblog v" + buildinfo.Version()
+	channel.Generator = "sanblog v" + buildinfo.Version()
 	output, err := feeds.ToXML(channel)
 	if err != nil {
 		return err

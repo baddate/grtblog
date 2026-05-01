@@ -6,10 +6,10 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	appfed "github.com/grtsinry43/grtblog-v2/server/internal/app/federation"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
-	fedinfra "github.com/grtsinry43/grtblog-v2/server/internal/infra/federation"
+	appfed "github.com/baddate/sanblog-v2/server/internal/app/federation"
+	"github.com/baddate/sanblog-v2/server/internal/http/contract"
+	"github.com/baddate/sanblog-v2/server/internal/http/response"
+	fedinfra "github.com/baddate/sanblog-v2/server/internal/infra/federation"
 )
 
 type FederationOutboundResultHandler struct {

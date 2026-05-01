@@ -80,7 +80,7 @@ const connectWs = async () => {
     ws.value.close(1000, 'refresh')
   }
 
-  ws.value = new WebSocket(wsUrl, ['grtblog.jwt', jwt])
+  ws.value = new WebSocket(wsUrl, ['sanblog.jwt', jwt])
 
   ws.value.onopen = () => {
     reconnectAttempts.value = 0

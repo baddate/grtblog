@@ -108,8 +108,8 @@ const {
   cleanup,
 } = usePreviewFrame({
   previewPath: '/internal/preview/moment',
-  readyType: 'grtblog-preview:ready',
-  postType: 'grtblog-preview:moment',
+  readyType: 'sanblog-preview:ready',
+  postType: 'sanblog-preview:moment',
   buildPayload: buildPreviewPayload,
   message,
 })

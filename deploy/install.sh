@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
-# GrtBlog v2 — One-Click Deployment Script
-# https://github.com/grtsinry43/grtblog
+# sanblog v2 — One-Click Deployment Script
+# https://github.com/baddate/sanblog
 #
 # Usage:
-#   bash <(curl -fsSL https://raw.githubusercontent.com/grtsinry43/grtblog/main/deploy/install.sh)
+#   bash <(curl -fsSL https://raw.githubusercontent.com/baddate/sanblog/main/deploy/install.sh)
 #   # China:
-#   bash <(curl -fsSL https://cnb.cool/grtsinry43/grtblog/-/git/raw/main/deploy/install.sh)
+#   bash <(curl -fsSL https://cnb.cool/baddate/sanblog/-/git/raw/main/deploy/install.sh)
 #
 # Non-interactive:
-#   GRTBLOG_NONINTERACTIVE=1 APP_VERSION=2.0.2 \
-#     IMAGE_REPO_PREFIX=docker.cnb.cool/grtsinry43/grtblog/ \
+#   sanblog_NONINTERACTIVE=1 APP_VERSION=2.0.2 \
+#     IMAGE_REPO_PREFIX=docker.cnb.cool/baddate/sanblog/ \
 #     bash <(curl -fsSL ...)
 set -euo pipefail
-trap 'printf "\n  \033[1;31m✗\033[0m Script failed at line %d (exit code %d).\n    Please report this issue: https://github.com/grtsinry43/grtblog/issues\n" "$LINENO" "$?" >&2' ERR
+trap 'printf "\n  \033[1;31m✗\033[0m Script failed at line %d (exit code %d).\n    Please report this issue: https://github.com/baddate/sanblog/issues\n" "$LINENO" "$?" >&2' ERR
 
 # ---------------------------------------------------------------------------
 # Output helpers (matches scripts/release.sh conventions)
@@ -55,7 +55,7 @@ prompt_value() {
 # ---------------------------------------------------------------------------
 # Utilities
 # ---------------------------------------------------------------------------
-NONINTERACTIVE="${GRTBLOG_NONINTERACTIVE:-0}"
+NONINTERACTIVE="${sanblog_NONINTERACTIVE:-0}"
 
 ask() {
   # ask "prompt" default_value variable_name
@@ -165,7 +165,7 @@ random_hex() {
 # ---------------------------------------------------------------------------
 # i18n — Chinese / English bilingual support
 # ---------------------------------------------------------------------------
-LANG_CODE="${GRTBLOG_LANG:-}"
+LANG_CODE="${sanblog_LANG:-}"
 
 __() {
   # __ KEY — prints the localized string for KEY
@@ -397,13 +397,13 @@ NGINX_PORT="${NGINX_PORT:-80}"
 POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-}"
 AUTH_SECRET="${AUTH_SECRET:-}"
 
-GITHUB_RAW_BASE="https://raw.githubusercontent.com/grtsinry43/grtblog/main"
-CNB_RAW_BASE="https://cnb.cool/grtsinry43/grtblog/-/git/raw/main"
+GITHUB_RAW_BASE="https://raw.githubusercontent.com/baddate/sanblog/main"
+CNB_RAW_BASE="https://cnb.cool/baddate/sanblog/-/git/raw/main"
 CONFIG_BASE_URL=""
 
-REPO_DOCKERHUB="grtsinry43/"
-REPO_GHCR="ghcr.io/grtsinry43/"
-REPO_CNB="docker.cnb.cool/grtsinry43/grtblog/"
+REPO_DOCKERHUB="baddate/"
+REPO_GHCR="ghcr.io/baddate/"
+REPO_CNB="docker.cnb.cool/baddate/sanblog/"
 
 # =========================================================================
 # Step 1: Environment Check
@@ -579,7 +579,7 @@ if [[ -z "$APP_VERSION" ]]; then
 
   if [[ "$APP_UPDATE_CHANNEL" == "stable" ]]; then
     info "$(__ FETCH_STABLE)"
-    API_RESPONSE="$(http_get_stdout "https://api.github.com/repos/grtsinry43/grtblog/releases/latest" || true)"
+    API_RESPONSE="$(http_get_stdout "https://api.github.com/repos/baddate/sanblog/releases/latest" || true)"
     if [[ -n "$API_RESPONSE" ]]; then
       FETCHED_VERSION="$(printf '%s' "$API_RESPONSE" | grep '"tag_name"' | sed 's/.*"tag_name"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/' | head -n1)"
       # Strip leading 'v' if present
@@ -587,7 +587,7 @@ if [[ -z "$APP_VERSION" ]]; then
     fi
   else
     info "$(__ FETCH_PREVIEW)"
-    API_RESPONSE="$(http_get_stdout "https://api.github.com/repos/grtsinry43/grtblog/git/refs/tags" || true)"
+    API_RESPONSE="$(http_get_stdout "https://api.github.com/repos/baddate/sanblog/git/refs/tags" || true)"
     if [[ -n "$API_RESPONSE" ]]; then
       # Find all tags with pre-release suffixes, pick the last one
       FETCHED_VERSION="$(printf '%s' "$API_RESPONSE" | grep '"ref"' | grep -E '(alpha|beta|rc)' | sed 's/.*refs\/tags\/v\{0,1\}\([^"]*\)".*/\1/' | tail -n1)"
@@ -596,7 +596,7 @@ if [[ -z "$APP_VERSION" ]]; then
     # If no preview found, fall back to latest stable
     if [[ -z "$FETCHED_VERSION" ]]; then
       warn "$(__ FETCH_FALLBACK)"
-      API_RESPONSE="$(http_get_stdout "https://api.github.com/repos/grtsinry43/grtblog/releases/latest" || true)"
+      API_RESPONSE="$(http_get_stdout "https://api.github.com/repos/baddate/sanblog/releases/latest" || true)"
       if [[ -n "$API_RESPONSE" ]]; then
         FETCHED_VERSION="$(printf '%s' "$API_RESPONSE" | grep '"tag_name"' | sed 's/.*"tag_name"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/' | head -n1)"
         FETCHED_VERSION="${FETCHED_VERSION#v}"
@@ -754,22 +754,22 @@ DOCKER_MIRROR=${DOCKER_MIRROR}
 
 NGINX_PORT=${NGINX_PORT}
 
-POSTGRES_DB=grtblog
+POSTGRES_DB=sanblog
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
 REDIS_PASSWORD=
-REDIS_PREFIX=grtblog:
+REDIS_PREFIX=sanblog:
 
 AUTH_SECRET=${AUTH_SECRET}
 
 APP_UPDATE_CHECK_ENABLED=true
-APP_UPDATE_CHECK_REPO=grtsinry43/grtblog-v2
+APP_UPDATE_CHECK_REPO=baddate/sanblog-v2
 APP_UPDATE_CHANNEL=${APP_UPDATE_CHANNEL}
 
 # Admin panel (build-time, baked into JS bundle)
 VITE_APP_BASE=/admin/
-VITE_APP_NAME=Grtblog Admin
+VITE_APP_NAME=Sanblog Admin
 VITE_APP_TITLE=管理后台
 VITE_WATERMARK_CONTENT=
 VITE_API_BASE_URL=/api/v2
@@ -863,5 +863,5 @@ printf '\n'
 info "$(__ UPGRADE_LATER)"
 info "  bash <(curl -fsSL ${CONFIG_BASE_URL}/deploy/install.sh)"
 printf '\n'
-info "$(__ DOCS): https://github.com/grtsinry43/grtblog"
+info "$(__ DOCS): https://github.com/baddate/sanblog"
 ok "$(__ DONE)"

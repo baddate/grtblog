@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/content"
+	"github.com/baddate/sanblog-v2/server/internal/domain/content"
 )
 
 type CategoryService struct {

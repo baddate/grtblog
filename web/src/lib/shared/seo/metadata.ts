@@ -36,9 +36,9 @@ type PageMeta = {
 	ogType?: string;
 };
 
-const DEFAULT_SITE_NAME = 'grtBlog';
+const DEFAULT_SITE_NAME = 'sanblog';
 const DEFAULT_DESCRIPTION =
-	'grtBlog - A personal blog about programming, technology, and software development.';
+	'sanblog - A personal blog about programming, technology, and software development.';
 const DEFAULT_KEYWORDS =
 	'blog, programming, technology, software development, web development, coding';
 const GENERATED_OG_IMAGE_WIDTH = 1200;

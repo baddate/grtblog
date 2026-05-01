@@ -9,15 +9,17 @@ import (
 	"strings"
 	"time"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/sysconfig"
-	domainconfig "github.com/grtsinry43/grtblog-v2/server/internal/domain/config"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/identity"
+	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
+	domainconfig "github.com/baddate/sanblog-v2/server/internal/domain/config"
+	"github.com/baddate/sanblog-v2/server/internal/domain/identity"
 )
 
 const setupMarkerFileName = ".setupdone"
 
 // Each completed guide is stored as an independent bool key:
-//   system.upgrade_guide.2.1.completed = "true"
+//
+//	system.upgrade_guide.2.1.completed = "true"
+//
 // This avoids read-modify-write races on a shared JSON array.
 const (
 	upgradeGuideKeyPrefix = "system.upgrade_guide."

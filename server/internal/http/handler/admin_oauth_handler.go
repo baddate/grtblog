@@ -6,9 +6,9 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/identity"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
-	"github.com/grtsinry43/grtblog-v2/server/internal/infra/persistence"
+	"github.com/baddate/sanblog-v2/server/internal/domain/identity"
+	"github.com/baddate/sanblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog-v2/server/internal/infra/persistence"
 	"gorm.io/gorm"
 )
 

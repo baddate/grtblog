@@ -25,7 +25,7 @@
 	};
 
 	const defaultNowItems = [
-		{ id: 'coding', label: 'Coding', value: 'grtblog-v2', icon: 'code2' as const },
+		{ id: 'coding', label: 'Coding', value: 'sanblog-v2', icon: 'code2' as const },
 		{
 			id: 'reading',
 			label: 'Reading',

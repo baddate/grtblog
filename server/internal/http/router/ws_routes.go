@@ -10,9 +10,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/websocket/v2"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/handler"
-	"github.com/grtsinry43/grtblog-v2/server/internal/infra/persistence"
-	"github.com/grtsinry43/grtblog-v2/server/internal/ws"
+	"github.com/baddate/sanblog-v2/server/internal/http/handler"
+	"github.com/baddate/sanblog-v2/server/internal/infra/persistence"
+	"github.com/baddate/sanblog-v2/server/internal/ws"
 )
 
 // wsIPLimiter tracks per-IP WebSocket connection counts.
@@ -122,7 +122,7 @@ func registerWSRoutes(v2 fiber.Router, manager *ws.Manager, deps Dependencies) {
 		return c.Next()
 	})
 	v2.Get("/ws/realtime", websocket.New(wsHandler.HandleRealtime, websocket.Config{
-		Subprotocols: []string{"grtblog.jwt"},
+		Subprotocols: []string{"sanblog.jwt"},
 	}))
 
 	v2.Use("/ws/presence", func(c *fiber.Ctx) error {
@@ -179,7 +179,7 @@ func registerWSRoutes(v2 fiber.Router, manager *ws.Manager, deps Dependencies) {
 		return c.Next()
 	})
 	v2.Get("/ws/notifications", websocket.New(wsHandler.HandleNotification, websocket.Config{
-		Subprotocols: []string{"grtblog.jwt"},
+		Subprotocols: []string{"sanblog.jwt"},
 	}))
 }
 
@@ -212,7 +212,7 @@ func extractWSJWTToken(c *fiber.Ctx) string {
 	}
 
 	protocols := splitHeaderTokens(c.Get("Sec-WebSocket-Protocol"))
-	if len(protocols) >= 2 && strings.EqualFold(protocols[0], "grtblog.jwt") {
+	if len(protocols) >= 2 && strings.EqualFold(protocols[0], "sanblog.jwt") {
 		return protocols[1]
 	}
 

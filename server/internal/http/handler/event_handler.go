@@ -5,9 +5,9 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	appEvent "github.com/grtsinry43/grtblog-v2/server/internal/app/event"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	appEvent "github.com/baddate/sanblog-v2/server/internal/app/event"
+	"github.com/baddate/sanblog-v2/server/internal/http/contract"
+	"github.com/baddate/sanblog-v2/server/internal/http/response"
 )
 
 type EventHandler struct{}

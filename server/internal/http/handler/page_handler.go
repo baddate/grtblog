@@ -5,13 +5,13 @@ import (
 	"errors"
 	"strconv"
 
+	"github.com/baddate/sanblog-v2/server/internal/app/page"
+	domaincomment "github.com/baddate/sanblog-v2/server/internal/domain/comment"
+	"github.com/baddate/sanblog-v2/server/internal/domain/content"
+	"github.com/baddate/sanblog-v2/server/internal/http/contract"
+	"github.com/baddate/sanblog-v2/server/internal/http/middleware"
+	"github.com/baddate/sanblog-v2/server/internal/http/response"
 	"github.com/gofiber/fiber/v2"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/page"
-	domaincomment "github.com/grtsinry43/grtblog-v2/server/internal/domain/comment"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/content"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/middleware"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
 )
 
 type PageHandler struct {

@@ -15,4 +15,4 @@ echo "[entrypoint] Running database migrations..."
 goose -table public.goose_db_version -dir /app/migrations postgres "$DB_DSN" up
 echo "[entrypoint] Migrations complete."
 
-exec su-exec app /app/grtblog-server
+exec su-exec app /app/sanblog-server

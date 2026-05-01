@@ -5,15 +5,15 @@ import (
 	"errors"
 	"strconv"
 
+	"github.com/baddate/sanblog-v2/server/internal/http/middleware"
 	"github.com/gofiber/fiber/v2"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/middleware"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/thinking"
-	domaincomment "github.com/grtsinry43/grtblog-v2/server/internal/domain/comment"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/identity"
-	domainthinking "github.com/grtsinry43/grtblog-v2/server/internal/domain/thinking"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog-v2/server/internal/app/thinking"
+	domaincomment "github.com/baddate/sanblog-v2/server/internal/domain/comment"
+	"github.com/baddate/sanblog-v2/server/internal/domain/identity"
+	domainthinking "github.com/baddate/sanblog-v2/server/internal/domain/thinking"
+	"github.com/baddate/sanblog-v2/server/internal/http/contract"
+	"github.com/baddate/sanblog-v2/server/internal/http/response"
 )
 
 type ThinkingHandler struct {

@@ -9,10 +9,10 @@ HOST="${HOST:-0.0.0.0}"
 
 cat <<EOF
 ================================================================
-> grtblog renderer ${APP_VERSION} (${BUILD_COMMIT})
+> sanblog renderer ${APP_VERSION} (${BUILD_COMMIT})
 > 不仅是博客，也是全新的内容基础设施。
 
-by @grtsinry43 · github.com/grtsinry43
+by @baddate · github.com/baddate
 “代码是写给人看的，顺便在机器上运行的。”
 
 - 渲染模式: SvelteKit adapter-node (SSR)

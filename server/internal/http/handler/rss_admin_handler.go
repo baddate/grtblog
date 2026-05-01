@@ -3,8 +3,8 @@ package handler
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/rss"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog-v2/server/internal/app/rss"
+	"github.com/baddate/sanblog-v2/server/internal/http/response"
 )
 
 type RSSAdminHandler struct {

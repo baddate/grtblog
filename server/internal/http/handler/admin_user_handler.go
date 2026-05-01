@@ -7,11 +7,11 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/adminuser"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/identity"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/middleware"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog-v2/server/internal/app/adminuser"
+	"github.com/baddate/sanblog-v2/server/internal/domain/identity"
+	"github.com/baddate/sanblog-v2/server/internal/http/contract"
+	"github.com/baddate/sanblog-v2/server/internal/http/middleware"
+	"github.com/baddate/sanblog-v2/server/internal/http/response"
 )
 
 type AdminUserHandler struct {

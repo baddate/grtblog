@@ -1,7 +1,7 @@
 GOOSE ?= goose
 GOOSE_DRIVER ?= postgres
 MIGRATIONS_DIR ?= migrations
-DB_DSN ?= postgres://postgres:postgres@localhost:5432/grtblog?sslmode=disable
+DB_DSN ?= postgres://postgres:postgres@localhost:5432/sanblog?sslmode=disable
 SWAG ?= swag
 SWAG_ENTRY ?= cmd/api/main.go
 SWAG_OUT ?= docs

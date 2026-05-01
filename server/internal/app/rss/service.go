@@ -9,10 +9,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/sysconfig"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/content"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/identity"
-	domainthinking "github.com/grtsinry43/grtblog-v2/server/internal/domain/thinking"
+	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
+	"github.com/baddate/sanblog-v2/server/internal/domain/content"
+	"github.com/baddate/sanblog-v2/server/internal/domain/identity"
+	domainthinking "github.com/baddate/sanblog-v2/server/internal/domain/thinking"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
 )

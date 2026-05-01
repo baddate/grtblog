@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 
-import { mkdir, rm, writeFile } from 'node:fs/promises';
-import path from 'node:path';
-import process from 'node:process';
+import { mkdir, rm, writeFile } from "node:fs/promises";
+import path from "node:path";
+import process from "node:process";
 
-const DEFAULT_API_BASE_URL = 'http://localhost:8080/api/v2';
-const DEFAULT_OUTPUT_DIR = 'exports/grtblog-content';
-const STRUCTURED_DIRNAME = 'site-root';
-const FLATTEN_DIRNAME = 'site-flatten';
+const DEFAULT_API_BASE_URL = "http://localhost:8080/api/v2";
+const DEFAULT_OUTPUT_DIR = "exports/sanblog-content";
+const STRUCTURED_DIRNAME = "site-root";
+const FLATTEN_DIRNAME = "site-flatten";
 const DEFAULT_PAGE_SIZE = 100;
 const DEFAULT_CONCURRENCY = 6;
 
 function printHelp() {
-  console.log(`导出 GrtBlog 内容到本地文件夹
+  console.log(`导出 sanblog 内容到本地文件夹
 
 用法：
   node scripts/export-blog-content.mjs --base-url https://your-blog.com --token gt_xxx
@@ -30,8 +30,8 @@ function printHelp() {
 
 环境变量：
   GT_TOKEN             等价于 --token
-  GRTBLOG_TOKEN        等价于 --token
-  GRTBLOG_BASE_URL     等价于 --base-url
+  sanblog_TOKEN        等价于 --token
+  sanblog_BASE_URL     等价于 --base-url
 
 导出内容：
   - articles -> posts/<slug>/
@@ -48,10 +48,10 @@ function printHelp() {
 
 function parseArgs(argv) {
   const parsed = {
-    baseUrl: process.env.GRTBLOG_BASE_URL || DEFAULT_API_BASE_URL,
-    token: process.env.GT_TOKEN || process.env.GRTBLOG_TOKEN || '',
+    baseUrl: process.env.sanblog_BASE_URL || DEFAULT_API_BASE_URL,
+    token: process.env.GT_TOKEN || process.env.sanblog_TOKEN || "",
     output: DEFAULT_OUTPUT_DIR,
-    mode: 'structured',
+    mode: "structured",
     pageSize: DEFAULT_PAGE_SIZE,
     concurrency: DEFAULT_CONCURRENCY,
     clean: false,
@@ -61,45 +61,51 @@ function parseArgs(argv) {
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
 
-    if (arg === '--help' || arg === '-h') {
+    if (arg === "--help" || arg === "-h") {
       parsed.help = true;
       continue;
     }
-    if (arg === '--clean') {
+    if (arg === "--clean") {
       parsed.clean = true;
       continue;
     }
-    if (arg === '--flatten') {
-      parsed.mode = 'flatten';
+    if (arg === "--flatten") {
+      parsed.mode = "flatten";
       continue;
     }
-    if (arg === '--base-url') {
-      parsed.baseUrl = argv[index + 1] || '';
+    if (arg === "--base-url") {
+      parsed.baseUrl = argv[index + 1] || "";
       index += 1;
       continue;
     }
-    if (arg === '--token') {
-      parsed.token = argv[index + 1] || '';
+    if (arg === "--token") {
+      parsed.token = argv[index + 1] || "";
       index += 1;
       continue;
     }
-    if (arg === '--output') {
+    if (arg === "--output") {
       parsed.output = argv[index + 1] || DEFAULT_OUTPUT_DIR;
       index += 1;
       continue;
     }
-    if (arg === '--mode') {
-      parsed.mode = argv[index + 1] || 'structured';
+    if (arg === "--mode") {
+      parsed.mode = argv[index + 1] || "structured";
       index += 1;
       continue;
     }
-    if (arg === '--page-size') {
-      parsed.pageSize = Number.parseInt(argv[index + 1] || `${DEFAULT_PAGE_SIZE}`, 10);
+    if (arg === "--page-size") {
+      parsed.pageSize = Number.parseInt(
+        argv[index + 1] || `${DEFAULT_PAGE_SIZE}`,
+        10,
+      );
       index += 1;
       continue;
     }
-    if (arg === '--concurrency') {
-      parsed.concurrency = Number.parseInt(argv[index + 1] || `${DEFAULT_CONCURRENCY}`, 10);
+    if (arg === "--concurrency") {
+      parsed.concurrency = Number.parseInt(
+        argv[index + 1] || `${DEFAULT_CONCURRENCY}`,
+        10,
+      );
       index += 1;
       continue;
     }
@@ -110,13 +116,13 @@ function parseArgs(argv) {
 }
 
 function normalizeToken(token) {
-  return token.replace(/^Bearer\s+/i, '').trim();
+  return token.replace(/^Bearer\s+/i, "").trim();
 }
 
 function normalizeApiBaseUrl(input) {
-  const trimmed = input.trim().replace(/\/$/, '');
+  const trimmed = input.trim().replace(/\/$/, "");
   if (!trimmed) {
-    throw new Error('缺少 --base-url，示例: https://your-blog.com');
+    throw new Error("缺少 --base-url，示例: https://your-blog.com");
   }
 
   let url;
@@ -126,12 +132,12 @@ function normalizeApiBaseUrl(input) {
     throw new Error(`无效的 base url: ${input}`);
   }
 
-  if (url.pathname.endsWith('/api/v2')) {
-    return url.toString().replace(/\/$/, '');
+  if (url.pathname.endsWith("/api/v2")) {
+    return url.toString().replace(/\/$/, "");
   }
 
-  url.pathname = `${url.pathname.replace(/\/$/, '')}/api/v2`;
-  return url.toString().replace(/\/$/, '');
+  url.pathname = `${url.pathname.replace(/\/$/, "")}/api/v2`;
+  return url.toString().replace(/\/$/, "");
 }
 
 function ensurePositiveInteger(value, label) {
@@ -141,19 +147,19 @@ function ensurePositiveInteger(value, label) {
 }
 
 function normalizeMode(mode) {
-  const normalized = `${mode ?? ''}`.trim().toLowerCase();
-  if (normalized === 'structured' || normalized === 'flatten') {
+  const normalized = `${mode ?? ""}`.trim().toLowerCase();
+  if (normalized === "structured" || normalized === "flatten") {
     return normalized;
   }
-  throw new Error('mode 只支持 structured 或 flatten');
+  throw new Error("mode 只支持 structured 或 flatten");
 }
 
 function buildUrl(baseUrl, pathname, query = {}) {
-  const normalizedPath = pathname.startsWith('/') ? pathname : `/${pathname}`;
+  const normalizedPath = pathname.startsWith("/") ? pathname : `/${pathname}`;
   const url = new URL(`${baseUrl}${normalizedPath}`);
 
   for (const [key, value] of Object.entries(query)) {
-    if (value === undefined || value === null || value === '') continue;
+    if (value === undefined || value === null || value === "") continue;
     url.searchParams.set(key, String(value));
   }
 
@@ -162,14 +168,14 @@ function buildUrl(baseUrl, pathname, query = {}) {
 
 async function apiRequest(baseUrl, token, pathname, { query } = {}) {
   const headers = new Headers();
-  headers.set('Accept', 'application/json');
+  headers.set("Accept", "application/json");
   if (token) {
-    headers.set('Authorization', `Bearer ${token}`);
+    headers.set("Authorization", `Bearer ${token}`);
   }
 
   const url = buildUrl(baseUrl, pathname, query);
   const response = await fetch(url, {
-    method: 'GET',
+    method: "GET",
     headers,
   });
 
@@ -185,22 +191,31 @@ async function apiRequest(baseUrl, token, pathname, { query } = {}) {
   }
 
   if (!response.ok) {
-    const message = payload?.msg || payload?.message || `请求失败 (${response.status})`;
+    const message =
+      payload?.msg || payload?.message || `请求失败 (${response.status})`;
     throw new Error(`${message}: ${url}`);
   }
 
-  if (!payload || typeof payload !== 'object') {
+  if (!payload || typeof payload !== "object") {
     throw new Error(`接口响应为空: ${url}`);
   }
 
   if (payload.code !== 0) {
-    throw new Error(`${payload.msg || payload.bizErr || '业务请求失败'}: ${url}`);
+    throw new Error(
+      `${payload.msg || payload.bizErr || "业务请求失败"}: ${url}`,
+    );
   }
 
   return payload.data;
 }
 
-async function paginateAll(baseUrl, token, pathname, pageSize, extraQuery = {}) {
+async function paginateAll(
+  baseUrl,
+  token,
+  pathname,
+  pageSize,
+  extraQuery = {},
+) {
   const items = [];
   let page = 1;
   let total = Number.POSITIVE_INFINITY;
@@ -215,11 +230,16 @@ async function paginateAll(baseUrl, token, pathname, pageSize, extraQuery = {}) 
     });
 
     const pageItems = Array.isArray(data?.items) ? data.items : [];
-    const reportedTotal = typeof data?.total === 'number' ? data.total : items.length + pageItems.length;
+    const reportedTotal =
+      typeof data?.total === "number"
+        ? data.total
+        : items.length + pageItems.length;
     total = reportedTotal;
     items.push(...pageItems);
 
-    console.log(`[list] ${pathname} page=${page} fetched=${pageItems.length} total=${reportedTotal}`);
+    console.log(
+      `[list] ${pathname} page=${page} fetched=${pageItems.length} total=${reportedTotal}`,
+    );
 
     if (pageItems.length === 0 || pageItems.length < pageSize) {
       break;
@@ -232,11 +252,11 @@ async function paginateAll(baseUrl, token, pathname, pageSize, extraQuery = {}) 
 }
 
 function pad2(value) {
-  return String(value).padStart(2, '0');
+  return String(value).padStart(2, "0");
 }
 
 function parseDateParts(value) {
-  if (typeof value === 'string') {
+  if (typeof value === "string") {
     const matched = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
     if (matched) {
       return {
@@ -250,9 +270,9 @@ function parseDateParts(value) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) {
     return {
-      year: '0000',
-      month: '00',
-      day: '00',
+      year: "0000",
+      month: "00",
+      day: "00",
     };
   }
 
@@ -264,31 +284,33 @@ function parseDateParts(value) {
 }
 
 function safeSegment(value, fallback) {
-  const raw = `${value ?? ''}`.trim();
+  const raw = `${value ?? ""}`.trim();
   if (!raw) return fallback;
   return encodeURIComponent(raw);
 }
 
 function safeFileSegment(value, fallback) {
-  const raw = `${value ?? ''}`.trim();
+  const raw = `${value ?? ""}`.trim();
   if (!raw) return fallback;
-  return raw
-    .replace(/[\\/:*?"<>|]/g, '-')
-    .replace(/\s+/g, ' ')
-    .replace(/^\.+|\.+$/g, '')
-    .slice(0, 120)
-    .trim() || fallback;
+  return (
+    raw
+      .replace(/[\\/:*?"<>|]/g, "-")
+      .replace(/\s+/g, " ")
+      .replace(/^\.+|\.+$/g, "")
+      .slice(0, 120)
+      .trim() || fallback
+  );
 }
 
 function toPosixPath(parts) {
-  return parts.join('/');
+  return parts.join("/");
 }
 
 function buildArticleExport(detail) {
   const slug = safeSegment(detail.shortUrl, `article-${detail.id}`);
-  const dirParts = [STRUCTURED_DIRNAME, 'posts', slug];
+  const dirParts = [STRUCTURED_DIRNAME, "posts", slug];
   return {
-    kind: 'article',
+    kind: "article",
     id: detail.id,
     routePath: `/posts/${slug}`,
     dirParts,
@@ -299,9 +321,16 @@ function buildArticleExport(detail) {
 function buildMomentExport(detail) {
   const dateParts = parseDateParts(detail.createdAt);
   const slug = safeSegment(detail.shortUrl, `moment-${detail.id}`);
-  const dirParts = [STRUCTURED_DIRNAME, 'moments', dateParts.year, dateParts.month, dateParts.day, slug];
+  const dirParts = [
+    STRUCTURED_DIRNAME,
+    "moments",
+    dateParts.year,
+    dateParts.month,
+    dateParts.day,
+    slug,
+  ];
   return {
-    kind: 'moment',
+    kind: "moment",
     id: detail.id,
     routePath: `/moments/${dateParts.year}/${dateParts.month}/${dateParts.day}/${slug}`,
     dirParts,
@@ -312,9 +341,16 @@ function buildMomentExport(detail) {
 function buildThinkingExport(detail) {
   const dateParts = parseDateParts(detail.createdAt);
   const anchor = `thinking-${detail.id}`;
-  const dirParts = [STRUCTURED_DIRNAME, 'thinkings', dateParts.year, dateParts.month, dateParts.day, anchor];
+  const dirParts = [
+    STRUCTURED_DIRNAME,
+    "thinkings",
+    dateParts.year,
+    dateParts.month,
+    dateParts.day,
+    anchor,
+  ];
   return {
-    kind: 'thinking',
+    kind: "thinking",
     id: detail.id,
     routePath: `/thinkings#${anchor}`,
     dirParts,
@@ -324,9 +360,9 @@ function buildThinkingExport(detail) {
 
 function buildPageExport(detail) {
   const slug = safeSegment(detail.shortUrl, `page-${detail.id}`);
-  const dirParts = [STRUCTURED_DIRNAME, 'pages', slug];
+  const dirParts = [STRUCTURED_DIRNAME, "pages", slug];
   return {
-    kind: 'page',
+    kind: "page",
     id: detail.id,
     routePath: `/${slug}`,
     dirParts,
@@ -335,7 +371,7 @@ function buildPageExport(detail) {
 }
 
 function splitContent(detail) {
-  const { content = '', ...meta } = detail;
+  const { content = "", ...meta } = detail;
   return {
     content,
     meta,
@@ -343,7 +379,7 @@ function splitContent(detail) {
 }
 
 async function writeJson(filepath, value) {
-  await writeFile(filepath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+  await writeFile(filepath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
 async function mapWithConcurrency(items, concurrency, mapper) {
@@ -358,16 +394,21 @@ async function mapWithConcurrency(items, concurrency, mapper) {
     }
   }
 
-  const workers = Array.from({ length: Math.min(concurrency, items.length || 1) }, () => worker());
+  const workers = Array.from(
+    { length: Math.min(concurrency, items.length || 1) },
+    () => worker(),
+  );
   await Promise.all(workers);
   return results;
 }
 
 function buildFlattenFilename(exportInfo, detail) {
   const titleSource =
-    detail.title
-    || (exportInfo.kind === 'thinking' ? String(detail.content || '').split('\n')[0] : '')
-    || `${exportInfo.kind}-${detail.id}`;
+    detail.title ||
+    (exportInfo.kind === "thinking"
+      ? String(detail.content || "").split("\n")[0]
+      : "") ||
+    `${exportInfo.kind}-${detail.id}`;
   const title = safeFileSegment(titleSource, `${exportInfo.kind}-${detail.id}`);
   return `${exportInfo.kind}__${title}__${detail.id}.md`;
 }
@@ -375,7 +416,7 @@ function buildFlattenFilename(exportInfo, detail) {
 function buildFlattenDocument(detail, exportInfo, exportedAt) {
   const { content, meta } = splitContent(detail);
   return [
-    '---meta',
+    "---meta",
     JSON.stringify(
       {
         kind: exportInfo.kind,
@@ -388,10 +429,10 @@ function buildFlattenDocument(detail, exportInfo, exportedAt) {
       null,
       2,
     ),
-    '---content',
-    content ?? '',
-    '',
-  ].join('\n');
+    "---content",
+    content ?? "",
+    "",
+  ].join("\n");
 }
 
 async function exportOne(outputRoot, detail, exportInfo, exportedAt) {
@@ -399,10 +440,10 @@ async function exportOne(outputRoot, detail, exportInfo, exportedAt) {
   await mkdir(directory, { recursive: true });
 
   const { content, meta } = splitContent(detail);
-  const contentFile = path.join(directory, 'content.md');
-  const metaFile = path.join(directory, 'meta.json');
+  const contentFile = path.join(directory, "content.md");
+  const metaFile = path.join(directory, "meta.json");
 
-  await writeFile(contentFile, content ?? '', 'utf8');
+  await writeFile(contentFile, content ?? "", "utf8");
   await writeJson(metaFile, {
     kind: exportInfo.kind,
     id: exportInfo.id,
@@ -417,8 +458,8 @@ async function exportOne(outputRoot, detail, exportInfo, exportedAt) {
     id: exportInfo.id,
     routePath: exportInfo.routePath,
     directory: toPosixPath(exportInfo.dirParts),
-    contentFile: toPosixPath([...exportInfo.dirParts, 'content.md']),
-    metaFile: toPosixPath([...exportInfo.dirParts, 'meta.json']),
+    contentFile: toPosixPath([...exportInfo.dirParts, "content.md"]),
+    metaFile: toPosixPath([...exportInfo.dirParts, "meta.json"]),
   };
 }
 
@@ -427,7 +468,11 @@ async function exportOneFlatten(outputRoot, detail, exportInfo, exportedAt) {
   await mkdir(flattenRoot, { recursive: true });
   const filename = buildFlattenFilename(exportInfo, detail);
   const filepath = path.join(flattenRoot, filename);
-  await writeFile(filepath, buildFlattenDocument(detail, exportInfo, exportedAt), 'utf8');
+  await writeFile(
+    filepath,
+    buildFlattenDocument(detail, exportInfo, exportedAt),
+    "utf8",
+  );
 
   return {
     kind: exportInfo.kind,
@@ -446,25 +491,29 @@ async function main() {
 
   const token = normalizeToken(args.token);
   if (!token) {
-    throw new Error('缺少 token。请传入 --token gt_xxx 或设置 GT_TOKEN 环境变量。');
+    throw new Error(
+      "缺少 token。请传入 --token gt_xxx 或设置 GT_TOKEN 环境变量。",
+    );
   }
-  if (!token.startsWith('gt_')) {
-    console.warn('[warn] 当前 token 不是 gt_ 开头，请确认你传入的是管理 token。');
+  if (!token.startsWith("gt_")) {
+    console.warn(
+      "[warn] 当前 token 不是 gt_ 开头，请确认你传入的是管理 token。",
+    );
   }
 
-  ensurePositiveInteger(args.pageSize, 'page-size');
-  ensurePositiveInteger(args.concurrency, 'concurrency');
+  ensurePositiveInteger(args.pageSize, "page-size");
+  ensurePositiveInteger(args.concurrency, "concurrency");
 
   const mode = normalizeMode(args.mode);
   const apiBaseUrl = normalizeApiBaseUrl(args.baseUrl);
   const outputRoot = path.resolve(process.cwd(), args.output);
   const exportedAt = new Date().toISOString();
-  const cleanTarget = mode === 'flatten'
-    ? path.join(outputRoot, FLATTEN_DIRNAME)
-    : outputRoot;
-  const activeTarget = mode === 'flatten'
-    ? path.join(outputRoot, FLATTEN_DIRNAME)
-    : path.join(outputRoot, STRUCTURED_DIRNAME);
+  const cleanTarget =
+    mode === "flatten" ? path.join(outputRoot, FLATTEN_DIRNAME) : outputRoot;
+  const activeTarget =
+    mode === "flatten"
+      ? path.join(outputRoot, FLATTEN_DIRNAME)
+      : path.join(outputRoot, STRUCTURED_DIRNAME);
 
   if (args.clean) {
     await rm(cleanTarget, { recursive: true, force: true });
@@ -476,36 +525,90 @@ async function main() {
   console.log(`[start] output=${outputRoot}`);
   console.log(`[start] target=${activeTarget}`);
 
-  const exportItem = mode === 'flatten' ? exportOneFlatten : exportOne;
+  const exportItem = mode === "flatten" ? exportOneFlatten : exportOne;
 
   const [articles, moments, thinkings, pages] = await Promise.all([
-    paginateAll(apiBaseUrl, token, '/admin/articles', args.pageSize),
-    paginateAll(apiBaseUrl, token, '/admin/moments', args.pageSize),
-    paginateAll(apiBaseUrl, token, '/thinkings', args.pageSize),
-    paginateAll(apiBaseUrl, token, '/pages', args.pageSize),
+    paginateAll(apiBaseUrl, token, "/admin/articles", args.pageSize),
+    paginateAll(apiBaseUrl, token, "/admin/moments", args.pageSize),
+    paginateAll(apiBaseUrl, token, "/thinkings", args.pageSize),
+    paginateAll(apiBaseUrl, token, "/pages", args.pageSize),
   ]);
 
-  console.log(`[summary] articles=${articles.length} moments=${moments.length} thinkings=${thinkings.length} pages=${pages.length}`);
+  console.log(
+    `[summary] articles=${articles.length} moments=${moments.length} thinkings=${thinkings.length} pages=${pages.length}`,
+  );
 
-  const articleEntries = await mapWithConcurrency(articles, args.concurrency, async (item) => {
-    const detail = await apiRequest(apiBaseUrl, token, `/admin/articles/${item.id}`);
-    return exportItem(outputRoot, detail, buildArticleExport(detail), exportedAt);
-  });
+  const articleEntries = await mapWithConcurrency(
+    articles,
+    args.concurrency,
+    async (item) => {
+      const detail = await apiRequest(
+        apiBaseUrl,
+        token,
+        `/admin/articles/${item.id}`,
+      );
+      return exportItem(
+        outputRoot,
+        detail,
+        buildArticleExport(detail),
+        exportedAt,
+      );
+    },
+  );
 
-  const momentEntries = await mapWithConcurrency(moments, args.concurrency, async (item) => {
-    const detail = await apiRequest(apiBaseUrl, token, `/admin/moments/${item.id}`);
-    return exportItem(outputRoot, detail, buildMomentExport(detail), exportedAt);
-  });
+  const momentEntries = await mapWithConcurrency(
+    moments,
+    args.concurrency,
+    async (item) => {
+      const detail = await apiRequest(
+        apiBaseUrl,
+        token,
+        `/admin/moments/${item.id}`,
+      );
+      return exportItem(
+        outputRoot,
+        detail,
+        buildMomentExport(detail),
+        exportedAt,
+      );
+    },
+  );
 
-  const thinkingEntries = await mapWithConcurrency(thinkings, args.concurrency, async (item) => {
-    const detail = await apiRequest(apiBaseUrl, token, `/thinkings/${item.id}`);
-    return exportItem(outputRoot, detail, buildThinkingExport(detail), exportedAt);
-  });
+  const thinkingEntries = await mapWithConcurrency(
+    thinkings,
+    args.concurrency,
+    async (item) => {
+      const detail = await apiRequest(
+        apiBaseUrl,
+        token,
+        `/thinkings/${item.id}`,
+      );
+      return exportItem(
+        outputRoot,
+        detail,
+        buildThinkingExport(detail),
+        exportedAt,
+      );
+    },
+  );
 
-  const pageEntries = await mapWithConcurrency(pages, args.concurrency, async (item) => {
-    const detail = await apiRequest(apiBaseUrl, token, `/admin/pages/${item.id}`);
-    return exportItem(outputRoot, detail, buildPageExport(detail), exportedAt);
-  });
+  const pageEntries = await mapWithConcurrency(
+    pages,
+    args.concurrency,
+    async (item) => {
+      const detail = await apiRequest(
+        apiBaseUrl,
+        token,
+        `/admin/pages/${item.id}`,
+      );
+      return exportItem(
+        outputRoot,
+        detail,
+        buildPageExport(detail),
+        exportedAt,
+      );
+    },
+  );
 
   const manifest = {
     exportedAt,
@@ -516,7 +619,11 @@ async function main() {
       moments: momentEntries.length,
       thinkings: thinkingEntries.length,
       pages: pageEntries.length,
-      total: articleEntries.length + momentEntries.length + thinkingEntries.length + pageEntries.length,
+      total:
+        articleEntries.length +
+        momentEntries.length +
+        thinkingEntries.length +
+        pageEntries.length,
     },
     items: [
       ...articleEntries,
@@ -526,9 +633,10 @@ async function main() {
     ],
   };
 
-  const manifestPath = mode === 'flatten'
-    ? path.join(outputRoot, FLATTEN_DIRNAME, 'manifest.json')
-    : path.join(outputRoot, 'manifest.json');
+  const manifestPath =
+    mode === "flatten"
+      ? path.join(outputRoot, FLATTEN_DIRNAME, "manifest.json")
+      : path.join(outputRoot, "manifest.json");
 
   await writeJson(manifestPath, manifest);
 
@@ -537,6 +645,8 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error(`[error] ${error instanceof Error ? error.message : String(error)}`);
+  console.error(
+    `[error] ${error instanceof Error ? error.message : String(error)}`,
+  );
   process.exitCode = 1;
 });

@@ -11,8 +11,8 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/federation"
-	"github.com/grtsinry43/grtblog-v2/server/internal/infra/persistence/model"
+	"github.com/baddate/sanblog-v2/server/internal/domain/federation"
+	"github.com/baddate/sanblog-v2/server/internal/infra/persistence/model"
 )
 
 // FederationInstanceRepository handles remote instance records.

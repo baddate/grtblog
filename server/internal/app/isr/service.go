@@ -15,10 +15,10 @@ import (
 
 	"github.com/redis/go-redis/v9"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/htmlsnapshot"
-	domainalbum "github.com/grtsinry43/grtblog-v2/server/internal/domain/album"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/content"
-	domainthinking "github.com/grtsinry43/grtblog-v2/server/internal/domain/thinking"
+	"github.com/baddate/sanblog-v2/server/internal/app/htmlsnapshot"
+	domainalbum "github.com/baddate/sanblog-v2/server/internal/domain/album"
+	"github.com/baddate/sanblog-v2/server/internal/domain/content"
+	domainthinking "github.com/baddate/sanblog-v2/server/internal/domain/thinking"
 )
 
 const (

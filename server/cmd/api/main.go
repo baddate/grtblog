@@ -9,15 +9,15 @@ import (
 
 	"github.com/joho/godotenv"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/buildinfo"
-	"github.com/grtsinry43/grtblog-v2/server/internal/config"
-	"github.com/grtsinry43/grtblog-v2/server/internal/database"
-	appserver "github.com/grtsinry43/grtblog-v2/server/internal/server"
+	"github.com/baddate/sanblog-v2/server/internal/buildinfo"
+	"github.com/baddate/sanblog-v2/server/internal/config"
+	"github.com/baddate/sanblog-v2/server/internal/database"
+	appserver "github.com/baddate/sanblog-v2/server/internal/server"
 )
 
-// @title grtblog API v2
+// @title sanblog API v2
 // @version 2.0.0
-// @description grtblog 后端接口
+// @description sanblog 后端接口
 // @BasePath /api/v2
 // @securityDefinitions.apikey BearerAuth
 // @in header
@@ -76,7 +76,7 @@ func startupBanner(cfg config.Config) string {
 		"> " + cfg.App.Name + " " + version + "\n" +
 		"> " + "不仅是博客，也是全新的内容基础设施。\n" +
 		"\n" +
-		"by @grtsinry43 · github.com/grtsinry43\n" +
+		"by @baddate · github.com/baddate\n" +
 		"“代码是写给人看的，顺便在机器上运行的。”\n" +
 		"\n" +
 		"- API 前缀: " + apiBasePath + "\n" +

@@ -59,8 +59,8 @@ func (c *OpenRouterClient) Chat(ctx context.Context, req ChatRequest) (*ChatResp
 	}
 	httpReq.Header.Set("Content-Type", "application/json")
 	httpReq.Header.Set("Authorization", "Bearer "+c.apiKey)
-	httpReq.Header.Set("HTTP-Referer", "https://grtblog.app")
-	httpReq.Header.Set("X-Title", "GrtBlog AI")
+	httpReq.Header.Set("HTTP-Referer", "https://sanblog.app")
+	httpReq.Header.Set("X-Title", "sanblog AI")
 
 	resp, err := c.httpClient.Do(httpReq)
 	if err != nil {
@@ -127,8 +127,8 @@ func (c *OpenRouterClient) ChatStream(ctx context.Context, req ChatRequest, onCh
 	}
 	httpReq.Header.Set("Content-Type", "application/json")
 	httpReq.Header.Set("Authorization", "Bearer "+c.apiKey)
-	httpReq.Header.Set("HTTP-Referer", "https://grtblog.app")
-	httpReq.Header.Set("X-Title", "GrtBlog AI")
+	httpReq.Header.Set("HTTP-Referer", "https://sanblog.app")
+	httpReq.Header.Set("X-Title", "sanblog AI")
 
 	client := &http.Client{}
 	resp, err := client.Do(httpReq)

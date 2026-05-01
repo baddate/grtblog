@@ -1,7 +1,7 @@
 import { browser } from '$app/environment';
 
-const GUEST_PROFILE_KEY = 'grtblog:comment:guest-profile:v1';
-const DRAFT_KEY_PREFIX = 'grtblog:comment:draft:v1';
+const GUEST_PROFILE_KEY = 'sanblog:comment:guest-profile:v1';
+const DRAFT_KEY_PREFIX = 'sanblog:comment:draft:v1';
 
 export type CommentGuestProfile = {
 	guestName: string;

@@ -268,7 +268,7 @@ const latestVersion = computed(() => {
               <div
                 class="mt-20 flex items-center gap-4 text-[10px] font-medium tracking-widest text-neutral-400 uppercase"
               >
-                <span>GRTBLOG V{{ latestVersion }}</span>
+                <span>sanblog V{{ latestVersion }}</span>
                 <span class="h-0.5 w-0.5 rounded-full bg-neutral-300"></span>
                 <span>UPGRADE GUIDE</span>
               </div>

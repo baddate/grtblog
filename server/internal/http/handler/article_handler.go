@@ -8,17 +8,17 @@ import (
 
 	"github.com/jinzhu/copier"
 
+	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
+	domaincomment "github.com/baddate/sanblog-v2/server/internal/domain/comment"
+	"github.com/baddate/sanblog-v2/server/internal/domain/content"
+	domainfed "github.com/baddate/sanblog-v2/server/internal/domain/federation"
+	"github.com/baddate/sanblog-v2/server/internal/domain/identity"
 	"github.com/gofiber/fiber/v2"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/sysconfig"
-	domaincomment "github.com/grtsinry43/grtblog-v2/server/internal/domain/comment"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/content"
-	domainfed "github.com/grtsinry43/grtblog-v2/server/internal/domain/federation"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/identity"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/article"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/middleware"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog-v2/server/internal/app/article"
+	"github.com/baddate/sanblog-v2/server/internal/http/contract"
+	"github.com/baddate/sanblog-v2/server/internal/http/middleware"
+	"github.com/baddate/sanblog-v2/server/internal/http/response"
 )
 
 type ArticleHandler struct {

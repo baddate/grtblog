@@ -112,7 +112,7 @@ export const postDetailCtx = createModelDataContext<PostDetail | null>({
   import { websiteInfoCtx } from '$lib/features/website-info/context';
 
   const websiteName = websiteInfoCtx.selectModelData(
-    (data) => data?.website_name || 'grtBlog'
+    (data) => data?.website_name || 'sanblog'
   );
 </script>
 

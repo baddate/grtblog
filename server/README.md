@@ -1,6 +1,6 @@
-# grtblog server
+# sanblog server
 
-Go Fiber + GORM API scaffold that powers grtblog. The layout follows idiomatic Go conventions by splitting the executable (`cmd/api`) from reusable packages (`internal/...`).
+Go Fiber + GORM API scaffold that powers sanblog. The layout follows idiomatic Go conventions by splitting the executable (`cmd/api`) from reusable packages (`internal/...`).
 
 ## Structure
 
@@ -36,11 +36,11 @@ go install github.com/pressly/goose/v3/cmd/goose@latest
 
 ```bash
 # Apply all up migrations (uses the DSN from your environment or override inline)
-DB_DSN=postgres://postgres:postgres@localhost:5432/grtblog?sslmode=disable \
+DB_DSN=postgres://postgres:postgres@localhost:5432/sanblog?sslmode=disable \
   make migrate-up
 
 # Roll the last migration back
-DB_DSN=postgres://postgres:postgres@localhost:5432/grtblog?sslmode=disable \
+DB_DSN=postgres://postgres:postgres@localhost:5432/sanblog?sslmode=disable \
   make migrate-down
 
 # Create a new timestamped SQL migration under migrations/

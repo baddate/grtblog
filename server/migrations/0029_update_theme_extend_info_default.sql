@@ -19,7 +19,7 @@ VALUES (
             "type": "br"
           },
           {
-            "text": "I'm grtsinry43",
+            "text": "I'm baddate",
             "type": "h1",
             "variant": "hero_h1_primary"
           }
@@ -27,12 +27,12 @@ VALUES (
       },
       "socials": [
         {
-          "href": "https://github.com/grtinry43",
+          "href": "https://github.com/baddate",
           "icon": "github",
           "name": "GitHub"
         },
         {
-          "href": "mailto:grtsinry43@outlook.com",
+          "href": "mailto:baddate@outlook.com",
           "icon": "mail",
           "name": "Email"
         },
@@ -42,7 +42,7 @@ VALUES (
           "name": "RSS"
         }
       ],
-      "avatarUrl": "https://dogeoss.grtsinry43.com/img/author.jpeg",
+      "avatarUrl": "https://dogeoss.baddate.com/img/author.jpeg",
       "mottoLines": [
         "热衷于在逻辑与感性的缝隙中构建数字花园。",
         "也许，代码是现代的诗歌，而文字是思想的快照。"
@@ -56,7 +56,7 @@ VALUES (
             "id": "coding",
             "icon": "code2",
             "label": "Coding",
-            "value": "grtblog-v2"
+            "value": "sanblog-v2"
           },
           {
             "id": "reading",
@@ -112,7 +112,7 @@ VALUES (
         "label": "High Energy"
       },
       "github": {
-        "username": "grtsinry43"
+        "username": "baddate"
       },
       "techStack": {
         "icons": [

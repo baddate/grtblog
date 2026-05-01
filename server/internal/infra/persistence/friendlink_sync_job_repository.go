@@ -8,8 +8,8 @@ import (
 
 	"gorm.io/gorm"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/social"
-	"github.com/grtsinry43/grtblog-v2/server/internal/infra/persistence/model"
+	"github.com/baddate/sanblog-v2/server/internal/domain/social"
+	"github.com/baddate/sanblog-v2/server/internal/infra/persistence/model"
 )
 
 type FriendLinkSyncJobRepository struct {
