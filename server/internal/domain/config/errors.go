@@ -2,4 +2,4 @@ package config
 
 import "errors"
 
-var ErrSysConfigNotFound = errors.New("系统配置不存在")
+var ErrSysConfigNotFound = errors.New("SYS_CONFIG_NOT_FOUND")

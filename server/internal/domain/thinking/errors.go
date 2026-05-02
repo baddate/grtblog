@@ -3,6 +3,6 @@ package thinking
 import "errors"
 
 var (
-	ErrThinkingNotFound     = errors.New("回想不存在或已被删除")
-	ErrThinkingContentEmpty = errors.New("回想内容不能为空")
+	ErrThinkingNotFound     = errors.New("THINKING_NOT_FOUND")
+	ErrThinkingContentEmpty = errors.New("THINKING_CONTENT_EMPTY")
 )

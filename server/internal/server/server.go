@@ -39,6 +39,7 @@ import (
 	"github.com/baddate/sanblog-v2/server/internal/http/router"
 	infraevent "github.com/baddate/sanblog-v2/server/internal/infra/event"
 	fedinfra "github.com/baddate/sanblog-v2/server/internal/infra/federation"
+	"github.com/baddate/sanblog-v2/server/internal/infra/i18n"
 	"github.com/baddate/sanblog-v2/server/internal/infra/metrics"
 	"github.com/baddate/sanblog-v2/server/internal/infra/persistence"
 	"github.com/baddate/sanblog-v2/server/internal/security/jwt"
@@ -84,6 +85,11 @@ func New(cfg config.Config, db *gorm.DB) *Server {
 
 	ctx, cancel := context.WithCancel(context.Background())
 	bodyLimit := sysCfgSvc.UploadMaxSizeBytes(ctx)
+
+	// Initialize i18n bundle
+	if err := i18n.Init("."); err != nil {
+		log.Printf("[server] i18n init warning: %v", err)
+	}
 
 	app := fiber.New(fiber.Config{
 		AppName:           cfg.App.Name,
@@ -174,6 +180,9 @@ func New(cfg config.Config, db *gorm.DB) *Server {
 			c.Locals("panicRecorded", true)
 		},
 	}))
+
+	// i18n locale detection middleware
+	app.Use(i18n.Middleware())
 
 	// CORS: read allowed origins from sysconfig (site.public_url, site.api_url).
 	app.Use(cors.New(cors.Config{

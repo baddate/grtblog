@@ -4,6 +4,8 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+
+	"github.com/baddate/sanblog-v2/server/internal/infra/i18n"
 )
 
 // TimeLayout 用于对外时间字段格式化。
@@ -62,6 +64,24 @@ func ErrorWithMsg[T any](c *fiber.Ctx, be BizError, msg string) error {
 	}
 	var zero T
 	return respond(c, be.HTTPStatus, be.Code, be.BizErr, msg, zero)
+}
+
+// T resolves the localized message for the current request's language.
+func T(c *fiber.Ctx, key string, templateData ...map[string]interface{}) string {
+	fn, ok := c.Locals("t").(func(string, ...map[string]interface{}) string)
+	if !ok {
+		return i18n.MustLocalize("en", key, templateData...)
+	}
+	return fn(key, templateData...)
+}
+
+// ErrorFromBizLocalized uses BizError.MsgKey with i18n localization.
+func ErrorFromBizLocalized[T any](c *fiber.Ctx, be BizError, templateData ...map[string]interface{}) error {
+	msg := T(c, be.MsgKey, templateData...)
+	if msg == be.MsgKey || msg == "" {
+		msg = be.Msg
+	}
+	return ErrorWithMsg[T](c, be, msg)
 }
 
 // 低层封装：真正写出 JSON 的地方
