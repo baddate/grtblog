@@ -9,13 +9,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/comment"
-	"github.com/baddate/sanblog-v2/server/internal/http/handler"
-	"github.com/baddate/sanblog-v2/server/internal/http/middleware"
-	"github.com/baddate/sanblog-v2/server/internal/http/response"
-	"github.com/baddate/sanblog-v2/server/internal/infra/clientinfo"
-	"github.com/baddate/sanblog-v2/server/internal/infra/geoip"
-	"github.com/baddate/sanblog-v2/server/internal/infra/persistence"
+	"github.com/baddate/sanblog/server/internal/app/comment"
+	"github.com/baddate/sanblog/server/internal/http/handler"
+	"github.com/baddate/sanblog/server/internal/http/middleware"
+	"github.com/baddate/sanblog/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/infra/clientinfo"
+	"github.com/baddate/sanblog/server/internal/infra/geoip"
+	"github.com/baddate/sanblog/server/internal/infra/persistence"
 )
 
 const (

@@ -8,16 +8,16 @@ import (
 
 	"github.com/jinzhu/copier"
 
-	domaincomment "github.com/baddate/sanblog-v2/server/internal/domain/comment"
-	"github.com/baddate/sanblog-v2/server/internal/domain/content"
-	"github.com/baddate/sanblog-v2/server/internal/domain/identity"
+	domaincomment "github.com/baddate/sanblog/server/internal/domain/comment"
+	"github.com/baddate/sanblog/server/internal/domain/content"
+	"github.com/baddate/sanblog/server/internal/domain/identity"
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/moment"
-	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
-	"github.com/baddate/sanblog-v2/server/internal/http/contract"
-	"github.com/baddate/sanblog-v2/server/internal/http/middleware"
-	"github.com/baddate/sanblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/app/moment"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/middleware"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type MomentHandler struct {
@@ -57,16 +57,16 @@ func (h *MomentHandler) CreateMoment(c *fiber.Ctx) error {
 	var req contract.CreateMomentReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if req.Views != nil && *req.Views < 0 {
 		msg := response.Translate(c, "server.handler.views_negative")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	extInfo, err := parseExtInfo(req.ExtInfo)
 	if err != nil {
 		msg := response.Translate(c, "server.handler.invalid_extinfo")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	cmd := moment.CreateMomentCmd{
@@ -95,15 +95,15 @@ func (h *MomentHandler) CreateMoment(c *fiber.Ctx) error {
 	if err != nil {
 		if errors.Is(err, content.ErrMomentShortURLExists) {
 			msg := response.Translate(c, "server.error.moment_short_url_exists")
-		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		if errors.Is(err, content.ErrColumnNotFound) {
 			msg := response.Translate(c, "server.error.column_not_found")
-		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		if errors.Is(err, content.ErrTagNotFound) {
 			msg := response.Translate(c, "server.error.tag_not_found")
-		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		return err
 	}
@@ -147,12 +147,12 @@ func (h *MomentHandler) UpdateMoment(c *fiber.Ctx) error {
 	var req contract.UpdateMomentReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	extInfo, err := parseExtInfo(req.ExtInfo)
 	if err != nil {
 		msg := response.Translate(c, "server.handler.invalid_extinfo")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	cmd := moment.UpdateMomentCmd{
@@ -176,15 +176,15 @@ func (h *MomentHandler) UpdateMoment(c *fiber.Ctx) error {
 	if err != nil {
 		if errors.Is(err, content.ErrMomentShortURLExists) {
 			msg := response.Translate(c, "server.error.moment_short_url_exists")
-		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		if errors.Is(err, content.ErrColumnNotFound) {
 			msg := response.Translate(c, "server.error.column_not_found")
-		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		if errors.Is(err, content.ErrTagNotFound) {
 			msg := response.Translate(c, "server.error.tag_not_found")
-		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		return err
 	}
@@ -217,7 +217,7 @@ func (h *MomentHandler) BatchSetMomentPublished(c *fiber.Ctx) error {
 	var req contract.BatchSetMomentPublishedReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
 		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
@@ -255,7 +255,7 @@ func (h *MomentHandler) BatchSetMomentTop(c *fiber.Ctx) error {
 	var req contract.BatchSetMomentTopReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
 		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
@@ -631,7 +631,7 @@ func (h *MomentHandler) CheckMomentLatest(c *fiber.Ctx) error {
 	var req contract.CheckMomentLatestReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	momentItem, err := h.svc.GetMomentByID(c.Context(), id)
@@ -716,7 +716,7 @@ func (h *MomentHandler) BatchDeleteMoments(c *fiber.Ctx) error {
 	var req contract.BatchDeleteMomentReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
 		return response.ErrorFromBizLocalized[any](c, response.ParamsError)

@@ -1,6 +1,7 @@
 {
   "admin.sidebar.about": "About",
   "admin.sidebar.activitypub_outbox": "ActivityPub Outbox",
+  "admin.sidebar.advanced": "Advanced",
   "admin.sidebar.ai": "AI",
   "admin.sidebar.ai_task_logs": "Task Logs",
   "admin.sidebar.album_list": "Album List",

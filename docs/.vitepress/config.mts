@@ -51,7 +51,7 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: "github", link: "https://github.com/baddate/sanblog-v2" },
+      { icon: "github", link: "https://github.com/baddate/sanblog" },
     ],
 
     outline: {

@@ -43,8 +43,8 @@ ARG BUILD_COMMIT=unknown
 
 RUN CGO_ENABLED=0 GOOS=linux \
   go build -trimpath -ldflags="-s -w \
-  -X github.com/baddate/sanblog-v2/server/internal/buildinfo.BuildVersion=${APP_VERSION} \
-  -X github.com/baddate/sanblog-v2/server/internal/buildinfo.BuildCommit=${BUILD_COMMIT}" \
+  -X github.com/baddate/sanblog/server/internal/buildinfo.BuildVersion=${APP_VERSION} \
+  -X github.com/baddate/sanblog/server/internal/buildinfo.BuildCommit=${BUILD_COMMIT}" \
   -o /out/sanblog-server ./cmd/api
 
 FROM alpine:3.21 AS runtime

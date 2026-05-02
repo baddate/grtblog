@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
-	domainconfig "github.com/baddate/sanblog-v2/server/internal/domain/config"
-	"github.com/baddate/sanblog-v2/server/internal/domain/identity"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
+	domainconfig "github.com/baddate/sanblog/server/internal/domain/config"
+	"github.com/baddate/sanblog/server/internal/domain/identity"
 )
 
 const setupMarkerFileName = ".setupdone"

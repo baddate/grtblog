@@ -5,12 +5,12 @@ import (
 	"errors"
 	"strconv"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/page"
-	domaincomment "github.com/baddate/sanblog-v2/server/internal/domain/comment"
-	"github.com/baddate/sanblog-v2/server/internal/domain/content"
-	"github.com/baddate/sanblog-v2/server/internal/http/contract"
-	"github.com/baddate/sanblog-v2/server/internal/http/middleware"
-	"github.com/baddate/sanblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/app/page"
+	domaincomment "github.com/baddate/sanblog/server/internal/domain/comment"
+	"github.com/baddate/sanblog/server/internal/domain/content"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/middleware"
+	"github.com/baddate/sanblog/server/internal/http/response"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -45,16 +45,16 @@ func (h *PageHandler) CreatePage(c *fiber.Ctx) error {
 	var req contract.CreatePageReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if req.Views != nil && *req.Views < 0 {
 		msg := response.Translate(c, "server.handler.views_negative")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	extInfo, err := parseExtInfo(req.ExtInfo)
 	if err != nil {
 		msg := response.Translate(c, "server.handler.invalid_extinfo")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	cmd := page.CreatePageCmd{
@@ -79,7 +79,7 @@ func (h *PageHandler) CreatePage(c *fiber.Ctx) error {
 	if err != nil {
 		if errors.Is(err, content.ErrPageShortURLExists) {
 			msg := response.Translate(c, "server.error.page_short_url_exists")
-		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		return err
 	}
@@ -123,12 +123,12 @@ func (h *PageHandler) UpdatePage(c *fiber.Ctx) error {
 	var req contract.UpdatePageReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	extInfo, err := parseExtInfo(req.ExtInfo)
 	if err != nil {
 		msg := response.Translate(c, "server.handler.invalid_extinfo")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	cmd := page.UpdatePageCmd{
@@ -148,7 +148,7 @@ func (h *PageHandler) UpdatePage(c *fiber.Ctx) error {
 	if err != nil {
 		if errors.Is(err, content.ErrPageShortURLExists) {
 			msg := response.Translate(c, "server.error.page_short_url_exists")
-		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		return err
 	}
@@ -181,7 +181,7 @@ func (h *PageHandler) BatchSetPageEnabled(c *fiber.Ctx) error {
 	var req contract.BatchSetPageEnabledReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
 		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
@@ -383,7 +383,7 @@ func (h *PageHandler) CheckPageLatest(c *fiber.Ctx) error {
 	var req contract.CheckPageLatestReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	pageItem, err := h.svc.GetPageByID(c.Context(), id)
@@ -468,7 +468,7 @@ func (h *PageHandler) BatchDeletePages(c *fiber.Ctx) error {
 	var req contract.BatchDeletePageReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
 		return response.ErrorFromBizLocalized[any](c, response.ParamsError)

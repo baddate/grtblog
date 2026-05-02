@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /*
- * API migration tool: sanblog(v1) -> sanblog-v2
+ * API migration tool: sanblog(v1) -> sanblog
  *
  * Scope:
  * - taxonomy (categories -> categories/columns, tags)

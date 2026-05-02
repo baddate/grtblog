@@ -26,15 +26,15 @@ import (
 	"code.superseriousbusiness.org/httpsig"
 	"github.com/google/uuid"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/adminnotification"
-	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
-	domainap "github.com/baddate/sanblog-v2/server/internal/domain/activitypub"
-	domaincomment "github.com/baddate/sanblog-v2/server/internal/domain/comment"
-	"github.com/baddate/sanblog-v2/server/internal/domain/content"
-	"github.com/baddate/sanblog-v2/server/internal/domain/identity"
-	"github.com/baddate/sanblog-v2/server/internal/domain/thinking"
-	fedinfra "github.com/baddate/sanblog-v2/server/internal/infra/federation"
-	"github.com/baddate/sanblog-v2/server/internal/infra/i18n"
+	"github.com/baddate/sanblog/server/internal/app/adminnotification"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
+	domainap "github.com/baddate/sanblog/server/internal/domain/activitypub"
+	domaincomment "github.com/baddate/sanblog/server/internal/domain/comment"
+	"github.com/baddate/sanblog/server/internal/domain/content"
+	"github.com/baddate/sanblog/server/internal/domain/identity"
+	"github.com/baddate/sanblog/server/internal/domain/thinking"
+	fedinfra "github.com/baddate/sanblog/server/internal/infra/federation"
+	"github.com/baddate/sanblog/server/internal/infra/i18n"
 )
 
 const (

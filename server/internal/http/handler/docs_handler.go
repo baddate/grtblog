@@ -8,7 +8,7 @@ import (
 
 	scalar "github.com/MarceloPetrucio/go-scalar-api-reference"
 
-	"github.com/baddate/sanblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 // DocsHandler 提供 OpenAPI JSON 以及 Scalar UI。

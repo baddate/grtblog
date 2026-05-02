@@ -8,17 +8,17 @@ import (
 
 	"github.com/jinzhu/copier"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
-	domaincomment "github.com/baddate/sanblog-v2/server/internal/domain/comment"
-	"github.com/baddate/sanblog-v2/server/internal/domain/content"
-	domainfed "github.com/baddate/sanblog-v2/server/internal/domain/federation"
-	"github.com/baddate/sanblog-v2/server/internal/domain/identity"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
+	domaincomment "github.com/baddate/sanblog/server/internal/domain/comment"
+	"github.com/baddate/sanblog/server/internal/domain/content"
+	domainfed "github.com/baddate/sanblog/server/internal/domain/federation"
+	"github.com/baddate/sanblog/server/internal/domain/identity"
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/article"
-	"github.com/baddate/sanblog-v2/server/internal/http/contract"
-	"github.com/baddate/sanblog-v2/server/internal/http/middleware"
-	"github.com/baddate/sanblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/app/article"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/middleware"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type ArticleHandler struct {
@@ -77,22 +77,22 @@ func (h *ArticleHandler) CreateArticle(c *fiber.Ctx) error {
 	var req contract.CreateArticleReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if req.Views != nil && *req.Views < 0 {
 		msg := response.Translate(c, "server.handler.views_negative")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	extInfo, err := parseExtInfo(req.ExtInfo)
 	if err != nil {
 		msg := response.Translate(c, "server.handler.invalid_extinfo")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	var cmd article.CreateArticleCmd
 	if err := copier.Copy(&cmd, req); err != nil {
 		msg := response.Translate(c, "server.handler.map_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if cmd.AllowComment == nil {
 		defaultAllow := true
@@ -104,15 +104,15 @@ func (h *ArticleHandler) CreateArticle(c *fiber.Ctx) error {
 	if err != nil {
 		if errors.Is(err, content.ErrArticleShortURLExists) {
 			msg := response.Translate(c, "server.error.article_short_url_exists")
-		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		if errors.Is(err, content.ErrCategoryNotFound) {
 			msg := response.Translate(c, "server.error.category_not_found")
-		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		if errors.Is(err, content.ErrTagNotFound) {
 			msg := response.Translate(c, "server.error.tag_not_found")
-		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		return err
 	}
@@ -156,18 +156,18 @@ func (h *ArticleHandler) UpdateArticle(c *fiber.Ctx) error {
 	var req contract.UpdateArticleReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	extInfo, err := parseExtInfo(req.ExtInfo)
 	if err != nil {
 		msg := response.Translate(c, "server.handler.invalid_extinfo")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	var cmd article.UpdateArticleCmd
 	if err := copier.Copy(&cmd, req); err != nil {
 		msg := response.Translate(c, "server.handler.map_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	cmd.ID = id
 	cmd.ExtInfo = extInfo
@@ -176,15 +176,15 @@ func (h *ArticleHandler) UpdateArticle(c *fiber.Ctx) error {
 	if err != nil {
 		if errors.Is(err, content.ErrArticleShortURLExists) {
 			msg := response.Translate(c, "server.error.article_short_url_exists")
-		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		if errors.Is(err, content.ErrCategoryNotFound) {
 			msg := response.Translate(c, "server.error.category_not_found")
-		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		if errors.Is(err, content.ErrTagNotFound) {
 			msg := response.Translate(c, "server.error.tag_not_found")
-		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		return err
 	}
@@ -229,7 +229,7 @@ func (h *ArticleHandler) ResetArticleFederationSignals(c *fiber.Ctx) error {
 	if len(c.Body()) > 0 {
 		if err := c.BodyParser(&req); err != nil {
 			msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 	}
 
@@ -294,7 +294,7 @@ func (h *ArticleHandler) BatchSetArticlePublished(c *fiber.Ctx) error {
 	var req contract.BatchSetArticlePublishedReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
 		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
@@ -332,7 +332,7 @@ func (h *ArticleHandler) BatchSetArticleTop(c *fiber.Ctx) error {
 	var req contract.BatchSetArticleTopReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
 		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
@@ -713,7 +713,7 @@ func (h *ArticleHandler) CheckArticleLatest(c *fiber.Ctx) error {
 	var req contract.CheckArticleLatestReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	article, err := h.svc.GetArticleByID(c.Context(), id)
@@ -798,7 +798,7 @@ func (h *ArticleHandler) BatchDeleteArticles(c *fiber.Ctx) error {
 	var req contract.BatchDeleteArticleReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
 		return response.ErrorFromBizLocalized[any](c, response.ParamsError)

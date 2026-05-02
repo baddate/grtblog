@@ -8,8 +8,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/baddate/sanblog-v2/server/internal/http/response"
-	fedinfra "github.com/baddate/sanblog-v2/server/internal/infra/federation"
+	"github.com/baddate/sanblog/server/internal/http/response"
+	fedinfra "github.com/baddate/sanblog/server/internal/infra/federation"
 )
 
 func enforceFederationInboundRateLimit(c *fiber.Ctx, ctx context.Context, limiter fedinfra.RateLimiter, sourceBaseURL, action string, raw json.RawMessage) error {

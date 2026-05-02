@@ -9,10 +9,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
-	"github.com/baddate/sanblog-v2/server/internal/domain/content"
-	"github.com/baddate/sanblog-v2/server/internal/domain/identity"
-	domainthinking "github.com/baddate/sanblog-v2/server/internal/domain/thinking"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
+	"github.com/baddate/sanblog/server/internal/domain/content"
+	"github.com/baddate/sanblog/server/internal/domain/identity"
+	domainthinking "github.com/baddate/sanblog/server/internal/domain/thinking"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
 )

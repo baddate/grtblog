@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
-	domainemail "github.com/baddate/sanblog-v2/server/internal/domain/email"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
+	domainemail "github.com/baddate/sanblog/server/internal/domain/email"
 )
 
 type Message struct {

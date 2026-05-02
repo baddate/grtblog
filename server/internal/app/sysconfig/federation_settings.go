@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	domainconfig "github.com/baddate/sanblog-v2/server/internal/domain/config"
+	domainconfig "github.com/baddate/sanblog/server/internal/domain/config"
 )
 
 // FederationSettings aggregates federation configuration values.

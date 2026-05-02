@@ -1,6 +1,7 @@
 {
   "admin.sidebar.about": "关于",
   "admin.sidebar.activitypub_outbox": "ActivityPub 出站",
+  "admin.sidebar.advanced": "高级",
   "admin.sidebar.ai": "AI",
   "admin.sidebar.ai_task_logs": "任务日志",
   "admin.sidebar.album_list": "相册列表",

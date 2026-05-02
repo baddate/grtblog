@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/baddate/sanblog-v2/server/internal/buildinfo"
+	"github.com/baddate/sanblog/server/internal/buildinfo"
 )
 
 // ---------------------------------------------------------------------------

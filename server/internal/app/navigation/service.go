@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	appEvent "github.com/baddate/sanblog-v2/server/internal/app/event"
-	domain "github.com/baddate/sanblog-v2/server/internal/domain/navigation"
+	appEvent "github.com/baddate/sanblog/server/internal/app/event"
+	domain "github.com/baddate/sanblog/server/internal/domain/navigation"
 )
 
 type Service struct {

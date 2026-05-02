@@ -7,10 +7,10 @@ import (
 
 	"gorm.io/gorm"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/contentutil"
-	"github.com/baddate/sanblog-v2/server/internal/domain/album"
-	"github.com/baddate/sanblog-v2/server/internal/infra/persistence/model"
-	"github.com/baddate/sanblog-v2/server/internal/infra/i18n"
+	"github.com/baddate/sanblog/server/internal/app/contentutil"
+	"github.com/baddate/sanblog/server/internal/domain/album"
+	"github.com/baddate/sanblog/server/internal/infra/i18n"
+	"github.com/baddate/sanblog/server/internal/infra/persistence/model"
 )
 
 type AlbumRepository struct {

@@ -11,14 +11,14 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	appEvent "github.com/baddate/sanblog-v2/server/internal/app/event"
-	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
-	"github.com/baddate/sanblog-v2/server/internal/domain/content"
-	"github.com/baddate/sanblog-v2/server/internal/domain/federation"
-	"github.com/baddate/sanblog-v2/server/internal/domain/social"
-	"github.com/baddate/sanblog-v2/server/internal/http/contract"
-	"github.com/baddate/sanblog-v2/server/internal/http/response"
-	fedinfra "github.com/baddate/sanblog-v2/server/internal/infra/federation"
+	appEvent "github.com/baddate/sanblog/server/internal/app/event"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
+	"github.com/baddate/sanblog/server/internal/domain/content"
+	"github.com/baddate/sanblog/server/internal/domain/federation"
+	"github.com/baddate/sanblog/server/internal/domain/social"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/response"
+	fedinfra "github.com/baddate/sanblog/server/internal/infra/federation"
 )
 
 type FederationCitationHandler struct {

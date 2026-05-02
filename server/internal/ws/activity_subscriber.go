@@ -9,16 +9,16 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/article"
-	appcomment "github.com/baddate/sanblog-v2/server/internal/app/comment"
-	appEvent "github.com/baddate/sanblog-v2/server/internal/app/event"
-	"github.com/baddate/sanblog-v2/server/internal/app/moment"
-	"github.com/baddate/sanblog-v2/server/internal/app/page"
-	domainalbum "github.com/baddate/sanblog-v2/server/internal/domain/album"
-	domaincomment "github.com/baddate/sanblog-v2/server/internal/domain/comment"
-	"github.com/baddate/sanblog-v2/server/internal/domain/content"
-	domainthinking "github.com/baddate/sanblog-v2/server/internal/domain/thinking"
-	"github.com/baddate/sanblog-v2/server/internal/infra/i18n"
+	"github.com/baddate/sanblog/server/internal/app/article"
+	appcomment "github.com/baddate/sanblog/server/internal/app/comment"
+	appEvent "github.com/baddate/sanblog/server/internal/app/event"
+	"github.com/baddate/sanblog/server/internal/app/moment"
+	"github.com/baddate/sanblog/server/internal/app/page"
+	domainalbum "github.com/baddate/sanblog/server/internal/domain/album"
+	domaincomment "github.com/baddate/sanblog/server/internal/domain/comment"
+	"github.com/baddate/sanblog/server/internal/domain/content"
+	domainthinking "github.com/baddate/sanblog/server/internal/domain/thinking"
+	"github.com/baddate/sanblog/server/internal/infra/i18n"
 )
 
 const siteActivityType = "site.activity"
@@ -135,7 +135,7 @@ func RegisterSiteActivitySubscriber(
 			Type:        siteActivityType,
 			Event:       "thinking.updated",
 			ContentType: "thinking",
-			Title:       normalizeActivityTitle(title, i18n.MustLocalize("zh", "server.label.thinking") + fmt.Sprintf(" #%d", id)),
+			Title:       normalizeActivityTitle(title, i18n.MustLocalize("zh", "server.label.thinking")+fmt.Sprintf(" #%d", id)),
 			URL:         fmt.Sprintf("/thinkings/%d", id),
 			At:          normalizeActivityAt(generic.At),
 		})

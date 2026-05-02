@@ -17,7 +17,7 @@ import (
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 
-	"github.com/baddate/sanblog-v2/server/internal/infra/persistence/model"
+	"github.com/baddate/sanblog/server/internal/infra/persistence/model"
 )
 
 const (
@@ -504,7 +504,7 @@ func (s *Service) fetchGitHubJSON(ctx context.Context, endpoint string, target a
 	}
 	req.Header.Set("Accept", "application/vnd.github+json")
 	req.Header.Set("X-GitHub-Api-Version", "2022-11-28")
-	req.Header.Set("User-Agent", "sanblog-v2-home")
+	req.Header.Set("User-Agent", "sanblog-home")
 
 	resp, err := client.Do(req)
 	if err != nil {

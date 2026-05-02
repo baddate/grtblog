@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"strings"
 
-	domainconfig "github.com/baddate/sanblog-v2/server/internal/domain/config"
+	domainconfig "github.com/baddate/sanblog/server/internal/domain/config"
 )
 
 const siteKeyPrefix = "site."

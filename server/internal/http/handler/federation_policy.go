@@ -3,7 +3,7 @@ package handler
 import (
 	"encoding/json"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
 )
 
 type federationPolicy struct {

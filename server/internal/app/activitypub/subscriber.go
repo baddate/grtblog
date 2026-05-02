@@ -5,10 +5,10 @@ import (
 	"log"
 	"strings"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/article"
-	appEvent "github.com/baddate/sanblog-v2/server/internal/app/event"
-	"github.com/baddate/sanblog-v2/server/internal/app/moment"
-	"github.com/baddate/sanblog-v2/server/internal/app/thinking"
+	"github.com/baddate/sanblog/server/internal/app/article"
+	appEvent "github.com/baddate/sanblog/server/internal/app/event"
+	"github.com/baddate/sanblog/server/internal/app/moment"
+	"github.com/baddate/sanblog/server/internal/app/thinking"
 )
 
 type handlerFunc func(ctx context.Context, event appEvent.Event) error

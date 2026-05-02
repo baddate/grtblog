@@ -12,9 +12,9 @@ import (
 	"syscall"
 	"time"
 
-	domainai "github.com/baddate/sanblog-v2/server/internal/domain/ai"
-	domainconfig "github.com/baddate/sanblog-v2/server/internal/domain/config"
-	infraai "github.com/baddate/sanblog-v2/server/internal/infra/ai"
+	domainai "github.com/baddate/sanblog/server/internal/domain/ai"
+	domainconfig "github.com/baddate/sanblog/server/internal/domain/config"
+	infraai "github.com/baddate/sanblog/server/internal/infra/ai"
 )
 
 // SysConfigReader 提供读取 sys_config 的能力，由 sysconfig.Service 实现。

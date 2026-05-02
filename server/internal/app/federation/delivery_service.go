@@ -13,10 +13,10 @@ import (
 
 	"github.com/google/uuid"
 
-	appEvent "github.com/baddate/sanblog-v2/server/internal/app/event"
-	domainfed "github.com/baddate/sanblog-v2/server/internal/domain/federation"
-	"github.com/baddate/sanblog-v2/server/internal/domain/social"
-	"github.com/baddate/sanblog-v2/server/internal/http/contract"
+	appEvent "github.com/baddate/sanblog/server/internal/app/event"
+	domainfed "github.com/baddate/sanblog/server/internal/domain/federation"
+	"github.com/baddate/sanblog/server/internal/domain/social"
+	"github.com/baddate/sanblog/server/internal/http/contract"
 )
 
 type CallbackResultCmd struct {

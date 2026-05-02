@@ -3,9 +3,9 @@ package handler
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/analytics"
-	"github.com/baddate/sanblog-v2/server/internal/http/contract"
-	"github.com/baddate/sanblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/app/analytics"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type AnalyticsHandler struct {

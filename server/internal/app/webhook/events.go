@@ -3,14 +3,14 @@ package webhook
 import (
 	"time"
 
-	appalbum "github.com/baddate/sanblog-v2/server/internal/app/album"
-	"github.com/baddate/sanblog-v2/server/internal/app/article"
-	"github.com/baddate/sanblog-v2/server/internal/app/comment"
-	appEvent "github.com/baddate/sanblog-v2/server/internal/app/event"
-	"github.com/baddate/sanblog-v2/server/internal/app/globalnotification"
-	"github.com/baddate/sanblog-v2/server/internal/app/moment"
-	"github.com/baddate/sanblog-v2/server/internal/app/page"
-	"github.com/baddate/sanblog-v2/server/internal/app/thinking"
+	appalbum "github.com/baddate/sanblog/server/internal/app/album"
+	"github.com/baddate/sanblog/server/internal/app/article"
+	"github.com/baddate/sanblog/server/internal/app/comment"
+	appEvent "github.com/baddate/sanblog/server/internal/app/event"
+	"github.com/baddate/sanblog/server/internal/app/globalnotification"
+	"github.com/baddate/sanblog/server/internal/app/moment"
+	"github.com/baddate/sanblog/server/internal/app/page"
+	"github.com/baddate/sanblog/server/internal/app/thinking"
 )
 
 var AvailableEventNames = appEvent.NamesByChannel(appEvent.ChannelWebhook)

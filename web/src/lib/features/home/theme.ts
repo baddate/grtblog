@@ -77,7 +77,7 @@ const defaultThemeConfig: HomeThemeConfig = {
 		now: {
 			title: 'Now / 正在',
 			items: [
-				{ id: 'coding', label: 'Coding', value: 'sanblog-v2', icon: 'code2' },
+				{ id: 'coding', label: 'Coding', value: 'sanblog', icon: 'code2' },
 				{
 					id: 'reading',
 					label: 'Reading',

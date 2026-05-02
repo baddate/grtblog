@@ -7,7 +7,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	appap "github.com/baddate/sanblog-v2/server/internal/app/activitypub"
+	appap "github.com/baddate/sanblog/server/internal/app/activitypub"
 )
 
 type ActivityPubHandler struct {

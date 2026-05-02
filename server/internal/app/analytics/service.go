@@ -14,10 +14,10 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
-	"github.com/baddate/sanblog-v2/server/internal/config"
-	"github.com/baddate/sanblog-v2/server/internal/infra/clientinfo"
-	"github.com/baddate/sanblog-v2/server/internal/infra/geoip"
-	"github.com/baddate/sanblog-v2/server/internal/infra/persistence/model"
+	"github.com/baddate/sanblog/server/internal/config"
+	"github.com/baddate/sanblog/server/internal/infra/clientinfo"
+	"github.com/baddate/sanblog/server/internal/infra/geoip"
+	"github.com/baddate/sanblog/server/internal/infra/persistence/model"
 )
 
 const (

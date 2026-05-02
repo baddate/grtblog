@@ -5,7 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/baddate/sanblog-v2/server/internal/infra/i18n"
+	"github.com/baddate/sanblog/server/internal/infra/i18n"
 )
 
 // TimeLayout 用于对外时间字段格式化。

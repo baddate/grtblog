@@ -5,10 +5,10 @@ import (
 	"strconv"
 	"strings"
 
-	appnav "github.com/baddate/sanblog-v2/server/internal/app/navigation"
-	"github.com/baddate/sanblog-v2/server/internal/domain/navigation"
-	"github.com/baddate/sanblog-v2/server/internal/http/contract"
-	"github.com/baddate/sanblog-v2/server/internal/http/response"
+	appnav "github.com/baddate/sanblog/server/internal/app/navigation"
+	"github.com/baddate/sanblog/server/internal/domain/navigation"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/response"
 	"github.com/gofiber/fiber/v2"
 )
 

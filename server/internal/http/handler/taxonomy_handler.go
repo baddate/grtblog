@@ -8,10 +8,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jinzhu/copier"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/taxonomy"
-	"github.com/baddate/sanblog-v2/server/internal/domain/content"
-	"github.com/baddate/sanblog-v2/server/internal/http/contract"
-	"github.com/baddate/sanblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/app/taxonomy"
+	"github.com/baddate/sanblog/server/internal/domain/content"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type TaxonomyHandler struct {
@@ -69,7 +69,7 @@ func (h *TaxonomyHandler) CreateCategory(c *fiber.Ctx) error {
 	var req contract.CategoryCreateReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if strings.TrimSpace(req.Name) == "" {
 		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
@@ -113,7 +113,7 @@ func (h *TaxonomyHandler) UpdateCategory(c *fiber.Ctx) error {
 	var req contract.CategoryUpdateReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if strings.TrimSpace(req.Name) == "" {
 		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
@@ -204,7 +204,7 @@ func (h *TaxonomyHandler) CreateColumn(c *fiber.Ctx) error {
 	var req contract.ColumnCreateReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if strings.TrimSpace(req.Name) == "" {
 		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
@@ -248,7 +248,7 @@ func (h *TaxonomyHandler) UpdateColumn(c *fiber.Ctx) error {
 	var req contract.ColumnUpdateReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if strings.TrimSpace(req.Name) == "" {
 		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
@@ -351,7 +351,7 @@ func (h *TaxonomyHandler) CreateTag(c *fiber.Ctx) error {
 	var req contract.TagCreateReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if strings.TrimSpace(req.Name) == "" {
 		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
@@ -383,7 +383,7 @@ func (h *TaxonomyHandler) UpdateTag(c *fiber.Ctx) error {
 	var req contract.TagUpdateReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if strings.TrimSpace(req.Name) == "" {
 		return response.ErrorFromBizLocalized[any](c, response.ParamsError)

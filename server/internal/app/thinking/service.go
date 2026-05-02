@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	appEvent "github.com/baddate/sanblog-v2/server/internal/app/event"
-	"github.com/baddate/sanblog-v2/server/internal/domain/comment"
-	domainthinking "github.com/baddate/sanblog-v2/server/internal/domain/thinking"
+	appEvent "github.com/baddate/sanblog/server/internal/app/event"
+	"github.com/baddate/sanblog/server/internal/domain/comment"
+	domainthinking "github.com/baddate/sanblog/server/internal/domain/thinking"
 )
 
 type Service struct {

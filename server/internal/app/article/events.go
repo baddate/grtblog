@@ -3,7 +3,7 @@ package article
 import (
 	"time"
 
-	"github.com/baddate/sanblog-v2/server/internal/domain/content"
+	"github.com/baddate/sanblog/server/internal/domain/content"
 )
 
 type ArticleCreated struct {

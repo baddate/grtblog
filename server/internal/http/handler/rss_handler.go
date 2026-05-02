@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/aclr/feeds"
-	apprss "github.com/baddate/sanblog-v2/server/internal/app/rss"
-	"github.com/baddate/sanblog-v2/server/internal/buildinfo"
+	apprss "github.com/baddate/sanblog/server/internal/app/rss"
+	"github.com/baddate/sanblog/server/internal/buildinfo"
 	"github.com/gofiber/fiber/v2"
 )
 

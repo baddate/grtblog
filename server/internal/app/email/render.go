@@ -5,7 +5,7 @@ import (
 	htmltpl "html/template"
 	texttpl "text/template"
 
-	domainemail "github.com/baddate/sanblog-v2/server/internal/domain/email"
+	domainemail "github.com/baddate/sanblog/server/internal/domain/email"
 )
 
 type RenderedTemplate struct {

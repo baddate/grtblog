@@ -1,6 +1,6 @@
 package contract
 
-import "github.com/baddate/sanblog-v2/server/internal/http/response"
+import "github.com/baddate/sanblog/server/internal/http/response"
 
 // OAuthProviderResp 返回可用的 OAuth provider 信息。
 type OAuthProviderResp struct {

@@ -4,10 +4,10 @@ import (
 	"errors"
 	"strconv"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/webhook"
-	domainwebhook "github.com/baddate/sanblog-v2/server/internal/domain/webhook"
-	"github.com/baddate/sanblog-v2/server/internal/http/contract"
-	"github.com/baddate/sanblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/app/webhook"
+	domainwebhook "github.com/baddate/sanblog/server/internal/domain/webhook"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/response"
 	"github.com/gofiber/fiber/v2"
 )
 

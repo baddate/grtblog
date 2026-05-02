@@ -214,7 +214,7 @@
 					<span class="hidden md:inline"
 						>Powered by <a
 							href="https://sanblog.js.org/"
-							class="text-jade-500 hover:text-jade-600 transition-colors">Sanblog-v2</a
+							class="text-jade-500 hover:text-jade-600 transition-colors">Sanblog</a
 						></span
 					>
 					{#if uptimeText}

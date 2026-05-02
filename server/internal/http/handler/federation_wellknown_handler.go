@@ -8,10 +8,10 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
-	"github.com/baddate/sanblog-v2/server/internal/buildinfo"
-	"github.com/baddate/sanblog-v2/server/internal/config"
-	fedinfra "github.com/baddate/sanblog-v2/server/internal/infra/federation"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
+	"github.com/baddate/sanblog/server/internal/buildinfo"
+	"github.com/baddate/sanblog/server/internal/config"
+	fedinfra "github.com/baddate/sanblog/server/internal/infra/federation"
 )
 
 type FederationWellKnownHandler struct {

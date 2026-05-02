@@ -764,7 +764,7 @@ REDIS_PREFIX=sanblog:
 AUTH_SECRET=${AUTH_SECRET}
 
 APP_UPDATE_CHECK_ENABLED=true
-APP_UPDATE_CHECK_REPO=baddate/sanblog-v2
+APP_UPDATE_CHECK_REPO=baddate/sanblog
 APP_UPDATE_CHANNEL=${APP_UPDATE_CHANNEL}
 
 # Admin panel (build-time, baked into JS bundle)

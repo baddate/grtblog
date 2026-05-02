@@ -8,12 +8,12 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jinzhu/copier"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/comment"
-	domaincomment "github.com/baddate/sanblog-v2/server/internal/domain/comment"
-	"github.com/baddate/sanblog-v2/server/internal/http/contract"
-	"github.com/baddate/sanblog-v2/server/internal/http/middleware"
-	"github.com/baddate/sanblog-v2/server/internal/http/response"
-	"github.com/baddate/sanblog-v2/server/internal/security/jwt"
+	"github.com/baddate/sanblog/server/internal/app/comment"
+	domaincomment "github.com/baddate/sanblog/server/internal/domain/comment"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/middleware"
+	"github.com/baddate/sanblog/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/security/jwt"
 )
 
 type CommentHandler struct {
@@ -49,13 +49,13 @@ func (h *CommentHandler) CreateCommentLogin(c *fiber.Ctx) error {
 	var req contract.CreateCommentLoginReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	var cmd comment.CreateCommentLoginCmd
 	if err := copier.Copy(&cmd, req); err != nil {
 		msg := response.Translate(c, "server.handler.map_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	cmd.AreaID = areaID
 	cmd.VisitorID = strings.TrimSpace(req.VisitorID)
@@ -90,7 +90,7 @@ func (h *CommentHandler) CreateCommentVisitor(c *fiber.Ctx) error {
 	var req contract.CreateCommentVisitorReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	cmd := comment.CreateCommentVisitorCmd{
@@ -328,7 +328,7 @@ func (h *CommentHandler) MarkCommentsViewed(c *fiber.Ctx) error {
 	var req contract.MarkCommentsViewedReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
 		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
@@ -370,13 +370,13 @@ func (h *CommentHandler) ImportComment(c *fiber.Ctx) error {
 	var req contract.ImportCommentReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	var cmd comment.ImportCommentCmd
 	if err := copier.Copy(&cmd, req); err != nil {
 		msg := response.Translate(c, "server.handler.map_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	created, err := h.svc.ImportComment(c.Context(), cmd)
@@ -408,7 +408,7 @@ func (h *CommentHandler) ReplyComment(c *fiber.Ctx) error {
 	var req contract.ReplyCommentReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	reply, err := h.svc.ReplyComment(c.Context(), comment.ReplyCommentCmd{
 		ParentID: parentID,
@@ -439,7 +439,7 @@ func (h *CommentHandler) UpdateCommentStatus(c *fiber.Ctx) error {
 	var req contract.UpdateCommentStatusReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if err := h.svc.UpdateCommentStatus(c.Context(), comment.UpdateCommentStatusCmd{
 		ID:     id,
@@ -468,7 +468,7 @@ func (h *CommentHandler) SetCommentAuthor(c *fiber.Ctx) error {
 	var req contract.SetCommentAuthorReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if err := h.svc.SetCommentAuthor(c.Context(), comment.SetCommentAuthorCmd{
 		ID:       id,
@@ -497,7 +497,7 @@ func (h *CommentHandler) SetCommentTop(c *fiber.Ctx) error {
 	var req contract.SetCommentTopReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if err := h.svc.SetCommentTop(c.Context(), comment.SetCommentTopCmd{
 		ID:    id,
@@ -544,7 +544,7 @@ func (h *CommentHandler) EditOwnComment(c *fiber.Ctx) error {
 	var req contract.UpdateCommentReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	viewerAuthorID := h.resolveViewerAuthorID(c)
 	updated, err := h.svc.EditComment(c.Context(), comment.EditCommentCmd{
@@ -602,7 +602,7 @@ func (h *CommentHandler) SetCommentAreaClose(c *fiber.Ctx) error {
 	var req contract.SetCommentAreaCloseReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if err := h.svc.SetAreaClosed(c.Context(), areaID, req.IsClosed); err != nil {
 		return h.mapCommentError(c, err)

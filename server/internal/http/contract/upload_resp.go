@@ -3,8 +3,8 @@ package contract
 import (
 	"time"
 
-	"github.com/baddate/sanblog-v2/server/internal/domain/media"
-	"github.com/baddate/sanblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/domain/media"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type UploadImageMeta struct {

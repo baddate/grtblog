@@ -5,7 +5,7 @@ import (
 
 	"github.com/ua-parser/uap-go/uaparser"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/comment"
+	"github.com/baddate/sanblog/server/internal/app/comment"
 )
 
 type UAParser struct {

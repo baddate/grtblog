@@ -5,15 +5,15 @@ import (
 	"errors"
 	"strconv"
 
-	"github.com/baddate/sanblog-v2/server/internal/http/middleware"
+	"github.com/baddate/sanblog/server/internal/http/middleware"
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/thinking"
-	domaincomment "github.com/baddate/sanblog-v2/server/internal/domain/comment"
-	"github.com/baddate/sanblog-v2/server/internal/domain/identity"
-	domainthinking "github.com/baddate/sanblog-v2/server/internal/domain/thinking"
-	"github.com/baddate/sanblog-v2/server/internal/http/contract"
-	"github.com/baddate/sanblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/app/thinking"
+	domaincomment "github.com/baddate/sanblog/server/internal/domain/comment"
+	"github.com/baddate/sanblog/server/internal/domain/identity"
+	domainthinking "github.com/baddate/sanblog/server/internal/domain/thinking"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type ThinkingHandler struct {
@@ -48,7 +48,7 @@ func (h *ThinkingHandler) CreateThinking(c *fiber.Ctx) error {
 	var req contract.CreateThinkingReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	created, err := h.svc.Create(c.Context(), thinking.CreateThinkingCmd{
@@ -230,7 +230,7 @@ func (h *ThinkingHandler) BatchDeleteThinkings(c *fiber.Ctx) error {
 	var req contract.BatchDeleteThinkingReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
 		return response.ErrorFromBizLocalized[any](c, response.ParamsError)

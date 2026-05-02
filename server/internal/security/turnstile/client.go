@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/baddate/sanblog-v2/server/internal/config"
+	"github.com/baddate/sanblog/server/internal/config"
 )
 
 var (

@@ -3,7 +3,7 @@ package federation
 import (
 	"context"
 
-	appEvent "github.com/baddate/sanblog-v2/server/internal/app/event"
+	appEvent "github.com/baddate/sanblog/server/internal/app/event"
 )
 
 type handlerFunc func(ctx context.Context, event appEvent.Event) error

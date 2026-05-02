@@ -12,10 +12,10 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	appai "github.com/baddate/sanblog-v2/server/internal/app/ai"
-	domainai "github.com/baddate/sanblog-v2/server/internal/domain/ai"
-	"github.com/baddate/sanblog-v2/server/internal/http/contract"
-	"github.com/baddate/sanblog-v2/server/internal/http/response"
+	appai "github.com/baddate/sanblog/server/internal/app/ai"
+	domainai "github.com/baddate/sanblog/server/internal/domain/ai"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type AIHandler struct {

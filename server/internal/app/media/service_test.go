@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	domainmedia "github.com/baddate/sanblog-v2/server/internal/domain/media"
+	domainmedia "github.com/baddate/sanblog/server/internal/domain/media"
 )
 
 func TestSyncIndexCreatesAndDeletesRecords(t *testing.T) {

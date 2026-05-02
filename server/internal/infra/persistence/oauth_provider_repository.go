@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/baddate/sanblog-v2/server/internal/domain/identity"
-	"github.com/baddate/sanblog-v2/server/internal/infra/persistence/model"
+	"github.com/baddate/sanblog/server/internal/domain/identity"
+	"github.com/baddate/sanblog/server/internal/infra/persistence/model"
 	"gorm.io/gorm"
 )
 

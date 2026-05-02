@@ -9,10 +9,10 @@ import (
 
 	"github.com/joho/godotenv"
 
-	"github.com/baddate/sanblog-v2/server/internal/buildinfo"
-	"github.com/baddate/sanblog-v2/server/internal/config"
-	"github.com/baddate/sanblog-v2/server/internal/database"
-	appserver "github.com/baddate/sanblog-v2/server/internal/server"
+	"github.com/baddate/sanblog/server/internal/buildinfo"
+	"github.com/baddate/sanblog/server/internal/config"
+	"github.com/baddate/sanblog/server/internal/database"
+	appserver "github.com/baddate/sanblog/server/internal/server"
 )
 
 // @title sanblog API v2

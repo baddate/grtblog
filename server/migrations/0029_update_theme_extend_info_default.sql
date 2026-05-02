@@ -56,7 +56,7 @@ VALUES (
             "id": "coding",
             "icon": "code2",
             "label": "Coding",
-            "value": "sanblog-v2"
+            "value": "sanblog"
           },
           {
             "id": "reading",

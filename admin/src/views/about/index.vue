@@ -96,7 +96,6 @@ onMounted(async () => {
     .then((result: string) => (devDependenciesCodeHighlight.value = result))
     .catch(() => (devDependenciesCodeHighlight.value = JSON.stringify(devDependencies, null, 2)))
 })
-
 </script>
 
 <template>
@@ -116,9 +115,8 @@ onMounted(async () => {
         面向创作者与读者的全栈内容平台
       </p>
       <p class="mt-3 max-w-3xl text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
-        sanblog-v2 是对 v1 的系统性重构：回到单体结构、减少依赖与复杂度，以默认 SSG 为主、按需引入
-        SSR / API。 项目由 Go API、SvelteKit 前台、Vue 后台与共享 Markdown 组件能力组成，本后台为
-        Lithe Admin 的二次开发版本， 专为内容管理、发布与运营流程定制。
+        sanblog 由 Go API、SvelteKit 前台、Vue 后台与共享 Markdown 组件能力组成，本后台为 Lithe
+        Admin 的二次开发版本， 专为内容管理、发布与运营流程定制。
       </p>
     </div>
 

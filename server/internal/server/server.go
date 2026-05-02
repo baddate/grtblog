@@ -20,30 +20,30 @@ import (
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/analytics"
-	"github.com/baddate/sanblog-v2/server/internal/app/article"
-	"github.com/baddate/sanblog-v2/server/internal/app/cleanup"
-	appfed "github.com/baddate/sanblog-v2/server/internal/app/federation"
-	"github.com/baddate/sanblog-v2/server/internal/app/health"
-	"github.com/baddate/sanblog-v2/server/internal/app/htmlsnapshot"
-	"github.com/baddate/sanblog-v2/server/internal/app/isr"
-	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
-	"github.com/baddate/sanblog-v2/server/internal/app/telemetry"
-	"github.com/baddate/sanblog-v2/server/internal/buildinfo"
-	"github.com/baddate/sanblog-v2/server/internal/config"
-	albumdomain "github.com/baddate/sanblog-v2/server/internal/domain/album"
-	"github.com/baddate/sanblog-v2/server/internal/domain/comment"
-	"github.com/baddate/sanblog-v2/server/internal/domain/content"
-	"github.com/baddate/sanblog-v2/server/internal/domain/social"
-	"github.com/baddate/sanblog-v2/server/internal/http/response"
-	"github.com/baddate/sanblog-v2/server/internal/http/router"
-	infraevent "github.com/baddate/sanblog-v2/server/internal/infra/event"
-	fedinfra "github.com/baddate/sanblog-v2/server/internal/infra/federation"
-	"github.com/baddate/sanblog-v2/server/internal/infra/i18n"
-	"github.com/baddate/sanblog-v2/server/internal/infra/metrics"
-	"github.com/baddate/sanblog-v2/server/internal/infra/persistence"
-	"github.com/baddate/sanblog-v2/server/internal/security/jwt"
-	"github.com/baddate/sanblog-v2/server/internal/security/turnstile"
+	"github.com/baddate/sanblog/server/internal/app/analytics"
+	"github.com/baddate/sanblog/server/internal/app/article"
+	"github.com/baddate/sanblog/server/internal/app/cleanup"
+	appfed "github.com/baddate/sanblog/server/internal/app/federation"
+	"github.com/baddate/sanblog/server/internal/app/health"
+	"github.com/baddate/sanblog/server/internal/app/htmlsnapshot"
+	"github.com/baddate/sanblog/server/internal/app/isr"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
+	"github.com/baddate/sanblog/server/internal/app/telemetry"
+	"github.com/baddate/sanblog/server/internal/buildinfo"
+	"github.com/baddate/sanblog/server/internal/config"
+	albumdomain "github.com/baddate/sanblog/server/internal/domain/album"
+	"github.com/baddate/sanblog/server/internal/domain/comment"
+	"github.com/baddate/sanblog/server/internal/domain/content"
+	"github.com/baddate/sanblog/server/internal/domain/social"
+	"github.com/baddate/sanblog/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/http/router"
+	infraevent "github.com/baddate/sanblog/server/internal/infra/event"
+	fedinfra "github.com/baddate/sanblog/server/internal/infra/federation"
+	"github.com/baddate/sanblog/server/internal/infra/i18n"
+	"github.com/baddate/sanblog/server/internal/infra/metrics"
+	"github.com/baddate/sanblog/server/internal/infra/persistence"
+	"github.com/baddate/sanblog/server/internal/security/jwt"
+	"github.com/baddate/sanblog/server/internal/security/turnstile"
 )
 
 // Server wraps Fiber with configuration and dependencies.
@@ -117,10 +117,10 @@ func New(cfg config.Config, db *gorm.DB) *Server {
 					Message:  ae.Error(),
 				})
 				// Use localized message if available; fall back to legacy Msg.
-			if ae.Message != "" {
-				return response.ErrorWithMsg[any](c, ae.Biz, ae.Message)
-			}
-			return response.ErrorFromBizLocalized[any](c, ae.Biz)
+				if ae.Message != "" {
+					return response.ErrorWithMsg[any](c, ae.Biz, ae.Message)
+				}
+				return response.ErrorFromBizLocalized[any](c, ae.Biz)
 			}
 
 			// 2. Fiber 内置错误（比如 fiber.ErrNotFound / ErrMethodNotAllowed）

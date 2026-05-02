@@ -3,8 +3,8 @@ package handler
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/telemetry"
-	"github.com/baddate/sanblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/app/telemetry"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 // AdminTelemetryHandler exposes error telemetry data to the admin dashboard.

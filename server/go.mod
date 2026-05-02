@@ -1,4 +1,4 @@
-module github.com/baddate/sanblog-v2/server
+module github.com/baddate/sanblog/server
 
 go 1.25.0
 

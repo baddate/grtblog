@@ -3,11 +3,11 @@ package router
 import (
 	"github.com/gofiber/fiber/v2"
 
-	appalbum "github.com/baddate/sanblog-v2/server/internal/app/album"
-	mediaapp "github.com/baddate/sanblog-v2/server/internal/app/media"
-	"github.com/baddate/sanblog-v2/server/internal/http/handler"
-	"github.com/baddate/sanblog-v2/server/internal/http/middleware"
-	"github.com/baddate/sanblog-v2/server/internal/infra/persistence"
+	appalbum "github.com/baddate/sanblog/server/internal/app/album"
+	mediaapp "github.com/baddate/sanblog/server/internal/app/media"
+	"github.com/baddate/sanblog/server/internal/http/handler"
+	"github.com/baddate/sanblog/server/internal/http/middleware"
+	"github.com/baddate/sanblog/server/internal/infra/persistence"
 )
 
 func registerAlbumPublicRoutes(v2 fiber.Router, deps Dependencies) {

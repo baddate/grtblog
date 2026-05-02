@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"strings"
 
-	domainwebhook "github.com/baddate/sanblog-v2/server/internal/domain/webhook"
+	domainwebhook "github.com/baddate/sanblog/server/internal/domain/webhook"
 )
 
 type Service struct {

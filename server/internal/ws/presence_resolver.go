@@ -8,10 +8,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
-	"github.com/baddate/sanblog-v2/server/internal/domain/content"
-	domainthinking "github.com/baddate/sanblog-v2/server/internal/domain/thinking"
-	"github.com/baddate/sanblog-v2/server/internal/infra/i18n"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
+	"github.com/baddate/sanblog/server/internal/domain/content"
+	domainthinking "github.com/baddate/sanblog/server/internal/domain/thinking"
+	"github.com/baddate/sanblog/server/internal/infra/i18n"
 )
 
 const (

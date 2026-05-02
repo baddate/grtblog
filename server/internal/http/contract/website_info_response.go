@@ -3,7 +3,7 @@ package contract
 import (
 	"encoding/json"
 
-	"github.com/baddate/sanblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type WebsiteInfoResp struct {

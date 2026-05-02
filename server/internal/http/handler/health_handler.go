@@ -9,10 +9,10 @@ import (
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/health"
-	"github.com/baddate/sanblog-v2/server/internal/buildinfo"
-	"github.com/baddate/sanblog-v2/server/internal/config"
-	"github.com/baddate/sanblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/app/health"
+	"github.com/baddate/sanblog/server/internal/buildinfo"
+	"github.com/baddate/sanblog/server/internal/config"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 // HealthHandler exposes lightweight probe endpoints for uptime monitoring.

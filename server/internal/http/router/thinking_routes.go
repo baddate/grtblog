@@ -3,10 +3,10 @@ package router
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/thinking"
-	"github.com/baddate/sanblog-v2/server/internal/http/handler"
-	"github.com/baddate/sanblog-v2/server/internal/http/middleware"
-	"github.com/baddate/sanblog-v2/server/internal/infra/persistence"
+	"github.com/baddate/sanblog/server/internal/app/thinking"
+	"github.com/baddate/sanblog/server/internal/http/handler"
+	"github.com/baddate/sanblog/server/internal/http/middleware"
+	"github.com/baddate/sanblog/server/internal/infra/persistence"
 )
 
 func registerThinkingPublicRoutes(v2 fiber.Router, deps Dependencies) {

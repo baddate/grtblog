@@ -8,13 +8,13 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	appalbum "github.com/baddate/sanblog-v2/server/internal/app/album"
-	mediaapp "github.com/baddate/sanblog-v2/server/internal/app/media"
-	domainalbum "github.com/baddate/sanblog-v2/server/internal/domain/album"
-	domaincomment "github.com/baddate/sanblog-v2/server/internal/domain/comment"
-	"github.com/baddate/sanblog-v2/server/internal/http/contract"
-	"github.com/baddate/sanblog-v2/server/internal/http/middleware"
-	"github.com/baddate/sanblog-v2/server/internal/http/response"
+	appalbum "github.com/baddate/sanblog/server/internal/app/album"
+	mediaapp "github.com/baddate/sanblog/server/internal/app/media"
+	domainalbum "github.com/baddate/sanblog/server/internal/domain/album"
+	domaincomment "github.com/baddate/sanblog/server/internal/domain/comment"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/middleware"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type AlbumHandler struct {
@@ -39,7 +39,7 @@ func (h *AlbumHandler) CreateAlbum(c *fiber.Ctx) error {
 	var req contract.CreateAlbumReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	cmd := appalbum.CreateAlbumCmd{
@@ -60,7 +60,7 @@ func (h *AlbumHandler) CreateAlbum(c *fiber.Ctx) error {
 	if err != nil {
 		if errors.Is(err, domainalbum.ErrAlbumShortURLExists) {
 			msg := response.Translate(c, "server.error.album_short_url_exists")
-		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		return err
 	}
@@ -93,7 +93,7 @@ func (h *AlbumHandler) UpdateAlbum(c *fiber.Ctx) error {
 	var req contract.UpdateAlbumReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	cmd := appalbum.UpdateAlbumCmd{
@@ -110,7 +110,7 @@ func (h *AlbumHandler) UpdateAlbum(c *fiber.Ctx) error {
 	if err != nil {
 		if errors.Is(err, domainalbum.ErrAlbumShortURLExists) {
 			msg := response.Translate(c, "server.error.album_short_url_exists")
-		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		if errors.Is(err, domainalbum.ErrAlbumNotFound) {
 			return response.ErrorFromBizLocalized[any](c, response.NotFound)
@@ -312,7 +312,7 @@ func (h *AlbumHandler) BatchSetAlbumPublished(c *fiber.Ctx) error {
 	var req contract.BatchSetAlbumPublishedReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
 		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
@@ -334,7 +334,7 @@ func (h *AlbumHandler) BatchDeleteAlbums(c *fiber.Ctx) error {
 	var req contract.BatchDeleteAlbumReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
 		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
@@ -358,7 +358,7 @@ func (h *AlbumHandler) AddPhotos(c *fiber.Ctx) error {
 	var req contract.BatchCreatePhotosReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.Photos) == 0 {
 		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
@@ -433,7 +433,7 @@ func (h *AlbumHandler) UpdatePhoto(c *fiber.Ctx) error {
 	var req contract.UpdatePhotoReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	exifMap := map[string]any{}
@@ -503,7 +503,7 @@ func (h *AlbumHandler) ReorderPhotos(c *fiber.Ctx) error {
 	var req contract.ReorderPhotosReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.PhotoIDs) == 0 {
 		return response.ErrorFromBizLocalized[any](c, response.ParamsError)

@@ -25,8 +25,8 @@ import (
 	"github.com/disintegration/imaging"
 	goexif "github.com/rwcarlsen/goexif/exif"
 
-	appEvent "github.com/baddate/sanblog-v2/server/internal/app/event"
-	"github.com/baddate/sanblog-v2/server/internal/domain/media"
+	appEvent "github.com/baddate/sanblog/server/internal/app/event"
+	"github.com/baddate/sanblog/server/internal/domain/media"
 )
 
 type Service struct {

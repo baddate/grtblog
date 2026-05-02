@@ -4,7 +4,7 @@ import { ref, onMounted } from "vue";
 const show = ref(false);
 
 onMounted(() => {
-    if (!localStorage.getItem("sanblog-v2-announcement-closed")) {
+    if (!localStorage.getItem("sanblog-announcement-closed")) {
         show.value = true;
         document.documentElement.classList.add("has-announcement");
     }
@@ -12,7 +12,7 @@ onMounted(() => {
 
 function close() {
     show.value = false;
-    localStorage.setItem("sanblog-v2-announcement-closed", "true");
+    localStorage.setItem("sanblog-announcement-closed", "true");
     document.documentElement.classList.remove("has-announcement");
 }
 </script>

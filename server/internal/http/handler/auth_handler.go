@@ -7,14 +7,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jinzhu/copier"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/auth"
-	"github.com/baddate/sanblog-v2/server/internal/app/setupstate"
-	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
-	"github.com/baddate/sanblog-v2/server/internal/domain/identity"
-	"github.com/baddate/sanblog-v2/server/internal/http/contract"
-	"github.com/baddate/sanblog-v2/server/internal/http/middleware"
-	"github.com/baddate/sanblog-v2/server/internal/http/response"
-	"github.com/baddate/sanblog-v2/server/internal/security/turnstile"
+	"github.com/baddate/sanblog/server/internal/app/auth"
+	"github.com/baddate/sanblog/server/internal/app/setupstate"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
+	"github.com/baddate/sanblog/server/internal/domain/identity"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/middleware"
+	"github.com/baddate/sanblog/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/security/turnstile"
 )
 
 type AuthHandler struct {
@@ -45,7 +45,7 @@ func (h *AuthHandler) Register(c *fiber.Ctx) error {
 	var req contract.RegisterReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if err := h.verifyTurnstile(c, req.TurnstileToken); err != nil {
 		return err
@@ -53,7 +53,7 @@ func (h *AuthHandler) Register(c *fiber.Ctx) error {
 	var cmd auth.RegisterCmd
 	if err := copier.Copy(&cmd, req); err != nil {
 		msg := response.Translate(c, "server.handler.map_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	user, err := h.svc.Register(c.Context(), cmd)
 	if err != nil {
@@ -92,7 +92,7 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	var req contract.LoginReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if err := h.verifyTurnstile(c, req.TurnstileToken); err != nil {
 		return err
@@ -100,7 +100,7 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	var cmd auth.LoginCmd
 	if err := copier.Copy(&cmd, req); err != nil {
 		msg := response.Translate(c, "server.handler.map_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	result, err := h.svc.Login(c.Context(), cmd)
 	if err != nil {
@@ -155,12 +155,12 @@ func (h *AuthHandler) UpdateProfile(c *fiber.Ctx) error {
 	var req contract.UpdateProfileReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	var cmd auth.UpdateProfileCmd
 	if err := copier.Copy(&cmd, req); err != nil {
 		msg := response.Translate(c, "server.handler.map_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	cmd.UserID = claims.UserID
 	user, err := h.svc.UpdateProfile(c.Context(), cmd)
@@ -183,7 +183,7 @@ func (h *AuthHandler) ChangePassword(c *fiber.Ctx) error {
 	var req contract.ChangePasswordReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if req.NewPassword == "" || req.OldPassword == "" {
 		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.password_required"))
@@ -191,7 +191,7 @@ func (h *AuthHandler) ChangePassword(c *fiber.Ctx) error {
 	var cmd auth.ChangePasswordCmd
 	if err := copier.Copy(&cmd, req); err != nil {
 		msg := response.Translate(c, "server.handler.map_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	cmd.UserID = claims.UserID
 	if err := h.svc.ChangePassword(c.Context(), cmd); err != nil {
@@ -230,7 +230,7 @@ func (h *AuthHandler) BindOAuth(c *fiber.Ctx) error {
 	var req contract.OAuthCallbackReq
 	if err := c.BodyParser(&req); err != nil {
 		msg := response.Translate(c, "server.handler.parse_body_failed")
-	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if req.Code == "" || req.State == "" || provider == "" {
 		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.oauth_fields_required"))

@@ -11,12 +11,12 @@ import (
 	"time"
 	"unicode/utf8"
 
-	appEvent "github.com/baddate/sanblog-v2/server/internal/app/event"
-	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
-	domaincomment "github.com/baddate/sanblog-v2/server/internal/domain/comment"
-	"github.com/baddate/sanblog-v2/server/internal/domain/identity"
-	"github.com/baddate/sanblog-v2/server/internal/domain/social"
-	"github.com/baddate/sanblog-v2/server/internal/infra/i18n"
+	appEvent "github.com/baddate/sanblog/server/internal/app/event"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
+	domaincomment "github.com/baddate/sanblog/server/internal/domain/comment"
+	"github.com/baddate/sanblog/server/internal/domain/identity"
+	"github.com/baddate/sanblog/server/internal/domain/social"
+	"github.com/baddate/sanblog/server/internal/infra/i18n"
 )
 
 const (

@@ -14,7 +14,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
 )
 
 // ReportStatus describes the outcome of a single upload attempt.
