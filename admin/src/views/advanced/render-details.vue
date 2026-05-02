@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { ArrowClockwise24Regular, Flash24Regular, Rocket24Regular } from '@vicons/fluent'
 import {
@@ -193,6 +196,7 @@ function triggerInvalidate() {
     syncRender: syncRender.value,
   })
 }
+
 </script>
 
 <template>

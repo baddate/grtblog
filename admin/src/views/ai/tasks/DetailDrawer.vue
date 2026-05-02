@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { useWindowSize } from '@vueuse/core'
 import {
   NDrawer,
@@ -117,6 +120,7 @@ function formatDuration(ms?: number) {
 function handleClose() {
   emit('update:show', false)
 }
+
 </script>
 
 <template>

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { defineAsyncComponent, h } from 'vue'
 
 import DevModeBadge from '@/components/health/DevModeBadge.vue'
@@ -24,6 +27,7 @@ const AsyncAvatarDropdown = defineAsyncComponent({
 
 const { isMaxSm } = useInjection(mediaQueryInjectionKey)
 const { navigationMode } = toRefsPreferencesStore()
+
 </script>
 <template>
   <div class="flex items-center">

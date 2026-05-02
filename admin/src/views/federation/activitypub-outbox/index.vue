@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { useQuery } from '@tanstack/vue-query'
 import { NDataTable, NButton, NTag, NInput, NCard, NSelect, NPagination } from 'naive-ui'
 import { h, ref } from 'vue'
@@ -148,6 +151,7 @@ const sourceTypeOptions = [
   { label: '手记', value: 'moment' },
   { label: '思考', value: 'thinking' },
 ] as any
+
 </script>
 
 <template>

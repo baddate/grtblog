@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { NButton, NCard, NForm, NFormItem, NInput, NSelect, useMessage } from 'naive-ui'
 import { onMounted, reactive, ref } from 'vue'
 
@@ -85,6 +88,7 @@ async function handleSend() {
 onMounted(() => {
   fetchTemplates()
 })
+
 </script>
 
 <template>

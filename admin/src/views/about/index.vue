@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { NScrollbar, NTag } from 'naive-ui'
 import { onMounted, ref } from 'vue'
 
@@ -93,6 +96,7 @@ onMounted(async () => {
     .then((result: string) => (devDependenciesCodeHighlight.value = result))
     .catch(() => (devDependenciesCodeHighlight.value = JSON.stringify(devDependencies, null, 2)))
 })
+
 </script>
 
 <template>

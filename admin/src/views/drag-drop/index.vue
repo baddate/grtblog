@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { NAlert, NCard, NSplit, NScrollbar, NButton } from 'naive-ui'
 import { ref, watch } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
@@ -113,6 +116,7 @@ watch(
     immediate: true,
   },
 )
+
 </script>
 <template>
   <ScrollContainer wrapper-class="flex flex-col gap-y-2">

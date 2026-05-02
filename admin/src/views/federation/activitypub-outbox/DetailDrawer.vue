@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { useWindowSize } from '@vueuse/core'
 import {
   NDrawer,
@@ -114,6 +117,7 @@ async function handleRetry() {
     retrying.value = false
   }
 }
+
 </script>
 
 <template>

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import {
   NButton,
   NCard,
@@ -125,6 +128,7 @@ async function openProfile(visitorId: string) {
     detailLoading.value = false
   }
 }
+
 </script>
 
 <template>

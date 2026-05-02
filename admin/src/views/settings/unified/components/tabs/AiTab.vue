@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import {
   NButton,
   NCard,
@@ -322,6 +325,7 @@ async function handleDeleteModel(row: AIModel) {
 onMounted(async () => {
   await Promise.all([fetchProviders(), fetchModels()])
 })
+
 </script>
 
 <template>

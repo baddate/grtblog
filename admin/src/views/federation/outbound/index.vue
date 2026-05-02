@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { useQuery } from '@tanstack/vue-query'
 import { NDataTable, NButton, NTag, NInput, NSpace, NCard, NSelect } from 'naive-ui'
 import { h, ref } from 'vue'
@@ -111,6 +114,7 @@ const statusOptions = [
   { label: '失败', value: 'failed' },
   { label: '重试中', value: 'retrying' },
 ] as any
+
 </script>
 
 <template>

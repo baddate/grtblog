@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
 import {
   NCard,
@@ -155,6 +158,7 @@ function handleToggleStatus(row: FederationInstanceResp) {
   const newStatus = row.status === 'blocked' ? 'active' : 'blocked'
   updateStatus({ id: row.id, status: newStatus })
 }
+
 </script>
 
 <template>

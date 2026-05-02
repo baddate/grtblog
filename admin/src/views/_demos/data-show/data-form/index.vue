@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import {
   NCard,
   NForm,
@@ -219,6 +222,7 @@ watch(
     immediate: true,
   },
 )
+
 </script>
 <template>
   <ScrollContainer wrapper-class="flex flex-col gap-y-2">

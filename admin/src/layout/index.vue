@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { useQuery, useQueryClient } from '@tanstack/vue-query'
 import { isEmpty } from 'lodash-es'
 import { NScrollbar, useDialog } from 'naive-ui'
@@ -351,6 +354,7 @@ function normalizeOwnerStatusPayload(payload: unknown): OwnerStatusPayload | nul
     adminPanelOnline: raw.adminPanelOnline === true,
   }
 }
+
 </script>
 
 <template>

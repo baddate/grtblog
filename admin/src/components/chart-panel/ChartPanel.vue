@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { NSkeleton } from 'naive-ui'
 
 defineOptions({
@@ -28,6 +31,7 @@ const emit = defineEmits<{
 function selectTab(value: string) {
   emit('update:activeTab', value)
 }
+
 </script>
 
 <template>

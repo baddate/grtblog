@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { NForm, NFormItem, NInput, NButton, NCheckbox, NCarousel, useMessage } from 'naive-ui'
 import {
   computed,
@@ -163,6 +166,7 @@ onUnmounted(() => {
   window.removeEventListener('mousemove', onMouseMove)
   window.removeEventListener('touchmove', onTouchMove)
 })
+
 </script>
 <template>
   <div

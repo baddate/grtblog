@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { useElementSize, watchThrottled, useTemplateRefsList } from '@vueuse/core'
 import { isFunction, isEmpty } from 'lodash-es'
 import { NDropdown } from 'naive-ui'
@@ -134,6 +137,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   stopObserveContainerSize()
 })
+
 </script>
 <template>
   <div

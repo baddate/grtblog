@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import {
   NButton,
@@ -182,6 +185,7 @@ function handleReset() {
   params.search = undefined
   params.page = 1
 }
+
 </script>
 
 <template>

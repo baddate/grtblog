@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { ArrowLeft24Regular } from '@vicons/fluent'
 import {
   NButton,
@@ -241,6 +244,7 @@ onMounted(async () => {
   await fetchEvents()
   await fetchDetail()
 })
+
 </script>
 
 <template>

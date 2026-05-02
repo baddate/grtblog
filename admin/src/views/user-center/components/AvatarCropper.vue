@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { NButton, NModal } from 'naive-ui'
 import { computed } from 'vue'
 import { useCropper } from 'vue-picture-cropper'
@@ -37,6 +40,7 @@ async function handleConfirm() {
   if (!file) return
   emit('confirm', file)
 }
+
 </script>
 
 <template>

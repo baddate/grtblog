@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { onMounted, ref, toRef, watch } from 'vue'
 
 import { useTurnstile } from '@/composables/use-turnstile'
@@ -35,6 +38,7 @@ onMounted(() => {
 watch(siteKeyRef, (key) => {
   if (key) render()
 })
+
 </script>
 
 <template>

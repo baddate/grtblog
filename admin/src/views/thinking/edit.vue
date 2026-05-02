@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import {
   NButton,
   NCard,
@@ -108,6 +111,7 @@ async function handleRepublishActivityPub() {
     apPublishing.value = false
   }
 }
+
 </script>
 
 <template>

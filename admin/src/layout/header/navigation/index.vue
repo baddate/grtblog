@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { defineAsyncComponent } from 'vue'
 
 import { CollapseTransition } from '@/components'
@@ -13,6 +16,7 @@ const AsyncHorizontalMenu = defineAsyncComponent(() => import('./HorizontalMenu.
 const AsyncBreadcrumb = defineAsyncComponent(() => import('./Breadcrumb.vue'))
 
 const { showNavigationButton, breadcrumb, navigationMode } = toRefsPreferencesStore()
+
 </script>
 <template>
   <nav class="flex h-9 flex-1 items-center">

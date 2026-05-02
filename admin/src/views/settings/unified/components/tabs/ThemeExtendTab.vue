@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { NAlert, NButton, NTag, useMessage } from 'naive-ui'
 import { computed, onMounted, ref, watch } from 'vue'
 
@@ -91,6 +94,7 @@ async function handleSave() {
 }
 
 onMounted(fetchData)
+
 </script>
 
 <template>

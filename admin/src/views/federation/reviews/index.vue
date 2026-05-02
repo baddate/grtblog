@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
 import { NDataTable, NButton, NTag, useMessage, NModal, NInput, NCard, NSpace } from 'naive-ui'
 import { h, ref } from 'vue'
@@ -128,6 +131,7 @@ function confirmReject() {
     })
   }
 }
+
 </script>
 
 <template>

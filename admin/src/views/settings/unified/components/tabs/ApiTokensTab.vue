@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import {
   NButton,
   NCard,
@@ -119,6 +122,7 @@ async function handleDelete(row: AdminTokenItem) {
   message.success(t('admin.common.delete_success'))
   refresh()
 }
+
 </script>
 
 <template>

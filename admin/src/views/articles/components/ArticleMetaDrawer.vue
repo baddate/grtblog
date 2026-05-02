@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import {
   NAlert,
   NAutoComplete,
@@ -110,6 +113,7 @@ function outboundStatusTagType(status?: string | null) {
 function emitResetRow(row: FederationSignalRow) {
   emit('resetFederationSignal', row)
 }
+
 </script>
 
 <template>
