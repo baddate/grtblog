@@ -10,6 +10,7 @@ import (
 	"github.com/baddate/sanblog-v2/server/internal/app/contentutil"
 	"github.com/baddate/sanblog-v2/server/internal/domain/album"
 	"github.com/baddate/sanblog-v2/server/internal/infra/persistence/model"
+	"github.com/baddate/sanblog-v2/server/internal/infra/i18n"
 )
 
 type AlbumRepository struct {
@@ -33,7 +34,7 @@ func (r *AlbumRepository) CreateAlbum(ctx context.Context, a *album.Album) error
 			return err
 		}
 
-		areaID, err := createCommentArea(tx, contentutil.CommentAreaTypeAlbum, "相册", m.Title, m.ID)
+		areaID, err := createCommentArea(tx, contentutil.CommentAreaTypeAlbum, i18n.MustLocalize("zh", "server.label.album"), m.Title, m.ID)
 		if err != nil {
 			return err
 		}

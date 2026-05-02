@@ -14,6 +14,7 @@ import (
 	"github.com/baddate/sanblog-v2/server/internal/app/contentutil"
 	"github.com/baddate/sanblog-v2/server/internal/domain/content"
 	"github.com/baddate/sanblog-v2/server/internal/infra/persistence/model"
+	"github.com/baddate/sanblog-v2/server/internal/infra/i18n"
 )
 
 type ContentRepository struct {
@@ -561,7 +562,7 @@ func (r *ContentRepository) CreateArticle(ctx context.Context, article *content.
 			return err
 		}
 
-		areaID, err := createCommentArea(tx, contentutil.CommentAreaTypeArticle, "文章", articleModel.Title, articleModel.ID)
+		areaID, err := createCommentArea(tx, contentutil.CommentAreaTypeArticle, i18n.MustLocalize("zh", "server.label.article"), articleModel.Title, articleModel.ID)
 		if err != nil {
 			return err
 		}
@@ -676,7 +677,7 @@ func (r *ContentRepository) UpdateArticle(ctx context.Context, article *content.
 		_ = r.db.WithContext(ctx).
 			Model(&model.CommentArea{}).
 			Where("id = ?", *article.CommentID).
-			Update("area_name", contentutil.BuildCommentAreaName("文章", article.Title)).Error
+			Update("area_name", contentutil.BuildCommentAreaName(i18n.MustLocalize("zh", "server.label.article"), article.Title)).Error
 	}
 
 	article.UpdatedAt = now
@@ -959,7 +960,7 @@ func (r *ContentRepository) CreateMoment(ctx context.Context, moment *content.Mo
 			return err
 		}
 
-		areaID, err := createCommentArea(tx, contentutil.CommentAreaTypeMoment, "手记", momentModel.Title, momentModel.ID)
+		areaID, err := createCommentArea(tx, contentutil.CommentAreaTypeMoment, i18n.MustLocalize("zh", "server.label.moment"), momentModel.Title, momentModel.ID)
 		if err != nil {
 			return err
 		}
@@ -1072,7 +1073,7 @@ func (r *ContentRepository) UpdateMoment(ctx context.Context, moment *content.Mo
 		_ = r.db.WithContext(ctx).
 			Model(&model.CommentArea{}).
 			Where("id = ?", *moment.CommentID).
-			Update("area_name", contentutil.BuildCommentAreaName("手记", moment.Title)).Error
+			Update("area_name", contentutil.BuildCommentAreaName(i18n.MustLocalize("zh", "server.label.moment"), moment.Title)).Error
 	}
 
 	moment.UpdatedAt = now
@@ -1245,7 +1246,7 @@ func (r *ContentRepository) CreatePage(ctx context.Context, page *content.Page) 
 			return err
 		}
 
-		areaID, err := createCommentArea(tx, contentutil.CommentAreaTypePage, "页面", pageModel.Title, pageModel.ID)
+		areaID, err := createCommentArea(tx, contentutil.CommentAreaTypePage, i18n.MustLocalize("zh", "server.label.page"), pageModel.Title, pageModel.ID)
 		if err != nil {
 			return err
 		}
@@ -1336,7 +1337,7 @@ func (r *ContentRepository) UpdatePage(ctx context.Context, page *content.Page) 
 		_ = r.db.WithContext(ctx).
 			Model(&model.CommentArea{}).
 			Where("id = ?", *page.CommentID).
-			Update("area_name", contentutil.BuildCommentAreaName("页面", page.Title)).Error
+			Update("area_name", contentutil.BuildCommentAreaName(i18n.MustLocalize("zh", "server.label.page"), page.Title)).Error
 	}
 
 	page.UpdatedAt = now

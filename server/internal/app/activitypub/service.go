@@ -34,6 +34,7 @@ import (
 	"github.com/baddate/sanblog-v2/server/internal/domain/identity"
 	"github.com/baddate/sanblog-v2/server/internal/domain/thinking"
 	fedinfra "github.com/baddate/sanblog-v2/server/internal/infra/federation"
+	"github.com/baddate/sanblog-v2/server/internal/infra/i18n"
 )
 
 const (
@@ -1624,7 +1625,7 @@ func (s *Service) buildObjectForSource(ctx context.Context, baseURL string, sour
 			"id":        objectID,
 			"type":      "Note",
 			"url":       sourceURL,
-			"content":   renderFederatedHTML(publishTemplate, "思考", summary, sourceURL, sourceType),
+			"content":   renderFederatedHTML(publishTemplate, i18n.MustLocalize("zh", "server.label.thinking"), summary, sourceURL, sourceType),
 			"published": now,
 		}, nil
 	default:
@@ -1712,11 +1713,11 @@ func renderFederatedHTML(rawTemplate, title, summary, sourceURL, sourceType stri
 func activityPubContentTypeLabel(sourceType string) string {
 	switch strings.ToLower(strings.TrimSpace(sourceType)) {
 	case "article":
-		return "文章"
+		return i18n.MustLocalize("zh", "server.label.article")
 	case "moment":
-		return "手记"
+		return i18n.MustLocalize("zh", "server.label.moment")
 	case "thinking":
-		return "思考"
+		return i18n.MustLocalize("zh", "server.label.thinking")
 	default:
 		return ""
 	}

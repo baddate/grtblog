@@ -11,6 +11,7 @@ import (
 	"github.com/baddate/sanblog-v2/server/internal/app/sysconfig"
 	"github.com/baddate/sanblog-v2/server/internal/domain/content"
 	domainthinking "github.com/baddate/sanblog-v2/server/internal/domain/thinking"
+	"github.com/baddate/sanblog-v2/server/internal/infra/i18n"
 )
 
 const (
@@ -117,7 +118,7 @@ func splitPathSegments(pathname string) []string {
 func (r *PresenceTitleResolver) resolveArticle(pathname string) PresenceResolvedView {
 	view := PresenceResolvedView{
 		ContentType: presenceTypeArticle,
-		Title:       "文章",
+		Title:       i18n.MustLocalize("zh", "server.label.article"),
 		URL:         pathname,
 	}
 
@@ -139,7 +140,7 @@ func (r *PresenceTitleResolver) resolveArticle(pathname string) PresenceResolved
 
 	view.Title = strings.TrimSpace(article.Title)
 	if view.Title == "" {
-		view.Title = "文章"
+		view.Title = i18n.MustLocalize("zh", "server.label.article")
 	}
 	view.URL = "/posts/" + url.PathEscape(article.ShortURL)
 	return view
@@ -148,7 +149,7 @@ func (r *PresenceTitleResolver) resolveArticle(pathname string) PresenceResolved
 func (r *PresenceTitleResolver) resolveMoment(pathname string) PresenceResolvedView {
 	view := PresenceResolvedView{
 		ContentType: presenceTypeMoment,
-		Title:       "手记",
+		Title:       i18n.MustLocalize("zh", "server.label.moment"),
 		URL:         pathname,
 	}
 
@@ -173,7 +174,7 @@ func (r *PresenceTitleResolver) resolveMoment(pathname string) PresenceResolvedV
 
 	view.Title = strings.TrimSpace(item.Title)
 	if view.Title == "" {
-		view.Title = "手记"
+		view.Title = i18n.MustLocalize("zh", "server.label.moment")
 	}
 	siteTZ := r.sysCfg.Timezone(context.Background())
 	view.URL = buildMomentPath(item.ShortURL, item.CreatedAt.In(siteTZ))
@@ -183,12 +184,12 @@ func (r *PresenceTitleResolver) resolveMoment(pathname string) PresenceResolvedV
 func (r *PresenceTitleResolver) resolvePage(pathname string) PresenceResolvedView {
 	view := PresenceResolvedView{
 		ContentType: presenceTypePage,
-		Title:       "页面",
+		Title:       i18n.MustLocalize("zh", "server.label.page"),
 		URL:         pathname,
 	}
 
 	if pathname == "/" {
-		view.Title = "首页"
+		view.Title = i18n.MustLocalize("zh", "server.label.home")
 		view.URL = "/"
 		return view
 	}
@@ -211,7 +212,7 @@ func (r *PresenceTitleResolver) resolvePage(pathname string) PresenceResolvedVie
 
 	view.Title = strings.TrimSpace(item.Title)
 	if view.Title == "" {
-		view.Title = "页面"
+		view.Title = i18n.MustLocalize("zh", "server.label.page")
 	}
 	view.URL = "/" + url.PathEscape(item.ShortURL)
 	return view
@@ -220,7 +221,7 @@ func (r *PresenceTitleResolver) resolvePage(pathname string) PresenceResolvedVie
 func (r *PresenceTitleResolver) resolveThinking(pathname string) PresenceResolvedView {
 	view := PresenceResolvedView{
 		ContentType: presenceTypeThinking,
-		Title:       "思考",
+		Title:       i18n.MustLocalize("zh", "server.label.thinking"),
 		URL:         "/thinkings",
 	}
 
@@ -260,7 +261,7 @@ func buildMomentPath(slug string, createdAt interface{ Format(string) string }) 
 func formatThinkingTitle(id int64, content string) string {
 	trimmed := strings.TrimSpace(content)
 	if trimmed == "" {
-		return fmt.Sprintf("思考 #%d", id)
+		return i18n.MustLocalize("zh", "server.label.thinking") + fmt.Sprintf(" #%d", id)
 	}
 
 	runes := []rune(trimmed)

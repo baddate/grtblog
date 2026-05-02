@@ -298,7 +298,16 @@ func (s *Service) DiscoverRoutes(ctx context.Context) ([]string, error) {
 		}
 	}
 
-	return normalizeURLs(routes), nil
+	// Expand all routes with language prefix for zh/en dual-language ISR.
+	langs := []string{"zh", "en"}
+	expanded := make([]string, 0, len(routes)*len(langs))
+	for _, route := range routes {
+		for _, lang := range langs {
+			expanded = append(expanded, "/"+lang+route)
+		}
+	}
+
+	return normalizeURLs(expanded), nil
 }
 
 func (s *Service) Snapshot(ctx context.Context, trackedLimit int, recentLimit int) (*StateSnapshot, error) {

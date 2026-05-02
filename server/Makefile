@@ -28,3 +28,6 @@ endif
 
 docs:
 	$(SWAG) init -g $(SWAG_ENTRY) -o $(SWAG_OUT) --outputTypes json --parseInternal
+
+i18n-check:
+	bash scripts/i18n-check.sh

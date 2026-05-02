@@ -18,6 +18,7 @@ import (
 	domaincomment "github.com/baddate/sanblog-v2/server/internal/domain/comment"
 	"github.com/baddate/sanblog-v2/server/internal/domain/content"
 	domainthinking "github.com/baddate/sanblog-v2/server/internal/domain/thinking"
+	"github.com/baddate/sanblog-v2/server/internal/infra/i18n"
 )
 
 const siteActivityType = "site.activity"
@@ -54,7 +55,7 @@ func RegisterSiteActivitySubscriber(
 			Type:        siteActivityType,
 			Event:       updated.Name(),
 			ContentType: "article",
-			Title:       normalizeActivityTitle(updated.Title, "文章"),
+			Title:       normalizeActivityTitle(updated.Title, i18n.MustLocalize("zh", "server.label.article")),
 			URL:         "/posts/" + url.PathEscape(strings.TrimSpace(updated.ShortURL)),
 			At:          normalizeActivityAt(updated.At),
 		})
@@ -70,7 +71,7 @@ func RegisterSiteActivitySubscriber(
 			Type:        siteActivityType,
 			Event:       marked.Name(),
 			ContentType: "article",
-			Title:       normalizeActivityTitle(marked.Title, "文章"),
+			Title:       normalizeActivityTitle(marked.Title, i18n.MustLocalize("zh", "server.label.article")),
 			URL:         "/posts/" + url.PathEscape(strings.TrimSpace(marked.ShortURL)),
 			At:          normalizeActivityAt(marked.At),
 		})
@@ -90,7 +91,7 @@ func RegisterSiteActivitySubscriber(
 			Type:        siteActivityType,
 			Event:       updated.Name(),
 			ContentType: "moment",
-			Title:       normalizeActivityTitle(item.Title, "手记"),
+			Title:       normalizeActivityTitle(item.Title, i18n.MustLocalize("zh", "server.label.moment")),
 			URL:         buildMomentPath(item.ShortURL, item.CreatedAt),
 			At:          normalizeActivityAt(updated.At),
 		})
@@ -106,7 +107,7 @@ func RegisterSiteActivitySubscriber(
 			Type:        siteActivityType,
 			Event:       updated.Name(),
 			ContentType: "page",
-			Title:       normalizeActivityTitle(updated.Title, "页面"),
+			Title:       normalizeActivityTitle(updated.Title, i18n.MustLocalize("zh", "server.label.page")),
 			URL:         "/" + url.PathEscape(strings.TrimSpace(updated.ShortURL)),
 			At:          normalizeActivityAt(updated.At),
 		})
@@ -134,7 +135,7 @@ func RegisterSiteActivitySubscriber(
 			Type:        siteActivityType,
 			Event:       "thinking.updated",
 			ContentType: "thinking",
-			Title:       normalizeActivityTitle(title, fmt.Sprintf("思考 #%d", id)),
+			Title:       normalizeActivityTitle(title, i18n.MustLocalize("zh", "server.label.thinking") + fmt.Sprintf(" #%d", id)),
 			URL:         fmt.Sprintf("/thinkings/%d", id),
 			At:          normalizeActivityAt(generic.At),
 		})
@@ -232,7 +233,7 @@ func resolveCommentTarget(
 		if err != nil || item == nil || !item.IsPublished || strings.TrimSpace(item.ShortURL) == "" {
 			return "", "", false
 		}
-		return normalizeActivityTitle(item.Title, "文章"), "/posts/" + url.PathEscape(strings.TrimSpace(item.ShortURL)), true
+		return normalizeActivityTitle(item.Title, i18n.MustLocalize("zh", "server.label.article")), "/posts/" + url.PathEscape(strings.TrimSpace(item.ShortURL)), true
 	case "moment":
 		if contentRepo == nil {
 			return "", "", false
@@ -241,7 +242,7 @@ func resolveCommentTarget(
 		if err != nil || item == nil || !item.IsPublished || strings.TrimSpace(item.ShortURL) == "" {
 			return "", "", false
 		}
-		return normalizeActivityTitle(item.Title, "手记"), buildMomentPath(item.ShortURL, item.CreatedAt), true
+		return normalizeActivityTitle(item.Title, i18n.MustLocalize("zh", "server.label.moment")), buildMomentPath(item.ShortURL, item.CreatedAt), true
 	case "page":
 		if contentRepo == nil {
 			return "", "", false
@@ -250,7 +251,7 @@ func resolveCommentTarget(
 		if err != nil || item == nil || !item.IsEnabled || strings.TrimSpace(item.ShortURL) == "" {
 			return "", "", false
 		}
-		return normalizeActivityTitle(item.Title, "页面"), "/" + url.PathEscape(strings.TrimSpace(item.ShortURL)), true
+		return normalizeActivityTitle(item.Title, i18n.MustLocalize("zh", "server.label.page")), "/" + url.PathEscape(strings.TrimSpace(item.ShortURL)), true
 	case "thinking":
 		if thinkingRepo == nil {
 			return "", "", false
@@ -268,7 +269,7 @@ func resolveCommentTarget(
 		if err != nil || item == nil || !item.IsPublished || strings.TrimSpace(item.ShortURL) == "" {
 			return "", "", false
 		}
-		return normalizeActivityTitle(item.Title, "相册"), "/albums/" + url.PathEscape(strings.TrimSpace(item.ShortURL)), true
+		return normalizeActivityTitle(item.Title, i18n.MustLocalize("zh", "server.label.album")), "/albums/" + url.PathEscape(strings.TrimSpace(item.ShortURL)), true
 	default:
 		return "", "", false
 	}
