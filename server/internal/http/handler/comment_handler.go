@@ -38,22 +38,24 @@ func NewCommentHandler(svc *comment.Service, jwtManager *jwt.Manager) *CommentHa
 func (h *CommentHandler) CreateCommentLogin(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 
 	areaID, err := parseInt64Param(c, "areaId")
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的评论区ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	var req contract.CreateCommentLoginReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	var cmd comment.CreateCommentLoginCmd
 	if err := copier.Copy(&cmd, req); err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "请求体映射失败")
+		msg := response.Translate(c, "server.handler.map_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	cmd.AreaID = areaID
 	cmd.VisitorID = strings.TrimSpace(req.VisitorID)
@@ -67,7 +69,7 @@ func (h *CommentHandler) CreateCommentLogin(c *fiber.Ctx) error {
 		return h.mapCommentError(c, err)
 	}
 	resp := toCreateCommentResp(created)
-	return response.SuccessWithMessage(c, resp, "评论创建成功")
+	return response.SuccessWithMessage(c, resp, response.Translate(c, "server.success.created"))
 }
 
 // CreateCommentVisitor godoc
@@ -82,12 +84,13 @@ func (h *CommentHandler) CreateCommentLogin(c *fiber.Ctx) error {
 func (h *CommentHandler) CreateCommentVisitor(c *fiber.Ctx) error {
 	areaID, err := parseInt64Param(c, "areaId")
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的评论区ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	var req contract.CreateCommentVisitorReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	cmd := comment.CreateCommentVisitorCmd{
@@ -113,7 +116,7 @@ func (h *CommentHandler) CreateCommentVisitor(c *fiber.Ctx) error {
 		return h.mapCommentError(c, err)
 	}
 	resp := toCreateCommentResp(created)
-	return response.SuccessWithMessage(c, resp, "评论创建成功")
+	return response.SuccessWithMessage(c, resp, response.Translate(c, "server.success.created"))
 }
 
 // ListCommentTree godoc
@@ -130,7 +133,7 @@ func (h *CommentHandler) CreateCommentVisitor(c *fiber.Ctx) error {
 func (h *CommentHandler) ListCommentTree(c *fiber.Ctx) error {
 	areaID, err := parseInt64Param(c, "areaId")
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的评论区ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	page := parseIntQuery(c, "page", 1)
@@ -184,7 +187,7 @@ func (h *CommentHandler) ListAdminComments(c *fiber.Ctx) error {
 	pageSize := parseIntQuery(c, "pageSize", 20)
 	status := strings.TrimSpace(c.Query("status"))
 	if status != "" && !isValidCommentStatus(status) {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的评论状态")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	onlyUnviewed := parseBoolQuery(c, "onlyUnviewed", true)
 
@@ -192,7 +195,7 @@ func (h *CommentHandler) ListAdminComments(c *fiber.Ctx) error {
 	if raw := strings.TrimSpace(c.Query("areaId")); raw != "" {
 		val, err := strconv.ParseInt(raw, 10, 64)
 		if err != nil {
-			return response.NewBizErrorWithMsg(response.ParamsError, "无效的评论区ID")
+			return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 		}
 		areaID = &val
 	}
@@ -324,16 +327,17 @@ func (h *CommentHandler) GetAdminVisitorInsights(c *fiber.Ctx) error {
 func (h *CommentHandler) MarkCommentsViewed(c *fiber.Ctx) error {
 	var req contract.MarkCommentsViewedReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "ids 不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	ids := make([]int64, 0, len(req.IDs))
 	for _, raw := range req.IDs {
 		id, err := strconv.ParseInt(strings.TrimSpace(raw), 10, 64)
 		if err != nil || id <= 0 {
-			return response.NewBizErrorWithMsg(response.ParamsError, "ids 包含无效值")
+			return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 		}
 		ids = append(ids, id)
 	}
@@ -348,9 +352,9 @@ func (h *CommentHandler) MarkCommentsViewed(c *fiber.Ctx) error {
 		return h.mapCommentError(c, err)
 	}
 	if isViewed {
-		return response.SuccessWithMessage[any](c, nil, "已标记已读")
+		return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.updated"))
 	}
-	return response.SuccessWithMessage[any](c, nil, "已标记未读")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.updated"))
 }
 
 // ImportComment godoc
@@ -365,19 +369,21 @@ func (h *CommentHandler) MarkCommentsViewed(c *fiber.Ctx) error {
 func (h *CommentHandler) ImportComment(c *fiber.Ctx) error {
 	var req contract.ImportCommentReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	var cmd comment.ImportCommentCmd
 	if err := copier.Copy(&cmd, req); err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "请求体映射失败")
+		msg := response.Translate(c, "server.handler.map_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	created, err := h.svc.ImportComment(c.Context(), cmd)
 	if err != nil {
 		return h.mapCommentError(c, err)
 	}
-	return response.SuccessWithMessage(c, toCreateCommentResp(created), "评论导入成功")
+	return response.SuccessWithMessage(c, toCreateCommentResp(created), response.Translate(c, "server.success.created"))
 }
 
 // ReplyComment godoc
@@ -393,15 +399,16 @@ func (h *CommentHandler) ImportComment(c *fiber.Ctx) error {
 func (h *CommentHandler) ReplyComment(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 	parentID, err := parseInt64Param(c, "id")
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的评论ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	var req contract.ReplyCommentReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	reply, err := h.svc.ReplyComment(c.Context(), comment.ReplyCommentCmd{
 		ParentID: parentID,
@@ -411,7 +418,7 @@ func (h *CommentHandler) ReplyComment(c *fiber.Ctx) error {
 	if err != nil {
 		return h.mapCommentError(c, err)
 	}
-	return response.SuccessWithMessage(c, toCreateCommentResp(reply), "回复成功")
+	return response.SuccessWithMessage(c, toCreateCommentResp(reply), response.Translate(c, "server.success.created"))
 }
 
 // UpdateCommentStatus godoc
@@ -427,11 +434,12 @@ func (h *CommentHandler) ReplyComment(c *fiber.Ctx) error {
 func (h *CommentHandler) UpdateCommentStatus(c *fiber.Ctx) error {
 	id, err := parseInt64Param(c, "id")
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的评论ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	var req contract.UpdateCommentStatusReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if err := h.svc.UpdateCommentStatus(c.Context(), comment.UpdateCommentStatusCmd{
 		ID:     id,
@@ -439,7 +447,7 @@ func (h *CommentHandler) UpdateCommentStatus(c *fiber.Ctx) error {
 	}); err != nil {
 		return h.mapCommentError(c, err)
 	}
-	return response.SuccessWithMessage[any](c, nil, "评论状态已更新")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.updated"))
 }
 
 // SetCommentAuthor godoc
@@ -455,11 +463,12 @@ func (h *CommentHandler) UpdateCommentStatus(c *fiber.Ctx) error {
 func (h *CommentHandler) SetCommentAuthor(c *fiber.Ctx) error {
 	id, err := parseInt64Param(c, "id")
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的评论ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	var req contract.SetCommentAuthorReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if err := h.svc.SetCommentAuthor(c.Context(), comment.SetCommentAuthorCmd{
 		ID:       id,
@@ -467,7 +476,7 @@ func (h *CommentHandler) SetCommentAuthor(c *fiber.Ctx) error {
 	}); err != nil {
 		return h.mapCommentError(c, err)
 	}
-	return response.SuccessWithMessage[any](c, nil, "评论作者标记已更新")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.updated"))
 }
 
 // SetCommentTop godoc
@@ -483,11 +492,12 @@ func (h *CommentHandler) SetCommentAuthor(c *fiber.Ctx) error {
 func (h *CommentHandler) SetCommentTop(c *fiber.Ctx) error {
 	id, err := parseInt64Param(c, "id")
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的评论ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	var req contract.SetCommentTopReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if err := h.svc.SetCommentTop(c.Context(), comment.SetCommentTopCmd{
 		ID:    id,
@@ -495,7 +505,7 @@ func (h *CommentHandler) SetCommentTop(c *fiber.Ctx) error {
 	}); err != nil {
 		return h.mapCommentError(c, err)
 	}
-	return response.SuccessWithMessage[any](c, nil, "评论置顶状态已更新")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.updated"))
 }
 
 // DeleteComment godoc
@@ -509,12 +519,12 @@ func (h *CommentHandler) SetCommentTop(c *fiber.Ctx) error {
 func (h *CommentHandler) DeleteComment(c *fiber.Ctx) error {
 	id, err := parseInt64Param(c, "id")
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的评论ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	if err := h.svc.DeleteComment(c.Context(), id); err != nil {
 		return h.mapCommentError(c, err)
 	}
-	return response.SuccessWithMessage[any](c, nil, "评论已删除")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.deleted"))
 }
 
 // EditOwnComment godoc
@@ -529,11 +539,12 @@ func (h *CommentHandler) DeleteComment(c *fiber.Ctx) error {
 func (h *CommentHandler) EditOwnComment(c *fiber.Ctx) error {
 	id, err := parseInt64Param(c, "id")
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的评论ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	var req contract.UpdateCommentReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	viewerAuthorID := h.resolveViewerAuthorID(c)
 	updated, err := h.svc.EditComment(c.Context(), comment.EditCommentCmd{
@@ -545,7 +556,7 @@ func (h *CommentHandler) EditOwnComment(c *fiber.Ctx) error {
 	if err != nil {
 		return h.mapCommentError(c, err)
 	}
-	return response.SuccessWithMessage(c, toCreateCommentResp(updated), "评论已更新")
+	return response.SuccessWithMessage(c, toCreateCommentResp(updated), response.Translate(c, "server.success.updated"))
 }
 
 // DeleteOwnComment godoc
@@ -557,7 +568,7 @@ func (h *CommentHandler) EditOwnComment(c *fiber.Ctx) error {
 func (h *CommentHandler) DeleteOwnComment(c *fiber.Ctx) error {
 	id, err := parseInt64Param(c, "id")
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的评论ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	var req contract.DeleteOwnCommentReq
 	// Body is optional for DELETE — visitors send visitorId in body
@@ -570,7 +581,7 @@ func (h *CommentHandler) DeleteOwnComment(c *fiber.Ctx) error {
 	}); err != nil {
 		return h.mapCommentError(c, err)
 	}
-	return response.SuccessWithMessage[any](c, nil, "评论已删除")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.deleted"))
 }
 
 // SetCommentAreaClose godoc
@@ -586,51 +597,52 @@ func (h *CommentHandler) DeleteOwnComment(c *fiber.Ctx) error {
 func (h *CommentHandler) SetCommentAreaClose(c *fiber.Ctx) error {
 	areaID, err := parseInt64Param(c, "areaId")
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的评论区ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	var req contract.SetCommentAreaCloseReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if err := h.svc.SetAreaClosed(c.Context(), areaID, req.IsClosed); err != nil {
 		return h.mapCommentError(c, err)
 	}
 	if req.IsClosed {
-		return response.SuccessWithMessage[any](c, nil, "评论区已关闭")
+		return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.updated"))
 	}
-	return response.SuccessWithMessage[any](c, nil, "评论区已开启")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.updated"))
 }
 
 func (h *CommentHandler) mapCommentError(c *fiber.Ctx, err error) error {
 	switch {
 	case errors.Is(err, domaincomment.ErrCommentAreaNotFound):
-		return response.NewBizErrorWithMsg(response.NotFound, "评论区不存在")
+		return response.ErrorFromBizLocalized[any](c, response.NotFound)
 	case errors.Is(err, domaincomment.ErrCommentNotFound):
-		return response.NewBizErrorWithMsg(response.NotFound, "评论不存在")
+		return response.ErrorFromBizLocalized[any](c, response.NotFound)
 	case errors.Is(err, domaincomment.ErrCommentParentNotFound):
-		return response.NewBizErrorWithMsg(response.ParamsError, "父评论不存在")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	case errors.Is(err, domaincomment.ErrCommentTooDeep):
-		return response.NewBizErrorWithMsg(response.ParamsError, "评论层级过深")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	case errors.Is(err, domaincomment.ErrCommentContentEmpty):
-		return response.NewBizErrorWithMsg(response.ParamsError, "评论内容不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	case errors.Is(err, domaincomment.ErrCommentContentTooLong):
-		return response.NewBizErrorWithMsg(response.ParamsError, "评论内容不能超过500字")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	case errors.Is(err, domaincomment.ErrCommentAreaClosed):
-		return response.NewBizErrorWithMsg(response.ParamsError, "评论区已关闭")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	case errors.Is(err, domaincomment.ErrCommentDisabled):
-		return response.NewBizErrorWithMsg(response.ParamsError, "全站已关闭评论")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	case errors.Is(err, domaincomment.ErrCommentBlocked):
-		return response.NewBizErrorWithMsg(response.Unauthorized, "你已被禁止评论")
+		return response.ErrorFromBizLocalized[any](c, response.Unauthorized)
 	case errors.Is(err, domaincomment.ErrCommentStatusInvalid):
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的评论状态")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	case errors.Is(err, domaincomment.ErrVisitorNotFound):
-		return response.NewBizErrorWithMsg(response.NotFound, "访客不存在")
+		return response.ErrorFromBizLocalized[any](c, response.NotFound)
 	case errors.Is(err, domaincomment.ErrCommentReplyDisabled):
-		return response.NewBizErrorWithMsg(response.ParamsError, "该评论仅支持联邦回复")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	case errors.Is(err, domaincomment.ErrCommentNotOwner):
-		return response.NewBizErrorWithMsg(response.Unauthorized, "无权操作此评论")
+		return response.ErrorFromBizLocalized[any](c, response.Unauthorized)
 	case errors.Is(err, domaincomment.ErrCommentAlreadyDeleted):
-		return response.NewBizErrorWithMsg(response.ParamsError, "评论已被删除")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	default:
 		return err
 	}
