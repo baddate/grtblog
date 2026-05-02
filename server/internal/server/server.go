@@ -116,7 +116,11 @@ func New(cfg config.Config, db *gorm.DB) *Server {
 					Location: fmt.Sprintf("%s %s", c.Method(), c.Route().Path),
 					Message:  ae.Error(),
 				})
+				// Use localized message if available; fall back to legacy Msg.
+			if ae.Message != "" {
 				return response.ErrorWithMsg[any](c, ae.Biz, ae.Message)
+			}
+			return response.ErrorFromBizLocalized[any](c, ae.Biz)
 			}
 
 			// 2. Fiber 内置错误（比如 fiber.ErrNotFound / ErrMethodNotAllowed）
@@ -133,18 +137,18 @@ func New(cfg config.Config, db *gorm.DB) *Server {
 				}
 				switch fe.Code {
 				case fiber.StatusNotFound:
-					return response.ErrorFromBiz[any](c, response.NotFound)
+					return response.ErrorFromBizLocalized[any](c, response.NotFound)
 				case fiber.StatusMethodNotAllowed:
-					return response.ErrorFromBiz[any](c, response.MethodNotAllowed)
+					return response.ErrorFromBizLocalized[any](c, response.MethodNotAllowed)
 				default:
-					return response.ErrorFromBiz[any](c, response.ServerError)
+					return response.ErrorFromBizLocalized[any](c, response.ServerError)
 				}
 			}
 
 			// 2.5 领域层常见 sentinel errors → 404
 			if isNotFoundSentinel(err) {
 				logRequestError(c, "not_found", fmt.Sprintf("err=%v", err))
-				return response.ErrorWithMsg[any](c, response.NotFound, err.Error())
+				return response.ErrorFromBizLocalized[any](c, response.NotFound)
 			}
 
 			// 3. 其他未识别错误，统一视为服务器内部错误
@@ -158,7 +162,7 @@ func New(cfg config.Config, db *gorm.DB) *Server {
 					Message:  err.Error(),
 				})
 			}
-			return response.ErrorFromBiz[any](c, response.ServerError)
+			return response.ErrorFromBizLocalized[any](c, response.ServerError)
 		},
 	})
 
