@@ -39,19 +39,22 @@ func NewPageHandler(svc *page.Service, commentRepo domaincomment.CommentReposito
 func (h *PageHandler) CreatePage(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 
 	var req contract.CreatePageReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if req.Views != nil && *req.Views < 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "views 不能为负数")
+		msg := response.Translate(c, "server.handler.views_negative")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	extInfo, err := parseExtInfo(req.ExtInfo)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "extInfo格式错误", err)
+		msg := response.Translate(c, "server.handler.invalid_extinfo")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	cmd := page.CreatePageCmd{
@@ -75,7 +78,8 @@ func (h *PageHandler) CreatePage(c *fiber.Ctx) error {
 	createdPage, err := h.svc.CreatePage(c.Context(), cmd)
 	if err != nil {
 		if errors.Is(err, content.ErrPageShortURLExists) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "短链接已存在")
+			msg := response.Translate(c, "server.error.page_short_url_exists")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		return err
 	}
@@ -91,7 +95,7 @@ func (h *PageHandler) CreatePage(c *fiber.Ctx) error {
 		"userId": claims.UserID,
 	})
 
-	return response.SuccessWithMessage(c, pageResponse, "页面创建成功")
+	return response.SuccessWithMessage(c, pageResponse, response.Translate(c, "server.success.page_created"))
 }
 
 // UpdatePage godoc
@@ -108,21 +112,23 @@ func (h *PageHandler) CreatePage(c *fiber.Ctx) error {
 func (h *PageHandler) UpdatePage(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的页面ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	var req contract.UpdatePageReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	extInfo, err := parseExtInfo(req.ExtInfo)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "extInfo格式错误", err)
+		msg := response.Translate(c, "server.handler.invalid_extinfo")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	cmd := page.UpdatePageCmd{
@@ -141,7 +147,8 @@ func (h *PageHandler) UpdatePage(c *fiber.Ctx) error {
 	updatedPage, err := h.svc.UpdatePage(c.Context(), cmd)
 	if err != nil {
 		if errors.Is(err, content.ErrPageShortURLExists) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "短链接已存在")
+			msg := response.Translate(c, "server.error.page_short_url_exists")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		return err
 	}
@@ -157,7 +164,7 @@ func (h *PageHandler) UpdatePage(c *fiber.Ctx) error {
 		"userId": claims.UserID,
 	})
 
-	return response.SuccessWithMessage(c, pageResponse, "页面更新成功")
+	return response.SuccessWithMessage(c, pageResponse, response.Translate(c, "server.success.page_updated"))
 }
 
 // BatchSetPageEnabled godoc
@@ -173,14 +180,15 @@ func (h *PageHandler) UpdatePage(c *fiber.Ctx) error {
 func (h *PageHandler) BatchSetPageEnabled(c *fiber.Ctx) error {
 	var req contract.BatchSetPageEnabledReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "ids 不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	for _, id := range req.IDs {
 		if id <= 0 {
-			return response.NewBizErrorWithMsg(response.ParamsError, "ids 必须为正整数")
+			return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 		}
 	}
 
@@ -192,9 +200,9 @@ func (h *PageHandler) BatchSetPageEnabled(c *fiber.Ctx) error {
 	}
 
 	if req.IsEnabled {
-		return response.SuccessWithMessage[any](c, nil, "页面启用状态已批量更新为启用")
+		return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.updated"))
 	}
-	return response.SuccessWithMessage[any](c, nil, "页面启用状态已批量更新为禁用")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.updated"))
 }
 
 // GetPage godoc
@@ -208,18 +216,18 @@ func (h *PageHandler) BatchSetPageEnabled(c *fiber.Ctx) error {
 func (h *PageHandler) GetPage(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的页面ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	pageItem, err := h.svc.GetPageByID(c.Context(), id)
 	if err != nil {
 		if errors.Is(err, content.ErrPageNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "页面不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
 	if !pageItem.IsEnabled {
-		return response.NewBizErrorWithMsg(response.NotFound, "页面不存在")
+		return response.ErrorFromBizLocalized[any](c, response.NotFound)
 	}
 
 	pageResponse, err := h.toPageResp(c.Context(), pageItem)
@@ -242,12 +250,12 @@ func (h *PageHandler) GetPage(c *fiber.Ctx) error {
 func (h *PageHandler) GetPageAdmin(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的页面ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	pageItem, err := h.svc.GetPageByID(c.Context(), id)
 	if err != nil {
 		if errors.Is(err, content.ErrPageNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "页面不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
@@ -268,18 +276,18 @@ func (h *PageHandler) GetPageAdmin(c *fiber.Ctx) error {
 func (h *PageHandler) GetPageByShortURL(c *fiber.Ctx) error {
 	shortURL := c.Params("shortUrl")
 	if shortURL == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "短链接不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	pageItem, err := h.svc.GetPageByShortURL(c.Context(), shortURL)
 	if err != nil {
 		if errors.Is(err, content.ErrPageNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "页面不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
 	if !pageItem.IsEnabled {
-		return response.NewBizErrorWithMsg(response.NotFound, "页面不存在")
+		return response.ErrorFromBizLocalized[any](c, response.NotFound)
 	}
 
 	pageResponse, err := h.toPageResp(c.Context(), pageItem)
@@ -369,22 +377,23 @@ func (h *PageHandler) ListPages(c *fiber.Ctx) error {
 func (h *PageHandler) CheckPageLatest(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的页面ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	var req contract.CheckPageLatestReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	pageItem, err := h.svc.GetPageByID(c.Context(), id)
 	if errors.Is(err, content.ErrPageNotFound) {
-		return response.NewBizErrorWithMsg(response.NotFound, "页面不存在")
+		return response.ErrorFromBizLocalized[any](c, response.NotFound)
 	} else if err != nil {
 		return err
 	}
 	if !pageItem.IsEnabled {
-		return response.NewBizErrorWithMsg(response.NotFound, "页面不存在")
+		return response.ErrorFromBizLocalized[any](c, response.NotFound)
 	}
 
 	if req.Hash == pageItem.ContentHash {
@@ -420,12 +429,12 @@ func (h *PageHandler) CheckPageLatest(c *fiber.Ctx) error {
 func (h *PageHandler) DeletePage(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的页面ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	if err := h.svc.DeletePage(c.Context(), id); err != nil {
@@ -437,7 +446,7 @@ func (h *PageHandler) DeletePage(c *fiber.Ctx) error {
 		"userId": claims.UserID,
 	})
 
-	return response.SuccessWithMessage[any](c, nil, "页面删除成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.deleted"))
 }
 
 // BatchDeletePages godoc
@@ -453,19 +462,20 @@ func (h *PageHandler) DeletePage(c *fiber.Ctx) error {
 func (h *PageHandler) BatchDeletePages(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 
 	var req contract.BatchDeletePageReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "ids 不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	for _, id := range req.IDs {
 		if id <= 0 {
-			return response.NewBizErrorWithMsg(response.ParamsError, "ids 必须为正整数")
+			return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 		}
 	}
 
@@ -478,7 +488,7 @@ func (h *PageHandler) BatchDeletePages(c *fiber.Ctx) error {
 		"userId":  claims.UserID,
 	})
 
-	return response.SuccessWithMessage[any](c, nil, "页面批量删除成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.deleted"))
 }
 
 // GetPageMetrics godoc
@@ -491,13 +501,13 @@ func (h *PageHandler) BatchDeletePages(c *fiber.Ctx) error {
 func (h *PageHandler) GetPageMetrics(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的页面ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	metrics, err := h.svc.GetPageMetrics(c.Context(), id)
 	if err != nil {
 		if errors.Is(err, content.ErrPageNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "页面不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}

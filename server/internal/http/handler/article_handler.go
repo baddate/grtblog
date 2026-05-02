@@ -71,24 +71,28 @@ func WithFederationRepos(deliveryRepo domainfed.OutboundDeliveryRepository, post
 func (h *ArticleHandler) CreateArticle(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 
 	var req contract.CreateArticleReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if req.Views != nil && *req.Views < 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "views 不能为负数")
+		msg := response.Translate(c, "server.handler.views_negative")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	extInfo, err := parseExtInfo(req.ExtInfo)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "extInfo格式错误", err)
+		msg := response.Translate(c, "server.handler.invalid_extinfo")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	var cmd article.CreateArticleCmd
 	if err := copier.Copy(&cmd, req); err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "请求体映射失败")
+		msg := response.Translate(c, "server.handler.map_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if cmd.AllowComment == nil {
 		defaultAllow := true
@@ -99,13 +103,16 @@ func (h *ArticleHandler) CreateArticle(c *fiber.Ctx) error {
 	createdArticle, err := h.svc.CreateArticle(c.Context(), claims.UserID, cmd)
 	if err != nil {
 		if errors.Is(err, content.ErrArticleShortURLExists) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "短链接已存在")
+			msg := response.Translate(c, "server.error.article_short_url_exists")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		if errors.Is(err, content.ErrCategoryNotFound) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "分类不存在")
+			msg := response.Translate(c, "server.error.category_not_found")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		if errors.Is(err, content.ErrTagNotFound) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "标签不存在")
+			msg := response.Translate(c, "server.error.tag_not_found")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		return err
 	}
@@ -121,7 +128,7 @@ func (h *ArticleHandler) CreateArticle(c *fiber.Ctx) error {
 		"userId":    claims.UserID,
 	})
 
-	return response.SuccessWithMessage(c, articleResponse, "文章创建成功")
+	return response.SuccessWithMessage(c, articleResponse, response.Translate(c, "server.success.article_created"))
 }
 
 // UpdateArticle godoc
@@ -138,26 +145,29 @@ func (h *ArticleHandler) CreateArticle(c *fiber.Ctx) error {
 func (h *ArticleHandler) UpdateArticle(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的文章ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	var req contract.UpdateArticleReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	extInfo, err := parseExtInfo(req.ExtInfo)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "extInfo格式错误", err)
+		msg := response.Translate(c, "server.handler.invalid_extinfo")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	var cmd article.UpdateArticleCmd
 	if err := copier.Copy(&cmd, req); err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "请求体映射失败")
+		msg := response.Translate(c, "server.handler.map_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	cmd.ID = id
 	cmd.ExtInfo = extInfo
@@ -165,13 +175,16 @@ func (h *ArticleHandler) UpdateArticle(c *fiber.Ctx) error {
 	updatedArticle, err := h.svc.UpdateArticle(c.Context(), cmd)
 	if err != nil {
 		if errors.Is(err, content.ErrArticleShortURLExists) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "短链接已存在")
+			msg := response.Translate(c, "server.error.article_short_url_exists")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		if errors.Is(err, content.ErrCategoryNotFound) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "分类不存在")
+			msg := response.Translate(c, "server.error.category_not_found")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		if errors.Is(err, content.ErrTagNotFound) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "标签不存在")
+			msg := response.Translate(c, "server.error.tag_not_found")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		return err
 	}
@@ -187,7 +200,7 @@ func (h *ArticleHandler) UpdateArticle(c *fiber.Ctx) error {
 		"userId":    claims.UserID,
 	})
 
-	return response.SuccessWithMessage(c, articleResponse, "文章更新成功")
+	return response.SuccessWithMessage(c, articleResponse, response.Translate(c, "server.success.article_updated"))
 }
 
 // ResetArticleFederationSignals godoc
@@ -204,18 +217,19 @@ func (h *ArticleHandler) UpdateArticle(c *fiber.Ctx) error {
 func (h *ArticleHandler) ResetArticleFederationSignals(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil || id <= 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的文章ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	var req contract.ResetArticleFederationSignalsReq
 	if len(c.Body()) > 0 {
 		if err := c.BodyParser(&req); err != nil {
-			return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+			msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 	}
 
@@ -226,7 +240,7 @@ func (h *ArticleHandler) ResetArticleFederationSignals(c *fiber.Ctx) error {
 	if retrigger && h.apCfgSvc != nil {
 		settings, err := h.apCfgSvc.FederationSettings(c.Context())
 		if err != nil {
-			return response.NewBizErrorWithCause(response.ServerError, "联合配置读取失败", err)
+			return response.ErrorFromBizLocalized[any](c, response.ServerError)
 		}
 		if !settings.Enabled || !settings.AllowOutbound {
 			retrigger = false
@@ -241,7 +255,7 @@ func (h *ArticleHandler) ResetArticleFederationSignals(c *fiber.Ctx) error {
 	})
 	if err != nil {
 		if errors.Is(err, content.ErrArticleNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "文章不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
@@ -261,9 +275,9 @@ func (h *ArticleHandler) ResetArticleFederationSignals(c *fiber.Ctx) error {
 		ExtInfo:     jsonRawFromBytes(updatedArticle.ExtInfo),
 	}
 	if retriggered {
-		return response.SuccessWithMessage(c, resp, "已重置联合条目并重新触发")
+		return response.SuccessWithMessage(c, resp, response.Translate(c, "server.success.updated"))
 	}
-	return response.SuccessWithMessage(c, resp, "已重置联合条目")
+	return response.SuccessWithMessage(c, resp, response.Translate(c, "server.success.updated"))
 }
 
 // BatchSetArticlePublished godoc
@@ -279,14 +293,15 @@ func (h *ArticleHandler) ResetArticleFederationSignals(c *fiber.Ctx) error {
 func (h *ArticleHandler) BatchSetArticlePublished(c *fiber.Ctx) error {
 	var req contract.BatchSetArticlePublishedReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "ids 不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	for _, id := range req.IDs {
 		if id <= 0 {
-			return response.NewBizErrorWithMsg(response.ParamsError, "ids 必须为正整数")
+			return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 		}
 	}
 
@@ -298,9 +313,9 @@ func (h *ArticleHandler) BatchSetArticlePublished(c *fiber.Ctx) error {
 	}
 
 	if req.IsPublished {
-		return response.SuccessWithMessage[any](c, nil, "文章发布状态已批量更新为已发布")
+		return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.handler.article_batch_published"))
 	}
-	return response.SuccessWithMessage[any](c, nil, "文章发布状态已批量更新为未发布")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.updated"))
 }
 
 // BatchSetArticleTop godoc
@@ -316,14 +331,15 @@ func (h *ArticleHandler) BatchSetArticlePublished(c *fiber.Ctx) error {
 func (h *ArticleHandler) BatchSetArticleTop(c *fiber.Ctx) error {
 	var req contract.BatchSetArticleTopReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "ids 不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	for _, id := range req.IDs {
 		if id <= 0 {
-			return response.NewBizErrorWithMsg(response.ParamsError, "ids 必须为正整数")
+			return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 		}
 	}
 
@@ -335,9 +351,9 @@ func (h *ArticleHandler) BatchSetArticleTop(c *fiber.Ctx) error {
 	}
 
 	if req.IsTop {
-		return response.SuccessWithMessage[any](c, nil, "文章置顶状态已批量更新为置顶")
+		return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.updated"))
 	}
-	return response.SuccessWithMessage[any](c, nil, "文章置顶状态已批量更新为取消置顶")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.updated"))
 }
 
 // GetArticle godoc
@@ -351,18 +367,18 @@ func (h *ArticleHandler) BatchSetArticleTop(c *fiber.Ctx) error {
 func (h *ArticleHandler) GetArticle(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的文章ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	article, err := h.svc.GetArticleByID(c.Context(), id)
 	if err != nil {
 		if errors.Is(err, content.ErrArticleNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "文章不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
 	if !article.IsPublished {
-		return response.NewBizErrorWithMsg(response.NotFound, "文章不存在")
+		return response.ErrorFromBizLocalized[any](c, response.NotFound)
 	}
 
 	articleResponse, err := h.toArticleResp(c.Context(), article)
@@ -385,12 +401,12 @@ func (h *ArticleHandler) GetArticle(c *fiber.Ctx) error {
 func (h *ArticleHandler) GetArticleAdmin(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的文章ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	article, err := h.svc.GetArticleByID(c.Context(), id)
 	if err != nil {
 		if errors.Is(err, content.ErrArticleNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "文章不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
@@ -411,7 +427,7 @@ func (h *ArticleHandler) GetArticleAdmin(c *fiber.Ctx) error {
 func (h *ArticleHandler) ListSamePeriodMoments(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的文章ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	articleItem, err := h.svc.GetArticleByID(c.Context(), id)
@@ -419,7 +435,7 @@ func (h *ArticleHandler) ListSamePeriodMoments(c *fiber.Ctx) error {
 		return err
 	}
 	if !articleItem.IsPublished {
-		return response.NewBizErrorWithMsg(response.NotFound, "文章不存在")
+		return response.ErrorFromBizLocalized[any](c, response.NotFound)
 	}
 
 	const windowDays = 14
@@ -463,18 +479,18 @@ func (h *ArticleHandler) ListSamePeriodMoments(c *fiber.Ctx) error {
 func (h *ArticleHandler) GetArticleByShortURL(c *fiber.Ctx) error {
 	shortURL := c.Params("shortUrl")
 	if shortURL == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "短链接不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	art, err := h.svc.GetArticleByShortURL(c.Context(), shortURL)
 	if err != nil {
 		if errors.Is(err, content.ErrArticleNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "文章不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
 	if !art.IsPublished {
-		return response.NewBizErrorWithMsg(response.NotFound, "文章不存在")
+		return response.ErrorFromBizLocalized[any](c, response.NotFound)
 	}
 
 	articleResponse, err := h.toArticleResp(c.Context(), art)
@@ -518,13 +534,13 @@ func (h *ArticleHandler) ListArticles(c *fiber.Ctx) error {
 func (h *ArticleHandler) ListArticlesByCategoryShortURL(c *fiber.Ctx) error {
 	shortURL := strings.TrimSpace(c.Params("shortUrl"))
 	if shortURL == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "分类短链接不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	category, err := h.contentRepo.GetCategoryByShortURL(c.Context(), shortURL)
 	if err != nil {
 		if errors.Is(err, content.ErrCategoryNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "分类不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
@@ -691,22 +707,23 @@ func (h *ArticleHandler) ListRecentPublicArticles(c *fiber.Ctx) error {
 func (h *ArticleHandler) CheckArticleLatest(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的文章ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	var req contract.CheckArticleLatestReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	article, err := h.svc.GetArticleByID(c.Context(), id)
 	if errors.Is(err, content.ErrArticleNotFound) {
-		return response.NewBizErrorWithMsg(response.NotFound, "文章不存在")
+		return response.ErrorFromBizLocalized[any](c, response.NotFound)
 	} else if err != nil {
 		return err
 	}
 	if !article.IsPublished {
-		return response.NewBizErrorWithMsg(response.NotFound, "文章不存在")
+		return response.ErrorFromBizLocalized[any](c, response.NotFound)
 	}
 
 	if req.Hash == article.ContentHash {
@@ -742,12 +759,12 @@ func (h *ArticleHandler) CheckArticleLatest(c *fiber.Ctx) error {
 func (h *ArticleHandler) DeleteArticle(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的文章ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	if err := h.svc.DeleteArticle(c.Context(), id); err != nil {
@@ -759,7 +776,7 @@ func (h *ArticleHandler) DeleteArticle(c *fiber.Ctx) error {
 		"userId":    claims.UserID,
 	})
 
-	return response.SuccessWithMessage[any](c, nil, "文章删除成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.deleted"))
 }
 
 // BatchDeleteArticles godoc
@@ -775,19 +792,20 @@ func (h *ArticleHandler) DeleteArticle(c *fiber.Ctx) error {
 func (h *ArticleHandler) BatchDeleteArticles(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 
 	var req contract.BatchDeleteArticleReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "ids 不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	for _, id := range req.IDs {
 		if id <= 0 {
-			return response.NewBizErrorWithMsg(response.ParamsError, "ids 必须为正整数")
+			return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 		}
 	}
 
@@ -800,7 +818,7 @@ func (h *ArticleHandler) BatchDeleteArticles(c *fiber.Ctx) error {
 		"userId":     claims.UserID,
 	})
 
-	return response.SuccessWithMessage[any](c, nil, "文章批量删除成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.deleted"))
 }
 
 func (h *ArticleHandler) toArticleResp(ctx context.Context, article *content.Article) (*contract.ArticleResp, error) {
@@ -967,13 +985,13 @@ func (h *ArticleHandler) buildFediverseObjectURL(ctx context.Context, article *c
 func (h *ArticleHandler) GetArticleMetrics(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的文章ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	metrics, err := h.svc.GetArticleMetrics(c.Context(), id)
 	if err != nil {
 		if errors.Is(err, content.ErrArticleNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "文章不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
