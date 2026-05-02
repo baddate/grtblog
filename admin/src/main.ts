@@ -10,6 +10,7 @@ import { pinia } from '@/stores'
 
 import App from './App.vue'
 import router from './router'
+import i18n from './plugins/i18n'
 
 async function setupApp() {
   const app = createApp(App)
@@ -19,6 +20,8 @@ async function setupApp() {
   setupApiInterceptors()
 
   app.use(router)
+
+  app.use(i18n)
 
   setupRouterGuard(router)
 

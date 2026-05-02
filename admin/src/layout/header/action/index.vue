@@ -7,6 +7,7 @@ import { mediaQueryInjectionKey } from '@/injection'
 import { toRefsPreferencesStore } from '@/stores'
 
 import FullScreen from './FullScreen.vue'
+import LanguageSwitch from './LanguageSwitch.vue'
 import Notification from './Notification.vue'
 import PreferencesDrawer from './PreferencesDrawer.vue'
 import SignOut from './SignOut.vue'
@@ -30,6 +31,7 @@ const { navigationMode } = toRefsPreferencesStore()
     <Notification />
     <FullScreen />
     <ThemeModePopover />
+    <LanguageSwitch />
     <PreferencesDrawer />
     <SignOut />
     <AsyncAvatarDropdown v-if="!isMaxSm && navigationMode === 'horizontal'" />
