@@ -34,32 +34,32 @@ func NewFederationOutboundResultHandler(deliverySvc *appfed.DeliveryService, ver
 // @Router /api/federation/outbound/result [post]
 func (h *FederationOutboundResultHandler) ResultCallback(c *fiber.Ctx) error {
 	if h.deliverySvc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "联邦服务未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.federation_service_not_init"))
 	}
 	body := c.Body()
 	req, err := parseFederationRequest(c)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.request_parse_failed"), err)
 	}
 	if h.verifier != nil {
 		if _, err := h.verifier.VerifyRequest(c.Context(), req, body); err != nil {
-			return response.NewBizErrorWithMsg(response.Unauthorized, "签名校验失败")
+			return response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.signature_verification_failed"))
 		}
 	}
 
 	var payload contract.FederationOutboundResultReq
 	if err := c.BodyParser(&payload); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	requestID := strings.TrimSpace(payload.RequestID)
 	if requestID == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "request_id 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.request_id_required"))
 	}
 	var processedAt *time.Time
 	if raw := strings.TrimSpace(payload.ProcessedAt); raw != "" {
 		parsed, err := time.Parse(time.RFC3339, raw)
 		if err != nil {
-			return response.NewBizErrorWithMsg(response.ParamsError, "processed_at 必须为 RFC3339")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.processed_at_rfc3339"))
 		}
 		processedAt = &parsed
 	}
@@ -72,7 +72,7 @@ func (h *FederationOutboundResultHandler) ResultCallback(c *fiber.Ctx) error {
 		ProcessedAt:    processedAt,
 	})
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "回调处理失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.callback_failed"), err)
 	}
 	return response.Success(c, contract.FederationOutboundResultResp{
 		RequestID: item.RequestID,

@@ -36,7 +36,7 @@ func (h *SearchHandler) SiteSearch(c *fiber.Ctx) error {
 	result, err := h.svc.SearchSite(c.Context(), query, limit)
 	if err != nil {
 		if errors.Is(err, appsearch.ErrEmptyQuery) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "搜索关键词不能为空")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.search_keyword_required"))
 		}
 		return err
 	}

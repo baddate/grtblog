@@ -6,11 +6,13 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
+
 	"github.com/baddate/sanblog-v2/server/internal/http/response"
 	fedinfra "github.com/baddate/sanblog-v2/server/internal/infra/federation"
 )
 
-func enforceFederationInboundRateLimit(ctx context.Context, limiter fedinfra.RateLimiter, sourceBaseURL, action string, raw json.RawMessage) error {
+func enforceFederationInboundRateLimit(c *fiber.Ctx, ctx context.Context, limiter fedinfra.RateLimiter, sourceBaseURL, action string, raw json.RawMessage) error {
 	if limiter == nil {
 		return nil
 	}
@@ -24,7 +26,7 @@ func enforceFederationInboundRateLimit(ctx context.Context, limiter fedinfra.Rat
 		return err
 	}
 	if !ok {
-		return response.NewBizErrorWithMsg(response.TooManyRequests, "请求频率过高")
+		return response.NewBizErrorWithMsg(response.TooManyRequests, response.Translate(c, "server.handler.rate_limit_exceeded"))
 	}
 	return nil
 }

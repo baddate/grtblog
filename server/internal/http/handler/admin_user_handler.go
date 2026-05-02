@@ -95,12 +95,12 @@ func (h *AdminUserHandler) UpdateUser(c *fiber.Ctx) error {
 	}
 	userID, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil || userID <= 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的用户ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_user_id"))
 	}
 
 	var req contract.UpdateAdminUserReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 
 	updated, err := h.svc.UpdateUser(c.Context(), adminuser.UpdateUserCmd{
@@ -112,17 +112,17 @@ func (h *AdminUserHandler) UpdateUser(c *fiber.Ctx) error {
 		IsAdmin:    req.IsAdmin,
 	})
 	if err != nil {
-		return h.mapErr(err)
+		return h.mapErr(c, err)
 	}
-	return response.SuccessWithMessage(c, contract.ToUserResp(*updated), "用户信息已更新")
+	return response.SuccessWithMessage(c, contract.ToUserResp(*updated), response.Translate(c, "server.success.user_updated"))
 }
 
-func (h *AdminUserHandler) mapErr(err error) error {
+func (h *AdminUserHandler) mapErr(c *fiber.Ctx, err error) error {
 	switch {
 	case errors.Is(err, identity.ErrUserNotFound):
-		return response.NewBizErrorWithMsg(response.NotFound, "用户不存在")
+		return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.handler.user_not_found"))
 	case errors.Is(err, identity.ErrUserExists):
-		return response.NewBizErrorWithMsg(response.ParamsError, "用户名或邮箱已存在")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.user_or_email_exists"))
 	case errors.Is(err, adminuser.ErrLastAdminMutation):
 		return response.NewBizErrorWithMsg(response.ParamsError, err.Error())
 	case errors.Is(err, adminuser.ErrSelfAdminMutation):

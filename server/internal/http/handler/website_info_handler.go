@@ -88,13 +88,13 @@ func (h *WebsiteInfoHandler) List(c *fiber.Ctx) error {
 func (h *WebsiteInfoHandler) Update(c *fiber.Ctx) error {
 	key := c.Params("key")
 	if key == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "key 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.key_required"))
 	}
 	var req contract.WebsiteInfoReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
-	if err := validateWebsiteInfoReq(key, req); err != nil {
+	if err := validateWebsiteInfoReq(c, key, req); err != nil {
 		return err
 	}
 
@@ -117,28 +117,28 @@ func (h *WebsiteInfoHandler) Update(c *fiber.Ctx) error {
 	return response.SuccessWithMessage(c, resp, "updated")
 }
 
-func validateWebsiteInfoReq(key string, req contract.WebsiteInfoReq) error {
+func validateWebsiteInfoReq(c *fiber.Ctx, key string, req contract.WebsiteInfoReq) error {
 	trimmedKey := strings.TrimSpace(key)
 	if trimmedKey == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "key 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.key_required"))
 	}
 	if trimmedKey == themeExtendInfoKey {
 		if req.Value != nil {
-			return response.NewBizErrorWithMsg(response.ParamsError, "theme_extend_info 仅支持 infoJson")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.only_info_json_for_theme"))
 		}
 		if req.InfoJSON == nil {
-			return response.NewBizErrorWithMsg(response.ParamsError, "theme_extend_info 的 infoJson 不能为空")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.info_json_required"))
 		}
 		if !json.Valid(json.RawMessage(*req.InfoJSON)) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "infoJson 不是合法 JSON")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.info_json_not_valid"))
 		}
 		return nil
 	}
 	if req.InfoJSON != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "普通配置不支持 infoJson")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.normal_config_no_info_json"))
 	}
 	if req.Value == nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "value 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.value_required"))
 	}
 	return nil
 }

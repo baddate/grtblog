@@ -19,7 +19,7 @@ func NewAdminObservabilityHandler(svc *observability.Service) *AdminObservabilit
 
 func (h *AdminObservabilityHandler) GetOverview(c *fiber.Ctx) error {
 	if h == nil || h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "observability service 未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.observability_service_not_init"))
 	}
 	data, err := h.svc.GetOverview(c.UserContext())
 	if err != nil {
@@ -30,7 +30,7 @@ func (h *AdminObservabilityHandler) GetOverview(c *fiber.Ctx) error {
 
 func (h *AdminObservabilityHandler) GetControlPlane(c *fiber.Ctx) error {
 	if h == nil || h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "observability service 未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.observability_service_not_init"))
 	}
 	window := parseWindowParam(c.Query("window"), 5*time.Minute)
 	data, err := h.svc.GetControlPlane(c.UserContext(), window)
@@ -42,7 +42,7 @@ func (h *AdminObservabilityHandler) GetControlPlane(c *fiber.Ctx) error {
 
 func (h *AdminObservabilityHandler) GetRenderPlane(c *fiber.Ctx) error {
 	if h == nil || h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "observability service 未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.observability_service_not_init"))
 	}
 	data, err := h.svc.GetRenderPlane(c.UserContext())
 	if err != nil {
@@ -53,7 +53,7 @@ func (h *AdminObservabilityHandler) GetRenderPlane(c *fiber.Ctx) error {
 
 func (h *AdminObservabilityHandler) GetRealtime(c *fiber.Ctx) error {
 	if h == nil || h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "observability service 未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.observability_service_not_init"))
 	}
 	data, err := h.svc.GetRealtime(c.UserContext())
 	if err != nil {
@@ -64,7 +64,7 @@ func (h *AdminObservabilityHandler) GetRealtime(c *fiber.Ctx) error {
 
 func (h *AdminObservabilityHandler) GetFederation(c *fiber.Ctx) error {
 	if h == nil || h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "observability service 未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.observability_service_not_init"))
 	}
 	window := parseWindowParam(c.Query("window"), 24*time.Hour)
 	data, err := h.svc.GetFederation(c.UserContext(), window)
@@ -76,7 +76,7 @@ func (h *AdminObservabilityHandler) GetFederation(c *fiber.Ctx) error {
 
 func (h *AdminObservabilityHandler) GetStorage(c *fiber.Ctx) error {
 	if h == nil || h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "observability service 未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.observability_service_not_init"))
 	}
 	data, err := h.svc.GetStorage(c.UserContext())
 	if err != nil {
@@ -87,21 +87,21 @@ func (h *AdminObservabilityHandler) GetStorage(c *fiber.Ctx) error {
 
 func (h *AdminObservabilityHandler) GetTimeline(c *fiber.Ctx) error {
 	if h == nil || h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "observability service 未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.observability_service_not_init"))
 	}
 	since, _ := time.Parse(time.RFC3339, c.Query("since"))
 	until, _ := time.Parse(time.RFC3339, c.Query("until"))
 	groupBy := c.Query("group_by")
 	data, err := h.svc.GetTimeline(c.UserContext(), since, until, groupBy)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "timeline 参数错误", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.timeline_params_error"), err)
 	}
 	return response.Success(c, data)
 }
 
 func (h *AdminObservabilityHandler) GetAlerts(c *fiber.Ctx) error {
 	if h == nil || h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "observability service 未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.observability_service_not_init"))
 	}
 	limit := c.QueryInt("limit", 50)
 	data, err := h.svc.GetAlerts(c.UserContext(), limit)
@@ -113,7 +113,7 @@ func (h *AdminObservabilityHandler) GetAlerts(c *fiber.Ctx) error {
 
 func (h *AdminObservabilityHandler) GetPageState(c *fiber.Ctx) error {
 	if h == nil || h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "observability service 未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.observability_service_not_init"))
 	}
 	trackedLimit := c.QueryInt("tracked_limit", 200)
 	recentLimit := c.QueryInt("recent_limit", 30)
@@ -127,7 +127,7 @@ func (h *AdminObservabilityHandler) GetPageState(c *fiber.Ctx) error {
 
 func (h *AdminObservabilityHandler) BootstrapPages(c *fiber.Ctx) error {
 	if h == nil || h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "observability service 未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.observability_service_not_init"))
 	}
 	data, err := h.svc.BootstrapPages(c.UserContext())
 	if err != nil {
@@ -138,7 +138,7 @@ func (h *AdminObservabilityHandler) BootstrapPages(c *fiber.Ctx) error {
 
 func (h *AdminObservabilityHandler) InvalidatePages(c *fiber.Ctx) error {
 	if h == nil || h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "observability service 未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.observability_service_not_init"))
 	}
 	var req observability.PageInvalidateRequest
 	if len(c.Body()) > 0 {

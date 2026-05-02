@@ -72,11 +72,11 @@ func (h *EventHandler) ListEventCatalog(c *fiber.Ctx) error {
 func (h *EventHandler) GetEventCatalogItem(c *fiber.Ctx) error {
 	name := strings.TrimSpace(c.Params("name"))
 	if name == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "事件名不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.event_name_required"))
 	}
 	item, ok := appEvent.CatalogByName(name)
 	if !ok {
-		return response.NewBizErrorWithMsg(response.NotFound, "事件不存在")
+		return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.handler.event_not_found"))
 	}
 	return response.Success(c, mapEventDescriptor(item))
 }

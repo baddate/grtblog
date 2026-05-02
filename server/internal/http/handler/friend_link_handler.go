@@ -35,37 +35,37 @@ func NewFriendLinkHandler(svc *friendlink.Service, sysCfg *sysconfig.Service) *F
 func (h *FriendLinkHandler) SubmitApplication(c *fiber.Ctx) error {
 	if h.sysCfg != nil {
 		if v, err := h.sysCfg.GetConfigValue(c.Context(), "friendlink.apply.enabled"); err == nil && v == "false" {
-			return response.NewBizErrorWithMsg(response.Unauthorized, "友链申请功能已关闭")
+			return response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.friend_link_app_closed"))
 		}
 	}
 
 	var req contract.FriendLinkApplicationReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
 		return response.ErrorFromBiz[any](c, response.NotLogin)
 	}
 	if req.URL == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "友链 URL 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.friend_link_url_required"))
 	}
 	userID := claims.UserID
 	var cmd friendlink.SubmitCmd
 	if err := copier.Copy(&cmd, req); err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "请求体映射失败")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.map_body_failed"))
 	}
 	cmd.UserID = &userID
 	result, err := h.svc.Submit(c.Context(), cmd)
 	if err != nil {
 		if errors.Is(err, social.ErrFriendLinkApplicationBlocked) {
-			return response.NewBizErrorWithMsg(response.Unauthorized, "该站点已被封禁，无法提交申请")
+			return response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.site_blocked"))
 		}
 		return err
 	}
-	msg := "友链申请已提交成功，我们会尽快审核"
+	msg := response.Translate(c, "server.handler.friend_link_app_submitted")
 	if !result.Created {
-		msg = "你之前的友链申请已更新，感谢耐心等待"
+		msg = response.Translate(c, "server.handler.friend_link_app_prev_updated")
 	}
 	Audit(c, "friend-link.submit", map[string]any{"url": req.URL, "name": req.Name, "created": result.Created})
 	return response.SuccessWithMessage(c, contract.ToFriendLinkApplicationResp(result.Application), msg)

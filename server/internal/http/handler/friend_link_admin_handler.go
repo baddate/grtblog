@@ -87,7 +87,7 @@ func (h *FriendLinkAdminHandler) ListApplications(c *fiber.Ctx) error {
 // @Router /admin/friend-links/sync-jobs [get]
 func (h *FriendLinkAdminHandler) ListSyncJobs(c *fiber.Ctx) error {
 	if h.syncJobRepo == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "同步作业服务未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.sync_job_service_not_init"))
 	}
 	page := parseIntQuery(c, "page", 1)
 	pageSize := parseIntQuery(c, "pageSize", 10)
@@ -140,13 +140,13 @@ func (h *FriendLinkAdminHandler) ListSyncJobs(c *fiber.Ctx) error {
 func (h *FriendLinkAdminHandler) ApproveApplication(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的申请ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_application_id"))
 	}
 	app, err := h.svc.ApproveApplication(c.Context(), id)
 	if err != nil {
-		return h.mapApplicationError(err)
+		return h.mapApplicationError(c, err)
 	}
-	return response.SuccessWithMessage(c, contract.ToFriendLinkApplicationResp(*app), "友链申请已通过")
+	return response.SuccessWithMessage(c, contract.ToFriendLinkApplicationResp(*app), response.Translate(c, "server.success.friend_link_app_approved"))
 }
 
 // RejectApplication godoc
@@ -160,13 +160,13 @@ func (h *FriendLinkAdminHandler) ApproveApplication(c *fiber.Ctx) error {
 func (h *FriendLinkAdminHandler) RejectApplication(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的申请ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_application_id"))
 	}
 	app, err := h.svc.RejectApplication(c.Context(), id)
 	if err != nil {
-		return h.mapApplicationError(err)
+		return h.mapApplicationError(c, err)
 	}
-	return response.SuccessWithMessage(c, contract.ToFriendLinkApplicationResp(*app), "友链申请已拒绝")
+	return response.SuccessWithMessage(c, contract.ToFriendLinkApplicationResp(*app), response.Translate(c, "server.success.friend_link_app_rejected"))
 }
 
 // BlockApplication godoc
@@ -180,13 +180,13 @@ func (h *FriendLinkAdminHandler) RejectApplication(c *fiber.Ctx) error {
 func (h *FriendLinkAdminHandler) BlockApplication(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的申请ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_application_id"))
 	}
 	app, err := h.svc.BlockApplication(c.Context(), id)
 	if err != nil {
-		return h.mapApplicationError(err)
+		return h.mapApplicationError(c, err)
 	}
-	return response.SuccessWithMessage(c, contract.ToFriendLinkApplicationResp(*app), "友链申请已封禁")
+	return response.SuccessWithMessage(c, contract.ToFriendLinkApplicationResp(*app), response.Translate(c, "server.success.friend_link_app_blocked"))
 }
 
 // UpdateApplicationStatus godoc
@@ -202,20 +202,20 @@ func (h *FriendLinkAdminHandler) BlockApplication(c *fiber.Ctx) error {
 func (h *FriendLinkAdminHandler) UpdateApplicationStatus(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的申请ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_application_id"))
 	}
 	var req contract.FriendLinkApplicationStatusReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	if strings.TrimSpace(req.Status) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "状态不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.status_required"))
 	}
 	app, err := h.svc.UpdateApplicationStatus(c.Context(), id, req.Status)
 	if err != nil {
-		return h.mapApplicationError(err)
+		return h.mapApplicationError(c, err)
 	}
-	return response.SuccessWithMessage(c, contract.ToFriendLinkApplicationResp(*app), "友链申请状态已更新")
+	return response.SuccessWithMessage(c, contract.ToFriendLinkApplicationResp(*app), response.Translate(c, "server.success.friend_link_app_status_updated"))
 }
 
 // ListFriendLinks godoc
@@ -284,7 +284,7 @@ func (h *FriendLinkAdminHandler) ListFriendLinks(c *fiber.Ctx) error {
 func (h *FriendLinkAdminHandler) CreateFriendLink(c *fiber.Ctx) error {
 	var req contract.FriendLinkCreateReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	created, err := h.svc.CreateFriendLink(c.Context(), friendlink.CreateFriendLinkCmd{
 		Name:         req.Name,
@@ -301,7 +301,7 @@ func (h *FriendLinkAdminHandler) CreateFriendLink(c *fiber.Ctx) error {
 	if err != nil {
 		return response.NewBizErrorWithMsg(response.ParamsError, err.Error())
 	}
-	return response.SuccessWithMessage(c, toFriendLinkResp(*created), "友链创建成功")
+	return response.SuccessWithMessage(c, toFriendLinkResp(*created), response.Translate(c, "server.success.friend_link_created"))
 }
 
 // UpdateFriendLink godoc
@@ -317,11 +317,11 @@ func (h *FriendLinkAdminHandler) CreateFriendLink(c *fiber.Ctx) error {
 func (h *FriendLinkAdminHandler) UpdateFriendLink(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的友链ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_friend_link_id"))
 	}
 	var req contract.FriendLinkUpdateReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	updated, err := h.svc.UpdateFriendLink(c.Context(), friendlink.UpdateFriendLinkCmd{
 		ID:           id,
@@ -342,7 +342,7 @@ func (h *FriendLinkAdminHandler) UpdateFriendLink(c *fiber.Ctx) error {
 		}
 		return response.NewBizErrorWithMsg(response.ParamsError, err.Error())
 	}
-	return response.SuccessWithMessage(c, toFriendLinkResp(*updated), "友链更新成功")
+	return response.SuccessWithMessage(c, toFriendLinkResp(*updated), response.Translate(c, "server.success.friend_link_updated"))
 }
 
 // DeleteFriendLink godoc
@@ -356,12 +356,12 @@ func (h *FriendLinkAdminHandler) UpdateFriendLink(c *fiber.Ctx) error {
 func (h *FriendLinkAdminHandler) DeleteFriendLink(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的友链ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_friend_link_id"))
 	}
 	if err := h.svc.DeleteFriendLink(c.Context(), id); err != nil {
 		return err
 	}
-	return response.SuccessWithMessage[any](c, nil, "友链已删除")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.friend_link_deleted"))
 }
 
 // BlockFriendLink godoc
@@ -375,7 +375,7 @@ func (h *FriendLinkAdminHandler) DeleteFriendLink(c *fiber.Ctx) error {
 func (h *FriendLinkAdminHandler) BlockFriendLink(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的友链ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_friend_link_id"))
 	}
 	link, err := h.svc.BlockFriendLink(c.Context(), id)
 	if err != nil {
@@ -384,15 +384,15 @@ func (h *FriendLinkAdminHandler) BlockFriendLink(c *fiber.Ctx) error {
 		}
 		return response.NewBizErrorWithMsg(response.ParamsError, err.Error())
 	}
-	return response.SuccessWithMessage(c, toFriendLinkResp(*link), "友链已封禁")
+	return response.SuccessWithMessage(c, toFriendLinkResp(*link), response.Translate(c, "server.success.friend_link_blocked"))
 }
 
-func (h *FriendLinkAdminHandler) mapApplicationError(err error) error {
+func (h *FriendLinkAdminHandler) mapApplicationError(c *fiber.Ctx, err error) error {
 	if errors.Is(err, social.ErrFriendLinkApplicationNotFound) {
 		return response.NewBizError(response.NotFound)
 	}
 	if errors.Is(err, social.ErrFriendLinkApplicationBlocked) {
-		return response.NewBizErrorWithMsg(response.Unauthorized, "已被封禁")
+		return response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.already_blocked"))
 	}
 	return response.NewBizErrorWithMsg(response.ParamsError, err.Error())
 }

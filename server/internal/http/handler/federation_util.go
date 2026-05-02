@@ -7,33 +7,35 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
+
 	"github.com/baddate/sanblog-v2/server/internal/domain/federation"
 	"github.com/baddate/sanblog-v2/server/internal/http/response"
 	fedinfra "github.com/baddate/sanblog-v2/server/internal/infra/federation"
 )
 
-func fetchFederationDocs(ctx context.Context, resolver *fedinfra.Resolver, baseURL string) (*fedinfra.Manifest, *fedinfra.EndpointsDoc, *fedinfra.PublicKeyDoc, error) {
+func fetchFederationDocs(c *fiber.Ctx, ctx context.Context, resolver *fedinfra.Resolver, baseURL string) (*fedinfra.Manifest, *fedinfra.EndpointsDoc, *fedinfra.PublicKeyDoc, error) {
 	if resolver == nil {
 		return nil, nil, nil, errors.New("resolver not configured")
 	}
 	baseURL = strings.TrimRight(baseURL, "/")
 	manifest, err := resolver.FetchManifest(ctx, baseURL)
 	if err != nil {
-		return nil, nil, nil, response.NewBizErrorWithCause(response.ServerError, "拉取远程 manifest 失败", err)
+		return nil, nil, nil, response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.fetch_manifest_failed"), err)
 	}
 	endpoints, err := resolver.FetchEndpoints(ctx, baseURL)
 	if err != nil {
-		return nil, nil, nil, response.NewBizErrorWithCause(response.ServerError, "拉取远程 endpoints 失败", err)
+		return nil, nil, nil, response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.fetch_remote_endpoints_failed"), err)
 	}
 	publicKey, err := resolver.FetchPublicKey(ctx, baseURL)
 	if err != nil {
-		return nil, nil, nil, response.NewBizErrorWithCause(response.ServerError, "拉取远程公钥失败", err)
+		return nil, nil, nil, response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.fetch_public_key_failed"), err)
 	}
 	return manifest, endpoints, publicKey, nil
 }
 
-func ensureFederationInstance(ctx context.Context, baseURL string, resolver *fedinfra.Resolver, instanceRepo federation.FederationInstanceRepository) (*federation.FederationInstance, error) {
-	manifest, endpoints, publicKey, err := fetchFederationDocs(ctx, resolver, baseURL)
+func ensureFederationInstance(c *fiber.Ctx, ctx context.Context, baseURL string, resolver *fedinfra.Resolver, instanceRepo federation.FederationInstanceRepository) (*federation.FederationInstance, error) {
+	manifest, endpoints, publicKey, err := fetchFederationDocs(c, ctx, resolver, baseURL)
 	if err != nil {
 		return nil, err
 	}

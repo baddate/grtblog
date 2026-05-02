@@ -34,20 +34,20 @@ func NewActivityPubAdminHandler(svc *appap.Service) *ActivityPubAdminHandler {
 // @Security JWTAuth
 func (h *ActivityPubAdminHandler) Publish(c *fiber.Ctx) error {
 	if h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "ActivityPub 服务未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.activitypub_service_not_init"))
 	}
 	var req contract.FederationActivityPubPublishReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	sourceType := strings.ToLower(strings.TrimSpace(req.SourceType))
 	switch sourceType {
 	case "article", "moment", "thinking":
 	default:
-		return response.NewBizErrorWithMsg(response.ParamsError, "source_type 仅支持 article/moment/thinking")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.source_type_invalid"))
 	}
 	if req.SourceID <= 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "source_id 必须大于 0")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.source_id_positive"))
 	}
 	baseURL := resolveActivityPubBaseURL(c)
 	result, err := h.svc.Publish(c.Context(), baseURL, appap.PublishCmd{
@@ -57,7 +57,7 @@ func (h *ActivityPubAdminHandler) Publish(c *fiber.Ctx) error {
 		TriggerSource: "manual",
 	})
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "ActivityPub 推送失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.push_failed"), err)
 	}
 	return response.Success(c, contract.FederationActivityPubPublishResp{
 		ActivityID:   result.Item.ActivityID,
@@ -84,13 +84,13 @@ func (h *ActivityPubAdminHandler) Publish(c *fiber.Ctx) error {
 // @Security JWTAuth
 func (h *ActivityPubAdminHandler) ListFollowers(c *fiber.Ctx) error {
 	if h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "ActivityPub 服务未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.activitypub_service_not_init"))
 	}
 	page := parseIntQuery(c, "page", 1)
 	size := parseIntQuery(c, "pageSize", 20)
 	items, total, err := h.svc.ListFollowers(c.Context(), page, size)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "关注者查询失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.followers_query_failed"), err)
 	}
 	resp := make([]contract.FederationActivityPubFollowerResp, len(items))
 	for i, item := range items {
@@ -117,7 +117,7 @@ func (h *ActivityPubAdminHandler) ListFollowers(c *fiber.Ctx) error {
 
 func (h *ActivityPubAdminHandler) ListOutbox(c *fiber.Ctx) error {
 	if h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "ActivityPub 服务未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.activitypub_service_not_init"))
 	}
 	page := parseIntQuery(c, "page", 1)
 	size := parseIntQuery(c, "pageSize", 20)
@@ -130,7 +130,7 @@ func (h *ActivityPubAdminHandler) ListOutbox(c *fiber.Ctx) error {
 	}
 	items, total, err := h.svc.ListOutbox(c.Context(), opts)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "ActivityPub 出站查询失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.outbox_query_failed"), err)
 	}
 	resp := make([]contract.ActivityPubOutboxItemResp, 0, len(items))
 	for _, item := range items {
@@ -141,39 +141,39 @@ func (h *ActivityPubAdminHandler) ListOutbox(c *fiber.Ctx) error {
 
 func (h *ActivityPubAdminHandler) GetOutbox(c *fiber.Ctx) error {
 	if h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "ActivityPub 服务未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.activitypub_service_not_init"))
 	}
 	id, err := strconv.ParseInt(strings.TrimSpace(c.Params("id")), 10, 64)
 	if err != nil || id <= 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的 outbox id")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_outbox_id"))
 	}
 	item, err := h.svc.GetOutbox(c.Context(), id)
 	if err != nil {
 		if errors.Is(err, domainap.ErrOutboxItemNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "ActivityPub 出站记录不存在")
+			return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.handler.outbox_not_found"))
 		}
-		return response.NewBizErrorWithCause(response.ServerError, "查询 ActivityPub 出站详情失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.outbox_detail_query_failed"), err)
 	}
 	return response.Success(c, mapActivityPubOutboxItemResp(*item, true))
 }
 
 func (h *ActivityPubAdminHandler) RetryOutbox(c *fiber.Ctx) error {
 	if h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "ActivityPub 服务未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.activitypub_service_not_init"))
 	}
 	id, err := strconv.ParseInt(strings.TrimSpace(c.Params("id")), 10, 64)
 	if err != nil || id <= 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的 outbox id")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_outbox_id"))
 	}
 	item, err := h.svc.RetryFailedDeliveries(c.Context(), resolveActivityPubBaseURL(c), id)
 	if err != nil {
 		if errors.Is(err, domainap.ErrOutboxItemNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "ActivityPub 出站记录不存在")
+			return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.handler.outbox_not_found"))
 		}
 		if errors.Is(err, domainap.ErrOutboxItemNotRetryable) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "当前状态不允许重试")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.outbox_retry_not_allowed"))
 		}
-		return response.NewBizErrorWithCause(response.ServerError, "重试 ActivityPub 出站失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.outbox_retry_failed"), err)
 	}
 	return response.Success(c, mapActivityPubOutboxItemResp(*item, true))
 }

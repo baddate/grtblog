@@ -38,7 +38,7 @@ type TrackLikeEnvelope struct {
 func (h *LikeHandler) TrackLike(c *fiber.Ctx) error {
 	var req contract.TrackLikeReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 
 	result, err := h.svc.TrackLike(c.UserContext(), applike.TrackLikeCmd{
@@ -50,7 +50,7 @@ func (h *LikeHandler) TrackLike(c *fiber.Ctx) error {
 		UserAgent: c.Get("User-Agent", ""),
 	})
 	if err != nil {
-		return h.mapLikeError(err)
+		return h.mapLikeError(c, err)
 	}
 
 	return response.Success(c, contract.TrackLikeResp{
@@ -71,13 +71,13 @@ func (h *LikeHandler) TrackLike(c *fiber.Ctx) error {
 func (h *LikeHandler) ImportLikeBatch(c *fiber.Ctx) error {
 	var req contract.ImportLikeBatchReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	if req.ContentID <= 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "contentId 必须为正整数")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.content_id_positive"))
 	}
 	if len(req.VisitorIDs) == 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "visitorIds 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.visitor_ids_required"))
 	}
 
 	result, err := h.svc.ImportLikeBatch(c.UserContext(), applike.ImportLikeBatchCmd{
@@ -86,7 +86,7 @@ func (h *LikeHandler) ImportLikeBatch(c *fiber.Ctx) error {
 		VisitorIDs:  req.VisitorIDs,
 	})
 	if err != nil {
-		return h.mapLikeError(err)
+		return h.mapLikeError(c, err)
 	}
 
 	return response.Success(c, contract.ImportLikeBatchResp{
@@ -94,12 +94,12 @@ func (h *LikeHandler) ImportLikeBatch(c *fiber.Ctx) error {
 	})
 }
 
-func (h *LikeHandler) mapLikeError(err error) error {
+func (h *LikeHandler) mapLikeError(c *fiber.Ctx, err error) error {
 	switch {
 	case errors.Is(err, domainlike.ErrInvalidTargetType), errors.Is(err, domainlike.ErrInvalidTargetID):
-		return response.NewBizErrorWithCause(response.ParamsError, "点赞参数无效", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.like_params_invalid"), err)
 	case errors.Is(err, domainlike.ErrTargetNotFound):
-		return response.NewBizErrorWithCause(response.NotFound, "点赞目标不存在", err)
+		return response.NewBizErrorWithCause(response.NotFound, response.Translate(c, "server.handler.like_target_not_found"), err)
 	default:
 		return err
 	}

@@ -67,7 +67,7 @@ func (h *FederationFriendLinkHandler) RequestFriendLink(c *fiber.Ctx) error {
 	body := c.Body()
 	req, err := parseFederationRequest(c)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.request_parse_failed"), err)
 	}
 
 	signature, err := h.verifier.VerifyRequest(c.Context(), req, body)
@@ -78,29 +78,29 @@ func (h *FederationFriendLinkHandler) RequestFriendLink(c *fiber.Ctx) error {
 			At:        time.Now(),
 			Payload:   map[string]any{"action": "friendlink", "ip": c.IP()},
 		})
-		return response.NewBizErrorWithMsg(response.Unauthorized, "签名校验失败")
+		return response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.signature_verification_failed"))
 	}
 
 	var payload contract.FederationFriendLinkRequestReq
 	if err := json.Unmarshal(body, &payload); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	requesterURL := strings.TrimSpace(payload.RequesterURL)
 	if requesterURL == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "requester_url 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.requester_url_required"))
 	}
 	if signature != nil && signature.BaseURL != "" && !sameBaseURL(signature.BaseURL, requesterURL) {
-		return response.NewBizErrorWithMsg(response.Unauthorized, "签名来源与请求不一致")
+		return response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.signature_mismatch"))
 	}
 
 	settings, err := h.cfgSvc.FederationSettings(c.Context())
 	if err != nil || !settings.Enabled {
-		return response.NewBizErrorWithMsg(response.Unauthorized, "联合未启用")
+		return response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.federation_not_enabled"))
 	}
 	if !settings.AllowInbound {
-		return response.NewBizErrorWithMsg(response.Unauthorized, "已关闭入站请求")
+		return response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.inbound_requests_closed"))
 	}
-	if err := enforceFederationInboundRateLimit(c.Context(), h.rateLimiter, requesterURL, "friendlink", settings.RateLimits); err != nil {
+	if err := enforceFederationInboundRateLimit(c, c.Context(), h.rateLimiter, requesterURL, "friendlink", settings.RateLimits); err != nil {
 		_ = h.events.Publish(c.Context(), appEvent.Generic{
 			EventName: "federation.inbound.rate_limited",
 			At:        time.Now(),
@@ -109,7 +109,7 @@ func (h *FederationFriendLinkHandler) RequestFriendLink(c *fiber.Ctx) error {
 		return err
 	}
 
-	manifest, endpoints, publicKey, err := fetchFederationDocs(c.Context(), h.resolver, requesterURL)
+	manifest, endpoints, publicKey, err := fetchFederationDocs(c, c.Context(), h.resolver, requesterURL)
 	if err != nil {
 		return err
 	}
@@ -119,7 +119,7 @@ func (h *FederationFriendLinkHandler) RequestFriendLink(c *fiber.Ctx) error {
 		return err
 	}
 
-	app, created, err := h.upsertFriendLinkApplication(c.Context(), payload, requesterURL, manifest, signature.KeyID)
+	app, created, err := h.upsertFriendLinkApplication(c, c.Context(), payload, requesterURL, manifest, signature.KeyID)
 	if err != nil {
 		return err
 	}
@@ -134,11 +134,11 @@ func (h *FederationFriendLinkHandler) RequestFriendLink(c *fiber.Ctx) error {
 		_ = h.instanceRepo.Update(c.Context(), instance)
 	}
 
-	message := "友链申请已提交"
+	message := response.Translate(c, "server.federation.friend_link_submitted")
 	if app.Status == social.FriendLinkAppStatusApproved {
-		message = "友链申请已通过"
+		message = response.Translate(c, "server.success.friend_link_app_approved")
 	} else if !created {
-		message = "友链申请已更新"
+		message = response.Translate(c, "server.federation.friend_link_updated")
 	}
 
 	resp := contract.FederationFriendLinkResponseResp{
@@ -184,14 +184,14 @@ func (h *FederationFriendLinkHandler) ensureFriendLink(ctx context.Context, inst
 	return h.linkRepo.Create(ctx, link)
 }
 
-func (h *FederationFriendLinkHandler) upsertFriendLinkApplication(ctx context.Context, payload contract.FederationFriendLinkRequestReq, requesterURL string, manifest *fedinfra.Manifest, keyID string) (*social.FriendLinkApplication, bool, error) {
+func (h *FederationFriendLinkHandler) upsertFriendLinkApplication(c *fiber.Ctx, ctx context.Context, payload contract.FederationFriendLinkRequestReq, requesterURL string, manifest *fedinfra.Manifest, keyID string) (*social.FriendLinkApplication, bool, error) {
 	url := strings.TrimSpace(payload.RequesterURL)
 	app, err := h.applicationRepo.FindByURL(ctx, url)
 	if err != nil && !errors.Is(err, social.ErrFriendLinkApplicationNotFound) {
 		return nil, false, err
 	}
 	if app != nil && app.Status == social.FriendLinkAppStatusBlocked {
-		return nil, false, response.NewBizErrorWithMsg(response.Unauthorized, "已被封禁")
+		return nil, false, response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.already_blocked"))
 	}
 
 	manifestPayload := toJSON(manifest)

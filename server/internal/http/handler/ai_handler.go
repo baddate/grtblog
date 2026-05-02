@@ -31,7 +31,7 @@ func NewAIHandler(svc *appai.Service) *AIHandler {
 func (h *AIHandler) ListProviders(c *fiber.Ctx) error {
 	providers, err := h.svc.ListProviders(c.Context())
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "获取提供商列表失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.providers_list_failed"), err)
 	}
 	resp := make([]contract.AIProviderResp, len(providers))
 	for i, p := range providers {
@@ -43,13 +43,13 @@ func (h *AIHandler) ListProviders(c *fiber.Ctx) error {
 func (h *AIHandler) CreateProvider(c *fiber.Ctx) error {
 	var req contract.CreateAIProviderReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	if strings.TrimSpace(req.Name) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "名称不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.name_not_empty"))
 	}
 	if !isValidProviderType(req.Type) {
-		return response.NewBizErrorWithMsg(response.ParamsError, "提供商类型必须为 openai、openrouter 或 gemini")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.provider_type_invalid"))
 	}
 
 	p := &domainai.Provider{
@@ -64,28 +64,28 @@ func (h *AIHandler) CreateProvider(c *fiber.Ctx) error {
 	}
 
 	if err := h.svc.CreateProvider(c.Context(), p); err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "创建提供商失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.create_provider_failed"), err)
 	}
-	return response.SuccessWithMessage(c, toProviderResp(p), "提供商创建成功")
+	return response.SuccessWithMessage(c, toProviderResp(p), response.Translate(c, "server.success.provider_created"))
 }
 
 func (h *AIHandler) UpdateProvider(c *fiber.Ctx) error {
 	id, err := parseInt64Param(c, "id")
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的提供商 ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_provider_id"))
 	}
 
 	existing, err := h.svc.GetProviderByID(c.Context(), id)
 	if err != nil {
 		if errors.Is(err, domainai.ErrProviderNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "提供商不存在")
+			return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.handler.provider_not_found"))
 		}
-		return response.NewBizErrorWithCause(response.ServerError, "获取提供商失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.get_provider_failed"), err)
 	}
 
 	var req contract.UpdateAIProviderReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 
 	if req.Name != nil {
@@ -93,7 +93,7 @@ func (h *AIHandler) UpdateProvider(c *fiber.Ctx) error {
 	}
 	if req.Type != nil {
 		if !isValidProviderType(*req.Type) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "提供商类型必须为 openai、openrouter 或 gemini")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.provider_type_invalid"))
 		}
 		existing.Type = *req.Type
 	}
@@ -108,20 +108,20 @@ func (h *AIHandler) UpdateProvider(c *fiber.Ctx) error {
 	}
 
 	if err := h.svc.UpdateProvider(c.Context(), existing); err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "更新提供商失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.update_provider_failed"), err)
 	}
-	return response.SuccessWithMessage(c, toProviderResp(existing), "提供商更新成功")
+	return response.SuccessWithMessage(c, toProviderResp(existing), response.Translate(c, "server.success.provider_updated"))
 }
 
 func (h *AIHandler) DeleteProvider(c *fiber.Ctx) error {
 	id, err := parseInt64Param(c, "id")
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的提供商 ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_provider_id"))
 	}
 	if err := h.svc.DeleteProvider(c.Context(), id); err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "删除提供商失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.delete_provider_failed"), err)
 	}
-	return response.SuccessWithMessage[any](c, nil, "提供商删除成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.provider_deleted"))
 }
 
 // ── Model CRUD ──
@@ -129,7 +129,7 @@ func (h *AIHandler) DeleteProvider(c *fiber.Ctx) error {
 func (h *AIHandler) ListModels(c *fiber.Ctx) error {
 	models, err := h.svc.ListModels(c.Context())
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "获取模型列表失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.get_models_failed"), err)
 	}
 
 	// 批量获取 provider 信息
@@ -154,16 +154,16 @@ func (h *AIHandler) ListModels(c *fiber.Ctx) error {
 func (h *AIHandler) CreateModel(c *fiber.Ctx) error {
 	var req contract.CreateAIModelReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	if strings.TrimSpace(req.Name) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "模型名称不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.model_name_required"))
 	}
 	if strings.TrimSpace(req.ModelID) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "模型 ID 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.model_id_required"))
 	}
 	if req.ProviderID <= 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "请选择提供商")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.select_provider_required"))
 	}
 
 	m := &domainai.Model{
@@ -177,28 +177,28 @@ func (h *AIHandler) CreateModel(c *fiber.Ctx) error {
 	}
 
 	if err := h.svc.CreateModel(c.Context(), m); err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "创建模型失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.create_model_failed"), err)
 	}
-	return response.SuccessWithMessage(c, toModelResp(m), "模型创建成功")
+	return response.SuccessWithMessage(c, toModelResp(m), response.Translate(c, "server.success.model_created"))
 }
 
 func (h *AIHandler) UpdateModel(c *fiber.Ctx) error {
 	id, err := parseInt64Param(c, "id")
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的模型 ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_model_id"))
 	}
 
 	existing, err := h.svc.GetModelByID(c.Context(), id)
 	if err != nil {
 		if errors.Is(err, domainai.ErrModelNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "模型不存在")
+			return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.handler.model_not_found"))
 		}
-		return response.NewBizErrorWithCause(response.ServerError, "获取模型失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.get_model_failed"), err)
 	}
 
 	var req contract.UpdateAIModelReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 
 	if req.ProviderID != nil {
@@ -215,20 +215,20 @@ func (h *AIHandler) UpdateModel(c *fiber.Ctx) error {
 	}
 
 	if err := h.svc.UpdateModel(c.Context(), existing); err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "更新模型失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.update_model_failed"), err)
 	}
-	return response.SuccessWithMessage(c, toModelResp(existing), "模型更新成功")
+	return response.SuccessWithMessage(c, toModelResp(existing), response.Translate(c, "server.success.model_updated"))
 }
 
 func (h *AIHandler) DeleteModel(c *fiber.Ctx) error {
 	id, err := parseInt64Param(c, "id")
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的模型 ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_model_id"))
 	}
 	if err := h.svc.DeleteModel(c.Context(), id); err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "删除模型失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.delete_model_failed"), err)
 	}
-	return response.SuccessWithMessage[any](c, nil, "模型删除成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.model_deleted"))
 }
 
 // ── AI 功能 ──
@@ -236,10 +236,10 @@ func (h *AIHandler) DeleteModel(c *fiber.Ctx) error {
 func (h *AIHandler) ModerateComment(c *fiber.Ctx) error {
 	var req contract.AIModerateCommentReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	if strings.TrimSpace(req.Content) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "评论内容不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.comment_content_required"))
 	}
 
 	result, err := h.svc.ModerateComment(c.Context(), req.Content, "manual")
@@ -256,10 +256,10 @@ func (h *AIHandler) ModerateComment(c *fiber.Ctx) error {
 func (h *AIHandler) GenerateTitle(c *fiber.Ctx) error {
 	var req contract.AIGenerateTitleReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	if strings.TrimSpace(req.Content) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "文章内容不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.article_content_required"))
 	}
 
 	result, err := h.svc.GenerateTitle(c.Context(), req.Content)
@@ -275,10 +275,10 @@ func (h *AIHandler) GenerateTitle(c *fiber.Ctx) error {
 func (h *AIHandler) RewriteContent(c *fiber.Ctx) error {
 	var req contract.AIRewriteContentReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	if strings.TrimSpace(req.Content) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "内容不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.content_required"))
 	}
 
 	result, err := h.svc.RewriteContent(c.Context(), req.Content, req.Instruction)
@@ -293,10 +293,10 @@ func (h *AIHandler) RewriteContent(c *fiber.Ctx) error {
 func (h *AIHandler) RewriteContentStream(c *fiber.Ctx) error {
 	var req contract.AIRewriteContentReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	if strings.TrimSpace(req.Content) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "内容不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.content_required"))
 	}
 
 	c.Set("Content-Type", "text/event-stream")
@@ -331,10 +331,10 @@ func (h *AIHandler) RewriteContentStream(c *fiber.Ctx) error {
 func (h *AIHandler) GenerateSummaryStream(c *fiber.Ctx) error {
 	var req contract.AIGenerateSummaryReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	if strings.TrimSpace(req.Content) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "内容不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.content_required"))
 	}
 
 	c.Set("Content-Type", "text/event-stream")
@@ -386,7 +386,7 @@ func (h *AIHandler) ListTaskLogs(c *fiber.Ctx) error {
 
 	items, total, err := h.svc.ListTaskLogs(c.Context(), opts)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "获取任务日志列表失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.get_task_logs_failed"), err)
 	}
 
 	respItems := make([]contract.AITaskLogResp, len(items))
@@ -404,12 +404,12 @@ func (h *AIHandler) ListTaskLogs(c *fiber.Ctx) error {
 func (h *AIHandler) GetTaskLog(c *fiber.Ctx) error {
 	id, err := parseInt64Param(c, "id")
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的任务日志 ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_task_log_id"))
 	}
 
 	l, err := h.svc.GetTaskLogByID(c.Context(), id)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "获取任务日志失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.get_task_log_failed"), err)
 	}
 	return response.Success(c, toTaskLogResp(l))
 }

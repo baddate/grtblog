@@ -72,12 +72,12 @@ func (h *AdminNotificationHandler) MarkRead(c *fiber.Ctx) error {
 	}
 	id := parseInt64Path(c, "id")
 	if id <= 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的通知ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_notification_id"))
 	}
 	if err := h.svc.MarkRead(c.Context(), claims.UserID, id); err != nil {
 		return h.mapError(err)
 	}
-	return response.SuccessWithMessage[any](c, nil, "已标记为已读")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.marked_read"))
 }
 
 // MarkAllRead 标记全部已读。
@@ -96,7 +96,7 @@ func (h *AdminNotificationHandler) MarkAllRead(c *fiber.Ctx) error {
 	if err := h.svc.MarkAllRead(c.Context(), claims.UserID); err != nil {
 		return h.mapError(err)
 	}
-	return response.SuccessWithMessage[any](c, nil, "全部标记已读")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.all_marked_read"))
 }
 
 func (h *AdminNotificationHandler) mapError(err error) error {

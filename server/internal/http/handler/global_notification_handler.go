@@ -77,7 +77,7 @@ func (h *GlobalNotificationHandler) ListAdmin(c *fiber.Ctx) error {
 func (h *GlobalNotificationHandler) GetAdmin(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的通知ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_notification_id"))
 	}
 	item, err := h.svc.GetByID(c.Context(), id)
 	if err != nil {
@@ -99,7 +99,7 @@ func (h *GlobalNotificationHandler) GetAdmin(c *fiber.Ctx) error {
 func (h *GlobalNotificationHandler) Create(c *fiber.Ctx) error {
 	var req contract.GlobalNotificationCreateReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	created, err := h.svc.Create(c.Context(), globalnotification.CreateCmd{
 		Content:    req.Content,
@@ -111,7 +111,7 @@ func (h *GlobalNotificationHandler) Create(c *fiber.Ctx) error {
 		return h.mapGlobalNotificationError(err)
 	}
 	Audit(c, "global_notification.create", map[string]any{"id": created.ID})
-	return response.SuccessWithMessage(c, contract.ToGlobalNotificationResp(*created), "全站通知创建成功")
+	return response.SuccessWithMessage(c, contract.ToGlobalNotificationResp(*created), response.Translate(c, "server.success.global_notification_created"))
 }
 
 // Update godoc
@@ -128,11 +128,11 @@ func (h *GlobalNotificationHandler) Create(c *fiber.Ctx) error {
 func (h *GlobalNotificationHandler) Update(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的通知ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_notification_id"))
 	}
 	var req contract.GlobalNotificationUpdateReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	updated, err := h.svc.Update(c.Context(), globalnotification.UpdateCmd{
 		ID:         id,
@@ -145,7 +145,7 @@ func (h *GlobalNotificationHandler) Update(c *fiber.Ctx) error {
 		return h.mapGlobalNotificationError(err)
 	}
 	Audit(c, "global_notification.update", map[string]any{"id": updated.ID})
-	return response.SuccessWithMessage(c, contract.ToGlobalNotificationResp(*updated), "全站通知更新成功")
+	return response.SuccessWithMessage(c, contract.ToGlobalNotificationResp(*updated), response.Translate(c, "server.success.global_notification_updated"))
 }
 
 // Delete godoc
@@ -160,13 +160,13 @@ func (h *GlobalNotificationHandler) Update(c *fiber.Ctx) error {
 func (h *GlobalNotificationHandler) Delete(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的通知ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_notification_id"))
 	}
 	if err := h.svc.Delete(c.Context(), id); err != nil {
 		return h.mapGlobalNotificationError(err)
 	}
 	Audit(c, "global_notification.delete", map[string]any{"id": id})
-	return response.SuccessWithMessage[any](c, nil, "全站通知删除成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.global_notification_deleted"))
 }
 
 // ListPublicActive godoc

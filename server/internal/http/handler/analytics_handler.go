@@ -35,7 +35,7 @@ type TrackViewEnvelope struct {
 func (h *AnalyticsHandler) TrackView(c *fiber.Ctx) error {
 	var req contract.TrackViewReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 
 	res, err := h.svc.TrackView(c.UserContext(), analytics.ViewTrackInput{
@@ -46,7 +46,7 @@ func (h *AnalyticsHandler) TrackView(c *fiber.Ctx) error {
 		UserAgent:   c.Get("User-Agent", ""),
 	})
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "埋点请求无效", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.analytics_invalid"), err)
 	}
 
 	return response.Success(c, contract.TrackViewResp{

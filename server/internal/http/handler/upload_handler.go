@@ -35,19 +35,19 @@ func NewUploadHandler(svc *mediaapp.Service) *UploadHandler {
 func (h *UploadHandler) UploadFile(c *fiber.Ctx) error {
 	file, err := c.FormFile("file")
 	if err != nil || file == nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "file 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.file_required"))
 	}
 	fileType := c.FormValue("type")
 	if strings.TrimSpace(fileType) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "type 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.file_type_required"))
 	}
 
 	result, err := h.svc.Upload(c.Context(), file, fileType)
 	if err != nil {
 		if errors.Is(err, media.ErrInvalidUploadType) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "type 仅支持 picture 或 file")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.file_type_invalid"))
 		}
-		return response.NewBizErrorWithCause(response.ServerError, "文件上传失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.file_upload_failed"), err)
 	}
 
 	var imgMeta *contract.UploadImageMeta
@@ -59,9 +59,9 @@ func (h *UploadHandler) UploadFile(c *fiber.Ctx) error {
 		}
 	}
 	resp := contract.ToUploadFileResp(result.File, !result.Created, result.ThumbnailURL, imgMeta)
-	msg := "上传成功"
+	msg := response.Translate(c, "server.handler.file_upload_success")
 	if !result.Created {
-		msg = "文件已存在，返回已上传结果"
+		msg = response.Translate(c, "server.handler.file_exists_returned")
 	}
 	return response.SuccessWithMessage(c, resp, msg)
 }
@@ -87,7 +87,7 @@ func (h *UploadHandler) ListUploads(c *fiber.Ctx) error {
 
 	result, err := h.svc.List(c.Context(), page, pageSize)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "获取文件列表失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.file_list_failed"), err)
 	}
 
 	items := make([]contract.UploadFileResp, len(result.Items))
@@ -115,7 +115,7 @@ func (h *UploadHandler) ListUploads(c *fiber.Ctx) error {
 func (h *UploadHandler) SyncUploads(c *fiber.Ctx) error {
 	result, err := h.svc.SyncIndex(c.Context())
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "同步文件索引失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.file_sync_failed"), err)
 	}
 
 	resp := contract.UploadSyncResp{
@@ -126,7 +126,7 @@ func (h *UploadHandler) SyncUploads(c *fiber.Ctx) error {
 		Deleted:           result.Deleted,
 		SkippedDuplicates: result.SkippedDuplicates,
 	}
-	return response.SuccessWithMessage(c, resp, "文件索引同步完成")
+	return response.SuccessWithMessage(c, resp, response.Translate(c, "server.handler.file_sync_completed"))
 }
 
 // RenameUpload godoc
@@ -142,27 +142,27 @@ func (h *UploadHandler) SyncUploads(c *fiber.Ctx) error {
 func (h *UploadHandler) RenameUpload(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的文件ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_file_id"))
 	}
 
 	var req contract.UploadRenameReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	if strings.TrimSpace(req.Name) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "文件名不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.file_name_required"))
 	}
 
 	updated, err := h.svc.Rename(c.Context(), id, req.Name)
 	if err != nil {
 		if errors.Is(err, media.ErrUploadFileNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "文件不存在")
+			return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.handler.file_not_found"))
 		}
-		return response.NewBizErrorWithCause(response.ParamsError, "文件重命名失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.file_rename_failed"), err)
 	}
 
 	thumbURL := h.svc.ThumbnailURLFor("/uploads" + updated.Path)
-	return response.SuccessWithMessage(c, contract.ToUploadFileResp(*updated, false, thumbURL, nil), "文件名已更新")
+	return response.SuccessWithMessage(c, contract.ToUploadFileResp(*updated, false, thumbURL, nil), response.Translate(c, "server.handler.file_name_updated"))
 }
 
 // DeleteUpload godoc
@@ -176,18 +176,18 @@ func (h *UploadHandler) RenameUpload(c *fiber.Ctx) error {
 func (h *UploadHandler) DeleteUpload(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的文件ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_file_id"))
 	}
 
 	_, err = h.svc.Delete(c.Context(), id)
 	if err != nil {
 		if errors.Is(err, media.ErrUploadFileNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "文件不存在")
+			return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.handler.file_not_found"))
 		}
-		return response.NewBizErrorWithCause(response.ServerError, "删除文件失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.file_delete_failed"), err)
 	}
 
-	return response.SuccessWithMessage[any](c, nil, "文件已删除")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.handler.file_deleted"))
 }
 
 // DownloadUpload godoc
@@ -201,26 +201,26 @@ func (h *UploadHandler) DeleteUpload(c *fiber.Ctx) error {
 func (h *UploadHandler) DownloadUpload(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的文件ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_file_id"))
 	}
 
 	file, err := h.svc.GetByID(c.Context(), id)
 	if err != nil {
 		if errors.Is(err, media.ErrUploadFileNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "文件不存在")
+			return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.handler.file_not_found"))
 		}
-		return response.NewBizErrorWithCause(response.ServerError, "获取文件失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.file_get_failed"), err)
 	}
 
 	diskPath, err := h.svc.ResolveDiskPath(file.Path)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "文件路径解析失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.file_path_parse_failed"), err)
 	}
 	if _, err := os.Stat(diskPath); err != nil {
 		if os.IsNotExist(err) {
-			return response.NewBizErrorWithMsg(response.NotFound, "文件不存在")
+			return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.handler.file_not_found"))
 		}
-		return response.NewBizErrorWithCause(response.ServerError, "读取文件失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.file_read_failed"), err)
 	}
 
 	return c.Download(diskPath, file.Name)

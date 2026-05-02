@@ -109,7 +109,7 @@ func (h *EmailTemplateHandler) ListEmailTemplates(c *fiber.Ctx) error {
 func (h *EmailTemplateHandler) CreateEmailTemplate(c *fiber.Ctx) error {
 	var req contract.CreateEmailTemplateReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	tpl := &domainemail.Template{
 		Code:            req.Code,
@@ -127,12 +127,12 @@ func (h *EmailTemplateHandler) CreateEmailTemplate(c *fiber.Ctx) error {
 			"eventName": tpl.EventName,
 			"error":     err.Error(),
 		})
-		if mapped := mapEmailDomainError(err); mapped != nil {
+		if mapped := mapEmailDomainError(c, err); mapped != nil {
 			return mapped
 		}
 		return err
 	}
-	return response.SuccessWithMessage(c, mapEmailTemplateResp(tpl), "邮件模板创建成功")
+	return response.SuccessWithMessage(c, mapEmailTemplateResp(tpl), response.Translate(c, "server.success.email_template_created"))
 }
 
 // UpdateEmailTemplate godoc
@@ -149,11 +149,11 @@ func (h *EmailTemplateHandler) CreateEmailTemplate(c *fiber.Ctx) error {
 func (h *EmailTemplateHandler) UpdateEmailTemplate(c *fiber.Ctx) error {
 	code := strings.TrimSpace(c.Params("code"))
 	if code == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的模板编码")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_template_code"))
 	}
 	var req contract.UpdateEmailTemplateReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	tpl := &domainemail.Template{
 		Name:            req.Name,
@@ -170,19 +170,19 @@ func (h *EmailTemplateHandler) UpdateEmailTemplate(c *fiber.Ctx) error {
 			"eventName": tpl.EventName,
 			"error":     err.Error(),
 		})
-		if mapped := mapEmailDomainError(err); mapped != nil {
+		if mapped := mapEmailDomainError(c, err); mapped != nil {
 			return mapped
 		}
 		return err
 	}
 	updated, err := h.svc.GetTemplateByCode(c.Context(), code)
 	if err != nil {
-		if mapped := mapEmailDomainError(err); mapped != nil {
+		if mapped := mapEmailDomainError(c, err); mapped != nil {
 			return mapped
 		}
 		return err
 	}
-	return response.SuccessWithMessage(c, mapEmailTemplateResp(updated), "邮件模板更新成功")
+	return response.SuccessWithMessage(c, mapEmailTemplateResp(updated), response.Translate(c, "server.success.email_template_updated"))
 }
 
 // DeleteEmailTemplate godoc
@@ -197,15 +197,15 @@ func (h *EmailTemplateHandler) UpdateEmailTemplate(c *fiber.Ctx) error {
 func (h *EmailTemplateHandler) DeleteEmailTemplate(c *fiber.Ctx) error {
 	code := strings.TrimSpace(c.Params("code"))
 	if code == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的模板编码")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_template_code"))
 	}
 	if err := h.svc.DeleteTemplate(c.Context(), code); err != nil {
-		if mapped := mapEmailDomainError(err); mapped != nil {
+		if mapped := mapEmailDomainError(c, err); mapped != nil {
 			return mapped
 		}
 		return err
 	}
-	return response.SuccessWithMessage[any](c, nil, "邮件模板删除成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.email_template_deleted"))
 }
 
 // PreviewEmailTemplate godoc
@@ -222,17 +222,17 @@ func (h *EmailTemplateHandler) DeleteEmailTemplate(c *fiber.Ctx) error {
 func (h *EmailTemplateHandler) PreviewEmailTemplate(c *fiber.Ctx) error {
 	code := strings.TrimSpace(c.Params("code"))
 	if code == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的模板编码")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_template_code"))
 	}
 	var req contract.EmailTemplatePreviewReq
 	if len(c.Body()) > 0 {
 		if err := c.BodyParser(&req); err != nil {
-			return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+			return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 		}
 	}
 	variables, err := parseEmailVariables(req.Variables)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "variables 无效", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.invalid_extinfo"), err)
 	}
 	rendered, err := h.svc.PreviewTemplate(c.Context(), code, variables)
 	if err != nil {
@@ -241,7 +241,7 @@ func (h *EmailTemplateHandler) PreviewEmailTemplate(c *fiber.Ctx) error {
 			"keys":  mapKeys(variables),
 			"error": err.Error(),
 		})
-		if mapped := mapEmailDomainError(err); mapped != nil {
+		if mapped := mapEmailDomainError(c, err); mapped != nil {
 			return mapped
 		}
 		return err
@@ -267,17 +267,17 @@ func (h *EmailTemplateHandler) PreviewEmailTemplate(c *fiber.Ctx) error {
 func (h *EmailTemplateHandler) TestEmailTemplate(c *fiber.Ctx) error {
 	code := strings.TrimSpace(c.Params("code"))
 	if code == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的模板编码")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_template_code"))
 	}
 	var req contract.EmailTemplateTestReq
 	if len(c.Body()) > 0 {
 		if err := c.BodyParser(&req); err != nil {
-			return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+			return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 		}
 	}
 	variables, err := parseEmailVariables(req.Variables)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "variables 无效", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.invalid_extinfo"), err)
 	}
 	if err := h.svc.TestSend(c.Context(), code, req.ToEmails, variables); err != nil {
 		Audit(c, "email.template.test_failed", map[string]any{
@@ -286,12 +286,12 @@ func (h *EmailTemplateHandler) TestEmailTemplate(c *fiber.Ctx) error {
 			"keys":    mapKeys(variables),
 			"error":   err.Error(),
 		})
-		if mapped := mapEmailDomainError(err); mapped != nil {
+		if mapped := mapEmailDomainError(c, err); mapped != nil {
 			return mapped
 		}
 		return err
 	}
-	return response.SuccessWithMessage[any](c, nil, "测试邮件发送成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.email_test_sent"))
 }
 
 // SubscribeEmail godoc
@@ -305,11 +305,11 @@ func (h *EmailTemplateHandler) TestEmailTemplate(c *fiber.Ctx) error {
 func (h *EmailTemplateHandler) SubscribeEmail(c *fiber.Ctx) error {
 	var req contract.EmailSubscribeReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	items, err := h.svc.SubscribeBatch(c.Context(), req.Email, req.EventNames, c.IP())
 	if err != nil {
-		if mapped := mapEmailDomainError(err); mapped != nil {
+		if mapped := mapEmailDomainError(c, err); mapped != nil {
 			return mapped
 		}
 		return err
@@ -318,7 +318,7 @@ func (h *EmailTemplateHandler) SubscribeEmail(c *fiber.Ctx) error {
 	for i, item := range items {
 		respItems[i] = mapEmailPublicSubscriptionResp(item)
 	}
-	return response.SuccessWithMessage(c, contract.EmailSubscribeBatchResp{Items: respItems}, "订阅成功")
+	return response.SuccessWithMessage(c, contract.EmailSubscribeBatchResp{Items: respItems}, response.Translate(c, "server.success.email_subscribed"))
 }
 
 // UnsubscribeEmail godoc
@@ -332,15 +332,15 @@ func (h *EmailTemplateHandler) SubscribeEmail(c *fiber.Ctx) error {
 func (h *EmailTemplateHandler) UnsubscribeEmail(c *fiber.Ctx) error {
 	var req contract.EmailUnsubscribeReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	if err := h.svc.Unsubscribe(c.Context(), req.Token, req.Email, req.EventName); err != nil {
-		if mapped := mapEmailDomainError(err); mapped != nil {
+		if mapped := mapEmailDomainError(c, err); mapped != nil {
 			return mapped
 		}
 		return err
 	}
-	return response.SuccessWithMessage[any](c, nil, "退订成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.email_unsubscribed"))
 }
 
 // ListEmailSubscriptions godoc
@@ -383,7 +383,7 @@ func (h *EmailTemplateHandler) ListEmailSubscriptions(c *fiber.Ctx) error {
 		Search:    searchPtr,
 	})
 	if err != nil {
-		if mapped := mapEmailDomainError(err); mapped != nil {
+		if mapped := mapEmailDomainError(c, err); mapped != nil {
 			return mapped
 		}
 		return err
@@ -413,15 +413,15 @@ func (h *EmailTemplateHandler) ListEmailSubscriptions(c *fiber.Ctx) error {
 func (h *EmailTemplateHandler) BatchUpdateEmailSubscriptionStatus(c *fiber.Ctx) error {
 	var req contract.BatchUpdateEmailSubscriptionStatusReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	if err := h.svc.BatchUpdateSubscriptionStatus(c.Context(), req.IDs, req.Status); err != nil {
-		if mapped := mapEmailDomainError(err); mapped != nil {
+		if mapped := mapEmailDomainError(c, err); mapped != nil {
 			return mapped
 		}
 		return err
 	}
-	return response.SuccessWithMessage[any](c, nil, "批量更新订阅状态成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.batch_update_subscription_status"))
 }
 
 // ListEmailOutbox godoc
@@ -488,11 +488,11 @@ func (h *EmailTemplateHandler) ListEmailOutbox(c *fiber.Ctx) error {
 func (h *EmailTemplateHandler) GetEmailOutbox(c *fiber.Ctx) error {
 	id, err := c.ParamsInt("id")
 	if err != nil || id <= 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的出站记录 ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_outbox_detail_id"))
 	}
 	item, err := h.svc.GetOutboxByID(c.Context(), int64(id))
 	if err != nil {
-		if mapped := mapEmailDomainError(err); mapped != nil {
+		if mapped := mapEmailDomainError(c, err); mapped != nil {
 			return mapped
 		}
 		return err
@@ -598,36 +598,36 @@ func mapKeys(input map[string]any) []string {
 	return keys
 }
 
-func mapEmailDomainError(err error) error {
+func mapEmailDomainError(c *fiber.Ctx, err error) error {
 	switch {
 	case errors.Is(err, domainemail.ErrEmailTemplateNotFound):
-		return response.NewBizErrorWithMsg(response.NotFound, "邮件模板不存在")
+		return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.error.email_template_not_found"))
 	case errors.Is(err, domainemail.ErrEmailTemplateCodeExists):
-		return response.NewBizErrorWithMsg(response.ParamsError, "模板编码已存在")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.error.email_template_code_exists"))
 	case errors.Is(err, domainemail.ErrEmailTemplateEventInvalid):
-		return response.NewBizErrorWithMsg(response.ParamsError, "事件名称无效")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.error.email_template_event_invalid"))
 	case errors.Is(err, domainemail.ErrEmailTemplateRenderFailed):
-		return response.NewBizErrorWithMsg(response.ParamsError, "模板内容无效或渲染失败")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.error.email_template_render_failed"))
 	case errors.Is(err, domainemail.ErrEmailTemplateInternalLocked):
-		return response.NewBizErrorWithMsg(response.ParamsError, "内置模板不允许删除")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.error.email_template_internal_locked"))
 	case errors.Is(err, domainemail.ErrEmailNoRecipient):
-		return response.NewBizErrorWithMsg(response.ParamsError, "收件人为空，请配置模板收件人或 email.defaultTo")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.error.email_no_recipient"))
 	case errors.Is(err, domainemail.ErrEmailDisabled):
-		return response.NewBizErrorWithMsg(response.ParamsError, "邮件功能未启用")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.error.email_disabled"))
 	case errors.Is(err, domainemail.ErrEmailConfigInvalid):
-		return response.NewBizErrorWithMsg(response.ParamsError, "SMTP 配置不完整")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.error.email_config_invalid"))
 	case errors.Is(err, domainemail.ErrEmailSendFailed):
-		return response.NewBizErrorWithMsg(response.ServerError, "邮件发送失败")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.error.email_send_failed"))
 	case errors.Is(err, domainemail.ErrEmailSubscriptionInvalid):
-		return response.NewBizErrorWithMsg(response.ParamsError, "订阅参数无效")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.error.email_subscription_invalid"))
 	case errors.Is(err, domainemail.ErrEmailSubscriptionEventInvalid):
-		return response.NewBizErrorWithMsg(response.ParamsError, "订阅事件无效")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.error.email_subscription_event_invalid"))
 	case errors.Is(err, domainemail.ErrEmailSubscriptionNotFound):
-		return response.NewBizErrorWithMsg(response.NotFound, "订阅记录不存在")
+		return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.error.email_subscription_not_found"))
 	case errors.Is(err, domainemail.ErrEmailSubscriptionStatusInvalid):
-		return response.NewBizErrorWithMsg(response.ParamsError, "订阅状态无效")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.error.email_subscription_status_invalid"))
 	case errors.Is(err, domainemail.ErrEmailOutboxNotFound):
-		return response.NewBizErrorWithMsg(response.NotFound, "邮件出站记录不存在")
+		return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.error.email_outbox_not_found"))
 	default:
 		return nil
 	}

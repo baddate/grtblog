@@ -61,18 +61,18 @@ func NewFederationAdminHandler(cfgSvc *sysconfig.Service, contentRepo content.Re
 func (h *FederationAdminHandler) RequestFriendLink(c *fiber.Ctx) error {
 	var req contract.FederationAdminFriendLinkRequestReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	target := strings.TrimSpace(req.TargetURL)
 	if target == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "target_url 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.target_url_required"))
 	}
 	if h.deliverySvc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "联邦服务未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.federation_service_not_init"))
 	}
 	delivery, err := h.deliverySvc.DispatchFriendLink(c.Context(), target, req.Message, req.RSSURL, nil)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "请求失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.request_failed"), err)
 	}
 	_ = h.events.Publish(c.Context(), appEvent.Generic{
 		EventName: "federation.friendlink.requested",
@@ -104,21 +104,21 @@ func (h *FederationAdminHandler) RequestFriendLink(c *fiber.Ctx) error {
 func (h *FederationAdminHandler) SendCitation(c *fiber.Ctx) error {
 	var req contract.FederationAdminCitationReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	target := strings.TrimSpace(req.TargetInstanceURL)
 	if target == "" || strings.TrimSpace(req.TargetPostID) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "target_instance_url/target_post_id 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.ti_tpi_required"))
 	}
 	if h.deliverySvc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "联邦服务未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.federation_service_not_init"))
 	}
 	article, err := h.resolveArticle(c, req.SourceArticleID, req.SourceShortURL)
 	if err != nil {
 		if errors.Is(err, content.ErrArticleNotFound) {
 			return response.NewBizError(response.NotFound)
 		}
-		return response.NewBizErrorWithCause(response.ServerError, "文章获取失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.article_get_failed"), err)
 	}
 	context := strings.TrimSpace(req.CitationContext)
 	if context == "" {
@@ -137,7 +137,7 @@ func (h *FederationAdminHandler) SendCitation(c *fiber.Ctx) error {
 	}
 	delivery, err := h.deliverySvc.DispatchCitation(c.Context(), ev, nil)
 	if err != nil {
-		return mapFederationDispatchError(err)
+		return mapFederationDispatchError(c, err)
 	}
 	_ = h.events.Publish(c.Context(), appEvent.Generic{
 		EventName: "federation.citation.requested",
@@ -169,21 +169,21 @@ func (h *FederationAdminHandler) SendCitation(c *fiber.Ctx) error {
 func (h *FederationAdminHandler) SendMention(c *fiber.Ctx) error {
 	var req contract.FederationAdminMentionReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	target := strings.TrimSpace(req.TargetInstanceURL)
 	if target == "" || strings.TrimSpace(req.MentionedUser) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "target_instance_url/mentioned_user 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.ti_mu_required"))
 	}
 	if h.deliverySvc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "联邦服务未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.federation_service_not_init"))
 	}
 	article, err := h.resolveArticle(c, req.SourceArticleID, req.SourceShortURL)
 	if err != nil {
 		if errors.Is(err, content.ErrArticleNotFound) {
 			return response.NewBizError(response.NotFound)
 		}
-		return response.NewBizErrorWithCause(response.ServerError, "文章获取失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.article_get_failed"), err)
 	}
 	context := strings.TrimSpace(req.MentionContext)
 	if context == "" {
@@ -202,7 +202,7 @@ func (h *FederationAdminHandler) SendMention(c *fiber.Ctx) error {
 	}
 	delivery, err := h.deliverySvc.DispatchMention(c.Context(), ev, nil)
 	if err != nil {
-		return mapFederationDispatchError(err)
+		return mapFederationDispatchError(c, err)
 	}
 	_ = h.events.Publish(c.Context(), appEvent.Generic{
 		EventName: "federation.mention.requested",
@@ -237,7 +237,7 @@ func (h *FederationAdminHandler) SendMention(c *fiber.Ctx) error {
 // @Security JWTAuth
 func (h *FederationAdminHandler) ListOutbound(c *fiber.Ctx) error {
 	if h.deliverySvc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "联邦服务未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.federation_service_not_init"))
 	}
 	page := parseIntQuery(c, "page", 1)
 	size := parseIntQuery(c, "pageSize", 20)
@@ -275,11 +275,11 @@ func (h *FederationAdminHandler) ListOutbound(c *fiber.Ctx) error {
 // @Security JWTAuth
 func (h *FederationAdminHandler) GetOutbound(c *fiber.Ctx) error {
 	if h.deliverySvc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "联邦服务未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.federation_service_not_init"))
 	}
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil || id <= 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的投递ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_delivery_id"))
 	}
 	item, err := h.deliverySvc.Get(c.Context(), id)
 	if err != nil {
@@ -299,11 +299,11 @@ func (h *FederationAdminHandler) GetOutbound(c *fiber.Ctx) error {
 // @Security JWTAuth
 func (h *FederationAdminHandler) GetOutboundByRequestID(c *fiber.Ctx) error {
 	if h.deliverySvc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "联邦服务未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.federation_service_not_init"))
 	}
 	requestID := strings.TrimSpace(c.Params("requestId"))
 	if requestID == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "request_id 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.request_id_required"))
 	}
 	items, total, err := h.deliverySvc.List(c.Context(), domainfed.OutboundDeliveryListOptions{
 		RequestID: requestID,
@@ -330,15 +330,15 @@ func (h *FederationAdminHandler) GetOutboundByRequestID(c *fiber.Ctx) error {
 // @Security JWTAuth
 func (h *FederationAdminHandler) RetryOutbound(c *fiber.Ctx) error {
 	if h.deliverySvc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "联邦服务未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.federation_service_not_init"))
 	}
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil || id <= 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的投递ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_delivery_id"))
 	}
 	item, err := h.deliverySvc.Retry(c.Context(), id)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "重试失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.retry_failed"), err)
 	}
 	return response.Success(c, mapOutboundDelivery(*item))
 }
@@ -362,26 +362,26 @@ func (h *FederationAdminHandler) CheckRemote(c *fiber.Ctx) error {
 		}
 	}
 	if target == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "target_url 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.target_url_required"))
 	}
 	if h.resolver == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "resolver 未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.resolver_not_init"))
 	}
 	baseURL := normalizeInstanceURL(target)
 	if baseURL == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "target_url 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.target_url_required"))
 	}
 	manifest, err := h.resolver.FetchManifest(c.Context(), baseURL)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "拉取 manifest 失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.fetch_manifest_failed"), err)
 	}
 	publicKey, err := h.resolver.FetchPublicKey(c.Context(), baseURL)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "拉取公钥失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.fetch_public_key_failed"), err)
 	}
 	endpoints, err := h.resolver.FetchEndpoints(c.Context(), baseURL)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "拉取 endpoints 失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.fetch_endpoints_failed"), err)
 	}
 	return response.Success(c, contract.FederationAdminRemoteCheckResp{
 		Manifest:  mapManifestResp(manifest),
@@ -405,14 +405,14 @@ func (h *FederationAdminHandler) CheckRemote(c *fiber.Ctx) error {
 func (h *FederationAdminHandler) FetchRemotePosts(c *fiber.Ctx) error {
 	target := strings.TrimSpace(c.Query("url"))
 	if target == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "url 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.url_required"))
 	}
 	if h.resolver == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "resolver 未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.resolver_not_init"))
 	}
 	baseURL := normalizeInstanceURL(target)
 	if baseURL == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "url 格式无效")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_url_format"))
 	}
 
 	keyword := strings.TrimSpace(c.Query("query"))
@@ -431,16 +431,16 @@ func (h *FederationAdminHandler) FetchRemotePosts(c *fiber.Ctx) error {
 	// 尝试拉取远端 endpoints
 	endpoints, err := h.resolver.FetchEndpoints(c.Context(), baseURL)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "拉取远端 endpoints 失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.fetch_remote_endpoints_failed"), err)
 	}
 	if endpoints == nil || endpoints.Endpoints == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "远端 endpoints 不可用")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.remote_endpoints_unavailable"))
 	}
 
 	// 构建时间线 URL
 	path := strings.TrimSpace(endpoints.Endpoints["timeline"])
 	if path == "" {
-		return response.NewBizErrorWithMsg(response.ServerError, "远端未提供 timeline 端点")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.remote_timeline_not_provided"))
 	}
 	endpointBaseURL := strings.TrimSpace(endpoints.BaseURL)
 	if endpointBaseURL == "" {
@@ -448,7 +448,7 @@ func (h *FederationAdminHandler) FetchRemotePosts(c *fiber.Ctx) error {
 	}
 	timelineURL, err := resolveEndpointURL(endpointBaseURL, path)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "解析 timeline 端点失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.parse_timeline_endpoint_failed"), err)
 	}
 	q := timelineURL.Query()
 	q.Set("page", strconv.Itoa(page))
@@ -459,16 +459,16 @@ func (h *FederationAdminHandler) FetchRemotePosts(c *fiber.Ctx) error {
 	httpClient := &http.Client{Timeout: 10 * time.Second}
 	req, err := http.NewRequestWithContext(c.Context(), http.MethodGet, timelineURL.String(), nil)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "构建请求失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.build_request_failed"), err)
 	}
 	resp, err := httpClient.Do(req)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "拉取远端时间线失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.fetch_remote_timeline_failed"), err)
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		body, _ := io.ReadAll(io.LimitReader(resp.Body, 512))
-		return response.NewBizErrorWithMsg(response.ServerError, fmt.Sprintf("远端返回 %d: %s", resp.StatusCode, string(body)))
+		return response.NewBizErrorWithMsg(response.ServerError, fmt.Sprintf("%s %d: %s", response.Translate(c, "server.handler.remote_returned_format"), resp.StatusCode, string(body)))
 	}
 
 	var envelope struct {
@@ -491,7 +491,7 @@ func (h *FederationAdminHandler) FetchRemotePosts(c *fiber.Ctx) error {
 		} `json:"data"`
 	}
 	if err := json.NewDecoder(resp.Body).Decode(&envelope); err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "解析远端响应失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.parse_remote_response_failed"), err)
 	}
 
 	// 获取远端实例名
@@ -595,7 +595,7 @@ func resolveEndpointURL(base, path string) (*url.URL, error) {
 // @Security JWTAuth
 func (h *FederationAdminHandler) ListInstances(c *fiber.Ctx) error {
 	if h.instanceRepo == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "联邦服务未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.federation_service_not_init"))
 	}
 	page := parseIntQuery(c, "page", 1)
 	size := parseIntQuery(c, "pageSize", 20)
@@ -629,11 +629,11 @@ func (h *FederationAdminHandler) ListInstances(c *fiber.Ctx) error {
 // @Security JWTAuth
 func (h *FederationAdminHandler) GetInstance(c *fiber.Ctx) error {
 	if h.instanceRepo == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "联邦服务未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.federation_service_not_init"))
 	}
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil || id <= 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的实例ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_instance_id"))
 	}
 	instance, err := h.instanceRepo.GetByID(c.Context(), id)
 	if err != nil {
@@ -665,7 +665,7 @@ func (h *FederationAdminHandler) GetInstance(c *fiber.Ctx) error {
 					instance = updated
 				}
 			} else {
-				msg := "拉取远端实例详情失败"
+				msg := response.Translate(c, "server.handler.fetch_remote_instance_details_failed")
 				if errM != nil {
 					msg += ": manifest"
 				} else if errP != nil {
@@ -693,19 +693,19 @@ func (h *FederationAdminHandler) GetInstance(c *fiber.Ctx) error {
 // @Security JWTAuth
 func (h *FederationAdminHandler) UpdateInstanceStatus(c *fiber.Ctx) error {
 	if h.instanceRepo == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "联邦服务未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.federation_service_not_init"))
 	}
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil || id <= 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的实例ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_instance_id"))
 	}
 	var req contract.FederationInstanceStatusUpdateReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	status := normalizeInstanceStatus(req.Status)
 	if status == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "status 仅支持 pending|active|blocked")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.status_invalid"))
 	}
 	instance, err := h.instanceRepo.GetByID(c.Context(), id)
 	if err != nil {
@@ -731,11 +731,11 @@ func (h *FederationAdminHandler) UpdateInstanceStatus(c *fiber.Ctx) error {
 // @Security JWTAuth
 func (h *FederationAdminHandler) ListInstancePosts(c *fiber.Ctx) error {
 	if h.postCacheRepo == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "联邦服务未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.federation_service_not_init"))
 	}
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil || id <= 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的实例ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_instance_id"))
 	}
 	keyword := strings.TrimSpace(c.Query("q"))
 	limit := parseIntQuery(c, "limit", 20)
@@ -782,7 +782,7 @@ func (h *FederationAdminHandler) ListInstancePosts(c *fiber.Ctx) error {
 // @Security JWTAuth
 func (h *FederationAdminHandler) SearchAuthors(c *fiber.Ctx) error {
 	if h.postCacheRepo == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "联邦服务未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.federation_service_not_init"))
 	}
 	keyword := strings.TrimSpace(c.Query("q"))
 	limit := parseIntQuery(c, "limit", 20)
@@ -811,7 +811,7 @@ func (h *FederationAdminHandler) resolveArticle(c *fiber.Ctx, id *int64, shortUR
 	return nil, content.ErrArticleNotFound
 }
 
-func mapFederationDispatchError(err error) error {
+func mapFederationDispatchError(c *fiber.Ctx, err error) error {
 	if err == nil {
 		return nil
 	}
@@ -825,7 +825,7 @@ func mapFederationDispatchError(err error) error {
 	case errors.Is(err, appfed.ErrTargetInstanceEmpty):
 		return response.NewBizErrorWithMsg(response.ParamsError, appfed.ErrTargetInstanceEmpty.Error())
 	default:
-		return response.NewBizErrorWithCause(response.ServerError, "请求失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.request_failed"), err)
 	}
 }
 

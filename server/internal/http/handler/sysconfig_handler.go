@@ -58,7 +58,7 @@ func (h *SysConfigHandler) ListSysConfig(c *fiber.Ctx) error {
 	}
 	tree, err := buildSysConfigTree(items)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "配置解析失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.config_parse_failed"), err)
 	}
 	return response.Success(c, tree)
 }
@@ -76,17 +76,17 @@ func (h *SysConfigHandler) ListSysConfig(c *fiber.Ctx) error {
 func (h *SysConfigHandler) UpdateSysConfig(c *fiber.Ctx) error {
 	var req contract.SysConfigBatchUpdateReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	if len(req.Items) == 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "items 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.items_required"))
 	}
 
 	updates := make([]sysconfig.UpdateItem, 0, len(req.Items))
 	for _, item := range req.Items {
 		key := strings.TrimSpace(item.Key)
 		if key == "" {
-			return response.NewBizErrorWithMsg(response.ParamsError, "key 不能为空")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.key_required"))
 		}
 		updates = append(updates, sysconfig.UpdateItem{
 			Key:          key,
@@ -114,9 +114,9 @@ func (h *SysConfigHandler) UpdateSysConfig(c *fiber.Ctx) error {
 	}
 	tree, err := buildSysConfigTree(updated)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "配置解析失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.config_parse_failed"), err)
 	}
-	return response.SuccessWithMessage(c, tree, "更新成功")
+	return response.SuccessWithMessage(c, tree, response.Translate(c, "server.success.updated"))
 }
 
 type sysConfigGroupNode struct {

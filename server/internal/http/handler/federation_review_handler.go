@@ -100,15 +100,15 @@ func (h *FederationReviewHandler) ListPendingReviews(c *fiber.Ctx) error {
 func (h *FederationReviewHandler) ReviewCitation(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil || id <= 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的引用ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_citation_id"))
 	}
 	var req contract.FederationReviewDecisionReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	status := normalizeReviewStatus(req.Status)
 	if status == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "status 仅支持 approved/rejected")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.status_approved_rejected"))
 	}
 	var reason *string
 	if trimmed := strings.TrimSpace(req.Reason); trimmed != "" {
@@ -132,7 +132,7 @@ func (h *FederationReviewHandler) ReviewCitation(c *fiber.Ctx) error {
 			},
 		})
 	}
-	return response.SuccessWithMessage[any](c, nil, "审核结果已更新")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.review_updated"))
 }
 
 // ReviewMention 审核提及。
@@ -149,15 +149,15 @@ func (h *FederationReviewHandler) ReviewCitation(c *fiber.Ctx) error {
 func (h *FederationReviewHandler) ReviewMention(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil || id <= 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的提及ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_mention_id"))
 	}
 	var req contract.FederationReviewDecisionReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	status := normalizeReviewStatus(req.Status)
 	if status == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "status 仅支持 approved/rejected")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.status_approved_rejected"))
 	}
 	var reason *string
 	if trimmed := strings.TrimSpace(req.Reason); trimmed != "" {
@@ -182,7 +182,7 @@ func (h *FederationReviewHandler) ReviewMention(c *fiber.Ctx) error {
 			},
 		})
 	}
-	return response.SuccessWithMessage[any](c, nil, "审核结果已更新")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.review_updated"))
 }
 
 func (h *FederationReviewHandler) sendResultCallback(ctx context.Context, typ string, sourceInstanceID int64, sourceRequestID *string, status string, reason string) error {

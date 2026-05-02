@@ -40,7 +40,7 @@ type LogLinesEnvelope struct {
 func (h *AdminLogHandler) List(c *fiber.Ctx) error {
 	file, err := os.Open(h.logPath)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "无法读取日志文件")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.cannot_read_log"))
 	}
 	defer file.Close()
 

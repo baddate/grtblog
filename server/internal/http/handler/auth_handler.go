@@ -44,28 +44,30 @@ func NewAuthHandler(svc *auth.Service, setupSvc *setupstate.Service, sysCfg *sys
 func (h *AuthHandler) Register(c *fiber.Ctx) error {
 	var req contract.RegisterReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if err := h.verifyTurnstile(c, req.TurnstileToken); err != nil {
 		return err
 	}
 	var cmd auth.RegisterCmd
 	if err := copier.Copy(&cmd, req); err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "请求体映射失败")
+		msg := response.Translate(c, "server.handler.map_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	user, err := h.svc.Register(c.Context(), cmd)
 	if err != nil {
 		if errors.Is(err, auth.ErrRegisterClosed) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "仅允许初始化管理员账号，普通用户请使用 OAuth 登录")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.admin_only_registration"))
 		}
 		if errors.Is(err, auth.ErrPasswordTooWeak) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "密码至少需要 8 位")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.password_too_short"))
 		}
 		if errors.Is(err, identity.ErrInvalidCredentials) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "用户名、邮箱和密码不能为空，且邮箱格式必须正确")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_registration_fields"))
 		}
 		if errors.Is(err, identity.ErrUserExists) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "用户名或邮箱已存在")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.user_or_email_exists"))
 		}
 		return err
 	}
@@ -75,7 +77,7 @@ func (h *AuthHandler) Register(c *fiber.Ctx) error {
 		"email":    user.Email,
 		"isAdmin":  user.IsAdmin,
 	})
-	return response.SuccessWithMessage(c, contract.ToUserResp(*user), "注册成功")
+	return response.SuccessWithMessage(c, contract.ToUserResp(*user), response.Translate(c, "server.success.registration_success"))
 }
 
 // Login godoc
@@ -89,19 +91,21 @@ func (h *AuthHandler) Register(c *fiber.Ctx) error {
 func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	var req contract.LoginReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if err := h.verifyTurnstile(c, req.TurnstileToken); err != nil {
 		return err
 	}
 	var cmd auth.LoginCmd
 	if err := copier.Copy(&cmd, req); err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "请求体映射失败")
+		msg := response.Translate(c, "server.handler.map_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	result, err := h.svc.Login(c.Context(), cmd)
 	if err != nil {
 		if errors.Is(err, auth.ErrUserDisabled) {
-			return response.NewBizErrorWithMsg(response.Unauthorized, "账号已被禁用")
+			return response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.account_disabled"))
 		}
 		if errors.Is(err, identity.ErrInvalidCredentials) {
 			return response.NewBizError(response.InvalidCredential)
@@ -125,19 +129,19 @@ func (h *AuthHandler) verifyTurnstile(c *fiber.Ctx, token string) error {
 	}
 	settings, err := h.sysCfg.Turnstile(c.Context())
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "获取系统配置失败")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.get_sys_config_failed"))
 	}
 	if !settings.Enabled {
 		return nil
 	}
 	if err := h.turnstile.Verify(c.Context(), token, c.IP(), settings); err != nil {
 		if errors.Is(err, turnstile.ErrVerificationFailed) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "人机校验未通过")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.turnstile_not_passed"))
 		}
 		if errors.Is(err, turnstile.ErrMissingSecret) {
-			return response.NewBizErrorWithMsg(response.ServerError, "人机校验未配置，请联系管理员")
+			return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.turnstile_not_configured"))
 		}
-		return response.NewBizErrorWithMsg(response.ServerError, "人机校验失败，请稍后重试")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.turnstile_failed"))
 	}
 	return nil
 }
@@ -146,49 +150,53 @@ func (h *AuthHandler) verifyTurnstile(c *fiber.Ctx, token string) error {
 func (h *AuthHandler) UpdateProfile(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 	var req contract.UpdateProfileReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	var cmd auth.UpdateProfileCmd
 	if err := copier.Copy(&cmd, req); err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "请求体映射失败")
+		msg := response.Translate(c, "server.handler.map_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	cmd.UserID = claims.UserID
 	user, err := h.svc.UpdateProfile(c.Context(), cmd)
 	if err != nil {
 		if errors.Is(err, identity.ErrUserExists) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "邮箱已被使用")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.email_already_used"))
 		}
 		return err
 	}
 	Audit(c, "auth.update_profile", map[string]any{"userId": claims.UserID})
-	return response.SuccessWithMessage(c, contract.ToUserResp(*user), "更新成功")
+	return response.SuccessWithMessage(c, contract.ToUserResp(*user), response.Translate(c, "server.success.updated"))
 }
 
 // ChangePassword 修改当前登录用户密码。
 func (h *AuthHandler) ChangePassword(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 	var req contract.ChangePasswordReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if req.NewPassword == "" || req.OldPassword == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "密码不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.password_required"))
 	}
 	var cmd auth.ChangePasswordCmd
 	if err := copier.Copy(&cmd, req); err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "请求体映射失败")
+		msg := response.Translate(c, "server.handler.map_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	cmd.UserID = claims.UserID
 	if err := h.svc.ChangePassword(c.Context(), cmd); err != nil {
 		if errors.Is(err, auth.ErrPasswordTooWeak) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "密码至少需要 8 位")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.password_too_short"))
 		}
 		if errors.Is(err, identity.ErrInvalidCredentials) {
 			return response.NewBizError(response.InvalidCredential)
@@ -196,14 +204,14 @@ func (h *AuthHandler) ChangePassword(c *fiber.Ctx) error {
 		return err
 	}
 	Audit(c, "auth.change_password", map[string]any{"userId": claims.UserID})
-	return response.SuccessWithMessage[any](c, nil, "密码已更新")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.password_updated"))
 }
 
 // ListOAuthBindings 返回当前用户绑定的 OAuth 账号。
 func (h *AuthHandler) ListOAuthBindings(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 	items, err := h.svc.ListOAuthBindings(c.Context(), claims.UserID)
 	if err != nil {
@@ -216,15 +224,16 @@ func (h *AuthHandler) ListOAuthBindings(c *fiber.Ctx) error {
 func (h *AuthHandler) BindOAuth(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 	provider := c.Params("provider")
 	var req contract.OAuthCallbackReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+	return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if req.Code == "" || req.State == "" || provider == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "provider/code/state 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.oauth_fields_required"))
 	}
 	contextNonce := readOAuthStateNonceCookie(c)
 	clearOAuthStateNonceCookie(c)
@@ -236,10 +245,10 @@ func (h *AuthHandler) BindOAuth(c *fiber.Ctx) error {
 		ContextNonce: contextNonce,
 	}); err != nil {
 		if errors.Is(err, identity.ErrOAuthAlreadyBound) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "该第三方账号已绑定其他用户")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.oauth_already_bound"))
 		}
 		if errors.Is(err, auth.ErrInvalidOAuthIdentity) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "OAuth 身份信息无效，请检查 provider 的用户信息映射配置")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.oauth_identity_invalid"))
 		}
 		return err
 	}
@@ -247,25 +256,25 @@ func (h *AuthHandler) BindOAuth(c *fiber.Ctx) error {
 		"userId":   claims.UserID,
 		"provider": provider,
 	})
-	return response.SuccessWithMessage[any](c, nil, "绑定成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.bind_success"))
 }
 
 // UnbindOAuth 解绑当前用户的 OAuth 账号。
 func (h *AuthHandler) UnbindOAuth(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 	provider := c.Params("provider")
 	if provider == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "provider 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.oauth_provider_required"))
 	}
 	if err := h.svc.UnbindOAuth(c.Context(), claims.UserID, provider); err != nil {
 		if errors.Is(err, auth.ErrLastOAuthBinding) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "至少保留一种登录方式，当前账号无法解绑最后一个 OAuth")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.cannot_unbind_last_auth"))
 		}
 		if errors.Is(err, identity.ErrOAuthBindingNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "该账号未绑定此提供方")
+			return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.handler.account_not_bound_to_provider"))
 		}
 		return err
 	}
@@ -273,14 +282,14 @@ func (h *AuthHandler) UnbindOAuth(c *fiber.Ctx) error {
 		"userId":   claims.UserID,
 		"provider": provider,
 	})
-	return response.SuccessWithMessage[any](c, nil, "解绑成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.unbind_success"))
 }
 
 // AccessInfo 返回当前登录用户的角色/权限。
 func (h *AuthHandler) AccessInfo(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 	info, err := h.svc.AccessInfo(c.Context(), claims)
 	if err != nil {
@@ -301,12 +310,12 @@ func (h *AuthHandler) AccessInfo(c *fiber.Ctx) error {
 func (h *AuthHandler) Profile(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 	user, err := h.svc.CurrentUser(c.Context(), claims.UserID)
 	if err != nil {
 		if errors.Is(err, identity.ErrUserNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "用户不存在")
+			return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.handler.user_not_found"))
 		}
 		return err
 	}
@@ -317,7 +326,7 @@ func (h *AuthHandler) Profile(c *fiber.Ctx) error {
 func (h *AuthHandler) InitState(c *fiber.Ctx) error {
 	initialized, err := h.svc.IsInitialized(c.Context())
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "获取初始化状态失败")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.get_init_state_failed"))
 	}
 	return response.Success(c, contract.InitStateResp{
 		Initialized: initialized,
@@ -327,11 +336,11 @@ func (h *AuthHandler) InitState(c *fiber.Ctx) error {
 // SetupState 返回初始化准备状态（用户、管理员、站点信息）。
 func (h *AuthHandler) SetupState(c *fiber.Ctx) error {
 	if h.setupSvc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "初始化服务未配置")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.init_service_not_configured"))
 	}
 	state, err := h.setupSvc.Evaluate(c.Context())
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "获取初始化状态失败")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.get_init_state_failed"))
 	}
 	pending := state.PendingUpgradeGuides
 	if pending == nil {
@@ -362,7 +371,7 @@ func (h *AuthHandler) TurnstileState(c *fiber.Ctx) error {
 	}
 	settings, err := h.sysCfg.Turnstile(c.Context())
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "获取系统配置失败")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.get_sys_config_failed"))
 	}
 	resp := contract.TurnstileStateResp{
 		Enabled: settings.Enabled,

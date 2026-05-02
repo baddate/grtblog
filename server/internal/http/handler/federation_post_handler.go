@@ -59,7 +59,7 @@ func (h *FederationPostHandler) GetPostDetail(c *fiber.Ctx) error {
 		if errors.Is(err, content.ErrArticleNotFound) {
 			return response.NewBizError(response.NotFound)
 		}
-		return response.NewBizErrorWithCause(response.ServerError, "文章获取失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.article_get_failed"), err)
 	}
 	if !article.IsPublished {
 		return response.NewBizError(response.NotFound)

@@ -71,7 +71,7 @@ func (h *FederationMentionHandler) NotifyMention(c *fiber.Ctx) error {
 	body := c.Body()
 	req, err := parseFederationRequest(c)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.request_parse_failed"), err)
 	}
 
 	signature, err := h.verifier.VerifyRequest(c.Context(), req, body)
@@ -82,41 +82,41 @@ func (h *FederationMentionHandler) NotifyMention(c *fiber.Ctx) error {
 			At:        time.Now(),
 			Payload:   map[string]any{"action": "mention", "ip": c.IP()},
 		})
-		return response.NewBizErrorWithMsg(response.Unauthorized, "签名校验失败")
+		return response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.signature_verification_failed"))
 	}
 
 	var payload contract.FederationMentionNotifyReq
 	if err := json.Unmarshal(body, &payload); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	if strings.TrimSpace(payload.SourceInstanceURL) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "source_instance_url 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.source_instance_url_required"))
 	}
 	if strings.TrimSpace(payload.SourcePost.URL) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "source_post.url 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.source_post_url_required"))
 	}
 	if strings.TrimSpace(payload.MentionedUser) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "mentioned_user 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.mentioned_user_required"))
 	}
 	if strings.TrimSpace(payload.MentionContext) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "mention_context 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.mention_context_required"))
 	}
 	if signature != nil && signature.BaseURL != "" && !sameBaseURL(signature.BaseURL, payload.SourceInstanceURL) {
-		return response.NewBizErrorWithMsg(response.Unauthorized, "签名来源与请求不一致")
+		return response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.signature_mismatch"))
 	}
 
 	settings, err := h.cfgSvc.FederationSettings(c.Context())
 	if err != nil || !settings.Enabled {
-		return response.NewBizErrorWithMsg(response.Unauthorized, "联合未启用")
+		return response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.federation_not_enabled"))
 	}
 	policy := parseFederationPolicy(settings)
 	if !policyBool(policy.AllowMention, true) {
-		return response.NewBizErrorWithMsg(response.Unauthorized, "未允许被提及")
+		return response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.mention_not_allowed"))
 	}
 	if !settings.AllowInbound {
-		return response.NewBizErrorWithMsg(response.Unauthorized, "已关闭入站请求")
+		return response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.inbound_requests_closed"))
 	}
-	if err := enforceFederationInboundRateLimit(c.Context(), h.rateLimiter, payload.SourceInstanceURL, "mention", settings.RateLimits); err != nil {
+	if err := enforceFederationInboundRateLimit(c, c.Context(), h.rateLimiter, payload.SourceInstanceURL, "mention", settings.RateLimits); err != nil {
 		_ = h.events.Publish(c.Context(), appEvent.Generic{
 			EventName: "federation.inbound.rate_limited",
 			At:        time.Now(),
@@ -128,12 +128,12 @@ func (h *FederationMentionHandler) NotifyMention(c *fiber.Ctx) error {
 	user, err := h.userRepo.FindByUsername(c.Context(), payload.MentionedUser)
 	if err != nil {
 		if errors.Is(err, identity.ErrUserNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "用户不存在")
+			return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.handler.user_not_found"))
 		}
-		return response.NewBizErrorWithCause(response.ServerError, "用户查询失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.user_query_failed"), err)
 	}
 
-	instance, err := ensureFederationInstance(c.Context(), payload.SourceInstanceURL, h.resolver, h.instanceRepo)
+	instance, err := ensureFederationInstance(c, c.Context(), payload.SourceInstanceURL, h.resolver, h.instanceRepo)
 	if err != nil {
 		return err
 	}
@@ -170,7 +170,7 @@ func (h *FederationMentionHandler) NotifyMention(c *fiber.Ctx) error {
 		CreatedAt:        time.Now().UTC(),
 	}
 	if err := h.mentionRepo.Create(c.Context(), mention); err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "写入提及失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.write_mention_failed"), err)
 	}
 
 	resp := contract.FederationMentionNotifyResp{

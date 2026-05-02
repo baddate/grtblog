@@ -67,7 +67,7 @@ func (h *WebhookHandler) ListWebhooks(c *fiber.Ctx) error {
 func (h *WebhookHandler) CreateWebhook(c *fiber.Ctx) error {
 	var req contract.CreateWebhookReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 
 	hook := &domainwebhook.Webhook{
@@ -80,13 +80,13 @@ func (h *WebhookHandler) CreateWebhook(c *fiber.Ctx) error {
 	}
 	if err := h.svc.Create(c.Context(), hook); err != nil {
 		if errors.Is(err, domainwebhook.ErrWebhookInvalidEvents) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "事件列表无效")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_events"))
 		}
 		return err
 	}
 
 	resp := mapWebhookResp(hook)
-	return response.SuccessWithMessage(c, resp, "Webhook 创建成功")
+	return response.SuccessWithMessage(c, resp, response.Translate(c, "server.success.webhook_created"))
 }
 
 // UpdateWebhook godoc
@@ -103,12 +103,12 @@ func (h *WebhookHandler) CreateWebhook(c *fiber.Ctx) error {
 func (h *WebhookHandler) UpdateWebhook(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的 Webhook ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_webhook_id"))
 	}
 
 	var req contract.UpdateWebhookReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 
 	hook := &domainwebhook.Webhook{
@@ -122,10 +122,10 @@ func (h *WebhookHandler) UpdateWebhook(c *fiber.Ctx) error {
 	}
 	if err := h.svc.Update(c.Context(), hook); err != nil {
 		if errors.Is(err, domainwebhook.ErrWebhookInvalidEvents) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "事件列表无效")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_events"))
 		}
 		if errors.Is(err, domainwebhook.ErrWebhookNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "Webhook 不存在")
+			return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.error.webhook_not_found"))
 		}
 		return err
 	}
@@ -135,7 +135,7 @@ func (h *WebhookHandler) UpdateWebhook(c *fiber.Ctx) error {
 		return err
 	}
 	resp := mapWebhookResp(updated)
-	return response.SuccessWithMessage(c, resp, "Webhook 更新成功")
+	return response.SuccessWithMessage(c, resp, response.Translate(c, "server.success.webhook_updated"))
 }
 
 // DeleteWebhook godoc
@@ -150,16 +150,16 @@ func (h *WebhookHandler) UpdateWebhook(c *fiber.Ctx) error {
 func (h *WebhookHandler) DeleteWebhook(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的 Webhook ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_webhook_id"))
 	}
 
 	if err := h.svc.Delete(c.Context(), id); err != nil {
 		if errors.Is(err, domainwebhook.ErrWebhookNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "Webhook 不存在")
+			return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.error.webhook_not_found"))
 		}
 		return err
 	}
-	return response.SuccessWithMessage[any](c, nil, "Webhook 删除成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.webhook_deleted"))
 }
 
 // TestWebhook godoc
@@ -176,27 +176,27 @@ func (h *WebhookHandler) DeleteWebhook(c *fiber.Ctx) error {
 func (h *WebhookHandler) TestWebhook(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的 Webhook ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_webhook_id"))
 	}
 
 	var req contract.WebhookTestReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 
 	if err := h.svc.Test(c.Context(), id, req.EventName); err != nil {
 		if errors.Is(err, domainwebhook.ErrWebhookInvalidEvents) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "事件列表无效")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_events"))
 		}
 		if errors.Is(err, domainwebhook.ErrWebhookNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "Webhook 不存在")
+			return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.error.webhook_not_found"))
 		}
 		if errors.Is(err, domainwebhook.ErrWebhookDeliveryFailed) {
-			return response.SuccessWithMessage[any](c, nil, "Webhook 测试失败，已记录投递历史")
+			return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.webhook_test_failed"))
 		}
 		return err
 	}
-	return response.SuccessWithMessage[any](c, nil, "Webhook 测试成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.webhook_test_success"))
 }
 
 // ListHistory godoc
@@ -272,18 +272,18 @@ func (h *WebhookHandler) ListHistory(c *fiber.Ctx) error {
 func (h *WebhookHandler) ReplayHistory(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的记录ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_record_id"))
 	}
 	if err := h.svc.Replay(c.Context(), id); err != nil {
 		if errors.Is(err, domainwebhook.ErrDeliveryHistoryNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "记录不存在")
+			return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.handler.record_not_found"))
 		}
 		if errors.Is(err, domainwebhook.ErrWebhookDeliveryFailed) {
-			return response.SuccessWithMessage[any](c, nil, "重放失败，已记录投递历史")
+			return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.replay_failed"))
 		}
 		return err
 	}
-	return response.SuccessWithMessage[any](c, nil, "重放成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.replay_success"))
 }
 
 func mapWebhookResp(hook *domainwebhook.Webhook) contract.WebhookResp {
