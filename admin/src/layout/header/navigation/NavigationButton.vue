@@ -29,7 +29,7 @@ const stopWatch = watch(
     <ButtonAnimation
       size="medium"
       @click="router.back()"
-      title="上一页"
+      :title="$t('admin.nav.prev_page')"
       :disabled="!navigationState.canGoBack"
     >
       <span class="iconify size-4.5 ph--arrow-left" />
@@ -37,7 +37,7 @@ const stopWatch = watch(
     <ButtonAnimation
       size="medium"
       @click="router.forward()"
-      title="下一页"
+      :title="$t('admin.nav.next_page')"
       :disabled="!navigationState.canGoForward"
     >
       <span class="iconify size-4.5 ph--arrow-right" />

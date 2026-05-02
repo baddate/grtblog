@@ -75,6 +75,8 @@
   "admin.common.batch_delete_confirm": "Delete selected items?",
   "admin.common.fill_required": "Please fill in required fields",
   "admin.common.network_error": "Network error, please try again",
+  "admin.common.top": "Top",
+  "admin.common.bottom": "Bottom",
 
   "admin.header.sign_out": "Sign out",
   "admin.header.sign_out_confirm": "Are you sure you want to sign out?",
@@ -373,5 +375,13 @@
   "admin.validation.required": "This field is required",
   "admin.validation.max_length": "Max {n} characters",
   "admin.validation.invalid_url": "Please enter a valid URL",
-  "admin.validation.invalid_email": "Please enter a valid email"
+  "admin.validation.invalid_email": "Please enter a valid email",
+
+  "admin.nav.prev_page": "Previous page",
+  "admin.nav.next_page": "Next page",
+
+  "admin.watermark.italic": "Italic",
+  "admin.watermark.oblique": "Oblique",
+  "admin.watermark.thin": "Thin",
+  "admin.watermark.restart_hint": "Reopen watermark to apply changes"
 }

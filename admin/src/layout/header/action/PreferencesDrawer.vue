@@ -15,6 +15,8 @@ import {
 import { h, onMounted, ref } from 'vue'
 
 import { ButtonAnimation, ButtonAnimationProvider, CollapseTransitionTrigger } from '@/components'
+import { useI18n } from 'vue-i18n'
+
 import { useComponentThemeOverrides, useInjection } from '@/composables'
 import { mediaQueryInjectionKey } from '@/injection'
 import { getSystemStatus } from '@/services/system'
@@ -33,6 +35,7 @@ const { reset } = usePreferencesStore()
 
 const { preferences, themeColor, sidebarMenu, isDark } = toRefsPreferencesStore()
 
+const { t } = useI18n()
 const modal = useModal()
 
 const showPreferencesDrawer = ref(false)
@@ -72,7 +75,7 @@ const colorSwatches = [
 const showWatermarkModal = () => {
   modal.create({
     autoFocus: false,
-    title: '修改水印信息',
+    title: t('admin.preferences.modify_watermark'),
     preset: 'dialog',
     content: () => h(WatermarkModal),
     closable: true,
@@ -86,7 +89,7 @@ const showWatermarkModal = () => {
   <div>
     <ButtonAnimation
       @click="showPreferencesDrawer = true"
-      title="系统设定"
+      :title="$t('admin.preferences.system_settings')"
     >
       <span class="iconify ph--gear" />
     </ButtonAnimation>
@@ -106,7 +109,7 @@ const showWatermarkModal = () => {
           <NDrawerContent :native-scrollbar="false">
             <template #header>
               <div class="flex items-center gap-x-1">
-                <span>系统设定</span>
+                <span>{{ $t('admin.preferences.system_settings') }}</span>
                 <ButtonAnimation
                   animation="rotate"
                   @click="reset"
@@ -116,7 +119,7 @@ const showWatermarkModal = () => {
               </div>
             </template>
             <div>
-              <NDivider>主题颜色</NDivider>
+              <NDivider>{{ $t('admin.preferences.theme_color') }}</NDivider>
               <NColorPicker
                 v-bind="$attrs"
                 v-model:value="themeColor"
@@ -141,11 +144,11 @@ const showWatermarkModal = () => {
               </NColorPicker>
             </div>
             <div>
-              <NDivider>导航模式</NDivider>
+              <NDivider>{{ $t('admin.preferences.nav_mode') }}</NDivider>
               <LayoutThumbnail />
             </div>
             <div>
-              <NDivider>布局相关</NDivider>
+              <NDivider>{{ $t('admin.preferences.layout') }}</NDivider>
               <div class="flex flex-col gap-y-1.5">
                 <CollapseTransitionTrigger>
                   <template #trigger="{ collapsed }">
@@ -153,7 +156,7 @@ const showWatermarkModal = () => {
                       <div
                         class="flex flex-1 items-center gap-x-1 transition-[color] hover:text-primary"
                       >
-                        <span>展开侧边菜单</span>
+                        <span>{{ $t('admin.preferences.expand_sidebar') }}</span>
                         <span
                           class="iconify transition-[rotate] ph--caret-right"
                           :class="{ 'rotate-90': collapsed }"
@@ -170,7 +173,7 @@ const showWatermarkModal = () => {
                   </template>
                   <div class="flex flex-col gap-y-1 pt-1.5 pl-4">
                     <div class="flex items-center justify-between">
-                      <span>侧边菜单宽度</span>
+                      <span>{{ $t('admin.preferences.sidebar_width') }}</span>
                       <NInputNumber
                         v-model:value="sidebarMenu.width"
                         size="small"
@@ -183,7 +186,7 @@ const showWatermarkModal = () => {
                       />
                     </div>
                     <div class="flex items-center justify-between">
-                      <span>侧边菜单最大宽度</span>
+                      <span>{{ $t('admin.preferences.sidebar_max_width') }}</span>
                       <NInputNumber
                         v-model:value="sidebarMenu.maxWidth"
                         size="small"
@@ -201,7 +204,7 @@ const showWatermarkModal = () => {
                       <div
                         class="flex flex-1 items-center gap-x-1 transition-[color] hover:text-primary"
                       >
-                        <span>显示标签页</span>
+                        <span>{{ $t('admin.preferences.show_tabs') }}</span>
                         <span
                           class="iconify transition-[rotate] ph--caret-right"
                           :class="{ 'rotate-90': collapsed }"
@@ -216,23 +219,23 @@ const showWatermarkModal = () => {
                   </template>
                   <div class="flex flex-col gap-y-1 pt-1.5 pl-4">
                     <div class="flex items-center justify-between">
-                      <span>常显标签关闭按钮</span>
+                      <span>{{ $t('admin.preferences.always_show_close') }}</span>
                       <NSwitch
                         v-model:value="preferences.tabs.showTabClose"
                         :disabled="!preferences.tabs.show || isMaxSm"
                       />
                     </div>
                     <div class="flex items-center justify-between">
-                      <span>激活标签边框位置</span>
+                      <span>{{ $t('admin.preferences.tab_border_position') }}</span>
                       <NSelect
                         v-model:value="preferences.tabs.tabBorderPosition"
                         :options="[
                           {
-                            label: '顶部',
+                            label: t('admin.common.top'),
                             value: 'top',
                           },
                           {
-                            label: '底部',
+                            label: t('admin.common.bottom'),
                             value: 'bottom',
                           },
                         ]"
@@ -249,7 +252,7 @@ const showWatermarkModal = () => {
                       <div
                         class="flex flex-1 items-center gap-x-1 transition-[color] hover:text-primary"
                       >
-                        <span>显示面包屑</span>
+                        <span>{{ $t('admin.preferences.show_breadcrumb') }}</span>
                         <span
                           class="iconify transition-[rotate] ph--caret-right"
                           :class="{ 'rotate-90': collapsed }"
@@ -265,7 +268,7 @@ const showWatermarkModal = () => {
 
                   <div class="flex flex-col gap-y-1 pt-1.5 pl-4">
                     <div class="flex items-center justify-between">
-                      <span>启用切换过渡效果</span>
+                      <span>{{ $t('admin.preferences.enable_transition') }}</span>
                       <NSwitch
                         v-model:value="preferences.breadcrumb.enableTransition"
                         :disabled="
@@ -279,22 +282,22 @@ const showWatermarkModal = () => {
                 </CollapseTransitionTrigger>
 
                 <div class="flex items-center justify-between">
-                  <span>显示顶部加载条</span>
+                  <span>{{ $t('admin.preferences.show_loading_bar') }}</span>
                   <NSwitch v-model:value="preferences.showTopLoadingBar" />
                 </div>
                 <div class="flex items-center justify-between">
-                  <span>显示Logo</span>
+                  <span>{{ $t('admin.preferences.show_logo') }}</span>
                   <NSwitch v-model:value="preferences.showLogo" />
                 </div>
                 <div class="flex items-center justify-between">
-                  <span>显示导航按钮</span>
+                  <span>{{ $t('admin.preferences.show_nav_buttons') }}</span>
                   <NSwitch
                     v-model:value="preferences.showNavigationButton"
                     :disabled="isMaxSm || preferences.navigationMode !== 'sidebar'"
                   />
                 </div>
                 <div class="flex items-center justify-between">
-                  <span>显示底部</span>
+                  <span>{{ $t('admin.preferences.show_footer') }}</span>
                   <NSwitch
                     v-model:value="preferences.showFooter"
                     :disabled="isMaxSm"
@@ -306,7 +309,7 @@ const showWatermarkModal = () => {
                       <div
                         class="flex flex-1 items-center gap-x-1 transition-[color] hover:text-primary"
                       >
-                        <span>启用导航过渡效果</span>
+                        <span>{{ $t('admin.preferences.enable_nav_transition') }}</span>
                         <span
                           class="iconify transition-[rotate] ph--caret-right"
                           :class="{ 'rotate-90': collapsed }"
@@ -321,28 +324,28 @@ const showWatermarkModal = () => {
                   </template>
                   <div class="flex flex-col gap-y-1 pt-1.5 pl-4">
                     <div class="flex items-center justify-between">
-                      <span>过渡效果</span>
+                      <span>{{ $t('admin.preferences.transition_effect') }}</span>
                       <NSelect
                         v-model:value="preferences.navigationTransition.effect"
                         :options="[
                           {
-                            label: '左右滑动',
+                            label: t('admin.preferences.slide'),
                             value: 'slider',
                           },
                           {
-                            label: '缩放',
+                            label: t('admin.preferences.zoom'),
                             value: 'scale',
                           },
                           {
-                            label: '淡现',
+                            label: t('admin.preferences.fade'),
                             value: 'fade',
                           },
                           {
-                            label: '左淡现',
+                            label: t('admin.preferences.fade_left'),
                             value: 'fade-left',
                           },
                           {
-                            label: '右淡现',
+                            label: t('admin.preferences.fade_right'),
                             value: 'fade-right',
                           },
                         ]"
@@ -356,15 +359,15 @@ const showWatermarkModal = () => {
               </div>
             </div>
             <div>
-              <NDivider>页面相关</NDivider>
+              <NDivider>{{ $t('admin.preferences.page_settings') }}</NDivider>
               <div class="flex flex-col gap-y-1.5">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-x-1">
-                    <span>显示水印</span>
+                    <span>{{ $t('admin.preferences.show_watermark') }}</span>
                     <ButtonAnimation
                       size="small"
                       @click="showWatermarkModal"
-                      label="修改"
+                      :label="$t('admin.common.edit')"
                       :theme-overrides="{
                         heightSmall: '24px',
                       }"
@@ -381,7 +384,7 @@ const showWatermarkModal = () => {
                       <div
                         class="flex flex-1 items-center gap-x-1 transition-[color] hover:text-primary"
                       >
-                        <span>显示磨砂效果</span>
+                        <span>{{ $t('admin.preferences.show_frosted_glass') }}</span>
                         <span
                           class="iconify transition-[rotate] ph--caret-right"
                           :class="{ 'rotate-90': collapsed }"
@@ -395,7 +398,7 @@ const showWatermarkModal = () => {
                   </template>
                   <div class="flex flex-col gap-y-1 pt-1.5 pl-4">
                     <div class="flex items-center justify-between">
-                      <span class="mr-4 shrink-0">透明度</span>
+                      <span class="mr-4 shrink-0">{{ $t('admin.preferences.opacity') }}</span>
                       <NSlider
                         v-model:value="preferences.noise.opacity"
                         :min="0"
@@ -411,7 +414,7 @@ const showWatermarkModal = () => {
                       <div
                         class="flex flex-1 items-center gap-x-1 transition-[color] hover:text-primary"
                       >
-                        <span>启用背景图片</span>
+                        <span>{{ $t('admin.preferences.enable_background') }}</span>
                         <span
                           class="iconify transition-[rotate] ph--caret-right"
                           :class="{ 'rotate-90': collapsed }"
@@ -425,17 +428,17 @@ const showWatermarkModal = () => {
                   </template>
                   <div class="flex flex-col gap-y-1 pt-1.5 pl-4">
                     <div class="flex flex-col gap-y-1">
-                      <span class="shrink-0">图片链接</span>
+                      <span class="shrink-0">{{ $t('admin.preferences.background_url') }}</span>
                       <NInput
                         v-model:value="preferences.backgroundImage.url"
-                        placeholder="请输入图片URL"
+                        :placeholder="$t('admin.validation.invalid_url')"
                         size="small"
                         :disabled="!preferences.backgroundImage.show"
                         clearable
                       />
                     </div>
                     <div class="flex items-center justify-between">
-                      <span class="mr-4 shrink-0">透明度</span>
+                      <span class="mr-4 shrink-0">{{ $t('admin.preferences.opacity') }}</span>
                       <NSlider
                         v-model:value="preferences.backgroundImage.opacity"
                         :min="0"
@@ -445,7 +448,7 @@ const showWatermarkModal = () => {
                       />
                     </div>
                     <div class="flex items-center justify-between">
-                      <span class="mr-4 shrink-0">模糊程度</span>
+                      <span class="mr-4 shrink-0">{{ $t('admin.preferences.blur_level') }}</span>
                       <NSlider
                         v-model:value="preferences.backgroundImage.blur"
                         :min="0"
@@ -460,7 +463,7 @@ const showWatermarkModal = () => {
                           <div
                             class="flex flex-1 items-center gap-x-1 transition-[color] hover:text-primary"
                           >
-                            <span>启用毛玻璃效果</span>
+                            <span>{{ $t('admin.preferences.enable_glass_effect') }}</span>
                             <span
                               class="iconify transition-[rotate] ph--caret-right"
                               :class="{ 'rotate-90': collapsed }"
@@ -475,7 +478,7 @@ const showWatermarkModal = () => {
                       </template>
                       <div class="flex flex-col gap-y-1 pt-1.5 pl-4">
                         <div class="flex items-center justify-between">
-                          <span class="mr-4 shrink-0">组件透明度</span>
+                          <span class="mr-4 shrink-0">{{ $t('admin.preferences.component_opacity') }}</span>
                           <NSlider
                             v-model:value="preferences.backgroundImage.glassEffect.opacity"
                             :min="0"
@@ -488,7 +491,7 @@ const showWatermarkModal = () => {
                           />
                         </div>
                         <div class="flex items-center justify-between">
-                          <span class="mr-4 shrink-0">背景模糊</span>
+                          <span class="mr-4 shrink-0">{{ $t('admin.preferences.background_blur') }}</span>
                           <NSlider
                             v-model:value="preferences.backgroundImage.glassEffect.blur"
                             :min="0"
@@ -505,7 +508,7 @@ const showWatermarkModal = () => {
                   </div>
                 </CollapseTransitionTrigger>
                 <div class="flex items-center justify-between">
-                  <span>文字可选中</span>
+                  <span>{{ $t('admin.preferences.text_selectable') }}</span>
                   <NSwitch v-model:value="preferences.enableTextSelect" />
                 </div>
               </div>
@@ -514,7 +517,7 @@ const showWatermarkModal = () => {
               <div class="flex w-full items-center justify-between">
                 <div class="flex items-center gap-x-1">
                   <span class="iconify size-5 ph--gear-fine" />
-                  <span class="leading-4">当前版本</span>
+                  <span class="leading-4">{{ $t('admin.preferences.current_version') }}</span>
                 </div>
                 <span class="leading-4">{{ serverVersion || '...' }}</span>
               </div>

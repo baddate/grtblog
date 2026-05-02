@@ -75,6 +75,8 @@
   "admin.common.batch_delete_confirm": "确定要删除选中项吗？",
   "admin.common.fill_required": "请填写必要信息",
   "admin.common.network_error": "网络错误，请稍后重试",
+  "admin.common.top": "顶部",
+  "admin.common.bottom": "底部",
 
   "admin.header.sign_out": "退出登录",
   "admin.header.sign_out_confirm": "确定要退出登录吗？",
@@ -373,5 +375,13 @@
   "admin.validation.required": "此项为必填",
   "admin.validation.max_length": "最多 {n} 个字符",
   "admin.validation.invalid_url": "请输入有效的 URL",
-  "admin.validation.invalid_email": "请输入有效的邮箱地址"
+  "admin.validation.invalid_email": "请输入有效的邮箱地址",
+
+  "admin.nav.prev_page": "上一页",
+  "admin.nav.next_page": "下一页",
+
+  "admin.watermark.italic": "斜体",
+  "admin.watermark.oblique": "倾斜",
+  "admin.watermark.thin": "细体",
+  "admin.watermark.restart_hint": "修改后需重新打开水印"
 }

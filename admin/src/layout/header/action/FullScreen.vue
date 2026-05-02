@@ -9,7 +9,7 @@ const { isFullscreen, enter, exit } = useFullscreen()
   <div>
     <ButtonAnimation
       @click="isFullscreen ? exit() : enter()"
-      :title="isFullscreen ? '退出全屏' : '全屏'"
+      :title="isFullscreen ? $t('admin.header.exit_fullscreen') : $t('admin.header.fullscreen')"
     >
       <span :class="isFullscreen ? 'iconify ph--arrows-in' : 'iconify ph--arrows-out'" />
     </ButtonAnimation>
