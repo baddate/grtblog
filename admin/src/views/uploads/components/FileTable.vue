@@ -73,7 +73,7 @@ const columns = computed<DataTableColumns<UploadFileResponse>>(() => [
     ellipsis: { tooltip: true },
   },
   {
-    title: '类型',
+    title: t('admin.common.type'),
     key: 'type',
     width: 100,
     render: (row) =>
@@ -96,7 +96,7 @@ const columns = computed<DataTableColumns<UploadFileResponse>>(() => [
     render: (row) => formatDate(row.createdAt),
   },
   {
-    title: '操作',
+    title: t('admin.common.actions'),
     key: 'actions',
     width: 320,
     render: (row) =>

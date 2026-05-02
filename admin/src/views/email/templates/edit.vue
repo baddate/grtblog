@@ -161,10 +161,10 @@ async function handleSave() {
   try {
     if (isEdit.value) {
       await updateEmailTemplate(form.code, form)
-      message.success('更新成功')
+      message.success(t('admin.common.update_success'))
     } else {
       await createEmailTemplate(form)
-      message.success('创建成功')
+      message.success(t('admin.common.create_success'))
       router.replace(`/email/templates/${form.code}`)
     }
   } finally {
@@ -386,7 +386,7 @@ onMounted(async () => {
                 placeholder="输入邮箱后回车..."
               />
             </NFormItem>
-            <NFormItem label="启用">
+            <NFormItem :label="$t('admin.common.enabled')">
               <NSwitch v-model:value="form.isEnabled" />
             </NFormItem>
           </NForm>

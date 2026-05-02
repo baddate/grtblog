@@ -56,7 +56,7 @@ const filteredWebhooks = computed(() => {
 
 const columns = computed<DataTableColumns<WebhookItem>>(() => [
   {
-    title: '名称',
+    title: t('admin.common.name'),
     key: 'name',
     width: 160,
     render: (row) => h('div', { class: 'font-medium' }, row.name),
@@ -84,7 +84,7 @@ const columns = computed<DataTableColumns<WebhookItem>>(() => [
     },
   },
   {
-    title: '状态',
+    title: t('admin.common.status'),
     key: 'isEnabled',
     width: 90,
     render: (row) =>
@@ -95,13 +95,13 @@ const columns = computed<DataTableColumns<WebhookItem>>(() => [
       ),
   },
   {
-    title: '更新时间',
+    title: t('admin.common.updated_at'),
     key: 'updatedAt',
     width: 180,
     render: (row) => formatDate(row.updatedAt),
   },
   {
-    title: '操作',
+    title: t('admin.common.actions'),
     key: 'actions',
     width: 220,
     render: (row) =>
@@ -172,7 +172,7 @@ const columns = computed<DataTableColumns<WebhookItem>>(() => [
           </NFormItem>
         </NGi>
         <NGi>
-          <NFormItem label="状态">
+          <NFormItem :label="$t('admin.common.status')">
             <NSelect
               :value="listFilters.status"
               :options="statusOptions"
@@ -192,12 +192,12 @@ const columns = computed<DataTableColumns<WebhookItem>>(() => [
           </NFormItem>
         </NGi>
         <NGi>
-          <NFormItem label="操作">
+          <NFormItem :label="$t('admin.common.actions')">
             <NSpace>
               <NButton
                 secondary
                 @click="emit('resetFilters')"
-                >重置</NButton
+                >{{ $t('admin.common.reset') }}</NButton
               >
             </NSpace>
           </NFormItem>

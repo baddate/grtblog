@@ -118,14 +118,14 @@ function handleClose() {
           <NDescriptionsItem label="收件人">{{
             displayItem.toEmails?.join(', ') || '-'
           }}</NDescriptionsItem>
-          <NDescriptionsItem label="状态">
+          <NDescriptionsItem :label="$t('admin.common.status')">
             <NTag
               :type="statusTagType(displayItem.status)"
               size="small"
               >{{ statusLabel(displayItem.status) }}</NTag
             >
           </NDescriptionsItem>
-          <NDescriptionsItem label="创建时间">{{
+          <NDescriptionsItem :label="$t('admin.common.created_at')">{{
             new Date(displayItem.createdAt).toLocaleString()
           }}</NDescriptionsItem>
           <NDescriptionsItem label="发送时间">{{
@@ -184,7 +184,7 @@ function handleClose() {
         </div>
       </div>
       <template #footer>
-        <NButton @click="handleClose">关闭</NButton>
+        <NButton @click="handleClose">{{ $t('admin.common.close') }}</NButton>
       </template>
     </NDrawerContent>
   </NDrawer>

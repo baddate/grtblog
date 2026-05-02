@@ -78,7 +78,7 @@ const columns: DataTableColumns<ActivityPubDeliveryDetailResp> = [
   { title: 'Inbox', key: 'inbox', minWidth: 220, ellipsis: { tooltip: true } },
   { title: 'ActorID', key: 'actor_id', minWidth: 220, ellipsis: { tooltip: true } },
   {
-    title: '状态',
+    title: t('admin.common.status'),
     key: 'status',
     width: 90,
     render(row) {
@@ -137,7 +137,7 @@ async function handleRetry() {
           title="基本信息"
         >
           <NDescriptionsItem label="ID">{{ displayItem.id }}</NDescriptionsItem>
-          <NDescriptionsItem label="状态"
+          <NDescriptionsItem :label="$t('admin.common.status')"
             ><NTag
               :type="statusTagType(displayItem.status)"
               size="small"
@@ -193,7 +193,7 @@ async function handleRetry() {
         </div>
       </div>
       <template #footer>
-        <NButton @click="emit('update:show', false)">关闭</NButton>
+        <NButton @click="emit('update:show', false)">{{ $t('admin.common.close') }}</NButton>
       </template>
     </NDrawerContent>
   </NDrawer>

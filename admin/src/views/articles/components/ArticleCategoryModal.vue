@@ -25,7 +25,7 @@ defineEmits<{
         class="space-y-3"
       >
         <NFormItem
-          label="名称"
+          :label="$t('admin.common.name')"
           :show-feedback="false"
         >
           <NInput
@@ -47,7 +47,7 @@ defineEmits<{
         <NButton
           quaternary
           @click="modal.show = false"
-          >取消</NButton
+          >{{ $t('admin.common.cancel') }}</NButton
         >
         <NButton
           type="primary"

@@ -151,7 +151,7 @@ function handleClose() {
           <NDescriptionsItem label="提供商">{{
             displayItem.providerName || '-'
           }}</NDescriptionsItem>
-          <NDescriptionsItem label="状态">
+          <NDescriptionsItem :label="$t('admin.common.status')">
             <NTag
               :type="statusTagType(displayItem.status)"
               size="small"
@@ -168,7 +168,7 @@ function handleClose() {
           <NDescriptionsItem label="耗时">{{
             formatDuration(displayItem.durationMs)
           }}</NDescriptionsItem>
-          <NDescriptionsItem label="创建时间">{{
+          <NDescriptionsItem :label="$t('admin.common.created_at')">{{
             new Date(displayItem.createdAt).toLocaleString()
           }}</NDescriptionsItem>
         </NDescriptions>
@@ -201,7 +201,7 @@ function handleClose() {
         </div>
       </div>
       <template #footer>
-        <NButton @click="handleClose">关闭</NButton>
+        <NButton @click="handleClose">{{ $t('admin.common.close') }}</NButton>
       </template>
     </NDrawerContent>
   </NDrawer>

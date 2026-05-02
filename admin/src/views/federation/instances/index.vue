@@ -46,7 +46,7 @@ const { data, isPending } = useQuery({
 })
 
 const columns: DataTableColumns<FederationInstanceResp> = [
-  { title: 'ID', key: 'id', width: 80 },
+  { title: t('admin.table.id'), key: 'id', width: 80 },
   {
     title: '域名',
     key: 'base_url',
@@ -59,7 +59,7 @@ const columns: DataTableColumns<FederationInstanceResp> = [
         row.base_url,
       ),
   },
-  { title: '名称', key: 'name', minWidth: 120, render: (row) => row.name || '-' },
+  { title: t('admin.common.name'), key: 'name', minWidth: 120, render: (row) => row.name || '-' },
   {
     title: '软件版本',
     key: 'protocol_version',
@@ -67,7 +67,7 @@ const columns: DataTableColumns<FederationInstanceResp> = [
     render: (row) => row.protocol_version || '-',
   },
   {
-    title: '状态',
+    title: t('admin.common.status'),
     key: 'status',
     width: 100,
     render(row) {
@@ -90,7 +90,7 @@ const columns: DataTableColumns<FederationInstanceResp> = [
     render: (row) => (row.last_seen_at ? new Date(row.last_seen_at).toLocaleString() : '-'),
   },
   {
-    title: '操作',
+    title: t('admin.common.actions'),
     key: 'actions',
     width: 200,
     render(row) {

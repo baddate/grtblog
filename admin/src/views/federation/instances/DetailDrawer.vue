@@ -82,12 +82,12 @@ watch(
           >
             <NDescriptionsItem label="ID">{{ instance.id }}</NDescriptionsItem>
             <NDescriptionsItem label="域名">{{ instance.base_url }}</NDescriptionsItem>
-            <NDescriptionsItem label="名称">{{ instance.name || '-' }}</NDescriptionsItem>
-            <NDescriptionsItem label="描述">{{ instance.description || '-' }}</NDescriptionsItem>
+            <NDescriptionsItem :label="$t('admin.common.name')">{{ instance.name || '-' }}</NDescriptionsItem>
+            <NDescriptionsItem :label="$t('admin.common.description')">{{ instance.description || '-' }}</NDescriptionsItem>
             <NDescriptionsItem label="协议版本">{{
               instance.protocol_version || '-'
             }}</NDescriptionsItem>
-            <NDescriptionsItem label="状态">
+            <NDescriptionsItem :label="$t('admin.common.status')">
               <NTag
                 :type="
                   instance.status === 'active'

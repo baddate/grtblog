@@ -84,7 +84,7 @@ const columns = computed<DataTableColumns<VisitorProfile>>(() => [
   { title: '评论', key: 'totalComments', width: 90 },
   { title: '最近活跃', key: 'lastSeenAt', width: 180, render: (row) => formatDate(row.lastSeenAt) },
   {
-    title: '操作',
+    title: t('admin.common.actions'),
     key: 'actions',
     width: 96,
     render: (row) =>
@@ -273,7 +273,7 @@ async function openProfile(visitorId: string) {
           @click="doSearch"
           >查询</NButton
         >
-        <NButton @click="resetSearch">重置</NButton>
+        <NButton @click="resetSearch">{{ $t('admin.common.reset') }}</NButton>
       </NSpace>
 
       <NDataTable

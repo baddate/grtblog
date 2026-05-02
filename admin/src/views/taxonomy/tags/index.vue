@@ -58,16 +58,16 @@ async function openContents(row: TagItem) {
 }
 
 const columns: DataTableColumns<TagItem> = [
-  { title: 'ID', key: 'id', width: 80 },
+  { title: t('admin.table.id'), key: 'id', width: 80 },
   { title: '标签名称', key: 'name', minWidth: 220 },
   {
-    title: '更新时间',
+    title: t('admin.common.updated_at'),
     key: 'updatedAt',
     width: 180,
     render: (row) => formatDate(row.updatedAt),
   },
   {
-    title: '操作',
+    title: t('admin.common.actions'),
     key: 'actions',
     width: 260,
     render: (row) =>
@@ -157,7 +157,7 @@ async function handleSubmit() {
 async function handleDelete(row: TagItem) {
   try {
     await deleteTag(row.id)
-    message.success('删除成功')
+    message.success(t('admin.common.delete_success'))
     await fetchData()
   } catch (error: any) {
     message.error(error?.message || '删除失败')

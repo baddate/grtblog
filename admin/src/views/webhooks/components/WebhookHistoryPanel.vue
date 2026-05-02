@@ -71,7 +71,7 @@ const historyColumns = computed<DataTableColumns<WebhookHistoryItem>>(() => [
     render: (row) => props.webhookMap.get(row.webhookId) || `#${row.webhookId}`,
   },
   {
-    title: '状态',
+    title: t('admin.common.status'),
     key: 'responseStatus',
     width: 120,
     render: (row) => renderHistoryStatus(row),
@@ -94,7 +94,7 @@ const historyColumns = computed<DataTableColumns<WebhookHistoryItem>>(() => [
     render: (row) => formatDate(row.createdAt),
   },
   {
-    title: '操作',
+    title: t('admin.common.actions'),
     key: 'actions',
     width: 160,
     render: (row) =>
@@ -177,7 +177,7 @@ const historyColumns = computed<DataTableColumns<WebhookHistoryItem>>(() => [
           </NFormItem>
         </NGi>
         <NGi>
-          <NFormItem label="操作">
+          <NFormItem :label="$t('admin.common.actions')">
             <NSpace>
               <NButton
                 type="primary"
@@ -185,11 +185,11 @@ const historyColumns = computed<DataTableColumns<WebhookHistoryItem>>(() => [
                 @click="emit('applyFilters')"
                 >筛选</NButton
               >
-              <NButton @click="emit('resetFilters')">重置</NButton>
+              <NButton @click="emit('resetFilters')">{{ $t('admin.common.reset') }}</NButton>
               <NButton
                 tertiary
                 @click="emit('refresh')"
-                >刷新</NButton
+                >{{ $t('admin.common.refresh') }}</NButton
               >
             </NSpace>
           </NFormItem>

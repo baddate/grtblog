@@ -80,7 +80,7 @@ const handleUserPanelClick = () => {
         <UserDropdown placement="top">
           <ButtonAnimation
             animation="rotate"
-            title="设置"
+            :title="$t('admin.sidebar.settings')"
           >
             <span class="iconify text-neutral-500 ph--gear dark:text-neutral-450" />
           </ButtonAnimation>

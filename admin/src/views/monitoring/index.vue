@@ -347,7 +347,7 @@ const getStatusType = (usage: number) => {
                       <NDescriptionsItem label="内存使用">{{
                         status.redis.usedMemory
                       }}</NDescriptionsItem>
-                      <NDescriptionsItem label="状态">
+                      <NDescriptionsItem :label="$t('admin.common.status')">
                         {{
                           status.redis.status === 'connected' ? '连接正常，准备就绪' : '连接失败'
                         }}

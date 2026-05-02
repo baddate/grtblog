@@ -15,6 +15,7 @@ import {
   useMessage,
 } from 'naive-ui'
 import { computed, h, onMounted, reactive, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import TemplateEditor from '@/components/template-editor/TemplateEditor.vue'
 import {
@@ -33,6 +34,7 @@ import type { DataTableColumns } from 'naive-ui'
 const emit = defineEmits<{ 'dirty-change': [dirty: boolean] }>()
 
 const message = useMessage()
+const { t } = useI18n()
 const oauthLoading = ref(false)
 const oauthSaving = ref(false)
 const providers = ref<AdminOAuthProvider[]>([])
@@ -65,8 +67,8 @@ const form = reactive({
   extraParams: '{}',
 })
 
-const formTitle = computed(() => (editing.value ? '编辑 OAuth Provider' : '新增 OAuth Provider'))
-const formActionLabel = computed(() => (editing.value ? '保存' : '创建'))
+const formTitle = computed(() => (editing.value ? t('admin.settings.oauth_edit_provider') : t('admin.settings.oauth_add_provider')))
+const formActionLabel = computed(() => (editing.value ? t('admin.common.save') : t('admin.common.create')))
 
 const presets: Array<{
   name: string
@@ -106,35 +108,35 @@ const presets: Array<{
 
 const columns = computed<DataTableColumns<AdminOAuthProvider>>(() => [
   {
-    title: 'Key',
+    title: t('admin.table.key'),
     key: 'key',
     width: 160,
     render: (row) => h('div', { class: 'font-medium' }, row.key),
   },
   {
-    title: '显示名',
+    title: t('admin.table.display_name'),
     key: 'displayName',
     width: 180,
   },
   {
-    title: '状态',
+    title: t('admin.common.status'),
     key: 'enabled',
     width: 100,
     render: (row) =>
       h(
         NTag,
         { type: row.enabled ? 'success' : 'default', size: 'small' },
-        { default: () => (row.enabled ? '启用' : '停用') },
+        { default: () => (row.enabled ? t('admin.common.enabled') : t('admin.common.disabled')) },
       ),
   },
   {
-    title: 'Auth URL',
+    title: t('admin.table.auth_url'),
     key: 'authorizationEndpoint',
     render: (row) =>
       h('div', { class: 'text-xs text-[var(--text-color-3)]' }, row.authorizationEndpoint),
   },
   {
-    title: '操作',
+    title: t('admin.common.actions'),
     key: 'actions',
     width: 140,
     render: (row) =>
@@ -146,18 +148,18 @@ const columns = computed<DataTableColumns<AdminOAuthProvider>>(() => [
             h(
               NButton,
               { size: 'tiny', tertiary: true, onClick: () => openEdit(row) },
-              { default: () => '编辑' },
+              { default: () => t('admin.common.edit') },
             ),
             h(
               NPopconfirm,
               { onPositiveClick: () => handleDelete(row) },
               {
-                default: () => '确认删除该 Provider？',
+                default: () => t('admin.settings.oauth_delete_confirm'),
                 trigger: () =>
                   h(
                     NButton,
                     { size: 'tiny', type: 'error', tertiary: true },
-                    { default: () => '删除' },
+                    { default: () => t('admin.common.delete') },
                   ),
               },
             ),
@@ -172,7 +174,7 @@ async function fetchProviders() {
   try {
     providers.value = (await listOAuthProviders()) || []
   } catch (err) {
-    message.error(err instanceof Error ? err.message : '加载 OAuth Providers 失败')
+    message.error(err instanceof Error ? err.message : t('admin.settings.oauth_load_failed'))
   } finally {
     oauthLoading.value = false
   }
@@ -247,7 +249,7 @@ function buildPayload(): OAuthProviderPayload {
       extraParams = JSON.parse(form.extraParams)
       extraJsonError.value = null
     } catch (err) {
-      extraJsonError.value = err instanceof Error ? err.message : 'Extra Params JSON 格式不正确'
+      extraJsonError.value = err instanceof Error ? err.message : t('admin.settings.oauth_invalid_json')
       throw new Error(extraJsonError.value)
     }
   }
@@ -275,7 +277,7 @@ async function handleSave() {
   const required = ['key', 'authorizationEndpoint', 'tokenEndpoint', 'redirectUriTemplate']
   const emptyKey = required.find((field) => !(form as any)[field]?.trim())
   if (emptyKey) {
-    message.error('Key / Auth URL / Token URL / Redirect URI 不能为空')
+    message.error(t('admin.settings.oauth_required_fields'))
     return
   }
 
@@ -284,15 +286,15 @@ async function handleSave() {
     const payload = buildPayload()
     if (editing.value) {
       await updateOAuthProvider(editing.value.key, payload)
-      message.success('已更新')
+      message.success(t('admin.common.update_success'))
     } else {
       await createOAuthProvider(payload)
-      message.success('已创建')
+      message.success(t('admin.common.create_success'))
     }
     formVisible.value = false
     await fetchProviders()
   } catch (err) {
-    message.error(err instanceof Error ? err.message : '保存失败')
+    message.error(err instanceof Error ? err.message : t('admin.common.operation_failed'))
   } finally {
     oauthSaving.value = false
   }
@@ -301,10 +303,10 @@ async function handleSave() {
 async function handleDelete(row: AdminOAuthProvider) {
   try {
     await deleteOAuthProvider(row.key)
-    message.success('已删除')
+    message.success(t('admin.common.delete_success'))
     await fetchProviders()
   } catch (err) {
-    message.error(err instanceof Error ? err.message : '删除失败')
+    message.error(err instanceof Error ? err.message : t('admin.common.operation_failed'))
   }
 }
 
@@ -317,8 +319,8 @@ onMounted(fetchProviders)
     <ConfigPanel
       :list-fn="listSysConfigs"
       :update-fn="updateSysConfigs"
-      title="Turnstile 人机验证"
-      description="Cloudflare Turnstile 验证配置"
+      :title="$t('admin.settings.turnstile')"
+      :description="$t('admin.settings.turnstile_desc')"
       :filter-groups="['security/turnstile']"
       :on-dirty-change="handleConfigDirty"
     />
@@ -328,8 +330,8 @@ onMounted(fetchProviders)
       <template #header>
         <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <div class="text-base font-semibold">OAuth 登录方式</div>
-            <div class="text-xs text-neutral-500">管理 OAuth 登录提供方</div>
+            <div class="text-base font-semibold">{{ $t('admin.settings.oauth_login') }}</div>
+            <div class="text-xs text-neutral-500">{{ $t('admin.settings.oauth_login_desc') }}</div>
           </div>
           <div class="flex items-center gap-2">
             <NButton
@@ -338,13 +340,13 @@ onMounted(fetchProviders)
               :loading="oauthLoading"
               @click="fetchProviders"
             >
-              刷新
+              {{ $t('admin.common.refresh') }}
             </NButton>
             <NButton
               size="small"
               type="primary"
               @click="openCreate"
-              >新增 Provider</NButton
+              >{{ $t('admin.settings.oauth_new_provider') }}</NButton
             >
             <NButton
               v-for="preset in presets"
@@ -353,7 +355,7 @@ onMounted(fetchProviders)
               secondary
               @click="applyPreset(preset)"
             >
-              {{ preset.name }} 预设
+              {{ $t('admin.settings.oauth_preset_name', { name: preset.name }) }}
             </NButton>
           </div>
         </div>
@@ -467,7 +469,7 @@ onMounted(fetchProviders)
         <NFormItem label="PKCE Required">
           <NSwitch v-model:value="form.pkceRequired" />
         </NFormItem>
-        <NFormItem label="启用">
+        <NFormItem :label="$t('admin.common.enabled')">
           <NSwitch v-model:value="form.enabled" />
         </NFormItem>
         <NFormItem
@@ -481,7 +483,7 @@ onMounted(fetchProviders)
           <NButton
             secondary
             @click="formVisible = false"
-            >取消</NButton
+            >{{ $t('admin.common.cancel') }}</NButton
           >
           <NButton
             type="primary"

@@ -74,13 +74,13 @@ async function handleSave() {
           ? new Date(formValue.value.createdAt).toISOString()
           : null,
       })
-      message.success('创建成功')
+      message.success(t('admin.common.create_success'))
     } else {
       await updateThinking(Number(id.value), {
         content: formValue.value.content,
         allowComment: formValue.value.allowComment,
       })
-      message.success('更新成功')
+      message.success(t('admin.common.update_success'))
     }
     router.push({ name: 'thinkingList' })
   } catch (error) {

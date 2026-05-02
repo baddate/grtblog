@@ -27,28 +27,28 @@ const { loading, data: tableData, pagination, refresh } = useTable<AdminTokenIte
 
 const columns = computed<DataTableColumns<AdminTokenItem>>(() => [
   {
-    title: 'ID',
+    title: t('admin.table.id'),
     key: 'id',
     width: 70,
   },
   {
-    title: '描述',
+    title: t('admin.common.description'),
     key: 'description',
     render: (row) => row.description || '-',
   },
   {
-    title: '创建人',
+    title: t('admin.common.creator'),
     key: 'username',
     width: 140,
   },
   {
-    title: '到期时间',
+    title: t('admin.table.expires_at'),
     key: 'expireAt',
     width: 180,
     render: (row) => formatDate(row.expireAt),
   },
   {
-    title: '状态',
+    title: t('admin.common.status'),
     key: 'isExpired',
     width: 90,
     render: (row) =>
@@ -59,7 +59,7 @@ const columns = computed<DataTableColumns<AdminTokenItem>>(() => [
       ),
   },
   {
-    title: '操作',
+    title: t('admin.common.actions'),
     key: 'actions',
     width: 90,
     render: (row) =>
@@ -107,7 +107,7 @@ async function handleCreate() {
     createdToken.value = result.token
     createVisible.value = false
     revealVisible.value = true
-    message.success('创建成功')
+    message.success(t('admin.common.create_success'))
     refresh()
   } finally {
     saving.value = false
@@ -116,7 +116,7 @@ async function handleCreate() {
 
 async function handleDelete(row: AdminTokenItem) {
   await deleteAdminToken(row.id)
-  message.success('删除成功')
+  message.success(t('admin.common.delete_success'))
   refresh()
 }
 </script>
@@ -149,7 +149,7 @@ async function handleDelete(row: AdminTokenItem) {
     confirm-text="创建"
     @confirm="handleCreate"
   >
-    <NFormItem label="描述">
+    <NFormItem :label="$t('admin.common.description')">
       <NInput
         v-model:value="formParams.description"
         maxlength="200"

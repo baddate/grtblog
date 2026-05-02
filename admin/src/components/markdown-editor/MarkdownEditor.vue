@@ -231,7 +231,7 @@ watch(
           </NFormItem>
         </NForm>
         <NSpace justify="end">
-          <NButton @click="inserter.close">关闭</NButton>
+          <NButton @click="inserter.close">{{ $t('admin.common.close') }}</NButton>
         </NSpace>
       </NCard>
     </NModal>

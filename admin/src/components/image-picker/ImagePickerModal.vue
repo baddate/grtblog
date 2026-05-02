@@ -177,7 +177,7 @@ watch(
           />
           <div v-else />
           <div class="flex gap-2">
-            <NButton @click="handleClose">取消</NButton>
+            <NButton @click="handleClose">{{ $t('admin.common.cancel') }}</NButton>
             <NButton
               type="primary"
               :disabled="!selectedUrl"

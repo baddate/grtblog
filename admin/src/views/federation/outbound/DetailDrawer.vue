@@ -94,16 +94,16 @@ function handleClose() {
         >
           <NDescriptionsItem label="ID">{{ delivery.id }}</NDescriptionsItem>
           <NDescriptionsItem label="Request ID">{{ delivery.request_id }}</NDescriptionsItem>
-          <NDescriptionsItem label="类型">
+          <NDescriptionsItem :label="$t('admin.common.type')">
             <NTag>{{ delivery.type }}</NTag>
           </NDescriptionsItem>
-          <NDescriptionsItem label="状态">
+          <NDescriptionsItem :label="$t('admin.common.status')">
             <NTag :type="delivery.status === 'success' ? 'success' : 'error'">{{
               delivery.status
             }}</NTag>
           </NDescriptionsItem>
           <NDescriptionsItem label="目标">{{ delivery.target_instance_url }}</NDescriptionsItem>
-          <NDescriptionsItem label="创建时间">{{
+          <NDescriptionsItem :label="$t('admin.common.created_at')">{{
             new Date(delivery.created_at).toLocaleString()
           }}</NDescriptionsItem>
         </NDescriptions>

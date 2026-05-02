@@ -54,7 +54,7 @@ async function handleTemplateChange(code: string) {
 
 async function handleSend() {
   if (!form.code || !form.toEmail) {
-    message.error('请填写必要信息')
+    message.error(t('admin.common.fill_required'))
     return
   }
   loading.value = true

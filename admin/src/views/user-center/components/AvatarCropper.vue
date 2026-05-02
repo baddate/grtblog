@@ -57,7 +57,7 @@ async function handleConfirm() {
         <NButton
           :disabled="isUploading"
           @click="emit('update:visible', false)"
-          >取消</NButton
+          >{{ $t('admin.common.cancel') }}</NButton
         >
         <NButton
           type="primary"

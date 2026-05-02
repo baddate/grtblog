@@ -295,7 +295,7 @@ watch(previewUrl, () => {
               class="space-y-4"
             >
               <NFormItem
-                label="描述"
+                :label="$t('admin.common.description')"
                 :show-feedback="false"
               >
                 <NInput

@@ -462,7 +462,7 @@ onMounted(() => {
     </NScrollbar>
     <div class="flex items-center px-3">
       <ButtonAnimation
-        title="刷新"
+        :title="$t('admin.common.refresh')"
         @click="handleTabRefreshClick"
         animation="rotate"
       >

@@ -153,7 +153,7 @@ function emitResetRow(row: FederationSignalRow) {
                   quaternary
                   size="small"
                   @click="$emit('openCategoryModal')"
-                  >新建</NButton
+                  >{{ $t('admin.common.create') }}</NButton
                 >
               </div>
             </NFormItem>

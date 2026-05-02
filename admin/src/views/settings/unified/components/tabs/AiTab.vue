@@ -59,10 +59,10 @@ const providerTypeOptions: SelectOption[] = [
 ]
 
 const providerColumns = computed<DataTableColumns<AIProvider>>(() => [
-  { title: 'ID', key: 'id', width: 60 },
-  { title: '名称', key: 'name', minWidth: 120 },
+  { title: t('admin.table.id'), key: 'id', width: 60 },
+  { title: t('admin.common.name'), key: 'name', minWidth: 120 },
   {
-    title: '类型',
+    title: t('admin.common.type'),
     key: 'type',
     width: 130,
     render: (row) => {
@@ -76,7 +76,7 @@ const providerColumns = computed<DataTableColumns<AIProvider>>(() => [
   },
   { title: 'API 地址', key: 'apiUrl', ellipsis: { tooltip: true } },
   {
-    title: '状态',
+    title: t('admin.common.status'),
     key: 'isActive',
     width: 80,
     render: (row) =>
@@ -87,7 +87,7 @@ const providerColumns = computed<DataTableColumns<AIProvider>>(() => [
       ),
   },
   {
-    title: '操作',
+    title: t('admin.common.actions'),
     key: 'actions',
     width: 130,
     render: (row) =>
@@ -198,7 +198,7 @@ const providerSelectOptions = computed<SelectOption[]>(() =>
 )
 
 const modelColumns = computed<DataTableColumns<AIModel>>(() => [
-  { title: 'ID', key: 'id', width: 60 },
+  { title: t('admin.table.id'), key: 'id', width: 60 },
   { title: '模型名称', key: 'name', minWidth: 120 },
   { title: '模型 ID', key: 'modelId', minWidth: 140, ellipsis: { tooltip: true } },
   {
@@ -208,7 +208,7 @@ const modelColumns = computed<DataTableColumns<AIModel>>(() => [
     render: (row) => row.providerName || `#${row.providerId}`,
   },
   {
-    title: '状态',
+    title: t('admin.common.status'),
     key: 'isActive',
     width: 80,
     render: (row) =>
@@ -219,7 +219,7 @@ const modelColumns = computed<DataTableColumns<AIModel>>(() => [
       ),
   },
   {
-    title: '操作',
+    title: t('admin.common.actions'),
     key: 'actions',
     width: 130,
     render: (row) =>
@@ -392,7 +392,7 @@ onMounted(async () => {
       label-width="96"
     >
       <NFormItem
-        label="名称"
+        :label="$t('admin.common.name')"
         required
       >
         <NInput
@@ -401,7 +401,7 @@ onMounted(async () => {
         />
       </NFormItem>
       <NFormItem
-        label="类型"
+        :label="$t('admin.common.type')"
         required
       >
         <NSelect
@@ -423,18 +423,18 @@ onMounted(async () => {
           placeholder="sk-..."
         />
       </NFormItem>
-      <NFormItem label="启用">
+      <NFormItem :label="$t('admin.common.enabled')">
         <NSwitch v-model:value="providerForm.isActive" />
       </NFormItem>
     </NForm>
     <template #footer>
       <NSpace justify="end">
-        <NButton @click="providerModalVisible = false">取消</NButton>
+        <NButton @click="providerModalVisible = false">{{ $t('admin.common.cancel') }}</NButton>
         <NButton
           type="primary"
           :loading="providerSaving"
           @click="handleSaveProvider"
-          >保存</NButton
+          >{{ $t('admin.common.save') }}</NButton
         >
       </NSpace>
     </template>
@@ -479,18 +479,18 @@ onMounted(async () => {
           placeholder="如：gpt-4o、gemini-2.0-flash"
         />
       </NFormItem>
-      <NFormItem label="启用">
+      <NFormItem :label="$t('admin.common.enabled')">
         <NSwitch v-model:value="modelForm.isActive" />
       </NFormItem>
     </NForm>
     <template #footer>
       <NSpace justify="end">
-        <NButton @click="modelModalVisible = false">取消</NButton>
+        <NButton @click="modelModalVisible = false">{{ $t('admin.common.cancel') }}</NButton>
         <NButton
           type="primary"
           :loading="modelSaving"
           @click="handleSaveModel"
-          >保存</NButton
+          >{{ $t('admin.common.save') }}</NButton
         >
       </NSpace>
     </template>

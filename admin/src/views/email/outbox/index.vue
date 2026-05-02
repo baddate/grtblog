@@ -61,7 +61,7 @@ function statusLabel(status: string) {
 }
 
 const columns: DataTableColumns<EmailOutbox> = [
-  { title: 'ID', key: 'id', width: 70 },
+  { title: t('admin.table.id'), key: 'id', width: 70 },
   {
     title: '主题',
     key: 'subject',
@@ -96,7 +96,7 @@ const columns: DataTableColumns<EmailOutbox> = [
     },
   },
   {
-    title: '状态',
+    title: t('admin.common.status'),
     key: 'status',
     width: 90,
     render(row) {
@@ -114,13 +114,13 @@ const columns: DataTableColumns<EmailOutbox> = [
     render: (row) => `${row.retryCount}`,
   },
   {
-    title: '创建时间',
+    title: t('admin.common.created_at'),
     key: 'createdAt',
     width: 170,
     render: (row) => new Date(row.createdAt).toLocaleString(),
   },
   {
-    title: '操作',
+    title: t('admin.common.actions'),
     key: 'actions',
     width: 80,
     render(row) {

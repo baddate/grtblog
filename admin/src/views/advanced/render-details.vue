@@ -97,7 +97,7 @@ const renderColumns: DataTableColumns<ObservabilityRenderRecord> = [
     ellipsis: { tooltip: true },
   },
   {
-    title: '状态',
+    title: t('admin.common.status'),
     key: 'status',
     width: 100,
     render: (row) =>
