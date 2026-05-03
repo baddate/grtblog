@@ -1,18 +1,22 @@
 import type { TranslateFn, TranslationMap } from './types';
-import zh from './generated/zh.json';
-import en from './generated/en.json';
 import { parseAcceptLanguage } from './locale';
-import { SUPPORTED_LANGS, DEFAULT_LANG, FALLBACK_LANG, type SupportedLang } from './constants';
-export { SUPPORTED_LANGS, DEFAULT_LANG, FALLBACK_LANG, type SupportedLang };
+import { DEFAULT_LANG, FALLBACK_LANG, SUPPORTED_LANGS, SUPPORTED_LANGS_SET, isSupportedLang } from './languages';
 
-const translations: Record<string, TranslationMap> = { zh, en };
+// Re-export commonly-used symbols for backward compatibility
+export { DEFAULT_LANG, FALLBACK_LANG, SUPPORTED_LANGS, isSupportedLang } from './languages';
 
-export function isSupportedLang(lang: string): lang is SupportedLang {
-  return SUPPORTED_LANGS.includes(lang as SupportedLang);
+const modules = import.meta.glob<TranslationMap>('./generated/*.json', { eager: true, import: 'default' });
+
+const translations: Record<string, TranslationMap> = {};
+for (const [path, value] of Object.entries(modules)) {
+  const code = path.replace('./generated/', '').replace('.json', '');
+  if (SUPPORTED_LANGS_SET.has(code)) {
+    translations[code] = value;
+  }
 }
 
-export function loadTranslations(lang: SupportedLang): TranslationMap {
-  return translations[lang] ?? translations[FALLBACK_LANG];
+export function loadTranslations(lang: string): TranslationMap {
+  return translations[lang] ?? translations[FALLBACK_LANG] ?? {};
 }
 
 export function createTranslateFn(map: TranslationMap): TranslateFn {
@@ -39,7 +43,7 @@ export function detectLanguage(
   urlLang: string | undefined | null,
   cookieLang: string | null,
   acceptLanguage: string | null
-): SupportedLang {
+): string {
   if (urlLang && isSupportedLang(urlLang)) return urlLang;
   if (cookieLang && isSupportedLang(cookieLang)) return cookieLang;
   const preferred = parseAcceptLanguage(acceptLanguage);
