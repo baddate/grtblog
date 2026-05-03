@@ -3,10 +3,10 @@ package router
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/article"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/handler"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/middleware"
-	"github.com/grtsinry43/grtblog-v2/server/internal/infra/persistence"
+	"github.com/baddate/sanblog/server/internal/app/article"
+	"github.com/baddate/sanblog/server/internal/http/handler"
+	"github.com/baddate/sanblog/server/internal/http/middleware"
+	"github.com/baddate/sanblog/server/internal/infra/persistence"
 )
 
 func registerArticlePublicRoutes(v2 fiber.Router, deps Dependencies) {
@@ -18,7 +18,7 @@ func registerArticlePublicRoutes(v2 fiber.Router, deps Dependencies) {
 	publicGroup.Get("/:id/same-period-moments", articleHandler.ListSamePeriodMoments)
 	publicGroup.Get("/short/:shortUrl", articleHandler.GetArticleByShortURL) // GET /api/v2/articles/short/abc123
 	publicGroup.Post("/:id/latest", articleHandler.CheckArticleLatest)       // POST /api/v2/articles/123/latest
-	publicGroup.Get("/:id/metrics", articleHandler.GetArticleMetrics)       // GET /api/v2/articles/123/metrics
+	publicGroup.Get("/:id/metrics", articleHandler.GetArticleMetrics)        // GET /api/v2/articles/123/metrics
 
 	v2.Get("/categories/short/:shortUrl/articles", articleHandler.ListArticlesByCategoryShortURL)
 }

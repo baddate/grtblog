@@ -14,7 +14,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/sysconfig"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
 )
 
 // ReportStatus describes the outcome of a single upload attempt.
@@ -212,7 +212,7 @@ func (r *Reporter) upload(ctx context.Context, endpoint string, body []byte) Rep
 		return rec
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("User-Agent", "grtblog-telemetry/1.0")
+	req.Header.Set("User-Agent", "sanblog-telemetry/1.0")
 
 	resp, err := r.client.Do(req)
 	rec.DurationMS = time.Since(start).Milliseconds()

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { NButton, NCard, NDataTable, NPopconfirm, NSpace, NTag, useMessage } from 'naive-ui'
 import { h, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -17,7 +20,7 @@ const items = ref<EmailTemplate[]>([])
 
 const columns: DataTableColumns<EmailTemplate> = [
   {
-    title: '名称',
+    title: t('admin.common.name'),
     key: 'name',
     width: 200,
     render: (row) =>
@@ -45,7 +48,7 @@ const columns: DataTableColumns<EmailTemplate> = [
     width: 150,
   },
   {
-    title: '状态',
+    title: t('admin.common.status'),
     key: 'isEnabled',
     width: 100,
     render: (row) =>
@@ -56,13 +59,13 @@ const columns: DataTableColumns<EmailTemplate> = [
       ),
   },
   {
-    title: '更新时间',
+    title: t('admin.common.updated_at'),
     key: 'updatedAt',
     width: 180,
     render: (row) => new Date(row.updatedAt).toLocaleString(),
   },
   {
-    title: '操作',
+    title: t('admin.common.actions'),
     key: 'actions',
     width: 150,
     render: (row) =>
@@ -114,7 +117,7 @@ async function fetchData() {
 async function handleDelete(row: EmailTemplate) {
   try {
     await deleteEmailTemplate(row.code)
-    message.success('删除成功')
+    message.success(t('admin.common.delete_success'))
     fetchData()
   } catch (err) {
     //
@@ -128,6 +131,7 @@ function handleCreate() {
 onMounted(() => {
   fetchData()
 })
+
 </script>
 
 <template>

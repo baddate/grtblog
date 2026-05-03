@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import {
   NButton,
   NCard,
@@ -34,17 +37,17 @@ const formModel = reactive({
 })
 
 const columns: DataTableColumns<ColumnItem> = [
-  { title: 'ID', key: 'id', width: 80 },
+  { title: t('admin.table.id'), key: 'id', width: 80 },
   { title: '专栏名称', key: 'name', minWidth: 200 },
   { title: '短链接', key: 'shortUrl', minWidth: 180 },
   {
-    title: '更新时间',
+    title: t('admin.common.updated_at'),
     key: 'updatedAt',
     width: 180,
     render: (row) => formatDate(row.updatedAt),
   },
   {
-    title: '操作',
+    title: t('admin.common.actions'),
     key: 'actions',
     width: 180,
     render: (row) =>
@@ -133,7 +136,7 @@ async function handleSubmit() {
 async function handleDelete(row: ColumnItem) {
   try {
     await deleteColumn(row.id)
-    message.success('删除成功')
+    message.success(t('admin.common.delete_success'))
     await fetchData()
   } catch (error: any) {
     message.error(error?.message || '删除失败')
@@ -143,6 +146,7 @@ async function handleDelete(row: ColumnItem) {
 onMounted(() => {
   fetchData()
 })
+
 </script>
 
 <template>

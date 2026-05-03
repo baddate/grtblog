@@ -15,10 +15,10 @@ import (
 
 	"github.com/redis/go-redis/v9"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/htmlsnapshot"
-	domainalbum "github.com/grtsinry43/grtblog-v2/server/internal/domain/album"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/content"
-	domainthinking "github.com/grtsinry43/grtblog-v2/server/internal/domain/thinking"
+	"github.com/baddate/sanblog/server/internal/app/htmlsnapshot"
+	domainalbum "github.com/baddate/sanblog/server/internal/domain/album"
+	"github.com/baddate/sanblog/server/internal/domain/content"
+	domainthinking "github.com/baddate/sanblog/server/internal/domain/thinking"
 )
 
 const (
@@ -298,7 +298,16 @@ func (s *Service) DiscoverRoutes(ctx context.Context) ([]string, error) {
 		}
 	}
 
-	return normalizeURLs(routes), nil
+	// Expand all routes with language prefix for zh/en dual-language ISR.
+	langs := []string{"zh", "en"}
+	expanded := make([]string, 0, len(routes)*len(langs))
+	for _, route := range routes {
+		for _, lang := range langs {
+			expanded = append(expanded, "/"+lang+route)
+		}
+	}
+
+	return normalizeURLs(expanded), nil
 }
 
 func (s *Service) Snapshot(ctx context.Context, trackedLimit int, recentLimit int) (*StateSnapshot, error) {

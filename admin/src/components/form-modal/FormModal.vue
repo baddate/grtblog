@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { NButton, NForm, NModal, NSpace } from 'naive-ui'
 
 defineOptions({
@@ -36,6 +39,7 @@ function close() {
 function onConfirm() {
   emit('confirm')
 }
+
 </script>
 
 <template>

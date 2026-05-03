@@ -11,14 +11,14 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	appEvent "github.com/grtsinry43/grtblog-v2/server/internal/app/event"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/sysconfig"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/content"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/federation"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/social"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
-	fedinfra "github.com/grtsinry43/grtblog-v2/server/internal/infra/federation"
+	appEvent "github.com/baddate/sanblog/server/internal/app/event"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
+	"github.com/baddate/sanblog/server/internal/domain/content"
+	"github.com/baddate/sanblog/server/internal/domain/federation"
+	"github.com/baddate/sanblog/server/internal/domain/social"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/response"
+	fedinfra "github.com/baddate/sanblog/server/internal/infra/federation"
 )
 
 type FederationCitationHandler struct {
@@ -72,7 +72,7 @@ func (h *FederationCitationHandler) RequestCitation(c *fiber.Ctx) error {
 	body := c.Body()
 	req, err := parseFederationRequest(c)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.request_parse_failed"), err)
 	}
 
 	signature, err := h.verifier.VerifyRequest(c.Context(), req, body)
@@ -83,38 +83,38 @@ func (h *FederationCitationHandler) RequestCitation(c *fiber.Ctx) error {
 			At:        time.Now(),
 			Payload:   map[string]any{"action": "citation", "ip": c.IP()},
 		})
-		return response.NewBizErrorWithMsg(response.Unauthorized, "签名校验失败")
+		return response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.signature_verification_failed"))
 	}
 
 	var payload contract.FederationCitationRequestReq
 	if err := json.Unmarshal(body, &payload); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	if strings.TrimSpace(payload.SourceInstanceURL) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "source_instance_url 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.source_instance_url_required"))
 	}
 	if strings.TrimSpace(payload.SourcePost.URL) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "source_post.url 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.source_post_url_required"))
 	}
 	if strings.TrimSpace(payload.TargetPostID) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "target_post_id 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.target_post_id_required"))
 	}
 	if signature != nil && signature.BaseURL != "" && !sameBaseURL(signature.BaseURL, payload.SourceInstanceURL) {
-		return response.NewBizErrorWithMsg(response.Unauthorized, "签名来源与请求不一致")
+		return response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.signature_mismatch"))
 	}
 
 	settings, err := h.cfgSvc.FederationSettings(c.Context())
 	if err != nil || !settings.Enabled {
-		return response.NewBizErrorWithMsg(response.Unauthorized, "联合未启用")
+		return response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.federation_not_enabled"))
 	}
 	policy := parseFederationPolicy(settings)
 	if !policyBool(policy.AllowCitation, true) {
-		return response.NewBizErrorWithMsg(response.Unauthorized, "未允许引用请求")
+		return response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.citation_not_allowed"))
 	}
 	if !settings.AllowInbound {
-		return response.NewBizErrorWithMsg(response.Unauthorized, "已关闭入站请求")
+		return response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.inbound_requests_closed"))
 	}
-	if err := enforceFederationInboundRateLimit(c.Context(), h.rateLimiter, payload.SourceInstanceURL, "citation", settings.RateLimits); err != nil {
+	if err := enforceFederationInboundRateLimit(c, c.Context(), h.rateLimiter, payload.SourceInstanceURL, "citation", settings.RateLimits); err != nil {
 		_ = h.events.Publish(c.Context(), appEvent.Generic{
 			EventName: "federation.inbound.rate_limited",
 			At:        time.Now(),
@@ -128,13 +128,13 @@ func (h *FederationCitationHandler) RequestCitation(c *fiber.Ctx) error {
 		if errors.Is(err, content.ErrArticleNotFound) {
 			return response.NewBizError(response.NotFound)
 		}
-		return response.NewBizErrorWithCause(response.ServerError, "目标文章解析失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.target_article_parse_failed"), err)
 	}
 	if !article.IsPublished {
 		return response.NewBizError(response.NotFound)
 	}
 
-	instance, err := ensureFederationInstance(c.Context(), payload.SourceInstanceURL, h.resolver, h.instanceRepo)
+	instance, err := ensureFederationInstance(c, c.Context(), payload.SourceInstanceURL, h.resolver, h.instanceRepo)
 	if err != nil {
 		return err
 	}
@@ -171,7 +171,7 @@ func (h *FederationCitationHandler) RequestCitation(c *fiber.Ctx) error {
 		RequestedAt:      time.Now().UTC(),
 	}
 	if err := h.citationRepo.Create(c.Context(), citation); err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "创建引用记录失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.create_citation_failed"), err)
 	}
 
 	resp := contract.FederationCitationResponseResp{

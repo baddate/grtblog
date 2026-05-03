@@ -3,7 +3,7 @@ package page
 import (
 	"time"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/content"
+	"github.com/baddate/sanblog/server/internal/domain/content"
 )
 
 type PageCreated struct {

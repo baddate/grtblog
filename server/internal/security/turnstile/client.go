@@ -1,19 +1,19 @@
 package turnstile
 
 import (
-	"io"
-	"log"
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
+	"log"
 	"net"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/config"
+	"github.com/baddate/sanblog/server/internal/config"
 )
 
 var (

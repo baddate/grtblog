@@ -1,4 +1,7 @@
 <script setup lang="tsx">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { isEmpty, isFunction } from 'lodash-es'
 import { NDropdown, NEllipsis, NScrollbar } from 'naive-ui'
 import {
@@ -447,6 +450,7 @@ onMounted(() => {
   pendingActivePath.value = tabActivePath.value
   tabBackgroundTransitionClasses.enterFromClass = 'scale-0 opacity-0'
 })
+
 </script>
 <template>
   <div
@@ -462,7 +466,7 @@ onMounted(() => {
     </NScrollbar>
     <div class="flex items-center px-3">
       <ButtonAnimation
-        title="刷新"
+        :title="$t('admin.common.refresh')"
         @click="handleTabRefreshClick"
         animation="rotate"
       >

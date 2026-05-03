@@ -1,4 +1,7 @@
 <script setup lang="tsx">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import {
   NButton,
   NDataTable,
@@ -283,7 +286,7 @@ const columns: DataTableColumns<UserInfo> = [
     width: 140,
     key: 'actions',
     align: 'center',
-    title: '操作',
+    title: t('admin.common.actions'),
     fixed: 'right',
     render: (row) => <CellActions {...row} />,
   },
@@ -353,7 +356,7 @@ const dropdownOptions = reactive<DropdownProps>({
       key: 'edit',
     },
     {
-      label: () => <span class='text-rose-500'>删除</span>,
+      label: () => <span class='text-rose-500'>{t('admin.common.delete')}</span>,
       key: 'delete',
     },
   ],
@@ -438,6 +441,7 @@ async function getDataList() {
 }
 
 getDataList()
+
 </script>
 <template>
   <ScrollContainer

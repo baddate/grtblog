@@ -18,10 +18,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/sysconfig"
-	domainfed "github.com/grtsinry43/grtblog-v2/server/internal/domain/federation"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	fedinfra "github.com/grtsinry43/grtblog-v2/server/internal/infra/federation"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
+	domainfed "github.com/baddate/sanblog/server/internal/domain/federation"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	fedinfra "github.com/baddate/sanblog/server/internal/infra/federation"
 )
 
 type OutboundService struct {

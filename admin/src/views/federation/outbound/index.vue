@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { useQuery } from '@tanstack/vue-query'
 import { NDataTable, NButton, NTag, NInput, NSpace, NCard, NSelect } from 'naive-ui'
 import { h, ref } from 'vue'
@@ -34,9 +37,9 @@ const { data, isPending } = useQuery({
 })
 
 const columns: DataTableColumns<FederationOutboundDeliveryResp> = [
-  { title: 'ID', key: 'id', width: 80 },
+  { title: t('admin.table.id'), key: 'id', width: 80 },
   {
-    title: '类型',
+    title: t('admin.common.type'),
     key: 'type',
     width: 120,
     render(row) {
@@ -45,7 +48,7 @@ const columns: DataTableColumns<FederationOutboundDeliveryResp> = [
   },
   { title: '目标实例', key: 'target_instance_url', minWidth: 200, ellipsis: { tooltip: true } },
   {
-    title: '状态',
+    title: t('admin.common.status'),
     key: 'status',
     width: 100,
     render(row) {
@@ -66,13 +69,13 @@ const columns: DataTableColumns<FederationOutboundDeliveryResp> = [
     render: (row) => `${row.attempt_count}/${row.max_attempts}`,
   },
   {
-    title: '创建时间',
+    title: t('admin.common.created_at'),
     key: 'created_at',
     width: 180,
     render: (row) => new Date(row.created_at).toLocaleString(),
   },
   {
-    title: '操作',
+    title: t('admin.common.actions'),
     key: 'actions',
     width: 100,
     render(row) {
@@ -111,6 +114,7 @@ const statusOptions = [
   { label: '失败', value: 'failed' },
   { label: '重试中', value: 'retrying' },
 ] as any
+
 </script>
 
 <template>

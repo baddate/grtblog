@@ -2,7 +2,7 @@
 
 # 贡献指南
 
-感谢你对 **grtblog-v2** 的关注。本文档涵盖开发环境搭建、架构概览、关键约定与贡献流程。
+感谢你对 **sanblog** 的关注。本文档涵盖开发环境搭建、架构概览、关键约定与贡献流程。
 
 ---
 
@@ -152,7 +152,7 @@ SvelteKit 配置了 `trailingSlash: 'always'`。所有生成的 URL 必须以 `/
 
 Docker 镜像标签必须与发布版本号一致：
 
-- `grtblog-server:v2.1.0`
-- `grtblog-renderer:v2.1.0`
+- `sanblog-server:v2.1.0`
+- `sanblog-renderer:v2.1.0`
 
 部署时通过 `deploy/.env` 中的 `APP_VERSION` 变量统一控制镜像版本。

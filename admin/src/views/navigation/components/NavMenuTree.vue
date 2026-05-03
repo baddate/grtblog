@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 // 引入 Ionicons5 图标
 import {
   ReorderTwo,
@@ -88,6 +91,7 @@ const handleChildUpdate = (element: NavMenuItem, newChildren: NavMenuItem[]) => 
 }
 
 // ================= 核心逻辑修改结束 =================
+
 </script>
 
 <template>

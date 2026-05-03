@@ -313,7 +313,7 @@ onMounted(() => {
               secondary
               :loading="loading"
               @click="fetchMenus"
-              >刷新</NButton
+              >{{ $t('admin.common.refresh') }}</NButton
             >
             <NButton
               type="primary"
@@ -362,7 +362,7 @@ onMounted(() => {
         label-width="90"
       >
         <NFormItem
-          label="名称"
+          :label="$t('admin.common.name')"
           path="name"
         >
           <NInput
@@ -408,7 +408,7 @@ onMounted(() => {
 
       <template #footer>
         <div class="flex justify-end gap-3">
-          <NButton @click="modalOpen = false">取消</NButton>
+          <NButton @click="modalOpen = false">{{ $t('admin.common.cancel') }}</NButton>
           <NButton
             type="primary"
             :loading="formSubmitting"

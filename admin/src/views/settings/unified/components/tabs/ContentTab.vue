@@ -10,8 +10,8 @@ const emit = defineEmits<{ 'dirty-change': [dirty: boolean] }>()
   <ConfigPanel
     :list-fn="listSysConfigs"
     :update-fn="updateSysConfigs"
-    title="内容与评论"
-    description="评论审核、文章热度阈值和上传限制"
+    :title="$t('admin.settings.content')"
+    :description="$t('admin.settings.content_desc')"
     :filter-groups="['interaction/comment', 'storage/upload']"
     :filter-root-item-keys="['article.hot']"
     :on-dirty-change="(dirty: boolean) => emit('dirty-change', dirty)"

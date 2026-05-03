@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { useQuery } from '@tanstack/vue-query'
 import { NDataTable, NButton, NTag, NInput, NCard, NSelect, NPagination } from 'naive-ui'
 import { h, ref } from 'vue'
@@ -67,7 +70,7 @@ function sourceTypeLabel(type: string) {
 }
 
 const columns: DataTableColumns<ActivityPubOutboxItemResp> = [
-  { title: 'ID', key: 'id', width: 70 },
+  { title: t('admin.table.id'), key: 'id', width: 70 },
   {
     title: '摘要',
     key: 'summary',
@@ -75,7 +78,7 @@ const columns: DataTableColumns<ActivityPubOutboxItemResp> = [
     ellipsis: { tooltip: true },
   },
   {
-    title: '类型',
+    title: t('admin.common.type'),
     key: 'source_type',
     width: 100,
     render(row) {
@@ -87,7 +90,7 @@ const columns: DataTableColumns<ActivityPubOutboxItemResp> = [
     },
   },
   {
-    title: '状态',
+    title: t('admin.common.status'),
     key: 'status',
     width: 110,
     render(row) {
@@ -120,7 +123,7 @@ const columns: DataTableColumns<ActivityPubOutboxItemResp> = [
     },
   },
   {
-    title: '操作',
+    title: t('admin.common.actions'),
     key: 'actions',
     width: 90,
     render(row) {
@@ -148,6 +151,7 @@ const sourceTypeOptions = [
   { label: '手记', value: 'moment' },
   { label: '思考', value: 'thinking' },
 ] as any
+
 </script>
 
 <template>

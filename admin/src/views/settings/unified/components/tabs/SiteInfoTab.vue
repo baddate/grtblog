@@ -10,8 +10,8 @@ const emit = defineEmits<{ 'dirty-change': [dirty: boolean] }>()
   <ConfigPanel
     :list-fn="listSysConfigs"
     :update-fn="updateSysConfigs"
-    title="站点信息"
-    description="网站基础信息与 OG 默认值"
+    :title="$t('admin.settings.site_info')"
+    :description="$t('admin.settings.site_info_desc')"
     :filter-groups="['site']"
     :exclude-item-keys="['site.theme_extend_info']"
     :on-dirty-change="(dirty: boolean) => emit('dirty-change', dirty)"

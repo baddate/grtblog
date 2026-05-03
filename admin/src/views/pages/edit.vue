@@ -65,8 +65,8 @@ const {
   cleanup,
 } = usePreviewFrame({
   previewPath: '/internal/preview/page',
-  readyType: 'grtblog-preview:ready',
-  postType: 'grtblog-preview:page',
+  readyType: 'sanblog-preview:ready',
+  postType: 'sanblog-preview:page',
   buildPayload: buildPreviewPayload,
 })
 
@@ -295,7 +295,7 @@ watch(previewUrl, () => {
               class="space-y-4"
             >
               <NFormItem
-                label="描述"
+                :label="$t('admin.common.description')"
                 :show-feedback="false"
               >
                 <NInput

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import {
   ArrowUp20Filled,
   Checkmark20Filled,
@@ -85,6 +88,7 @@ function onInputKeydown(e: KeyboardEvent) {
     emit('close')
   }
 }
+
 </script>
 
 <template>

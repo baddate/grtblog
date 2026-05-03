@@ -1,4 +1,5 @@
 import type { WebsiteInfoMap } from '$lib/features/website-info/types';
+import type { TranslateFn } from '$lib/i18n/types';
 
 type UnknownRecord = Record<string, unknown>;
 
@@ -27,6 +28,7 @@ export type ResolveSeoMetaInput = {
 	websiteInfo?: WebsiteInfoMap | null;
 	origin?: string;
 	fallbackSiteIcon?: string;
+	t?: TranslateFn;
 };
 
 type PageMeta = {
@@ -36,9 +38,9 @@ type PageMeta = {
 	ogType?: string;
 };
 
-const DEFAULT_SITE_NAME = 'grtBlog';
+const DEFAULT_SITE_NAME = 'sanblog';
 const DEFAULT_DESCRIPTION =
-	'grtBlog - A personal blog about programming, technology, and software development.';
+	'sanblog - A personal blog about programming, technology, and software development.';
 const DEFAULT_KEYWORDS =
 	'blog, programming, technology, software development, web development, coding';
 const GENERATED_OG_IMAGE_WIDTH = 1200;
@@ -81,6 +83,15 @@ const normalizePathname = (pathname: string): string => {
 	if (!trimmed) return '/';
 	if (trimmed === '/') return '/';
 	return trimmed.endsWith('/') ? trimmed.slice(0, -1) : trimmed;
+};
+
+const stripLangPrefix = (pathname: string): string => {
+	const match = pathname.match(/^\/(zh|en|jp)(\/|$)/);
+	if (match) {
+		const rest = pathname.slice(match[0].length - 1);
+		return rest || '/';
+	}
+	return pathname;
 };
 
 const getPageValue = (
@@ -160,20 +171,22 @@ const buildCanonicalUrl = (pathname: string, search: string, baseUrl: string): s
 	}
 };
 
-const resolveListPageTitle = (baseTitle: string, page: number | null): string => {
+const resolveListPageTitle = (baseTitle: string, page: number | null, t: TranslateFn): string => {
 	if (!page || page <= 1) return baseTitle;
-	return `${baseTitle} · 第${page}页`;
+	return t('web.seo.paginated', { title: baseTitle, page });
 };
 
 export const resolveOgTag = (pathname: string, ogType: string): string => {
+	const p = stripLangPrefix(pathname);
 	if (ogType === 'article') return 'ARTICLE';
-	if (pathname === '/') return 'HOME';
-	if (pathname === '/timeline') return 'TIMELINE';
-	if (pathname === '/tags') return 'TAGS';
+	if (p === '/') return 'HOME';
+	if (p === '/timeline') return 'TIMELINE';
+	if (p === '/tags') return 'TAGS';
 	return 'PAGE';
 };
 
-const resolvePageMeta = (pathname: string, search: string, routeData: UnknownRecord): PageMeta => {
+const resolvePageMeta = (pathname: string, search: string, routeData: UnknownRecord, t: TranslateFn): PageMeta => {
+	const p = stripLangPrefix(pathname);
 	const post = getPageValue(routeData, 'post');
 	if (post) {
 		return {
@@ -207,8 +220,8 @@ const resolvePageMeta = (pathname: string, search: string, routeData: UnknownRec
 	if (categoryName) {
 		const page = getPaginationPage(routeData);
 		return {
-			pageTitle: resolveListPageTitle(categoryName, page),
-			description: `「${categoryName}」分类下的所有文章。`
+			pageTitle: resolveListPageTitle(categoryName, page, t),
+			description: t('web.seo.category.desc', { name: categoryName })
 		};
 	}
 
@@ -216,74 +229,74 @@ const resolvePageMeta = (pathname: string, search: string, routeData: UnknownRec
 	if (columnName) {
 		const page = getPaginationPage(routeData);
 		return {
-			pageTitle: resolveListPageTitle(columnName, page),
-			description: `「${columnName}」专栏下的所有手记。`
+			pageTitle: resolveListPageTitle(columnName, page, t),
+			description: t('web.seo.column.desc', { name: columnName })
 		};
 	}
 
-	if (pathname === '/') {
+	if (p === '/') {
 		return { pageTitle: '' };
 	}
 
-	if (pathname === '/posts' || pathname.startsWith('/posts/page/')) {
+	if (p === '/posts' || p.startsWith('/posts/page/')) {
 		const page = parsePageFromPath(pathname) ?? getPaginationPage(routeData);
 		return {
-			pageTitle: resolveListPageTitle('文章归档', page),
-			description: '按时间顺序排布的思考、笔记与技术沉淀。在这里，你可以找到所有历史文章的快照。'
+			pageTitle: resolveListPageTitle(t('web.seo.posts.title'), page, t),
+			description: t('web.seo.posts.desc')
 		};
 	}
 
-	if (pathname === '/moments') {
+	if (p === '/moments') {
 		const page = parsePageFromSearch(search) ?? getPaginationPage(routeData);
 		return {
-			pageTitle: resolveListPageTitle('手记', page),
-			description: '捕捉转瞬即逝的灵感与生活碎片。在这里，文字与心情一同流淌。'
+			pageTitle: resolveListPageTitle(t('web.seo.moments.title'), page, t),
+			description: t('web.seo.moments.desc')
 		};
 	}
 
-	if (pathname === '/thinkings' || pathname.startsWith('/thinkings/page/')) {
+	if (p === '/thinkings' || p.startsWith('/thinkings/page/')) {
 		const page = parsePageFromPath(pathname) ?? getPaginationPage(routeData);
 		return {
-			pageTitle: resolveListPageTitle('思考', page),
-			description: '记录深思熟虑后的感悟，或是对世界的细微观察。'
+			pageTitle: resolveListPageTitle(t('web.seo.thinkings.title'), page, t),
+			description: t('web.seo.thinkings.desc')
 		};
 	}
 
-	if (pathname === '/friends') {
+	if (p === '/friends') {
 		return {
-			pageTitle: '友情链接',
-			description: '志同道合者的数字家园，感谢在这个广袤网络中的相遇。'
+			pageTitle: t('web.seo.friends.title'),
+			description: t('web.seo.friends.desc')
 		};
 	}
 
-	if (pathname === '/friends-timeline' || pathname.startsWith('/friends-timeline/page/')) {
+	if (p === '/friends-timeline' || p.startsWith('/friends-timeline/page/')) {
 		const page = parsePageFromPath(pathname) ?? getPaginationPage(routeData);
 		return {
-			pageTitle: resolveListPageTitle('朋友圈', page),
-			description: '聚合了友情链接中朋友们的最新文章与动态，感受网络邻居们的思考与生活。'
+			pageTitle: resolveListPageTitle(t('web.seo.friends_timeline.title'), page, t),
+			description: t('web.seo.friends_timeline.desc')
 		};
 	}
 
-	if (pathname === '/tags') {
+	if (p === '/tags') {
 		return {
-			pageTitle: '标签档案馆',
-			description: '按主题整理公开文章。点击任意标签即可快速查看相关文章与手记。'
+			pageTitle: t('web.seo.tags.title'),
+			description: t('web.seo.tags.desc')
 		};
 	}
 
-	if (pathname === '/timeline') {
+	if (p === '/timeline') {
 		return {
-			pageTitle: '时间轴',
-			description: '按时间维度查看创作轨迹与数字足迹。'
+			pageTitle: t('web.seo.timeline.title'),
+			description: t('web.seo.timeline.desc')
 		};
 	}
 
-	if (pathname.startsWith('/auth/providers/')) {
-		return { pageTitle: '登录回调处理' };
+	if (p.startsWith('/auth/providers/')) {
+		return { pageTitle: t('web.seo.auth_callback') };
 	}
 
-	if (pathname.startsWith('/internal/preview/')) {
-		return { pageTitle: '内容预览' };
+	if (p.startsWith('/internal/preview/')) {
+		return { pageTitle: t('web.seo.content_preview') };
 	}
 
 	return { pageTitle: '' };
@@ -294,13 +307,14 @@ export const resolveSeoMeta = (input: ResolveSeoMetaInput): ResolvedSeoMeta => {
 	const search = input.search ?? '';
 	const routeData = asRecord(input.routeData) ?? {};
 	const websiteInfo = input.websiteInfo ?? null;
-	const isHomePage = pathname === '/';
+	const isHomePage = stripLangPrefix(pathname) === '/';
 
 	const siteName = readString(websiteInfo?.website_name) || DEFAULT_SITE_NAME;
 	const homeTitle = readString(websiteInfo?.home_title);
 	const defaultDescription = readString(websiteInfo?.description) || DEFAULT_DESCRIPTION;
 	const keywords = readString(websiteInfo?.keywords) || DEFAULT_KEYWORDS;
-	const pageMeta = resolvePageMeta(pathname, search, routeData);
+	const t = (input.t ?? ((key: string) => key)) as TranslateFn;
+	const pageMeta = resolvePageMeta(pathname, search, routeData, t);
 
 	const pageTitle = readString(pageMeta.pageTitle);
 	const resolvedHomeTitle = homeTitle || siteName;
@@ -333,9 +347,9 @@ export const resolveSeoMeta = (input: ResolveSeoMetaInput): ResolvedSeoMeta => {
 	const usesGeneratedOgImage = !contentImage;
 
 	const noIndex =
-		pathname.startsWith('/auth/providers/') ||
-		pathname.startsWith('/internal/preview/') ||
-		pathname.startsWith('/internal/');
+		stripLangPrefix(pathname).startsWith('/auth/providers/') ||
+		stripLangPrefix(pathname).startsWith('/internal/preview/') ||
+		stripLangPrefix(pathname).startsWith('/internal/');
 
 	return {
 		title,

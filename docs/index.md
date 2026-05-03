@@ -3,7 +3,7 @@
 layout: home
 
 hero:
-  name: "GrtBlog"
+  name: "sanblog"
   text: "现代化静态博客系统"
   tagline: 静态先行、实时注水、联合社交 — 极致性能与交互体验的平衡
   actions:
@@ -15,7 +15,7 @@ hero:
       link: /dev/architecture
     - theme: alt
       text: GitHub
-      link: https://github.com/grtsinry43/grtblog
+      link: https://github.com/baddate/sanblog
 
 features:
   - title: 极速加载

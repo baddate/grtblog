@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { resolvePath } from '$lib/shared/utils/resolve-path';
+	import { page as pageState } from '$app/state';
 	import { momentListCtx } from '$lib/features/moment/context';
 	import type { MomentListResponse } from '$lib/features/moment/types';
 	import StaggerList from '$lib/ui/animation/StaggerList.svelte';
@@ -32,7 +33,7 @@
 
 	function onPageChange(nextPage: number) {
 		const safePage = Number.isFinite(nextPage) && nextPage > 1 ? nextPage : 1;
-		goto(resolvePath(safePage === 1 ? `${basePath}/` : `${basePath}/page/${safePage}/`));
+		goto(resolvePath(safePage === 1 ? `${basePath}/` : `${basePath}/page/${safePage}/`, pageState.data.lang));
 	}
 </script>
 

@@ -5,15 +5,15 @@ import (
 	"errors"
 	"strconv"
 
+	"github.com/baddate/sanblog/server/internal/http/middleware"
 	"github.com/gofiber/fiber/v2"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/middleware"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/thinking"
-	domaincomment "github.com/grtsinry43/grtblog-v2/server/internal/domain/comment"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/identity"
-	domainthinking "github.com/grtsinry43/grtblog-v2/server/internal/domain/thinking"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/app/thinking"
+	domaincomment "github.com/baddate/sanblog/server/internal/domain/comment"
+	"github.com/baddate/sanblog/server/internal/domain/identity"
+	domainthinking "github.com/baddate/sanblog/server/internal/domain/thinking"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type ThinkingHandler struct {
@@ -42,12 +42,13 @@ func NewThinkingHandler(svc *thinking.Service, commentRepo domaincomment.Comment
 func (h *ThinkingHandler) CreateThinking(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 
 	var req contract.CreateThinkingReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	created, err := h.svc.Create(c.Context(), thinking.CreateThinkingCmd{
@@ -86,17 +87,17 @@ func (h *ThinkingHandler) CreateThinking(c *fiber.Ctx) error {
 func (h *ThinkingHandler) UpdateThinking(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的思考ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	var req contract.UpdateThinkingReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "无效的请求体", err)
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	_, err = h.svc.Update(c.Context(), thinking.UpdateThinkingCmd{
@@ -113,7 +114,7 @@ func (h *ThinkingHandler) UpdateThinking(c *fiber.Ctx) error {
 		"userId":     claims.UserID,
 	})
 
-	return response.SuccessWithMessage[any](c, nil, "更新思考成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.updated"))
 }
 
 // ListThinkings godoc
@@ -166,7 +167,7 @@ func (h *ThinkingHandler) ListThinkings(c *fiber.Ctx) error {
 func (h *ThinkingHandler) GetThinking(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	item, err := h.svc.FindByID(c.Context(), id)
@@ -191,12 +192,12 @@ func (h *ThinkingHandler) GetThinking(c *fiber.Ctx) error {
 func (h *ThinkingHandler) DeleteThinking(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	if err := h.svc.Delete(c.Context(), id); err != nil {
@@ -208,7 +209,7 @@ func (h *ThinkingHandler) DeleteThinking(c *fiber.Ctx) error {
 		"userId":     claims.UserID,
 	})
 
-	return response.SuccessWithMessage[any](c, nil, "思考删除成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.deleted"))
 }
 
 // BatchDeleteThinkings godoc
@@ -223,19 +224,20 @@ func (h *ThinkingHandler) DeleteThinking(c *fiber.Ctx) error {
 func (h *ThinkingHandler) BatchDeleteThinkings(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 
 	var req contract.BatchDeleteThinkingReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "ids 不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	for _, id := range req.IDs {
 		if id <= 0 {
-			return response.NewBizErrorWithMsg(response.ParamsError, "ids 必须为正整数")
+			return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 		}
 	}
 
@@ -248,7 +250,7 @@ func (h *ThinkingHandler) BatchDeleteThinkings(c *fiber.Ctx) error {
 		"userId":      claims.UserID,
 	})
 
-	return response.SuccessWithMessage[any](c, nil, "思考批量删除成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.deleted"))
 }
 
 // GetThinkingMetrics godoc
@@ -261,13 +263,13 @@ func (h *ThinkingHandler) BatchDeleteThinkings(c *fiber.Ctx) error {
 func (h *ThinkingHandler) GetThinkingMetrics(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的思考ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	t, err := h.svc.FindByID(c.Context(), id)
 	if err != nil {
 		if errors.Is(err, domainthinking.ErrThinkingNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "思考不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
@@ -290,13 +292,14 @@ func (h *ThinkingHandler) GetThinkingMetrics(c *fiber.Ctx) error {
 func (h *ThinkingHandler) BatchGetThinkingMetrics(c *fiber.Ctx) error {
 	var req contract.BatchThinkingMetricsReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "请求体解析失败")
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
 		return response.Success(c, contract.BatchThinkingMetricsResp{Items: []contract.ThinkingMetricsItem{}})
 	}
 	if len(req.IDs) > 50 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "最多支持 50 条")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	items := make([]contract.ThinkingMetricsItem, 0, len(req.IDs))
@@ -319,9 +322,9 @@ func (h *ThinkingHandler) BatchGetThinkingMetrics(c *fiber.Ctx) error {
 func (h *ThinkingHandler) mapError(c *fiber.Ctx, err error) error {
 	switch {
 	case errors.Is(err, domainthinking.ErrThinkingNotFound):
-		return response.NewBizErrorWithMsg(response.NotFound, "思考不存在")
+		return response.ErrorFromBizLocalized[any](c, response.NotFound)
 	case errors.Is(err, domainthinking.ErrThinkingContentEmpty):
-		return response.NewBizErrorWithMsg(response.ParamsError, "内容不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	default:
 		return err
 	}

@@ -8,16 +8,16 @@ import (
 
 	"github.com/jinzhu/copier"
 
+	domaincomment "github.com/baddate/sanblog/server/internal/domain/comment"
+	"github.com/baddate/sanblog/server/internal/domain/content"
+	"github.com/baddate/sanblog/server/internal/domain/identity"
 	"github.com/gofiber/fiber/v2"
-	domaincomment "github.com/grtsinry43/grtblog-v2/server/internal/domain/comment"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/content"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/identity"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/moment"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/sysconfig"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/middleware"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/app/moment"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/middleware"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type MomentHandler struct {
@@ -51,19 +51,22 @@ func NewMomentHandler(svc *moment.Service, contentRepo content.Repository, comme
 func (h *MomentHandler) CreateMoment(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 
 	var req contract.CreateMomentReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if req.Views != nil && *req.Views < 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "views 不能为负数")
+		msg := response.Translate(c, "server.handler.views_negative")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	extInfo, err := parseExtInfo(req.ExtInfo)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "extInfo格式错误", err)
+		msg := response.Translate(c, "server.handler.invalid_extinfo")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	cmd := moment.CreateMomentCmd{
@@ -91,13 +94,16 @@ func (h *MomentHandler) CreateMoment(c *fiber.Ctx) error {
 	createdMoment, err := h.svc.CreateMoment(c.Context(), claims.UserID, cmd)
 	if err != nil {
 		if errors.Is(err, content.ErrMomentShortURLExists) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "短链接已存在")
+			msg := response.Translate(c, "server.error.moment_short_url_exists")
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		if errors.Is(err, content.ErrColumnNotFound) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "分区不存在")
+			msg := response.Translate(c, "server.error.column_not_found")
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		if errors.Is(err, content.ErrTagNotFound) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "话题不存在")
+			msg := response.Translate(c, "server.error.tag_not_found")
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		return err
 	}
@@ -113,7 +119,7 @@ func (h *MomentHandler) CreateMoment(c *fiber.Ctx) error {
 		"userId":   claims.UserID,
 	})
 
-	return response.SuccessWithMessage(c, momentResponse, "手记创建成功")
+	return response.SuccessWithMessage(c, momentResponse, response.Translate(c, "server.success.moment_created"))
 }
 
 // UpdateMoment godoc
@@ -130,21 +136,23 @@ func (h *MomentHandler) CreateMoment(c *fiber.Ctx) error {
 func (h *MomentHandler) UpdateMoment(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的手记ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	var req contract.UpdateMomentReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	extInfo, err := parseExtInfo(req.ExtInfo)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "extInfo格式错误", err)
+		msg := response.Translate(c, "server.handler.invalid_extinfo")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	cmd := moment.UpdateMomentCmd{
@@ -167,13 +175,16 @@ func (h *MomentHandler) UpdateMoment(c *fiber.Ctx) error {
 	updatedMoment, err := h.svc.UpdateMoment(c.Context(), cmd)
 	if err != nil {
 		if errors.Is(err, content.ErrMomentShortURLExists) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "短链接已存在")
+			msg := response.Translate(c, "server.error.moment_short_url_exists")
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		if errors.Is(err, content.ErrColumnNotFound) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "分区不存在")
+			msg := response.Translate(c, "server.error.column_not_found")
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		if errors.Is(err, content.ErrTagNotFound) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "话题不存在")
+			msg := response.Translate(c, "server.error.tag_not_found")
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		return err
 	}
@@ -189,7 +200,7 @@ func (h *MomentHandler) UpdateMoment(c *fiber.Ctx) error {
 		"userId":   claims.UserID,
 	})
 
-	return response.SuccessWithMessage(c, momentResponse, "手记更新成功")
+	return response.SuccessWithMessage(c, momentResponse, response.Translate(c, "server.success.moment_updated"))
 }
 
 // BatchSetMomentPublished godoc
@@ -205,14 +216,15 @@ func (h *MomentHandler) UpdateMoment(c *fiber.Ctx) error {
 func (h *MomentHandler) BatchSetMomentPublished(c *fiber.Ctx) error {
 	var req contract.BatchSetMomentPublishedReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "ids 不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	for _, id := range req.IDs {
 		if id <= 0 {
-			return response.NewBizErrorWithMsg(response.ParamsError, "ids 必须为正整数")
+			return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 		}
 	}
 
@@ -224,9 +236,9 @@ func (h *MomentHandler) BatchSetMomentPublished(c *fiber.Ctx) error {
 	}
 
 	if req.IsPublished {
-		return response.SuccessWithMessage[any](c, nil, "手记发布状态已批量更新为已发布")
+		return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.updated"))
 	}
-	return response.SuccessWithMessage[any](c, nil, "手记发布状态已批量更新为未发布")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.updated"))
 }
 
 // BatchSetMomentTop godoc
@@ -242,14 +254,15 @@ func (h *MomentHandler) BatchSetMomentPublished(c *fiber.Ctx) error {
 func (h *MomentHandler) BatchSetMomentTop(c *fiber.Ctx) error {
 	var req contract.BatchSetMomentTopReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "ids 不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	for _, id := range req.IDs {
 		if id <= 0 {
-			return response.NewBizErrorWithMsg(response.ParamsError, "ids 必须为正整数")
+			return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 		}
 	}
 
@@ -261,9 +274,9 @@ func (h *MomentHandler) BatchSetMomentTop(c *fiber.Ctx) error {
 	}
 
 	if req.IsTop {
-		return response.SuccessWithMessage[any](c, nil, "手记置顶状态已批量更新为置顶")
+		return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.updated"))
 	}
-	return response.SuccessWithMessage[any](c, nil, "手记置顶状态已批量更新为取消置顶")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.updated"))
 }
 
 // GetMoment godoc
@@ -277,18 +290,18 @@ func (h *MomentHandler) BatchSetMomentTop(c *fiber.Ctx) error {
 func (h *MomentHandler) GetMoment(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的手记ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	momentItem, err := h.svc.GetMomentByID(c.Context(), id)
 	if err != nil {
 		if errors.Is(err, content.ErrMomentNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "手记不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
 	if !momentItem.IsPublished {
-		return response.NewBizErrorWithMsg(response.NotFound, "手记不存在")
+		return response.ErrorFromBizLocalized[any](c, response.NotFound)
 	}
 
 	momentResponse, err := h.toMomentResp(c.Context(), momentItem)
@@ -311,12 +324,12 @@ func (h *MomentHandler) GetMoment(c *fiber.Ctx) error {
 func (h *MomentHandler) GetMomentAdmin(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的手记ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	momentItem, err := h.svc.GetMomentByID(c.Context(), id)
 	if err != nil {
 		if errors.Is(err, content.ErrMomentNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "手记不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
@@ -337,7 +350,7 @@ func (h *MomentHandler) GetMomentAdmin(c *fiber.Ctx) error {
 func (h *MomentHandler) ListSamePeriodArticles(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的手记ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	momentItem, err := h.svc.GetMomentByID(c.Context(), id)
@@ -345,7 +358,7 @@ func (h *MomentHandler) ListSamePeriodArticles(c *fiber.Ctx) error {
 		return err
 	}
 	if !momentItem.IsPublished {
-		return response.NewBizErrorWithMsg(response.NotFound, "手记不存在")
+		return response.ErrorFromBizLocalized[any](c, response.NotFound)
 	}
 
 	const windowDays = 14
@@ -389,18 +402,18 @@ func (h *MomentHandler) ListSamePeriodArticles(c *fiber.Ctx) error {
 func (h *MomentHandler) GetMomentByShortURL(c *fiber.Ctx) error {
 	shortURL := c.Params("shortUrl")
 	if shortURL == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "短链接不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	momentItem, err := h.svc.GetMomentByShortURL(c.Context(), shortURL)
 	if err != nil {
 		if errors.Is(err, content.ErrMomentNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "手记不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
 	if !momentItem.IsPublished {
-		return response.NewBizErrorWithMsg(response.NotFound, "手记不存在")
+		return response.ErrorFromBizLocalized[any](c, response.NotFound)
 	}
 
 	momentResponse, err := h.toMomentResp(c.Context(), momentItem)
@@ -439,13 +452,13 @@ func (h *MomentHandler) ListMoments(c *fiber.Ctx) error {
 func (h *MomentHandler) ListMomentsByColumnShortURL(c *fiber.Ctx) error {
 	shortURL := strings.TrimSpace(c.Params("shortUrl"))
 	if shortURL == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "专栏短链接不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	column, err := h.contentRepo.GetColumnByShortURL(c.Context(), shortURL)
 	if err != nil {
 		if errors.Is(err, content.ErrColumnNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "专栏不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
@@ -612,22 +625,23 @@ func (h *MomentHandler) ListRecentPublicMoments(c *fiber.Ctx) error {
 func (h *MomentHandler) CheckMomentLatest(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的手记ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	var req contract.CheckMomentLatestReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	momentItem, err := h.svc.GetMomentByID(c.Context(), id)
 	if errors.Is(err, content.ErrMomentNotFound) {
-		return response.NewBizErrorWithMsg(response.NotFound, "手记不存在")
+		return response.ErrorFromBizLocalized[any](c, response.NotFound)
 	} else if err != nil {
 		return err
 	}
 	if !momentItem.IsPublished {
-		return response.NewBizErrorWithMsg(response.NotFound, "手记不存在")
+		return response.ErrorFromBizLocalized[any](c, response.NotFound)
 	}
 
 	if req.Hash == momentItem.ContentHash {
@@ -663,12 +677,12 @@ func (h *MomentHandler) CheckMomentLatest(c *fiber.Ctx) error {
 func (h *MomentHandler) DeleteMoment(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的手记ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	if err := h.svc.DeleteMoment(c.Context(), id); err != nil {
@@ -680,7 +694,7 @@ func (h *MomentHandler) DeleteMoment(c *fiber.Ctx) error {
 		"userId":   claims.UserID,
 	})
 
-	return response.SuccessWithMessage[any](c, nil, "手记删除成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.deleted"))
 }
 
 // BatchDeleteMoments godoc
@@ -696,19 +710,20 @@ func (h *MomentHandler) DeleteMoment(c *fiber.Ctx) error {
 func (h *MomentHandler) BatchDeleteMoments(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 
 	var req contract.BatchDeleteMomentReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "ids 不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	for _, id := range req.IDs {
 		if id <= 0 {
-			return response.NewBizErrorWithMsg(response.ParamsError, "ids 必须为正整数")
+			return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 		}
 	}
 
@@ -721,7 +736,7 @@ func (h *MomentHandler) BatchDeleteMoments(c *fiber.Ctx) error {
 		"userId":    claims.UserID,
 	})
 
-	return response.SuccessWithMessage[any](c, nil, "手记批量删除成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.deleted"))
 }
 
 // GetMomentMetrics godoc
@@ -734,13 +749,13 @@ func (h *MomentHandler) BatchDeleteMoments(c *fiber.Ctx) error {
 func (h *MomentHandler) GetMomentMetrics(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的手记ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	metrics, err := h.svc.GetMomentMetrics(c.Context(), id)
 	if err != nil {
 		if errors.Is(err, content.ErrMomentNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "手记不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}

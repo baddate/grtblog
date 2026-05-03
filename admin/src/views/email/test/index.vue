@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { NButton, NCard, NForm, NFormItem, NInput, NSelect, useMessage } from 'naive-ui'
 import { onMounted, reactive, ref } from 'vue'
 
@@ -54,7 +57,7 @@ async function handleTemplateChange(code: string) {
 
 async function handleSend() {
   if (!form.code || !form.toEmail) {
-    message.error('请填写必要信息')
+    message.error(t('admin.common.fill_required'))
     return
   }
   loading.value = true
@@ -85,6 +88,7 @@ async function handleSend() {
 onMounted(() => {
   fetchTemplates()
 })
+
 </script>
 
 <template>

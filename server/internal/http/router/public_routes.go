@@ -6,17 +6,17 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/friendlink"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/friendtimeline"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/globalnotification"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/home"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/htmlsnapshot"
-	applike "github.com/grtsinry43/grtblog-v2/server/internal/app/like"
-	apprss "github.com/grtsinry43/grtblog-v2/server/internal/app/rss"
-	appsearch "github.com/grtsinry43/grtblog-v2/server/internal/app/search"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/handler"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
-	"github.com/grtsinry43/grtblog-v2/server/internal/infra/persistence"
+	"github.com/baddate/sanblog/server/internal/app/friendlink"
+	"github.com/baddate/sanblog/server/internal/app/friendtimeline"
+	"github.com/baddate/sanblog/server/internal/app/globalnotification"
+	"github.com/baddate/sanblog/server/internal/app/home"
+	"github.com/baddate/sanblog/server/internal/app/htmlsnapshot"
+	applike "github.com/baddate/sanblog/server/internal/app/like"
+	apprss "github.com/baddate/sanblog/server/internal/app/rss"
+	appsearch "github.com/baddate/sanblog/server/internal/app/search"
+	"github.com/baddate/sanblog/server/internal/http/handler"
+	"github.com/baddate/sanblog/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/infra/persistence"
 )
 
 func registerPublicRoutes(v2 fiber.Router, deps Dependencies, websiteInfoHandler *handler.WebsiteInfoHandler, htmlSnapshotSvc *htmlsnapshot.Service, navMenuHandler *handler.NavMenuHandler) {

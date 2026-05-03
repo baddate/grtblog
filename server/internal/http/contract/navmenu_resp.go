@@ -3,7 +3,7 @@ package contract
 import (
 	"time"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type NavMenuResp struct {

@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { useDialog } from 'naive-ui'
+import { useI18n } from 'vue-i18n'
 
 import { ButtonAnimation } from '@/components'
 import { useComponentModifier } from '@/composables'
 import { useUserStore } from '@/stores'
 
 const { cleanup } = useUserStore()
+const { t } = useI18n()
 
 const dialog = useDialog()
 
@@ -14,10 +16,10 @@ const { getModalModifier } = useComponentModifier()
 const handleSignOutClick = () => {
   dialog.info({
     ...getModalModifier(),
-    title: '退出登录',
-    content: '确定要退出登录吗？',
-    positiveText: '确定',
-    negativeText: '取消',
+    title: t('admin.header.sign_out'),
+    content: t('admin.header.sign_out_confirm'),
+    positiveText: t('admin.common.confirm'),
+    negativeText: t('admin.common.cancel'),
     onPositiveClick: () => cleanup(),
   })
 }
@@ -25,7 +27,7 @@ const handleSignOutClick = () => {
 <template>
   <ButtonAnimation
     @click="handleSignOutClick"
-    title="退出登录"
+    :title="$t('admin.header.sign_out')"
   >
     <span class="iconify ph--sign-out" />
   </ButtonAnimation>

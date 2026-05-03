@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "grtblog 后端接口",
-        "title": "grtblog API v2",
+        "description": "sanblog 后端接口",
+        "title": "sanblog API v2",
         "contact": {},
         "version": "2.0.0"
     },

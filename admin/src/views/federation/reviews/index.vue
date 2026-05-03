@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
 import { NDataTable, NButton, NTag, useMessage, NModal, NInput, NCard, NSpace } from 'naive-ui'
 import { h, ref } from 'vue'
@@ -23,7 +26,7 @@ const { data, isPending } = useQuery({
 
 const columns: DataTableColumns<FederationReviewItemResp> = [
   {
-    title: '类型',
+    title: t('admin.common.type'),
     key: 'type',
     width: 100,
     render(row) {
@@ -38,7 +41,7 @@ const columns: DataTableColumns<FederationReviewItemResp> = [
     render: (row) => new Date(row.requested_at).toLocaleString(),
   },
   {
-    title: '操作',
+    title: t('admin.common.actions'),
     key: 'actions',
     width: 200,
     render(row) {
@@ -128,6 +131,7 @@ function confirmReject() {
     })
   }
 }
+
 </script>
 
 <template>

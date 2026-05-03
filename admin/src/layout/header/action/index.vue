@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { defineAsyncComponent, h } from 'vue'
 
 import DevModeBadge from '@/components/health/DevModeBadge.vue'
@@ -7,6 +10,7 @@ import { mediaQueryInjectionKey } from '@/injection'
 import { toRefsPreferencesStore } from '@/stores'
 
 import FullScreen from './FullScreen.vue'
+import LanguageSwitch from './LanguageSwitch.vue'
 import Notification from './Notification.vue'
 import PreferencesDrawer from './PreferencesDrawer.vue'
 import SignOut from './SignOut.vue'
@@ -23,6 +27,7 @@ const AsyncAvatarDropdown = defineAsyncComponent({
 
 const { isMaxSm } = useInjection(mediaQueryInjectionKey)
 const { navigationMode } = toRefsPreferencesStore()
+
 </script>
 <template>
   <div class="flex items-center">
@@ -30,6 +35,7 @@ const { navigationMode } = toRefsPreferencesStore()
     <Notification />
     <FullScreen />
     <ThemeModePopover />
+    <LanguageSwitch />
     <PreferencesDrawer />
     <SignOut />
     <AsyncAvatarDropdown v-if="!isMaxSm && navigationMode === 'horizontal'" />

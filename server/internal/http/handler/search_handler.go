@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"strconv"
 
-	appsearch "github.com/grtsinry43/grtblog-v2/server/internal/app/search"
-	domainsearch "github.com/grtsinry43/grtblog-v2/server/internal/domain/search"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	appsearch "github.com/baddate/sanblog/server/internal/app/search"
+	domainsearch "github.com/baddate/sanblog/server/internal/domain/search"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/response"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -36,7 +36,7 @@ func (h *SearchHandler) SiteSearch(c *fiber.Ctx) error {
 	result, err := h.svc.SearchSite(c.Context(), query, limit)
 	if err != nil {
 		if errors.Is(err, appsearch.ErrEmptyQuery) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "搜索关键词不能为空")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.search_keyword_required"))
 		}
 		return err
 	}

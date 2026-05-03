@@ -1,11 +1,13 @@
 import type { MenuMixedOptions } from './interface'
+import i18n from '@/plugins/i18n'
+const { t } = i18n.global
 
 export const routeRecordRaw: MenuMixedOptions[] = [
   {
     path: 'dashboard',
     name: 'dashboard',
     icon: 'icon-[mage--dashboard-chart]',
-    label: '仪表板',
+    label: t('admin.sidebar.dashboard'),
     meta: {
       componentName: 'Dashboard',
       pinned: true,
@@ -17,13 +19,13 @@ export const routeRecordRaw: MenuMixedOptions[] = [
     path: 'articles',
     name: 'articleManagement',
     icon: 'iconify ph--article',
-    label: '文章管理',
+    label: t('admin.sidebar.articles'),
     redirect: 'articles/list',
     children: [
       {
         path: 'list',
         name: 'articleList',
-        label: '文章列表',
+        label: t('admin.sidebar.article_list'),
         icon: 'iconify ph--list-bullets',
         meta: {
           componentName: 'ArticleList',
@@ -34,14 +36,14 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'edit/new',
         name: 'articleCreate',
-        label: '新建文章',
+        label: t('admin.sidebar.new_article'),
         icon: 'iconify ph--pencil-simple-line',
         meta: {
           componentName: 'ArticleEdit',
           showTab: true,
           enableMultiTab: true,
           renderTabTitle() {
-            return '新建文章'
+            return t('admin.sidebar.new_article')
           },
         },
         component: 'articles/edit',
@@ -49,7 +51,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'edit/:id',
         name: 'articleEdit',
-        label: '编辑文章',
+        label: t('admin.sidebar.edit_article'),
         icon: 'iconify ph--pencil-simple-line',
         show: false,
         meta: {
@@ -57,7 +59,9 @@ export const routeRecordRaw: MenuMixedOptions[] = [
           showTab: true,
           enableMultiTab: true,
           renderTabTitle({ id }) {
-            return `编辑文章${id ? `-${id}` : ''}`
+            return id
+              ? t('admin.sidebar.edit_article_tab', { id })
+              : t('admin.sidebar.edit_article')
           },
         },
         component: 'articles/edit',
@@ -68,13 +72,13 @@ export const routeRecordRaw: MenuMixedOptions[] = [
     path: 'notes',
     name: 'noteManagement',
     icon: 'iconify ph--aperture-thin',
-    label: '手记管理',
+    label: t('admin.sidebar.moments'),
     redirect: 'notes/list',
     children: [
       {
         path: 'list',
         name: 'noteList',
-        label: '手记列表',
+        label: t('admin.sidebar.moment_list'),
         icon: 'iconify ph--note',
         meta: {
           componentName: 'NoteList',
@@ -85,14 +89,14 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'edit/new',
         name: 'noteCreate',
-        label: '新建手记',
+        label: t('admin.sidebar.new_moment'),
         icon: 'iconify ph--pencil-simple-line',
         meta: {
           componentName: 'NoteEdit',
           showTab: true,
           enableMultiTab: true,
           renderTabTitle() {
-            return '新建手记'
+            return t('admin.sidebar.new_moment')
           },
         },
         component: 'notes/edit',
@@ -100,7 +104,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'edit/:id',
         name: 'noteEdit',
-        label: '编辑手记',
+        label: t('admin.sidebar.edit_moment'),
         icon: 'iconify ph--pencil-simple-line',
         show: false,
         meta: {
@@ -108,7 +112,9 @@ export const routeRecordRaw: MenuMixedOptions[] = [
           showTab: true,
           enableMultiTab: true,
           renderTabTitle({ id }) {
-            return `编辑手记${id ? `-${id}` : ''}`
+            return id
+              ? t('admin.sidebar.edit_moment_tab', { id })
+              : t('admin.sidebar.edit_moment')
           },
         },
         component: 'notes/edit',
@@ -119,13 +125,13 @@ export const routeRecordRaw: MenuMixedOptions[] = [
     path: 'thinkings',
     name: 'thinkingManagement',
     icon: 'iconify ph--lightbulb-filament',
-    label: '思考管理',
+    label: t('admin.sidebar.thinkings'),
     redirect: 'thinkings/list',
     children: [
       {
         path: 'list',
         name: 'thinkingList',
-        label: '思考列表',
+        label: t('admin.sidebar.thinking_list'),
         icon: 'iconify ph--list-bullets',
         meta: {
           componentName: 'ThinkingList',
@@ -136,14 +142,14 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'create',
         name: 'thinkingCreate',
-        label: '新建思考',
+        label: t('admin.sidebar.new_thinking'),
         icon: 'iconify ph--pencil-simple-line',
         meta: {
           componentName: 'ThinkingEdit',
           showTab: true,
           enableMultiTab: true,
           renderTabTitle() {
-            return '新建思考'
+            return t('admin.sidebar.new_thinking')
           },
         },
         component: 'thinking/edit',
@@ -151,7 +157,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'edit/:id',
         name: 'thinkingEdit',
-        label: '编辑思考',
+        label: t('admin.sidebar.edit_thinking'),
         icon: 'iconify ph--pencil-simple-line',
         show: false,
         meta: {
@@ -159,7 +165,9 @@ export const routeRecordRaw: MenuMixedOptions[] = [
           showTab: true,
           enableMultiTab: true,
           renderTabTitle({ id }) {
-            return `编辑思考${id ? `-${id}` : ''}`
+            return id
+              ? t('admin.sidebar.edit_thinking_tab', { id })
+              : t('admin.sidebar.edit_thinking')
           },
         },
         component: 'thinking/edit',
@@ -170,13 +178,13 @@ export const routeRecordRaw: MenuMixedOptions[] = [
     path: 'pages',
     name: 'pageManagement',
     icon: 'iconify ph--layout',
-    label: '页面管理',
+    label: t('admin.sidebar.pages'),
     redirect: 'pages/list',
     children: [
       {
         path: 'list',
         name: 'pageList',
-        label: '页面列表',
+        label: t('admin.sidebar.page_list'),
         icon: 'iconify ph--file-text',
         meta: {
           componentName: 'PageList',
@@ -187,14 +195,14 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'create',
         name: 'pageCreate',
-        label: '新建页面',
+        label: t('admin.sidebar.new_page'),
         icon: 'iconify ph--pencil-simple-line',
         meta: {
           componentName: 'PageEdit',
           showTab: true,
           enableMultiTab: true,
           renderTabTitle() {
-            return '新建页面'
+            return t('admin.sidebar.new_page')
           },
         },
         component: 'pages/edit',
@@ -202,7 +210,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'edit/:id',
         name: 'pageEdit',
-        label: '编辑页面',
+        label: t('admin.sidebar.edit_page'),
         icon: 'iconify ph--pencil-simple-line',
         show: false,
         meta: {
@@ -210,7 +218,9 @@ export const routeRecordRaw: MenuMixedOptions[] = [
           showTab: true,
           enableMultiTab: true,
           renderTabTitle({ id }) {
-            return `编辑页面${id ? `-${id}` : ''}`
+            return id
+              ? t('admin.sidebar.edit_page_tab', { id })
+              : t('admin.sidebar.edit_page')
           },
         },
         component: 'pages/edit',
@@ -221,13 +231,13 @@ export const routeRecordRaw: MenuMixedOptions[] = [
     path: 'albums',
     name: 'albumManagement',
     icon: 'iconify ph--image',
-    label: '相册管理',
+    label: t('admin.sidebar.albums'),
     redirect: 'albums/list',
     children: [
       {
         path: 'list',
         name: 'albumList',
-        label: '相册列表',
+        label: t('admin.sidebar.album_list'),
         icon: 'iconify ph--images',
         meta: {
           componentName: 'AlbumList',
@@ -238,14 +248,14 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'edit/new',
         name: 'albumCreate',
-        label: '新建相册',
+        label: t('admin.sidebar.new_album'),
         icon: 'iconify ph--pencil-simple-line',
         meta: {
           componentName: 'AlbumEdit',
           showTab: true,
           enableMultiTab: true,
           renderTabTitle() {
-            return '新建相册'
+            return t('admin.sidebar.new_album')
           },
         },
         component: 'albums/edit',
@@ -253,14 +263,16 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'edit/:id',
         name: 'albumEdit',
-        label: '编辑相册',
+        label: t('admin.sidebar.edit_album'),
         show: false,
         meta: {
           componentName: 'AlbumEdit',
           showTab: true,
           enableMultiTab: true,
           renderTabTitle({ id }) {
-            return `编辑相册${id ? `-${id}` : ''}`
+            return id
+              ? t('admin.sidebar.edit_album_tab', { id })
+              : t('admin.sidebar.edit_album')
           },
         },
         component: 'albums/edit',
@@ -271,7 +283,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
     path: 'comments',
     name: 'commentManagement',
     icon: 'iconify ph--chat-circle-text',
-    label: '评论管理',
+    label: t('admin.sidebar.comments'),
     meta: {
       componentName: 'CommentList',
       showTab: true,
@@ -282,14 +294,14 @@ export const routeRecordRaw: MenuMixedOptions[] = [
     path: 'taxonomy',
     name: 'taxonomyManagement',
     icon: 'iconify ph--tree-structure',
-    label: '内容分类',
+    label: t('admin.sidebar.categories'),
     redirect: 'taxonomy/categories',
     children: [
       {
         path: 'categories',
         name: 'articleCategoryManagement',
         icon: 'iconify ph--folders',
-        label: '文章分类',
+        label: t('admin.sidebar.article_categories'),
         meta: {
           componentName: 'ArticleCategoryManagement',
           showTab: true,
@@ -300,7 +312,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
         path: 'columns',
         name: 'noteColumnManagement',
         icon: 'iconify ph--rows',
-        label: '手记专栏',
+        label: t('admin.sidebar.moment_columns'),
         meta: {
           componentName: 'MomentColumnManagement',
           showTab: true,
@@ -311,7 +323,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
         path: 'tags',
         name: 'tagManagement',
         icon: 'iconify ph--tag',
-        label: '标签管理',
+        label: t('admin.sidebar.tags'),
         meta: {
           componentName: 'TagManagement',
           showTab: true,
@@ -324,14 +336,14 @@ export const routeRecordRaw: MenuMixedOptions[] = [
     path: 'audience',
     name: 'audienceManagement',
     icon: 'iconify ph--users-three',
-    label: '用户与访客',
+    label: t('admin.sidebar.users'),
     redirect: 'audience/users',
     children: [
       {
         path: 'users',
         name: 'siteUserManagement',
         icon: 'iconify ph--users',
-        label: '本站用户',
+        label: t('admin.sidebar.site_users'),
         meta: {
           componentName: 'SiteUserManagement',
           showTab: true,
@@ -342,7 +354,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
         path: 'visitors',
         name: 'visitorProfileManagement',
         icon: 'iconify ph--users-three',
-        label: '访客画像',
+        label: t('admin.sidebar.visitor_profiles'),
         meta: {
           componentName: 'VisitorProfileList',
           showTab: true,
@@ -353,7 +365,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
         path: 'rss',
         name: 'rssAccessStats',
         icon: 'iconify ph--rss',
-        label: 'RSS访问统计',
+        label: t('admin.sidebar.rss_stats'),
         meta: {
           componentName: 'RssAccessStats',
           showTab: true,
@@ -366,13 +378,13 @@ export const routeRecordRaw: MenuMixedOptions[] = [
     path: 'friend-links',
     name: 'friendLinkManagement',
     icon: 'iconify ph--link',
-    label: '友链',
+    label: t('admin.sidebar.friends'),
     redirect: 'friend-links/list',
     children: [
       {
         path: 'list',
         name: 'friendLinkList',
-        label: '友链列表',
+        label: t('admin.sidebar.friend_list'),
         icon: 'iconify ph--link',
         meta: {
           componentName: 'FriendLinkList',
@@ -383,7 +395,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'applications',
         name: 'friendLinkApplications',
-        label: '申请审核',
+        label: t('admin.sidebar.friend_applications'),
         icon: 'iconify ph--checks',
         meta: {
           componentName: 'FriendLinkApplications',
@@ -394,7 +406,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'sync-jobs',
         name: 'friendLinkSyncJobs',
-        label: '同步任务',
+        label: t('admin.sidebar.friend_sync_jobs'),
         icon: 'iconify ph--clock-counter-clockwise',
         meta: {
           componentName: 'FriendLinkSyncJobs',
@@ -408,13 +420,13 @@ export const routeRecordRaw: MenuMixedOptions[] = [
     path: 'federation',
     name: 'unionManagement',
     icon: 'iconify ph--circles-three',
-    label: '联合',
+    label: t('admin.sidebar.federation'),
     redirect: 'federation/instances',
     children: [
       {
         path: 'instances',
         name: 'federationInstances',
-        label: '联合实例',
+        label: t('admin.sidebar.federation_instances'),
         icon: 'iconify ph--network',
         meta: {
           componentName: 'FederationInstances',
@@ -425,7 +437,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'outbound',
         name: 'federationOutbound',
-        label: '出站记录',
+        label: t('admin.sidebar.federation_outbound'),
         icon: 'iconify ph--paper-plane-tilt',
         meta: {
           componentName: 'FederationOutbound',
@@ -436,7 +448,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'activitypub-outbox',
         name: 'activityPubOutbox',
-        label: 'ActivityPub 出站',
+        label: t('admin.sidebar.activitypub_outbox'),
         icon: 'iconify ph--broadcast',
         meta: {
           componentName: 'ActivityPubOutbox',
@@ -447,7 +459,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'reviews',
         name: 'federationReviews',
-        label: '审核队列',
+        label: t('admin.sidebar.federation_reviews'),
         icon: 'iconify ph--check-square',
         meta: {
           componentName: 'FederationReviews',
@@ -458,7 +470,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'debug',
         name: 'federationDebug',
-        label: '联合调试',
+        label: t('admin.sidebar.federation_debug'),
         icon: 'iconify ph--bug',
         show: false, // Hidden from menu, accessed via Instances page
         meta: {
@@ -485,7 +497,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
   {
     path: 'notifications',
     name: 'adminNotificationList',
-    label: '通知中心',
+    label: t('admin.sidebar.notifications'),
     show: false,
     meta: {
       componentName: 'AdminNotificationList',
@@ -497,13 +509,13 @@ export const routeRecordRaw: MenuMixedOptions[] = [
     path: 'files',
     name: 'fileManagement',
     icon: 'icon-[fluent--cloud-arrow-up-24-regular]',
-    label: '文件管理',
+    label: t('admin.sidebar.files'),
     redirect: 'files/list',
     children: [
       {
         path: 'list',
         name: 'fileList',
-        label: '文件列表',
+        label: t('admin.sidebar.file_list'),
         icon: 'icon-[fluent--cloud-arrow-up-24-regular]',
         meta: {
           componentName: 'FileList',
@@ -517,13 +529,13 @@ export const routeRecordRaw: MenuMixedOptions[] = [
     path: 'plugins',
     name: 'pluginManagement',
     icon: 'iconify ph--puzzle-piece',
-    label: '插件与云函数',
+    label: t('admin.sidebar.plugins'),
     redirect: 'plugins/list',
     children: [
       {
         path: 'list',
         name: 'pluginList',
-        label: '插件与云函数',
+        label: t('admin.sidebar.plugins'),
         icon: 'iconify ph--puzzle-piece',
         meta: {
           componentName: 'PluginList',
@@ -537,7 +549,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
     path: 'webhooks',
     name: 'webhookList',
     icon: 'iconify ph--webhooks-logo',
-    label: 'Webhook',
+    label: t('admin.sidebar.webhooks'),
     meta: {
       componentName: 'WebhookList',
       showTab: true,
@@ -548,7 +560,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
     path: 'global-notifications',
     name: 'globalNotificationList',
     icon: 'iconify ph--megaphone',
-    label: '全站通知',
+    label: t('admin.sidebar.global_notifications'),
     meta: {
       componentName: 'GlobalNotificationList',
       showTab: true,
@@ -559,13 +571,13 @@ export const routeRecordRaw: MenuMixedOptions[] = [
     path: 'ai',
     name: 'aiManagement',
     icon: 'iconify ph--brain',
-    label: 'AI',
+    label: t('admin.sidebar.ai'),
     redirect: 'ai/task-logs',
     children: [
       {
         path: 'task-logs',
         name: 'aiTaskLogs',
-        label: '任务日志',
+        label: t('admin.sidebar.ai_task_logs'),
         icon: 'iconify ph--list-checks',
         meta: {
           componentName: 'AITaskLogs',
@@ -579,13 +591,13 @@ export const routeRecordRaw: MenuMixedOptions[] = [
     path: 'email',
     name: 'emailManagement',
     icon: 'iconify ph--envelope',
-    label: '邮件管理',
+    label: t('admin.sidebar.emails'),
     redirect: 'email/templates',
     children: [
       {
         path: 'templates',
         name: 'emailTemplateList',
-        label: '邮件模版',
+        label: t('admin.sidebar.email_templates'),
         icon: 'iconify ph--scroll',
         meta: {
           componentName: 'EmailTemplateList',
@@ -596,14 +608,14 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'templates/new',
         name: 'emailTemplateCreate',
-        label: '新建模版',
+        label: t('admin.sidebar.new_email_template'),
         show: false,
         meta: {
           componentName: 'EmailTemplateEdit',
           showTab: true,
           enableMultiTab: true,
           renderTabTitle() {
-            return '新建模版'
+            return t('admin.sidebar.new_email_template')
           },
         },
         component: 'email/templates/edit',
@@ -611,14 +623,14 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'templates/:code',
         name: 'emailTemplateEdit',
-        label: '编辑模版',
+        label: t('admin.sidebar.edit_email_template'),
         show: false,
         meta: {
           componentName: 'EmailTemplateEdit',
           showTab: true,
           enableMultiTab: true,
           renderTabTitle({ code }) {
-            return `编辑模版-${code}`
+            return t('admin.sidebar.edit_email_template_tab', { code })
           },
         },
         component: 'email/templates/edit',
@@ -626,7 +638,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'subscriptions',
         name: 'emailSubscriptionList',
-        label: '订阅管理',
+        label: t('admin.sidebar.email_subscriptions'),
         icon: 'iconify ph--users',
         meta: {
           componentName: 'EmailSubscriptionList',
@@ -637,7 +649,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'outbox',
         name: 'emailOutbox',
-        label: '出站队列',
+        label: t('admin.sidebar.email_outbox'),
         icon: 'iconify ph--paper-plane-right',
         meta: {
           componentName: 'EmailOutbox',
@@ -648,7 +660,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'test',
         name: 'emailTest',
-        label: '邮件测试',
+        label: t('admin.sidebar.email_test'),
         icon: 'iconify ph--paper-plane-tilt',
         meta: {
           componentName: 'EmailTest',
@@ -662,7 +674,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
     path: 'navigation',
     name: 'navMenuManagement',
     icon: 'iconify ph--list',
-    label: '导航菜单',
+    label: t('admin.sidebar.navigation'),
     meta: {
       componentName: 'NavMenuManagement',
       showTab: true,
@@ -673,7 +685,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
     path: 'settings',
     name: 'settings',
     icon: 'iconify ph--gear-six',
-    label: '设置',
+    label: t('admin.sidebar.settings'),
     meta: {
       componentName: 'UnifiedSettings',
       showTab: true,
@@ -709,13 +721,13 @@ export const routeRecordRaw: MenuMixedOptions[] = [
     path: 'advanced',
     name: 'advancedInfo',
     icon: 'iconify ph--info',
-    label: '高级信息',
+    label: t('admin.sidebar.advanced'),
     redirect: 'advanced/render-details',
     children: [
       {
         path: 'overview',
         name: 'advancedOverview',
-        label: '高级信息',
+        label: t('admin.sidebar.advanced'),
         icon: 'iconify ph--info',
         meta: {
           componentName: 'AdvancedInfo',
@@ -726,7 +738,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'render-details',
         name: 'advancedRenderDetails',
-        label: '渲染详情',
+        label: t('admin.sidebar.render_details'),
         icon: 'iconify ph--lightning',
         meta: {
           componentName: 'AdvancedRenderDetails',
@@ -740,13 +752,13 @@ export const routeRecordRaw: MenuMixedOptions[] = [
     path: 'monitoring',
     name: 'systemMonitor',
     icon: 'iconify ph--activity',
-    label: '系统监控',
+    label: t('admin.sidebar.system'),
     redirect: 'monitoring/overview',
     children: [
       {
         path: 'overview',
         name: 'systemMonitorOverview',
-        label: '系统监控',
+        label: t('admin.sidebar.system'),
         icon: 'iconify ph--activity',
         meta: {
           componentName: 'SystemMonitor',
@@ -757,7 +769,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
       {
         path: 'logs',
         name: 'systemLogs',
-        label: '系统日志',
+        label: t('admin.sidebar.system_logs'),
         icon: 'iconify ph--scroll',
         meta: {
           componentName: 'SystemLogs',
@@ -770,7 +782,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
   {
     path: 'user-center',
     name: 'userCenter',
-    label: '个人中心',
+    label: t('admin.sidebar.profile'),
     icon: 'iconify ph--user',
     show: false,
     meta: {
@@ -784,7 +796,7 @@ export const routeRecordRaw: MenuMixedOptions[] = [
     key: 'about',
     name: 'about',
     icon: 'iconify ph--info',
-    label: '关于',
+    label: t('admin.sidebar.about'),
     component: 'about/index',
     meta: {
       showTab: true,

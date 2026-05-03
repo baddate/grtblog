@@ -2,6 +2,8 @@
 	import { ownerStatusStore } from '$lib/features/owner-status/store.svelte';
 	import { websiteInfoCtx } from '$lib/features/website-info/context';
 	import { resolveHomeThemeConfig } from '$lib/features/home/theme';
+	import { resolvePath } from '$lib/shared/utils/resolve-path';
+	import { page } from '$app/state';
 
 	const websiteInfoStore = websiteInfoCtx.selectModelData((m) => m ?? null);
 	const siteAvatar = $derived(resolveHomeThemeConfig($websiteInfoStore).hero?.avatarUrl || '');
@@ -26,7 +28,7 @@
 	onmouseleave={() => (showDetails = false)}
 >
 	<div class="nav-author-avatar relative z-10">
-		<a href="/" aria-label="返回首页" class="relative block">
+		<a href={resolvePath('/', page.data.lang)} aria-label="返回首页" class="relative block">
 			{#if siteAvatar}
 				<img
 					src={siteAvatar}

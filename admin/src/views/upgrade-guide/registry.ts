@@ -90,7 +90,7 @@ export const upgradeGuideRegistry: UpgradeGuideVersion[] = [
         icon: 'ph--heartbeat',
         label: '帮助我们变得更好',
         description:
-          '匿名发送脱敏后的错误摘要和基础运行指标，帮助开发团队更快发现并修复问题。我们承诺：不收集任何个人信息、文章内容或访客数据，您可以随时在设置中查看将要发送的完整数据并关闭此功能。GrtBlog 是开源项目，遥测相关的所有代码均可在 GitHub 上查看、审计和提出问题。',
+          '匿名发送脱敏后的错误摘要和基础运行指标，帮助开发团队更快发现并修复问题。我们承诺：不收集任何个人信息、文章内容或访客数据，您可以随时在设置中查看将要发送的完整数据并关闭此功能。sanblog 是开源项目，遥测相关的所有代码均可在 GitHub 上查看、审计和提出问题。',
         configs: [{ key: 'telemetry.enabled', endpoint: 'sysconfig', enableValue: true }],
       },
     ],

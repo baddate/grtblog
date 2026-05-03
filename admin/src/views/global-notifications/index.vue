@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import {
   NButton,
   NCard,
@@ -38,7 +41,7 @@ const { loading, data: tableData, pagination, refresh } = useTable(listGlobalNot
 
 const columns = computed<DataTableColumns<GlobalNotificationItem>>(() => [
   {
-    title: 'ID',
+    title: t('admin.table.id'),
     key: 'id',
     width: 80,
   },
@@ -73,7 +76,7 @@ const columns = computed<DataTableColumns<GlobalNotificationItem>>(() => [
       ),
   },
   {
-    title: '操作',
+    title: t('admin.common.actions'),
     key: 'actions',
     width: 150,
     render: (row) =>
@@ -167,10 +170,10 @@ async function handleSave() {
     }
     if (editingId.value) {
       await updateGlobalNotification(editingId.value, payload)
-      message.success('更新成功')
+      message.success(t('admin.common.update_success'))
     } else {
       await createGlobalNotification(payload)
-      message.success('创建成功')
+      message.success(t('admin.common.create_success'))
     }
     formVisible.value = false
     refresh()
@@ -184,12 +187,13 @@ async function handleSave() {
 async function handleDelete(row: GlobalNotificationItem) {
   try {
     await deleteGlobalNotification(row.id)
-    message.success('删除成功')
+    message.success(t('admin.common.delete_success'))
     refresh()
   } catch (e) {
     // Error handling
   }
 }
+
 </script>
 
 <template>

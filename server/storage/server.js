@@ -77,6 +77,40 @@ function serveFile(res, filePath, acceptEncoding) {
   stream.pipe(res);
 }
 
+function detectAvailableLangs(rootDir) {
+  const langs = [];
+  try {
+    const entries = fs.readdirSync(rootDir, { withFileTypes: true });
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      if (/^[a-z]{2}(-[a-z]{2})?$/.test(entry.name)) {
+        langs.push(entry.name);
+      }
+    }
+  } catch (_) {
+    // ignore
+  }
+  return langs;
+}
+
+function pickBestLang(availableLangs, acceptLanguage) {
+  if (availableLangs.length === 0) return null;
+  if (!acceptLanguage) return availableLangs.includes("en") ? "en" : availableLangs[0];
+
+  const preferred = acceptLanguage.split(",").map(part => {
+    const [tag] = part.trim().split(";");
+    return tag.trim().toLowerCase();
+  });
+
+  for (const pref of preferred) {
+    const short = pref.split("-")[0];
+    for (const lang of availableLangs) {
+      if (lang === pref || lang === short) return lang;
+    }
+  }
+  return availableLangs.includes("en") ? "en" : availableLangs[0];
+}
+
 function handleStatic(req, res) {
   if (!fs.existsSync(STATIC_ROOT)) {
     res.statusCode = 500;
@@ -89,7 +123,20 @@ function handleStatic(req, res) {
   const wantsRoot = requestPath === "/";
 
   if (requestPath === "/") {
-    requestPath = "/index.html";
+    const indexExists = fs.existsSync(path.join(STATIC_ROOT, "index.html"));
+    if (indexExists) {
+      requestPath = "/index.html";
+    } else {
+      const availableLangs = detectAvailableLangs(STATIC_ROOT);
+      if (availableLangs.length > 0) {
+        const lang = pickBestLang(availableLangs, req.headers["accept-language"] || "");
+        res.statusCode = 302;
+        res.setHeader("Location", `/${lang}/`);
+        res.end();
+        return;
+      }
+      requestPath = "/index.html";
+    }
   }
 
   serveCleanPath(req, res, url, requestPath, wantsRoot);

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import {
   NButton,
   NCard,
@@ -63,7 +66,7 @@ const isEditingSelf = computed(() => {
 
 const columns = computed<DataTableColumns<SiteUser>>(() => [
   {
-    title: 'ID',
+    title: t('admin.table.id'),
     key: 'id',
     width: 72,
   },
@@ -99,7 +102,7 @@ const columns = computed<DataTableColumns<SiteUser>>(() => [
       ),
   },
   {
-    title: '状态',
+    title: t('admin.common.status'),
     key: 'isActive',
     width: 90,
     render: (row) =>
@@ -110,13 +113,13 @@ const columns = computed<DataTableColumns<SiteUser>>(() => [
       ),
   },
   {
-    title: '创建时间',
+    title: t('admin.common.created_at'),
     key: 'createdAt',
     width: 180,
     render: (row) => formatDate(row.createdAt),
   },
   {
-    title: '操作',
+    title: t('admin.common.actions'),
     key: 'actions',
     width: 96,
     render: (row) =>
@@ -182,6 +185,7 @@ async function saveEdit() {
     saving.value = false
   }
 }
+
 </script>
 
 <template>
@@ -224,7 +228,7 @@ async function saveEdit() {
           @click="doSearch"
           >查询</NButton
         >
-        <NButton @click="resetSearch">重置</NButton>
+        <NButton @click="resetSearch">{{ $t('admin.common.reset') }}</NButton>
       </NSpace>
 
       <NDataTable
@@ -261,7 +265,7 @@ async function saveEdit() {
           placeholder="请输入邮箱（可留空）"
         />
       </NFormItem>
-      <NFormItem label="启用">
+      <NFormItem :label="$t('admin.common.enabled')">
         <NSwitch
           v-model:value="formModel.isActive"
           :disabled="isEditingSelf"

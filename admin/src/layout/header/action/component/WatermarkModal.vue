@@ -11,12 +11,14 @@ import {
   NScrollbar,
   NConfigProvider,
 } from 'naive-ui'
+import { useI18n } from 'vue-i18n'
 
 import { HintHelp } from '@/components'
 import { useComponentThemeOverrides } from '@/composables'
 import { toRefsPreferencesStore } from '@/stores'
 
 const { watermark } = toRefsPreferencesStore()
+const { t } = useI18n()
 
 const { overlayThemeOverrides } = useComponentThemeOverrides()
 </script>
@@ -33,7 +35,7 @@ const { overlayThemeOverrides } = useComponentThemeOverrides()
         class="space-y-4"
       >
         <NFormItem
-          label="水印内容"
+          :label="$t('admin.preferences.watermark_content')"
           path="content"
         >
           <NInput
@@ -45,7 +47,7 @@ const { overlayThemeOverrides } = useComponentThemeOverrides()
 
         <div class="flex gap-x-4">
           <NFormItem
-            label="字体大小"
+            :label="$t('admin.preferences.font_size')"
             path="fontSize"
             class="w-full"
           >
@@ -56,35 +58,35 @@ const { overlayThemeOverrides } = useComponentThemeOverrides()
             />
           </NFormItem>
           <NFormItem
-            label="文字颜色"
+            :label="$t('admin.preferences.font_color')"
             path="fontColor"
             class="w-full"
           >
             <NColorPicker v-model:value="watermark.fontColor" />
           </NFormItem>
           <NFormItem
-            label="字体风格"
+            :label="$t('admin.preferences.font_style')"
             path="fontStyle"
             class="w-full"
           >
             <NSelect
               v-model:value="watermark.fontStyle"
               :options="[
-                { label: '正常', value: 'normal' },
-                { label: '斜体', value: 'italic' },
-                { label: '倾斜', value: 'oblique' },
-                { label: '粗体', value: 'bold' },
-                { label: '细体', value: 'thin' },
-                { label: '超细体', value: 'extralight1' },
-                { label: '超细体', value: 'extralight2' },
-                { label: '超细体', value: 'extralight3' },
-                { label: '超细体', value: 'extralight4' },
-                { label: '超细体', value: 'extralight5' },
-                { label: '超细体', value: 'extralight6' },
-                { label: '超细体', value: 'extralight7' },
-                { label: '超细体', value: 'extralight8' },
-                { label: '超细体', value: 'extralight9' },
-                { label: '超细体', value: 'extralight10' },
+                { label: t('admin.preferences.font_normal'), value: 'normal' },
+                { label: t('admin.preferences.font_italic'), value: 'italic' },
+                { label: t('admin.watermark.oblique'), value: 'oblique' },
+                { label: t('admin.preferences.font_bold'), value: 'bold' },
+                { label: t('admin.watermark.thin'), value: 'thin' },
+                { label: t('admin.watermark.thin'), value: 'extralight1' },
+                { label: t('admin.watermark.thin'), value: 'extralight2' },
+                { label: t('admin.watermark.thin'), value: 'extralight3' },
+                { label: t('admin.watermark.thin'), value: 'extralight4' },
+                { label: t('admin.watermark.thin'), value: 'extralight5' },
+                { label: t('admin.watermark.thin'), value: 'extralight6' },
+                { label: t('admin.watermark.thin'), value: 'extralight7' },
+                { label: t('admin.watermark.thin'), value: 'extralight8' },
+                { label: t('admin.watermark.thin'), value: 'extralight9' },
+                { label: t('admin.watermark.thin'), value: 'extralight10' },
               ]"
             />
           </NFormItem>
@@ -92,7 +94,7 @@ const { overlayThemeOverrides } = useComponentThemeOverrides()
 
         <div class="flex gap-x-4">
           <NFormItem
-            label="行高"
+            :label="$t('admin.preferences.line_height')"
             path="lineHeight"
             class="w-full"
           >
@@ -102,7 +104,7 @@ const { overlayThemeOverrides } = useComponentThemeOverrides()
             />
           </NFormItem>
           <NFormItem
-            label="字重"
+            :label="$t('admin.preferences.font_weight')"
             path="fontWeight"
             class="w-full"
           >
@@ -116,7 +118,7 @@ const { overlayThemeOverrides } = useComponentThemeOverrides()
         </div>
         <div class="flex gap-x-4">
           <NFormItem
-            label="宽度"
+            :label="$t('admin.preferences.width')"
             path="width"
           >
             <NInputNumber
@@ -126,7 +128,7 @@ const { overlayThemeOverrides } = useComponentThemeOverrides()
             />
           </NFormItem>
           <NFormItem
-            label="高度"
+            :label="$t('admin.preferences.height')"
             path="height"
           >
             <NInputNumber
@@ -139,7 +141,7 @@ const { overlayThemeOverrides } = useComponentThemeOverrides()
 
         <div class="flex gap-x-4">
           <NFormItem
-            label="X轴间隔"
+            :label="$t('admin.preferences.x_gap')"
             path="xGap"
           >
             <NInputNumber
@@ -148,7 +150,7 @@ const { overlayThemeOverrides } = useComponentThemeOverrides()
             />
           </NFormItem>
           <NFormItem
-            label="Y轴间隔"
+            :label="$t('admin.preferences.y_gap')"
             path="yGap"
           >
             <NInputNumber
@@ -159,7 +161,7 @@ const { overlayThemeOverrides } = useComponentThemeOverrides()
         </div>
         <div class="flex gap-x-4">
           <NFormItem
-            label="X轴偏移"
+            :label="$t('admin.preferences.x_offset')"
             path="xoffset"
           >
             <NInputNumber
@@ -168,7 +170,7 @@ const { overlayThemeOverrides } = useComponentThemeOverrides()
             />
           </NFormItem>
           <NFormItem
-            label="Y轴偏移"
+            :label="$t('admin.preferences.y_offset')"
             path="yGap"
           >
             <NInputNumber
@@ -179,7 +181,7 @@ const { overlayThemeOverrides } = useComponentThemeOverrides()
         </div>
         <div class="flex gap-x-4">
           <NFormItem
-            label="旋转角度"
+            :label="$t('admin.preferences.rotation')"
             path="rotate"
             class="w-full"
           >
@@ -190,7 +192,7 @@ const { overlayThemeOverrides } = useComponentThemeOverrides()
             />
           </NFormItem>
           <NFormItem
-            label="整体旋转"
+            :label="$t('admin.preferences.global_rotation')"
             path="globalRotate"
             class="w-full"
           >
@@ -201,7 +203,7 @@ const { overlayThemeOverrides } = useComponentThemeOverrides()
             />
           </NFormItem>
           <NFormItem
-            label="跨越边界"
+            :label="$t('admin.preferences.cross_boundary')"
             path="cross"
             class="w-full"
           >
@@ -209,7 +211,7 @@ const { overlayThemeOverrides } = useComponentThemeOverrides()
           </NFormItem>
         </div>
         <NFormItem
-          label="图像地址"
+          :label="$t('admin.preferences.image_url')"
           path="image"
         >
           <NInput
@@ -227,8 +229,8 @@ const { overlayThemeOverrides } = useComponentThemeOverrides()
           >
             <div>
               <HintHelp
-                label="图像宽度"
-                content="修改后需重新打开水印"
+                :label="$t('admin.preferences.image_width')"
+                :content="$t('admin.watermark.restart_hint')"
                 class="pb-1.5"
               />
               <NInputNumber v-model:value="watermark.imageWidth" />
@@ -241,8 +243,8 @@ const { overlayThemeOverrides } = useComponentThemeOverrides()
           >
             <div>
               <HintHelp
-                label="图像高度"
-                content="修改后需重新打开水印"
+                :label="$t('admin.preferences.image_height')"
+                :content="$t('admin.watermark.restart_hint')"
                 class="pb-1.5"
               />
               <NInputNumber v-model:value="watermark.imageHeight" />
@@ -256,8 +258,8 @@ const { overlayThemeOverrides } = useComponentThemeOverrides()
           >
             <div class="flex h-full flex-col">
               <HintHelp
-                label="图像透明度"
-                content="修改后需重新打开水印"
+                :label="$t('admin.preferences.image_opacity')"
+                :content="$t('admin.watermark.restart_hint')"
                 class="pb-1.5"
               />
               <NSlider

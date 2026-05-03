@@ -2,12 +2,13 @@
 	import type { Tag } from '../types';
 	import { windowStore } from '$lib/shared/stores/windowStore.svelte';
 	import { Tag as TagIcon } from 'lucide-svelte';
+	import { t } from '$lib/i18n/client';
 
 	let { tags = [] }: { tags: Tag[] } = $props();
 
 	function handleTagClick(tag: Tag) {
 		windowStore.open(
-			`标签 “${tag.name}” 的相关内容`,
+			t('web.tag.contents_title', { name: tag.name }),
 			{ id: tag.id, name: tag.name },
 			'tag-contents'
 		);

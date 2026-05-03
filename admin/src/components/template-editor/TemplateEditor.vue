@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { useThemeVars } from 'naive-ui'
 import { computed, ref, watch } from 'vue'
 
@@ -77,6 +80,7 @@ watch(
   },
   { immediate: true },
 )
+
 </script>
 
 <template>

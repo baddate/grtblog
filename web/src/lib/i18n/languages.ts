@@ -1,37 +1,43 @@
+import type { TranslationMap } from './types';
+import zh from './generated/zh.json';
+import en from './generated/en.json';
+
+// ---- Language metadata type ----
 export interface LanguageMeta {
-  code: string;        // BCP 47 tag: 'zh-Hans', 'zh-Hant', 'en', 'ja'
-  nativeName: string;  // Display name in dropdown
-  isDefault: boolean;  // Default language has no URL prefix
+  code: SupportedLang;
+  name: string;
+  englishName: string;
 }
 
-export const LANGUAGES: LanguageMeta[] = [
-  { code: 'zh-Hans', nativeName: '简体中文', isDefault: true },
-  { code: 'zh-Hant', nativeName: '繁體中文', isDefault: false },
-  { code: 'en',      nativeName: 'English',  isDefault: false },
-  { code: 'ja',      nativeName: '日本語',   isDefault: false },
-];
+// ---- Core constants ----
+export const SUPPORTED_LANGS = ['zh', 'en', 'jp'] as const;
+export type SupportedLang = (typeof SUPPORTED_LANGS)[number];
 
-export const DEFAULT_LANG = LANGUAGES.find(l => l.isDefault)!.code;
-export const FALLBACK_LANG = 'en';
-export const SUPPORTED_LANGS = LANGUAGES.map(l => l.code);
-export const NON_DEFAULT_LANGS = LANGUAGES.filter(l => !l.isDefault).map(l => l.code);
+export const DEFAULT_LANG: SupportedLang = 'zh';
+export const FALLBACK_LANG: SupportedLang = 'en';
+export const SUPPORTED_LANGS_SET: Set<string> = new Set(SUPPORTED_LANGS);
 
-export const SUPPORTED_LANGS_SET = new Set(SUPPORTED_LANGS);
+// ---- Language registry ----
+export const LANGUAGES: Record<SupportedLang, LanguageMeta> = {
+  zh: { code: 'zh', name: '中文', englishName: 'Chinese' },
+  en: { code: 'en', name: 'English', englishName: 'English' },
+  jp: { code: 'jp', name: '日本語', englishName: 'Japanese' },
+};
 
-// Matches URL paths starting with a non-default lang prefix: /^(en|zh-Hant|ja)(/|$)/i
-export const NON_DEFAULT_LANG_RE = new RegExp(
-  `^/(${NON_DEFAULT_LANGS.join('|')})(/|$)`, 'i'
+// ---- Translations map (used by loader) ----
+export const TRANSLATIONS: Record<string, TranslationMap> = { zh, en };
+
+// ---- Derived values ----
+export const NON_DEFAULT_LANGS: readonly SupportedLang[] = SUPPORTED_LANGS.filter(
+  (lang) => lang !== DEFAULT_LANG,
 );
 
-// Matches URL paths starting with ANY supported lang prefix
-export const ANY_LANG_RE = new RegExp(
-  `^/(${SUPPORTED_LANGS.join('|')})(/|$)`, 'i'
-);
-
-export function getLanguageMeta(code: string): LanguageMeta | undefined {
-  return LANGUAGES.find(l => l.code === code);
+// ---- Helpers ----
+export function isSupportedLang(lang: string): lang is SupportedLang {
+  return SUPPORTED_LANGS.includes(lang as SupportedLang);
 }
 
-export function isSupportedLang(code: string): boolean {
-  return SUPPORTED_LANGS_SET.has(code);
+export function getLanguageMeta(lang: string): LanguageMeta | undefined {
+  if (isSupportedLang(lang)) return LANGUAGES[lang];
+  return undefined;
 }

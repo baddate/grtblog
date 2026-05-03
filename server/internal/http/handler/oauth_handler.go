@@ -6,9 +6,9 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/auth"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/app/auth"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type OAuthHandler struct {
@@ -83,10 +83,10 @@ func (h *OAuthHandler) Callback(c *fiber.Ctx) error {
 	provider := c.Params("provider")
 	var req contract.OAuthCallbackReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	if req.Code == "" || req.State == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "code/state 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.oauth_code_state_required"))
 	}
 	contextNonce := readOAuthStateNonceCookie(c)
 	clearOAuthStateNonceCookie(c)
@@ -99,10 +99,10 @@ func (h *OAuthHandler) Callback(c *fiber.Ctx) error {
 	})
 	if err != nil {
 		if err == auth.ErrUserDisabled {
-			return response.NewBizErrorWithMsg(response.Unauthorized, "账号已被禁用")
+			return response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.account_disabled"))
 		}
 		if err == auth.ErrInvalidOAuthIdentity {
-			return response.NewBizErrorWithMsg(response.ParamsError, "OAuth 身份信息无效，请检查 provider 的用户信息映射配置")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.oauth_identity_invalid"))
 		}
 		return err
 	}

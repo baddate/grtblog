@@ -3,14 +3,14 @@ package webhook
 import (
 	"time"
 
-	appalbum "github.com/grtsinry43/grtblog-v2/server/internal/app/album"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/article"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/comment"
-	appEvent "github.com/grtsinry43/grtblog-v2/server/internal/app/event"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/globalnotification"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/moment"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/page"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/thinking"
+	appalbum "github.com/baddate/sanblog/server/internal/app/album"
+	"github.com/baddate/sanblog/server/internal/app/article"
+	"github.com/baddate/sanblog/server/internal/app/comment"
+	appEvent "github.com/baddate/sanblog/server/internal/app/event"
+	"github.com/baddate/sanblog/server/internal/app/globalnotification"
+	"github.com/baddate/sanblog/server/internal/app/moment"
+	"github.com/baddate/sanblog/server/internal/app/page"
+	"github.com/baddate/sanblog/server/internal/app/thinking"
 )
 
 var AvailableEventNames = appEvent.NamesByChannel(appEvent.ChannelWebhook)
@@ -77,7 +77,7 @@ func SampleEvent(name string) (appEvent.Event, error) {
 		return appEvent.Generic{EventName: name, At: now, Payload: map[string]any{
 			"ID": int64(2), "ParentID": int64(1), "AreaID": int64(42),
 			"ContentType": "article", "ContentTitle": "示例文章标题",
-			"viewUrl": "https://example.com/posts/sample-article",
+			"viewUrl":       "https://example.com/posts/sample-article",
 			"ParentContent": "这是被回复的评论内容", "ReplyContent": "这是回复内容",
 			"ParentNickName": "示例访客", "ReplyNickName": "博主",
 			"recipientEmail": "visitor@example.com", "Status": "approved",

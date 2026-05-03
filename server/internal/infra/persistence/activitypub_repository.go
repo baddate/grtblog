@@ -9,8 +9,8 @@ import (
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
 
-	domainap "github.com/grtsinry43/grtblog-v2/server/internal/domain/activitypub"
-	"github.com/grtsinry43/grtblog-v2/server/internal/infra/persistence/model"
+	domainap "github.com/baddate/sanblog/server/internal/domain/activitypub"
+	"github.com/baddate/sanblog/server/internal/infra/persistence/model"
 )
 
 type ActivityPubFollowerRepository struct {

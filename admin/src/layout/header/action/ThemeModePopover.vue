@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { NPopselect } from 'naive-ui'
 import { computed, h } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import { ButtonAnimation } from '@/components'
 import { toRefsPreferencesStore } from '@/stores'
@@ -16,6 +17,7 @@ defineOptions({
 })
 
 const { themeMode } = toRefsPreferencesStore()
+const { t } = useI18n()
 
 const themeModeDropdownOptions = [
   {
@@ -23,21 +25,21 @@ const themeModeDropdownOptions = [
     iconName: 'iconify ph--sun',
     key: 'light',
     value: 'light',
-    label: '浅色模式',
+    label: t('admin.header.light_mode'),
   },
   {
     icon: () => h('span', { class: 'iconify ph--moon size-5' }),
     iconName: 'iconify ph--moon',
     key: 'dark',
     value: 'dark',
-    label: '深色模式',
+    label: t('admin.header.dark_mode'),
   },
   {
     icon: () => h('span', { class: 'iconify ph--desktop size-5' }),
     iconName: 'iconify ph--desktop',
     key: 'auto',
     value: 'auto',
-    label: '跟随系统',
+    label: t('admin.header.system_mode'),
   },
 ]
 
@@ -67,7 +69,7 @@ function renderSelectLabel(option: (typeof themeModeDropdownOptions)[number]) {
     :render-label="renderSelectLabel"
     :to="false"
   >
-    <ButtonAnimation title="主题">
+    <ButtonAnimation :title="$t('admin.header.theme')">
       <span :class="themeIconClasses" />
     </ButtonAnimation>
   </NPopselect>

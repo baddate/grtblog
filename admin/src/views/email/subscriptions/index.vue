@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import {
   NButton,
@@ -90,7 +93,7 @@ function toggleBlocked(row: EmailSubscription) {
 
 const columns: DataTableColumns<EmailSubscription> = [
   {
-    title: 'ID',
+    title: t('admin.table.id'),
     key: 'id',
     width: 80,
   },
@@ -107,7 +110,7 @@ const columns: DataTableColumns<EmailSubscription> = [
       h(NTag, { type: 'info', size: 'small', bordered: false }, { default: () => row.eventName }),
   },
   {
-    title: '状态',
+    title: t('admin.common.status'),
     key: 'status',
     width: 120,
     render: (row) => {
@@ -131,7 +134,7 @@ const columns: DataTableColumns<EmailSubscription> = [
     render: (row) => new Date(row.createdAt).toLocaleString(),
   },
   {
-    title: '操作',
+    title: t('admin.common.actions'),
     key: 'actions',
     width: 120,
     render: (row) =>
@@ -182,6 +185,7 @@ function handleReset() {
   params.search = undefined
   params.page = 1
 }
+
 </script>
 
 <template>
@@ -191,7 +195,7 @@ function handleReset() {
         <NButton
           secondary
           @click="handleRefresh"
-          >刷新</NButton
+          >{{ $t('admin.common.refresh') }}</NButton
         >
       </template>
 
@@ -207,7 +211,7 @@ function handleReset() {
           :y-gap="8"
         >
           <NGi>
-            <NFormItem label="搜索">
+            <NFormItem :label="$t('admin.common.search')">
               <NInput
                 v-model:value="params.search"
                 placeholder="邮箱地址"
@@ -216,7 +220,7 @@ function handleReset() {
             </NFormItem>
           </NGi>
           <NGi>
-            <NFormItem label="状态">
+            <NFormItem :label="$t('admin.common.status')">
               <NSelect
                 v-model:value="params.status"
                 :options="statusOptions"
@@ -236,7 +240,7 @@ function handleReset() {
           </NGi>
           <NGi>
             <div class="flex justify-end">
-              <NButton @click="handleReset">重置</NButton>
+              <NButton @click="handleReset">{{ $t('admin.common.reset') }}</NButton>
             </div>
           </NGi>
         </NGrid>

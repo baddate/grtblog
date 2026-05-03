@@ -6,9 +6,9 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/identity"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
-	"github.com/grtsinry43/grtblog-v2/server/internal/infra/persistence"
+	"github.com/baddate/sanblog/server/internal/domain/identity"
+	"github.com/baddate/sanblog/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/infra/persistence"
 	"gorm.io/gorm"
 )
 
@@ -147,11 +147,11 @@ func (h *AdminOAuthHandler) List(c *fiber.Ctx) error {
 func (h *AdminOAuthHandler) Create(c *fiber.Ctx) error {
 	var req OAuthProviderPayload
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	p := payloadToDomain(req)
 	if p.ProviderKey == "" || p.AuthorizationEndpoint == "" || p.TokenEndpoint == "" || p.RedirectURITemplate == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "key/auth/token/redirect 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.oauth_fields_required_alt"))
 	}
 	if err := h.repo.Create(c.Context(), &p); err != nil {
 		return err
@@ -173,11 +173,11 @@ func (h *AdminOAuthHandler) Create(c *fiber.Ctx) error {
 func (h *AdminOAuthHandler) Update(c *fiber.Ctx) error {
 	key := c.Params("key")
 	if key == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "key 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.key_required"))
 	}
 	var req OAuthProviderPayload
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	p := payloadToDomain(req)
 	p.ProviderKey = key
@@ -202,7 +202,7 @@ func (h *AdminOAuthHandler) Update(c *fiber.Ctx) error {
 func (h *AdminOAuthHandler) Delete(c *fiber.Ctx) error {
 	key := c.Params("key")
 	if key == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "key 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.key_required"))
 	}
 	if err := h.repo.Delete(c.Context(), key); err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

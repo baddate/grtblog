@@ -3,16 +3,18 @@
 	import { page } from '$app/state';
 	import { resolvePath } from '$lib/shared/utils/resolve-path';
 	import { ArrowLeft, Compass, RefreshCw } from 'lucide-svelte';
+	import { createTranslateFn } from '$lib/i18n/server';
 
 	const status = $derived(page.status);
 	const error = $derived(page.error);
 
+	const t = $derived(createTranslateFn(page.data?.translations ?? {}));
 	const isNotFound = $derived(status === 404);
-	const title = $derived(isNotFound ? '页面走丢了' : '页面暂时不可用');
+	const title = $derived(isNotFound ? t('web.error.page_not_found_title') : t('web.error.server_error_title'));
 	const summary = $derived(
 		isNotFound
-			? '你访问的链接不存在，或者已经被迁移到新的地址。'
-			: '服务器返回了异常响应，请稍后重试。'
+			? t('web.error.page_not_found_message')
+			: t('web.error.server_error_message')
 	);
 	const detail = $derived(error?.message || (isNotFound ? 'Not Found' : 'Unexpected Server Error'));
 
@@ -65,21 +67,21 @@
 				class="inline-flex items-center gap-2 rounded-default border border-jade-500/30 bg-jade-500/10 px-4 py-2 text-sm text-jade-700 transition-colors hover:bg-jade-500/20 dark:text-jade-300"
 			>
 				<Compass size={14} />
-				回到首页
+				{t('web.error.go_home')}
 			</a>
 			<button
 				class="inline-flex cursor-pointer items-center gap-2 rounded-default border border-ink-200/80 bg-white px-4 py-2 text-sm text-ink-700 transition-colors hover:bg-ink-100 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-200 dark:hover:bg-ink-700"
 				onclick={goBack}
 			>
 				<ArrowLeft size={14} />
-				返回上一页
+				{t('web.error.go_back')}
 			</button>
 			<button
 				class="inline-flex cursor-pointer items-center gap-2 rounded-default border border-ink-200/80 bg-white px-4 py-2 text-sm text-ink-700 transition-colors hover:bg-ink-100 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-200 dark:hover:bg-ink-700"
 				onclick={reloadPage}
 			>
 				<RefreshCw size={14} />
-				刷新页面
+				{t('web.error.refresh_page')}
 			</button>
 		</div>
 	</div>

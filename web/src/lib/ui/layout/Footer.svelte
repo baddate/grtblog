@@ -3,6 +3,9 @@
 	import { resolveFooterThemeConfig } from '$lib/features/footer/theme';
 	import { websiteInfoCtx } from '$lib/features/website-info/context';
 	import { onMount } from 'svelte';
+	import LanguageSwitcher from './footer/LanguageSwitcher.svelte';
+	import { page } from '$app/state';
+	import { DEFAULT_LANG } from '$lib/i18n/server';
 
 	type Props = {
 		onlineCount?: number;
@@ -15,6 +18,8 @@
 	const currentYear = new Date().getFullYear();
 	const footerThemeStore = websiteInfoCtx.selectModelData((data) => resolveFooterThemeConfig(data));
 	let nowMs = $state(0);
+	const currentLang = $derived(page.data.lang ?? DEFAULT_LANG);
+
 
 	const formatPresenceText = (template: string, count: number): string =>
 		template.replaceAll('{count}', String(count));
@@ -80,7 +85,7 @@
 					<div class="flex flex-wrap gap-x-4 gap-y-2">
 						{#each section.links as link (link.name)}
 							<a
-								href={/^(https?:|mailto:)/i.test(link.href) ? link.href : resolvePath(link.href)}
+								href={/^(https?:|mailto:)/i.test(link.href) ? link.href : resolvePath(link.href, currentLang)}
 								data-sveltekit-preload-data={preloadDataAttr(link.href)}
 								class="text-sm text-ink-500 hover:text-jade-600 dark:hover:text-jade-400 transition-colors"
 							>
@@ -127,6 +132,9 @@
 						{/if}
 					</span>
 				</button>
+				<div class="flex items-center gap-2 pt-2">
+					<LanguageSwitcher currentLang={currentLang} />
+				</div>
 			</div>
 		</div>
 
@@ -144,7 +152,7 @@
 						{#each section.links as link (link.name)}
 							<li>
 								<a
-									href={/^(https?:|mailto:)/i.test(link.href) ? link.href : resolvePath(link.href)}
+									href={/^(https?:|mailto:)/i.test(link.href) ? link.href : resolvePath(link.href, currentLang)}
 									data-sveltekit-preload-data={preloadDataAttr(link.href)}
 									class="text-sm text-ink-500 hover:text-jade-600 dark:hover:text-jade-400 transition-colors"
 								>
@@ -207,8 +215,8 @@
 				<div class="flex flex-wrap justify-center md:justify-start gap-x-3 mt-1">
 					<span class="hidden md:inline"
 						>Powered by <a
-							href="https://grtblog.js.org/"
-							class="text-jade-500 hover:text-jade-600 transition-colors">Grtblog-v2</a
+							href="https://sanblog.js.org/"
+							class="text-jade-500 hover:text-jade-600 transition-colors">Sanblog</a
 						></span
 					>
 					{#if uptimeText}
@@ -234,6 +242,8 @@
 
 			<div class="hidden md:flex items-center gap-4 text-[11px] font-mono text-ink-300">
 				<span>{$footerThemeStore.designedWithText}</span>
+				<span class="text-ink-200 dark:text-ink-800">|</span>
+				<LanguageSwitcher currentLang={currentLang} />
 			</div>
 		</div>
 	</div>

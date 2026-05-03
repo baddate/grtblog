@@ -8,6 +8,8 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import type { PhotoItem } from '$lib/features/album/types';
+	import { resolvePath } from '$lib/shared/utils/resolve-path';
+	import { page } from '$app/state';
 
 	let {
 		photos,
@@ -149,7 +151,7 @@
 			<div class="columns-2 gap-2.5 space-y-2.5 sm:columns-3 sm:gap-3 sm:space-y-3 lg:columns-4">
 				{#each group.items as { photo, index } (photo.id)}
 					<a
-						href="/albums/{albumSlug}/photo/{photo.id}"
+						href={resolvePath(`/albums/${albumSlug}/photo/${photo.id}`, page.data.lang)}
 						class="group relative block w-full overflow-hidden rounded-[3px] break-inside-avoid transition-shadow duration-300 hover:shadow-float"
 						style="background-color: {photo.exif?.dominantColor || '#1c1917'};"
 						data-photo-card

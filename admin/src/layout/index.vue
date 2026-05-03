@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { useQuery, useQueryClient } from '@tanstack/vue-query'
 import { isEmpty } from 'lodash-es'
 import { NScrollbar, useDialog } from 'naive-ui'
@@ -10,6 +13,7 @@ import HealthBanner from '@/components/health/HealthBanner.vue'
 import { useInjection } from '@/composables'
 import { createMarkdownIt } from '@/composables/markdown-it/core'
 import { mediaQueryInjectionKey, layoutInjectionKey } from '@/injection'
+import i18n from '@/plugins/i18n'
 import router from '@/router'
 import { adminRealtimeWSCore } from '@/services/realtime-ws'
 import { getSystemUpdateCheck } from '@/services/system'
@@ -57,7 +61,7 @@ const releaseNotesMd = createMarkdownIt({
   },
 })
 
-const UPDATE_DIALOG_ACK_KEY = 'grtblog:update-dialog:last-seen'
+const UPDATE_DIALOG_ACK_KEY = 'sanblog:update-dialog:last-seen'
 
 const { data: updateInfo } = useQuery({
   queryKey: ['system-update-check'],
@@ -115,18 +119,18 @@ function buildUpgradeCommands(targetVersion: string) {
 
 function renderUpdateDialogContent() {
   const info = updateInfo.value
-  const targetVersion = info?.targetRelease?.tag || info?.latestRelease?.tag || '最新版本'
+  const targetVersion = info?.targetRelease?.tag || info?.latestRelease?.tag || i18n.global.t('admin.update.latest_version')
   const releaseBody = info?.targetRelease?.body?.trim() || info?.latestRelease?.body?.trim() || ''
   const { prebuilt, localBuild } = buildUpgradeCommands(targetVersion)
   const releaseHtml = releaseBody
     ? releaseNotesMd.render(releaseBody)
-    : `<p>${info?.message || `当前版本 ${info?.currentVersion}，检测到新版本 ${targetVersion}。`}</p>`
+    : `<p>${info?.message || `${i18n.global.t('admin.update.current_version', { v: info?.currentVersion })}，${i18n.global.t('admin.update.new_version_found', { tag: targetVersion })}`}</p>`
 
   return () =>
     h('div', { class: 'space-y-3' }, [
       h('div', { class: 'space-y-1 text-sm text-neutral-500 dark:text-neutral-400' }, [
-        h('div', `当前版本 ${info?.currentVersion || '-'} → 目标版本 ${targetVersion}`),
-        h('div', `更新通道 ${info?.channel || '-'} / 来源 ${info?.source || '-'}`),
+        h('div', `${i18n.global.t('admin.update.current_version', { v: info?.currentVersion || '-' })} → ${i18n.global.t('admin.update.target_version', { v: targetVersion })}`),
+        h('div', `${i18n.global.t('admin.preferences.update_channel')} ${info?.channel || '-'} / ${i18n.global.t('admin.preferences.update_source')} ${info?.source || '-'}`),
       ]),
       h(
         NScrollbar,
@@ -144,7 +148,7 @@ function renderUpdateDialogContent() {
         h(
           'div',
           { class: 'text-xs font-medium text-neutral-500 dark:text-neutral-400' },
-          '预构建镜像升级',
+          i18n.global.t('admin.preferences.docker_upgrade'),
         ),
         h('pre', {
           class: 'overflow-x-auto rounded-lg bg-neutral-950 p-3 text-xs leading-5 text-neutral-100',
@@ -153,7 +157,7 @@ function renderUpdateDialogContent() {
         h(
           'div',
           { class: 'text-xs font-medium text-neutral-500 dark:text-neutral-400' },
-          '本地构建升级',
+          i18n.global.t('admin.preferences.local_upgrade'),
         ),
         h('pre', {
           class: 'overflow-x-auto rounded-lg bg-neutral-950 p-3 text-xs leading-5 text-neutral-100',
@@ -168,13 +172,13 @@ function openUpdateDialog() {
   if (!info || !shouldShowUpdateDialog()) return
 
   const tag = info.targetRelease?.tag || info.latestRelease?.tag || ''
-  const releaseNotesUrl = tag ? `https://grtblog.js.org/releases/${tag}` : ''
+  const releaseNotesUrl = tag ? `https://sanblog.js.org/releases/${tag}` : ''
 
   dialog.info({
-    title: `发现新版本 ${tag}`.trim(),
+    title: i18n.global.t('admin.update.new_version_found', { tag }).trim(),
     content: renderUpdateDialogContent(),
-    positiveText: releaseNotesUrl ? '查看说明' : '知道了',
-    negativeText: releaseNotesUrl ? '稍后再说' : undefined,
+    positiveText: releaseNotesUrl ? i18n.global.t('admin.preferences.release_notes') : i18n.global.t('admin.common.confirm'),
+    negativeText: releaseNotesUrl ? i18n.global.t('admin.preferences.later') : undefined,
     maskClosable: false,
     style: 'width: min(720px, calc(100vw - 32px));',
     onPositiveClick: () => {
@@ -350,6 +354,7 @@ function normalizeOwnerStatusPayload(payload: unknown): OwnerStatusPayload | nul
     adminPanelOnline: raw.adminPanelOnline === true,
   }
 }
+
 </script>
 
 <template>
@@ -404,7 +409,7 @@ function normalizeOwnerStatusPayload(payload: unknown): OwnerStatusPayload | nul
           </main>
           <EmptyPlaceholder
             :show="isEmpty(tabs)"
-            description="空标签页"
+            :description="$t('admin.tabs.empty')"
             size="huge"
           >
             <template #icon>

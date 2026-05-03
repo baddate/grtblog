@@ -8,10 +8,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jinzhu/copier"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/taxonomy"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/content"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/app/taxonomy"
+	"github.com/baddate/sanblog/server/internal/domain/content"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type TaxonomyHandler struct {
@@ -68,13 +68,14 @@ func (h *TaxonomyHandler) ListCategories(c *fiber.Ctx) error {
 func (h *TaxonomyHandler) CreateCategory(c *fiber.Ctx) error {
 	var req contract.CategoryCreateReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if strings.TrimSpace(req.Name) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "分类名称不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	if req.ShortURL == nil || strings.TrimSpace(*req.ShortURL) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "分类短链接不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	item, err := h.categories.Create(c.Context(), req.Name, req.ShortURL)
 	if err != nil {
@@ -91,7 +92,7 @@ func (h *TaxonomyHandler) CreateCategory(c *fiber.Ctx) error {
 		CreatedAt: item.CreatedAt,
 		UpdatedAt: item.UpdatedAt,
 	}
-	return response.SuccessWithMessage(c, resp, "创建成功")
+	return response.SuccessWithMessage(c, resp, response.Translate(c, "server.success.created"))
 }
 
 // UpdateCategory godoc
@@ -107,22 +108,23 @@ func (h *TaxonomyHandler) CreateCategory(c *fiber.Ctx) error {
 func (h *TaxonomyHandler) UpdateCategory(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的分类ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	var req contract.CategoryUpdateReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if strings.TrimSpace(req.Name) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "分类名称不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	if req.ShortURL == nil || strings.TrimSpace(*req.ShortURL) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "分类短链接不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	item, err := h.categories.Update(c.Context(), id, req.Name, req.ShortURL)
 	if err != nil {
 		if errors.Is(err, content.ErrCategoryNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "分类不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
@@ -137,7 +139,7 @@ func (h *TaxonomyHandler) UpdateCategory(c *fiber.Ctx) error {
 		CreatedAt: item.CreatedAt,
 		UpdatedAt: item.UpdatedAt,
 	}
-	return response.SuccessWithMessage(c, resp, "更新成功")
+	return response.SuccessWithMessage(c, resp, response.Translate(c, "server.success.updated"))
 }
 
 // DeleteCategory godoc
@@ -150,15 +152,15 @@ func (h *TaxonomyHandler) UpdateCategory(c *fiber.Ctx) error {
 func (h *TaxonomyHandler) DeleteCategory(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的分类ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	if err := h.categories.Delete(c.Context(), id); err != nil {
 		if errors.Is(err, content.ErrCategoryNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "分类不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
-	return response.SuccessWithMessage[any](c, nil, "删除成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.deleted"))
 }
 
 // ListColumns godoc
@@ -201,13 +203,14 @@ func (h *TaxonomyHandler) ListColumns(c *fiber.Ctx) error {
 func (h *TaxonomyHandler) CreateColumn(c *fiber.Ctx) error {
 	var req contract.ColumnCreateReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if strings.TrimSpace(req.Name) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "分区名称不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	if req.ShortURL == nil || strings.TrimSpace(*req.ShortURL) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "分区短链接不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	item, err := h.columns.Create(c.Context(), req.Name, req.ShortURL)
 	if err != nil {
@@ -224,7 +227,7 @@ func (h *TaxonomyHandler) CreateColumn(c *fiber.Ctx) error {
 		CreatedAt: item.CreatedAt,
 		UpdatedAt: item.UpdatedAt,
 	}
-	return response.SuccessWithMessage(c, resp, "创建成功")
+	return response.SuccessWithMessage(c, resp, response.Translate(c, "server.success.created"))
 }
 
 // UpdateColumn godoc
@@ -240,22 +243,23 @@ func (h *TaxonomyHandler) CreateColumn(c *fiber.Ctx) error {
 func (h *TaxonomyHandler) UpdateColumn(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的分区ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	var req contract.ColumnUpdateReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if strings.TrimSpace(req.Name) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "分区名称不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	if req.ShortURL == nil || strings.TrimSpace(*req.ShortURL) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "分区短链接不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	item, err := h.columns.Update(c.Context(), id, req.Name, req.ShortURL)
 	if err != nil {
 		if errors.Is(err, content.ErrColumnNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "手记分区不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
@@ -270,7 +274,7 @@ func (h *TaxonomyHandler) UpdateColumn(c *fiber.Ctx) error {
 		CreatedAt: item.CreatedAt,
 		UpdatedAt: item.UpdatedAt,
 	}
-	return response.SuccessWithMessage(c, resp, "更新成功")
+	return response.SuccessWithMessage(c, resp, response.Translate(c, "server.success.updated"))
 }
 
 // DeleteColumn godoc
@@ -283,15 +287,15 @@ func (h *TaxonomyHandler) UpdateColumn(c *fiber.Ctx) error {
 func (h *TaxonomyHandler) DeleteColumn(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的分区ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	if err := h.columns.Delete(c.Context(), id); err != nil {
 		if errors.Is(err, content.ErrColumnNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "手记分区不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
-	return response.SuccessWithMessage[any](c, nil, "删除成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.deleted"))
 }
 
 // ListTags godoc
@@ -346,10 +350,11 @@ func (h *TaxonomyHandler) ListPublicTags(c *fiber.Ctx) error {
 func (h *TaxonomyHandler) CreateTag(c *fiber.Ctx) error {
 	var req contract.TagCreateReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if strings.TrimSpace(req.Name) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "标签名称不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	item, err := h.tags.Create(c.Context(), req.Name)
 	if err != nil {
@@ -357,7 +362,7 @@ func (h *TaxonomyHandler) CreateTag(c *fiber.Ctx) error {
 	}
 	var resp contract.TagItemResp
 	_ = copier.Copy(&resp, item)
-	return response.SuccessWithMessage(c, resp, "创建成功")
+	return response.SuccessWithMessage(c, resp, response.Translate(c, "server.success.created"))
 }
 
 // UpdateTag godoc
@@ -373,25 +378,26 @@ func (h *TaxonomyHandler) CreateTag(c *fiber.Ctx) error {
 func (h *TaxonomyHandler) UpdateTag(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的标签ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	var req contract.TagUpdateReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if strings.TrimSpace(req.Name) == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "标签名称不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	item, err := h.tags.Update(c.Context(), id, req.Name)
 	if err != nil {
 		if errors.Is(err, content.ErrTagNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "标签不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
 	var resp contract.TagItemResp
 	_ = copier.Copy(&resp, item)
-	return response.SuccessWithMessage(c, resp, "更新成功")
+	return response.SuccessWithMessage(c, resp, response.Translate(c, "server.success.updated"))
 }
 
 // DeleteTag godoc
@@ -404,13 +410,13 @@ func (h *TaxonomyHandler) UpdateTag(c *fiber.Ctx) error {
 func (h *TaxonomyHandler) DeleteTag(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的标签ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 	if err := h.tags.Delete(c.Context(), id); err != nil {
 		if errors.Is(err, content.ErrTagNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "标签不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
-	return response.SuccessWithMessage[any](c, nil, "删除成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.deleted"))
 }

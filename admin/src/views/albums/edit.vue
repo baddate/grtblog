@@ -498,7 +498,7 @@ function thumbUrl(photo: PhotoItem): string {
       </div>
       <template #footer>
         <NSpace justify="end">
-          <NButton @click="showPhotoModal = false">取消</NButton>
+          <NButton @click="showPhotoModal = false">{{ $t('admin.common.cancel') }}</NButton>
           <NButton
             type="primary"
             @click="savePhotoEdit"

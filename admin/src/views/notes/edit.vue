@@ -108,8 +108,8 @@ const {
   cleanup,
 } = usePreviewFrame({
   previewPath: '/internal/preview/moment',
-  readyType: 'grtblog-preview:ready',
-  postType: 'grtblog-preview:moment',
+  readyType: 'sanblog-preview:ready',
+  postType: 'sanblog-preview:moment',
   buildPayload: buildPreviewPayload,
   message,
 })
@@ -476,7 +476,7 @@ watch(previewUrl, () => {
                     quaternary
                     size="small"
                     @click="newColumnModal.show = true"
-                    >新建</NButton
+                    >{{ $t('admin.common.create') }}</NButton
                   >
                 </div>
               </NFormItem>
@@ -631,7 +631,7 @@ watch(previewUrl, () => {
           class="space-y-3"
         >
           <NFormItem
-            label="名称"
+            :label="$t('admin.common.name')"
             :show-feedback="false"
           >
             <NInput
@@ -653,7 +653,7 @@ watch(previewUrl, () => {
           <NButton
             quaternary
             @click="newColumnModal.show = false"
-            >取消</NButton
+            >{{ $t('admin.common.cancel') }}</NButton
           >
           <NButton
             type="primary"

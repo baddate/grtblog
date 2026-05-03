@@ -11,10 +11,10 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/identity"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/middleware"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
-	"github.com/grtsinry43/grtblog-v2/server/internal/infra/persistence"
+	"github.com/baddate/sanblog/server/internal/domain/identity"
+	"github.com/baddate/sanblog/server/internal/http/middleware"
+	"github.com/baddate/sanblog/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/infra/persistence"
 )
 
 type AdminTokenHandler struct {
@@ -120,17 +120,17 @@ func (h *AdminTokenHandler) Create(c *fiber.Ctx) error {
 
 	var req CreateAdminTokenReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 
 	desc := strings.TrimSpace(req.Description)
 	expireAt, err := time.Parse(time.RFC3339, strings.TrimSpace(req.ExpireAt))
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "expireAt 必须是 RFC3339 时间")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.expire_at_rfc3339"))
 	}
 	expireAt = expireAt.UTC()
 	if !expireAt.After(time.Now().UTC()) {
-		return response.NewBizErrorWithMsg(response.ParamsError, "expireAt 必须晚于当前时间")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.expire_at_future"))
 	}
 
 	tokenEntity := identity.AdminToken{
@@ -139,7 +139,7 @@ func (h *AdminTokenHandler) Create(c *fiber.Ctx) error {
 		ExpireAt:    expireAt,
 	}
 
-	rawToken, err := h.createTokenWithRetry(c.Context(), &tokenEntity)
+	rawToken, err := h.createTokenWithRetry(c, c.Context(), &tokenEntity)
 	if err != nil {
 		return err
 	}
@@ -171,7 +171,7 @@ func (h *AdminTokenHandler) Create(c *fiber.Ctx) error {
 func (h *AdminTokenHandler) Delete(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil || id <= 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的令牌 ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_token_id"))
 	}
 	if err := h.tokenRepo.DeleteByID(c.Context(), id); err != nil {
 		if errors.Is(err, identity.ErrAdminTokenNotFound) {
@@ -183,12 +183,12 @@ func (h *AdminTokenHandler) Delete(c *fiber.Ctx) error {
 	return response.SuccessWithMessage[any](c, nil, "deleted")
 }
 
-func (h *AdminTokenHandler) createTokenWithRetry(ctx context.Context, tokenEntity *identity.AdminToken) (string, error) {
+func (h *AdminTokenHandler) createTokenWithRetry(c *fiber.Ctx, ctx context.Context, tokenEntity *identity.AdminToken) (string, error) {
 	const maxRetry = 5
 	for i := 0; i < maxRetry; i++ {
 		rawToken, err := newGTToken()
 		if err != nil {
-			return "", response.NewBizErrorWithCause(response.ServerError, "生成令牌失败", err)
+			return "", response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.token_generate_cause_failed"), err)
 		}
 		tokenEntity.Token = persistence.HashAdminToken(rawToken)
 		err = h.tokenRepo.Create(ctx, tokenEntity)
@@ -199,7 +199,7 @@ func (h *AdminTokenHandler) createTokenWithRetry(ctx context.Context, tokenEntit
 			return "", err
 		}
 	}
-	return "", response.NewBizErrorWithMsg(response.ServerError, "生成令牌失败，请重试")
+	return "", response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.token_generate_failed"))
 }
 
 func toAdminTokenListItem(item identity.AdminToken, username string) AdminTokenListItem {

@@ -6,10 +6,10 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/friendtimeline"
-	domainfed "github.com/grtsinry43/grtblog-v2/server/internal/domain/federation"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/app/friendtimeline"
+	domainfed "github.com/baddate/sanblog/server/internal/domain/federation"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type FriendTimelineHandler struct {
@@ -30,7 +30,7 @@ func NewFriendTimelineHandler(svc *friendtimeline.Service) *FriendTimelineHandle
 // @Router /public/friend-timeline [get]
 func (h *FriendTimelineHandler) ListPublic(c *fiber.Ctx) error {
 	if h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "时间线服务未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.timeline_service_not_init"))
 	}
 	page := parseIntQuery(c, "page", 1)
 	pageSize := parseIntQuery(c, "pageSize", 20)

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { useQuery } from '@tanstack/vue-query'
 import { NDataTable, NButton, NTag, NInput, NCard, NSelect, NPagination } from 'naive-ui'
 import { h, ref } from 'vue'
@@ -96,7 +99,7 @@ function formatDuration(ms: number) {
 }
 
 const columns: DataTableColumns<AITaskLog> = [
-  { title: 'ID', key: 'id', width: 70 },
+  { title: t('admin.table.id'), key: 'id', width: 70 },
   {
     title: '任务类型',
     key: 'taskType',
@@ -116,7 +119,7 @@ const columns: DataTableColumns<AITaskLog> = [
     ellipsis: { tooltip: true },
   },
   {
-    title: '状态',
+    title: t('admin.common.status'),
     key: 'status',
     width: 90,
     render(row) {
@@ -150,13 +153,13 @@ const columns: DataTableColumns<AITaskLog> = [
     },
   },
   {
-    title: '创建时间',
+    title: t('admin.common.created_at'),
     key: 'createdAt',
     width: 170,
     render: (row) => new Date(row.createdAt).toLocaleString(),
   },
   {
-    title: '操作',
+    title: t('admin.common.actions'),
     key: 'actions',
     width: 80,
     render(row) {
@@ -193,6 +196,7 @@ const statusOptions = [
   { label: '失败', value: 'failed' },
   { label: '已中断', value: 'interrupted' },
 ] as any
+
 </script>
 
 <template>

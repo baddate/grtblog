@@ -9,11 +9,11 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/content"
-	domainfed "github.com/grtsinry43/grtblog-v2/server/internal/domain/federation"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/middleware"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/domain/content"
+	domainfed "github.com/baddate/sanblog/server/internal/domain/federation"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/middleware"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type FederationInteractionHandler struct {
@@ -53,19 +53,19 @@ func (h *FederationInteractionHandler) GetArticleInteractions(c *fiber.Ctx) erro
 		if errors.Is(err, content.ErrArticleNotFound) {
 			return response.NewBizError(response.NotFound)
 		}
-		return response.NewBizErrorWithCause(response.ServerError, "文章查询失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.article_query_failed"), err)
 	}
 	if !claims.IsAdmin && claims.UserID != article.AuthorID {
-		return response.NewBizErrorWithMsg(response.Unauthorized, "仅作者可查看联合互动")
+		return response.NewBizErrorWithMsg(response.Unauthorized, response.Translate(c, "server.handler.only_author_can_view_interactions"))
 	}
 
 	citations, err := h.citationRepo.ListByTarget(c.Context(), article.ID, "")
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "引用记录查询失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.citation_records_query_failed"), err)
 	}
 	outbounds, err := h.outboundRepo.ListBySourceArticle(c.Context(), article.ID, 100)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "出站记录查询失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.outbox_records_query_failed"), err)
 	}
 
 	resp := contract.FederationArticleInteractionsResp{

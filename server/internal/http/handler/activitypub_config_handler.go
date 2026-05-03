@@ -7,10 +7,10 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/sysconfig"
-	domainconfig "github.com/grtsinry43/grtblog-v2/server/internal/domain/config"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
+	domainconfig "github.com/baddate/sanblog/server/internal/domain/config"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type ActivityPubConfigHandler struct {
@@ -43,7 +43,7 @@ func (h *ActivityPubConfigHandler) ListActivityPubConfig(c *fiber.Ctx) error {
 	items = filterActivityPubConfigsByPrefix(items, "activitypub.")
 	tree, err := buildSysConfigTree(items)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "配置解析失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.config_parse_failed"), err)
 	}
 	return response.Success(c, tree)
 }
@@ -61,29 +61,29 @@ func (h *ActivityPubConfigHandler) ListActivityPubConfig(c *fiber.Ctx) error {
 func (h *ActivityPubConfigHandler) UpdateActivityPubConfig(c *fiber.Ctx) error {
 	var req contract.SysConfigBatchUpdateReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	if len(req.Items) == 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "items 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.items_required"))
 	}
 
 	updates := make([]sysconfig.UpdateItem, 0, len(req.Items))
 	for _, item := range req.Items {
 		key := strings.TrimSpace(item.Key)
 		if key == "" {
-			return response.NewBizErrorWithMsg(response.ParamsError, "key 不能为空")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.key_required"))
 		}
 		if !strings.HasPrefix(key, "activitypub.") {
-			return response.NewBizErrorWithMsg(response.ParamsError, "仅允许更新 activitypub.* 配置")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.only_activitypub_config"))
 		}
 		if key == "activitypub.instanceURL" && item.Value != nil {
 			var instanceURL string
 			if err := json.Unmarshal(json.RawMessage(*item.Value), &instanceURL); err != nil {
-				return response.NewBizErrorWithMsg(response.ParamsError, "instanceURL 必须为字符串")
+				return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.instance_url_string"))
 			}
 			trimmed := strings.TrimSpace(instanceURL)
 			if trimmed != "" && !strings.HasPrefix(trimmed, "http://") && !strings.HasPrefix(trimmed, "https://") {
-				return response.NewBizErrorWithMsg(response.ParamsError, "instanceURL 必须以 http:// 或 https:// 开头")
+				return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.instance_url_prefix"))
 			}
 		}
 		updates = append(updates, sysconfig.UpdateItem{
@@ -113,9 +113,9 @@ func (h *ActivityPubConfigHandler) UpdateActivityPubConfig(c *fiber.Ctx) error {
 	updated = filterActivityPubConfigsByPrefix(updated, "activitypub.")
 	tree, err := buildSysConfigTree(updated)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "配置解析失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.config_parse_failed"), err)
 	}
-	return response.SuccessWithMessage(c, tree, "更新成功")
+	return response.SuccessWithMessage(c, tree, response.Translate(c, "server.success.updated"))
 }
 
 func parseAndValidateActivityPubConfigKeys(raw string, prefix string) ([]string, error) {

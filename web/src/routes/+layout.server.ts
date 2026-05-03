@@ -1,3 +1,4 @@
+import { loadTranslations } from '$lib/i18n/server';
 import { fetchNavMenuTree } from '$lib/features/navigation/api';
 import type { NavMenuItem } from '$lib/features/navigation/types';
 import type { HealthSSRData } from '$lib/features/site-health/store.svelte';
@@ -17,7 +18,7 @@ function resolveInternalBaseURL(): string {
 }
 
 export const load: LayoutServerLoad = async (event) => {
-	const { fetch } = event;
+	const { fetch, locals } = event;
 	trackISRDeps(event, 'layout:nav', 'layout:website-info');
 
 	let navMenus: NavMenuItem[] = [];
@@ -55,6 +56,8 @@ export const load: LayoutServerLoad = async (event) => {
 	return {
 		navMenus,
 		websiteInfo,
-		healthData
+		healthData,
+		lang: locals.lang,
+		translations: loadTranslations(locals.lang)
 	};
 };

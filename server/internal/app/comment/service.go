@@ -11,11 +11,12 @@ import (
 	"time"
 	"unicode/utf8"
 
-	appEvent "github.com/grtsinry43/grtblog-v2/server/internal/app/event"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/sysconfig"
-	domaincomment "github.com/grtsinry43/grtblog-v2/server/internal/domain/comment"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/identity"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/social"
+	appEvent "github.com/baddate/sanblog/server/internal/app/event"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
+	domaincomment "github.com/baddate/sanblog/server/internal/domain/comment"
+	"github.com/baddate/sanblog/server/internal/domain/identity"
+	"github.com/baddate/sanblog/server/internal/domain/social"
+	"github.com/baddate/sanblog/server/internal/infra/i18n"
 )
 
 const (
@@ -621,13 +622,13 @@ func toCommentEmail(item *domaincomment.Comment) string {
 func commentAreaTypeLabel(areaType string) string {
 	switch strings.ToLower(strings.TrimSpace(areaType)) {
 	case "article":
-		return "文章"
+		return i18n.MustLocalize("zh", "server.label.article")
 	case "moment":
-		return "手记"
+		return i18n.MustLocalize("zh", "server.label.moment")
 	case "page":
-		return "页面"
+		return i18n.MustLocalize("zh", "server.label.page")
 	case "thinking":
-		return "思考"
+		return i18n.MustLocalize("zh", "server.label.thinking")
 	default:
 		return strings.TrimSpace(areaType)
 	}

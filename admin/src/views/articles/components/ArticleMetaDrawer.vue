@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import {
   NAlert,
   NAutoComplete,
@@ -110,6 +113,7 @@ function outboundStatusTagType(status?: string | null) {
 function emitResetRow(row: FederationSignalRow) {
   emit('resetFederationSignal', row)
 }
+
 </script>
 
 <template>
@@ -153,7 +157,7 @@ function emitResetRow(row: FederationSignalRow) {
                   quaternary
                   size="small"
                   @click="$emit('openCategoryModal')"
-                  >新建</NButton
+                  >{{ $t('admin.common.create') }}</NButton
                 >
               </div>
             </NFormItem>

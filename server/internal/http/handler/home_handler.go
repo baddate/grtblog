@@ -5,8 +5,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/home"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/app/home"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type HomeHandler struct {
@@ -26,7 +26,7 @@ func NewHomeHandler(svc *home.Service) *HomeHandler {
 // @Router /public/home/activity-pulse [get]
 func (h *HomeHandler) GetActivityPulse(c *fiber.Ctx) error {
 	if h == nil || h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "home service 未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.home_service_not_init"))
 	}
 	daysQuery := strings.TrimSpace(c.Query("days"))
 	days := 365
@@ -51,7 +51,7 @@ func (h *HomeHandler) GetActivityPulse(c *fiber.Ctx) error {
 // @Router /public/home/inspiration-stats [get]
 func (h *HomeHandler) GetInspirationStats(c *fiber.Ctx) error {
 	if h == nil || h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "home service 未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.home_service_not_init"))
 	}
 	githubUsername := strings.TrimSpace(c.Query("githubUsername"))
 	result, err := h.svc.GetInspirationStats(c.UserContext(), githubUsername)
@@ -69,7 +69,7 @@ func (h *HomeHandler) GetInspirationStats(c *fiber.Ctx) error {
 // @Router /public/home/timeline-by-year [get]
 func (h *HomeHandler) GetTimelineByYear(c *fiber.Ctx) error {
 	if h == nil || h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "home service 未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.home_service_not_init"))
 	}
 	result, err := h.svc.GetTimelineByYear(c.UserContext())
 	if err != nil {

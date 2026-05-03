@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { Copy24Regular, Delete24Regular, Document24Regular, Edit24Regular } from '@vicons/fluent'
 import { NButton, NDataTable, NIcon, NImage, NTag } from 'naive-ui'
 import { computed, h } from 'vue'
@@ -73,7 +76,7 @@ const columns = computed<DataTableColumns<UploadFileResponse>>(() => [
     ellipsis: { tooltip: true },
   },
   {
-    title: '类型',
+    title: t('admin.common.type'),
     key: 'type',
     width: 100,
     render: (row) =>
@@ -96,7 +99,7 @@ const columns = computed<DataTableColumns<UploadFileResponse>>(() => [
     render: (row) => formatDate(row.createdAt),
   },
   {
-    title: '操作',
+    title: t('admin.common.actions'),
     key: 'actions',
     width: 320,
     render: (row) =>
@@ -144,6 +147,7 @@ const columns = computed<DataTableColumns<UploadFileResponse>>(() => [
       ),
   },
 ])
+
 </script>
 
 <template>

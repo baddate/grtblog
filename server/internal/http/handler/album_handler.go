@@ -8,13 +8,13 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	appalbum "github.com/grtsinry43/grtblog-v2/server/internal/app/album"
-	mediaapp "github.com/grtsinry43/grtblog-v2/server/internal/app/media"
-	domainalbum "github.com/grtsinry43/grtblog-v2/server/internal/domain/album"
-	domaincomment "github.com/grtsinry43/grtblog-v2/server/internal/domain/comment"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/middleware"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	appalbum "github.com/baddate/sanblog/server/internal/app/album"
+	mediaapp "github.com/baddate/sanblog/server/internal/app/media"
+	domainalbum "github.com/baddate/sanblog/server/internal/domain/album"
+	domaincomment "github.com/baddate/sanblog/server/internal/domain/comment"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/middleware"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type AlbumHandler struct {
@@ -33,12 +33,13 @@ func NewAlbumHandler(svc *appalbum.Service, albumRepo domainalbum.Repository, co
 func (h *AlbumHandler) CreateAlbum(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 
 	var req contract.CreateAlbumReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	cmd := appalbum.CreateAlbumCmd{
@@ -58,7 +59,8 @@ func (h *AlbumHandler) CreateAlbum(c *fiber.Ctx) error {
 	created, err := h.svc.CreateAlbum(c.Context(), claims.UserID, cmd)
 	if err != nil {
 		if errors.Is(err, domainalbum.ErrAlbumShortURLExists) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "短链接已存在")
+			msg := response.Translate(c, "server.error.album_short_url_exists")
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		return err
 	}
@@ -74,23 +76,24 @@ func (h *AlbumHandler) CreateAlbum(c *fiber.Ctx) error {
 		"userId":  claims.UserID,
 	})
 
-	return response.SuccessWithMessage(c, resp, "相册创建成功")
+	return response.SuccessWithMessage(c, resp, response.Translate(c, "server.success.album_created"))
 }
 
 func (h *AlbumHandler) UpdateAlbum(c *fiber.Ctx) error {
 	claims, ok := middleware.GetClaims(c)
 	if !ok {
-		return response.ErrorFromBiz[any](c, response.NotLogin)
+		return response.ErrorFromBizLocalized[any](c, response.NotLogin)
 	}
 
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的相册ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	var req contract.UpdateAlbumReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	cmd := appalbum.UpdateAlbumCmd{
@@ -106,10 +109,11 @@ func (h *AlbumHandler) UpdateAlbum(c *fiber.Ctx) error {
 	updated, err := h.svc.UpdateAlbum(c.Context(), cmd)
 	if err != nil {
 		if errors.Is(err, domainalbum.ErrAlbumShortURLExists) {
-			return response.NewBizErrorWithMsg(response.ParamsError, "短链接已存在")
+			msg := response.Translate(c, "server.error.album_short_url_exists")
+			return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 		}
 		if errors.Is(err, domainalbum.ErrAlbumNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "相册不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
@@ -125,42 +129,42 @@ func (h *AlbumHandler) UpdateAlbum(c *fiber.Ctx) error {
 		"userId":  claims.UserID,
 	})
 
-	return response.SuccessWithMessage(c, resp, "相册更新成功")
+	return response.SuccessWithMessage(c, resp, response.Translate(c, "server.success.updated"))
 }
 
 func (h *AlbumHandler) DeleteAlbum(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的相册ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	if err := h.svc.DeleteAlbum(c.Context(), id); err != nil {
 		if errors.Is(err, domainalbum.ErrAlbumNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "相册不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
 
 	Audit(c, "album.delete", map[string]any{"albumId": id})
 
-	return response.SuccessWithMessage[any](c, nil, "相册删除成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.deleted"))
 }
 
 func (h *AlbumHandler) GetAlbum(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的相册ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	a, err := h.svc.GetAlbumByID(c.Context(), id)
 	if err != nil {
 		if errors.Is(err, domainalbum.ErrAlbumNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "相册不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
 	if !a.IsPublished {
-		return response.NewBizErrorWithMsg(response.NotFound, "相册不存在")
+		return response.ErrorFromBizLocalized[any](c, response.NotFound)
 	}
 
 	resp, err := h.toAlbumResp(c.Context(), a)
@@ -173,18 +177,18 @@ func (h *AlbumHandler) GetAlbum(c *fiber.Ctx) error {
 func (h *AlbumHandler) GetAlbumByShortURL(c *fiber.Ctx) error {
 	shortURL := c.Params("shortUrl")
 	if shortURL == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "短链接不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	a, err := h.svc.GetAlbumByShortURL(c.Context(), shortURL)
 	if err != nil {
 		if errors.Is(err, domainalbum.ErrAlbumNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "相册不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
 	if !a.IsPublished {
-		return response.NewBizErrorWithMsg(response.NotFound, "相册不存在")
+		return response.ErrorFromBizLocalized[any](c, response.NotFound)
 	}
 
 	photos, err := h.svc.ListAlbumPhotos(c.Context(), a.ID)
@@ -240,13 +244,13 @@ func (h *AlbumHandler) ListAlbums(c *fiber.Ctx) error {
 func (h *AlbumHandler) GetAlbumAdmin(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的相册ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	a, err := h.svc.GetAlbumByID(c.Context(), id)
 	if err != nil {
 		if errors.Is(err, domainalbum.ErrAlbumNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "相册不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
@@ -307,10 +311,11 @@ func (h *AlbumHandler) ListAlbumsAdmin(c *fiber.Ctx) error {
 func (h *AlbumHandler) BatchSetAlbumPublished(c *fiber.Ctx) error {
 	var req contract.BatchSetAlbumPublishedReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "ids 不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	if err := h.svc.BatchSetPublished(c.Context(), appalbum.BatchSetPublishedCmd{
@@ -320,25 +325,26 @@ func (h *AlbumHandler) BatchSetAlbumPublished(c *fiber.Ctx) error {
 	}
 
 	if req.IsPublished {
-		return response.SuccessWithMessage[any](c, nil, "相册已批量发布")
+		return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.updated"))
 	}
-	return response.SuccessWithMessage[any](c, nil, "相册已批量取消发布")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.updated"))
 }
 
 func (h *AlbumHandler) BatchDeleteAlbums(c *fiber.Ctx) error {
 	var req contract.BatchDeleteAlbumReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.IDs) == 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "ids 不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	if err := h.svc.BatchDelete(c.Context(), appalbum.BatchDeleteCmd{IDs: req.IDs}); err != nil {
 		return err
 	}
 
-	return response.SuccessWithMessage[any](c, nil, "相册已批量删除")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.deleted"))
 }
 
 // --------------- Photo sub-resource ---------------
@@ -346,15 +352,16 @@ func (h *AlbumHandler) BatchDeleteAlbums(c *fiber.Ctx) error {
 func (h *AlbumHandler) AddPhotos(c *fiber.Ctx) error {
 	albumID, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的相册ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	var req contract.BatchCreatePhotosReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.Photos) == 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "photos 不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	cmds := make([]appalbum.CreatePhotoCmd, len(req.Photos))
@@ -399,7 +406,7 @@ func (h *AlbumHandler) AddPhotos(c *fiber.Ctx) error {
 	})
 	if err != nil {
 		if errors.Is(err, domainalbum.ErrAlbumNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "相册不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
@@ -414,18 +421,19 @@ func (h *AlbumHandler) AddPhotos(c *fiber.Ctx) error {
 		"count":   len(photos),
 	})
 
-	return response.SuccessWithMessage(c, respPhotos, "照片添加成功")
+	return response.SuccessWithMessage(c, respPhotos, response.Translate(c, "server.success.photo_uploaded"))
 }
 
 func (h *AlbumHandler) UpdatePhoto(c *fiber.Ctx) error {
 	photoID, err := strconv.ParseInt(c.Params("photoId"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的照片ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	var req contract.UpdatePhotoReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 
 	exifMap := map[string]any{}
@@ -462,54 +470,55 @@ func (h *AlbumHandler) UpdatePhoto(c *fiber.Ctx) error {
 	})
 	if err != nil {
 		if errors.Is(err, domainalbum.ErrPhotoNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "照片不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
 
-	return response.SuccessWithMessage(c, h.mapPhotoResp(updated), "照片更新成功")
+	return response.SuccessWithMessage(c, h.mapPhotoResp(updated), response.Translate(c, "server.success.updated"))
 }
 
 func (h *AlbumHandler) DeletePhoto(c *fiber.Ctx) error {
 	photoID, err := strconv.ParseInt(c.Params("photoId"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的照片ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	if err := h.svc.DeletePhoto(c.Context(), photoID); err != nil {
 		if errors.Is(err, domainalbum.ErrPhotoNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "照片不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
 
-	return response.SuccessWithMessage[any](c, nil, "照片删除成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.deleted"))
 }
 
 func (h *AlbumHandler) ReorderPhotos(c *fiber.Ctx) error {
 	albumID, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的相册ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	var req contract.ReorderPhotosReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		msg := response.Translate(c, "server.handler.parse_body_failed")
+		return response.ErrorWithMsg[any](c, response.ParamsError, msg)
 	}
 	if len(req.PhotoIDs) == 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "photoIds 不能为空")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	if err := h.svc.ReorderPhotos(c.Context(), appalbum.ReorderPhotosCmd{
 		AlbumID: albumID, PhotoIDs: req.PhotoIDs,
 	}); err != nil {
 		if errors.Is(err, domainalbum.ErrAlbumNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "相册不存在")
+			return response.ErrorFromBizLocalized[any](c, response.NotFound)
 		}
 		return err
 	}
 
-	return response.SuccessWithMessage[any](c, nil, "照片排序更新成功")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.updated"))
 }
 
 // GetAlbumMetrics godoc
@@ -522,7 +531,7 @@ func (h *AlbumHandler) ReorderPhotos(c *fiber.Ctx) error {
 func (h *AlbumHandler) GetAlbumMetrics(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的相册ID")
+		return response.ErrorFromBizLocalized[any](c, response.ParamsError)
 	}
 
 	metrics, err := h.svc.GetAlbumMetrics(c.Context(), id)

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { resolvePath } from '$lib/shared/utils/resolve-path';
+	import { page as pageState } from '$app/state';
 	import Pagination from '$lib/ui/primitives/pagination/Pagination.svelte';
 	import { FileText } from 'lucide-svelte';
 	import ArticleItem from '$lib/features/post/components/ArticleItem.svelte';
@@ -81,7 +82,7 @@
 
 	const onPageChange = (page: number) => {
 		const safePage = Number.isFinite(page) && page > 1 ? page : 1;
-		goto(resolvePath(safePage === 1 ? `${basePath}/` : `${basePath}/page/${safePage}/`));
+		goto(resolvePath(safePage === 1 ? `${basePath}/` : `${basePath}/page/${safePage}/`, pageState.data.lang));
 	};
 </script>
 

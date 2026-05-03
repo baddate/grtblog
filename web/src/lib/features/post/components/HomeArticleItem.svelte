@@ -2,10 +2,14 @@
 	import { resolvePath } from '$lib/shared/utils/resolve-path';
 	import type { PostSummary } from '$lib/features/post/types';
 	import { ArrowRight, Pin } from 'lucide-svelte';
-	import { formatRelativeTime } from '$lib/shared/utils/date';
+	import { createFormatRelativeTime } from '$lib/shared/utils/date';
 	import { buildPostPath } from '$lib/shared/utils/content-path';
+	import { page } from '$app/state';
+	import { t } from '$lib/i18n/client';
 
 	let { post } = $props<{ post: PostSummary }>();
+
+	const formatRelativeTime = $derived(createFormatRelativeTime(t));
 
 	let mouseX = $state('50%');
 	let mouseY = $state('50%');
@@ -26,7 +30,7 @@
 </script>
 
 <a
-	href={resolvePath(buildPostPath(post.shortUrl))}
+	href={resolvePath(buildPostPath(post.shortUrl), page.data.lang)}
 	class="home-item-card article-item group w-full px-4 py-4 outline-none focus-visible:ring-2 focus-visible:ring-jade-500/30"
 	onmousemove={handleMouseMove}
 	onmouseleave={handleMouseLeave}

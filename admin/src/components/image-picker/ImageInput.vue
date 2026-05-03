@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { NButton, NImage, NInput, NInputGroup } from 'naive-ui'
 import { ref } from 'vue'
 
@@ -21,6 +24,7 @@ function handleInput(val: string | null) {
 function handleSelect(url: string) {
   emit('update:value', url)
 }
+
 </script>
 
 <template>

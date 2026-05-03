@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/ws"
+	"github.com/baddate/sanblog/server/internal/ws"
 )
 
 const (

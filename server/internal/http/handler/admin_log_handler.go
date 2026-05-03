@@ -6,7 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 // AdminLogHandler 读取应用日志（仅后台查看）。
@@ -40,7 +40,7 @@ type LogLinesEnvelope struct {
 func (h *AdminLogHandler) List(c *fiber.Ctx) error {
 	file, err := os.Open(h.logPath)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "无法读取日志文件")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.cannot_read_log"))
 	}
 	defer file.Close()
 

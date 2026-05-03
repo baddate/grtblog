@@ -116,8 +116,8 @@ const {
   cleanup,
 } = usePreviewFrame({
   previewPath: '/internal/preview/post',
-  readyType: 'grtblog-preview:ready',
-  postType: 'grtblog-preview:post',
+  readyType: 'sanblog-preview:ready',
+  postType: 'sanblog-preview:post',
   buildPayload: buildPreviewPayload,
   message,
 })

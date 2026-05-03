@@ -2,5 +2,5 @@ package media
 
 import "errors"
 
-var ErrUploadFileNotFound = errors.New("上传文件不存在")
-var ErrInvalidUploadType = errors.New("无效的上传类型")
+var ErrUploadFileNotFound = errors.New("UPLOAD_FILE_NOT_FOUND")
+var ErrInvalidUploadType = errors.New("INVALID_UPLOAD_TYPE")

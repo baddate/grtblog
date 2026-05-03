@@ -5,8 +5,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/hitokoto"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/app/hitokoto"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type AdminHitokotoHandler struct {
@@ -46,7 +46,7 @@ func (h *AdminHitokotoHandler) GetSentence(c *fiber.Ctx) error {
 		Charset:    c.Query("charset"),
 	})
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "获取一言失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.hitokoto_failed"), err)
 	}
 	return response.Success(c, res)
 }

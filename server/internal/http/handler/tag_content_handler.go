@@ -8,10 +8,10 @@ import (
 	"log"
 	"strconv"
 
+	"github.com/baddate/sanblog/server/internal/domain/content"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/response"
 	"github.com/gofiber/fiber/v2"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/content"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -47,12 +47,12 @@ func (h *TagContentHandler) cacheKey(tagID int64) string {
 func (h *TagContentHandler) ListByTagID(c *fiber.Ctx) error {
 	tagID, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil || tagID <= 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的标签ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_tag_id"))
 	}
 
 	if _, err := h.contentRepo.GetTagByID(c.Context(), tagID); err != nil {
 		if errors.Is(err, content.ErrTagNotFound) {
-			return response.NewBizErrorWithMsg(response.NotFound, "标签不存在")
+			return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.handler.tag_not_found"))
 		}
 		return err
 	}

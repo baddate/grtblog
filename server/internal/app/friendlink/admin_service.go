@@ -8,12 +8,12 @@ import (
 	"strings"
 	"time"
 
-	appEvent "github.com/grtsinry43/grtblog-v2/server/internal/app/event"
-	appfed "github.com/grtsinry43/grtblog-v2/server/internal/app/federation"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/federation"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/identity"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/social"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
+	appEvent "github.com/baddate/sanblog/server/internal/app/event"
+	appfed "github.com/baddate/sanblog/server/internal/app/federation"
+	"github.com/baddate/sanblog/server/internal/domain/federation"
+	"github.com/baddate/sanblog/server/internal/domain/identity"
+	"github.com/baddate/sanblog/server/internal/domain/social"
+	"github.com/baddate/sanblog/server/internal/http/contract"
 )
 
 type AdminService struct {

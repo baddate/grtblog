@@ -6,7 +6,7 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/contract"
 )
 
 func parseExtInfo(raw *contract.JSONRaw) ([]byte, error) {

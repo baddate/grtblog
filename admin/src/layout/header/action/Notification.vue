@@ -12,6 +12,7 @@ import {
   useNotification,
 } from 'naive-ui'
 import { onMounted, onUnmounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
 import { ScrollContainer } from '@/components'
@@ -25,6 +26,7 @@ const router = useRouter()
 const queryClient = useQueryClient()
 const notification = useNotification()
 const { token } = toRefsUserStore()
+const { t } = useI18n()
 
 const ws = ref<WebSocket | null>(null)
 const isPopoverShow = ref(false)
@@ -80,7 +82,7 @@ const connectWs = async () => {
     ws.value.close(1000, 'refresh')
   }
 
-  ws.value = new WebSocket(wsUrl, ['grtblog.jwt', jwt])
+  ws.value = new WebSocket(wsUrl, ['sanblog.jwt', jwt])
 
   ws.value.onopen = () => {
     reconnectAttempts.value = 0
@@ -98,7 +100,7 @@ const connectWs = async () => {
       if (id > 0) seenNotifIds.value.add(id)
       queryClient.invalidateQueries({ queryKey: ['admin-notifications'] })
       notification.create({
-        title: data.title || '收到新通知',
+        title: data.title || t('admin.header.new_notification'),
         content: data.content,
         duration: 5000,
       })
@@ -202,7 +204,7 @@ const handleNotificationClick = (item: AdminNotificationResp) => {
     </template>
     <div class="flex flex-col">
       <div class="flex items-center justify-between px-4 py-2">
-        <NText strong>未读通知</NText>
+        <NText strong>{{ $t('admin.header.notifications') }}</NText>
         <NButton
           text
           type="primary"
@@ -210,7 +212,7 @@ const handleNotificationClick = (item: AdminNotificationResp) => {
           @click="handleMarkReadAll"
           v-if="(unreadData?.total ?? 0) > 0"
         >
-          全部已读
+          {{ $t('admin.header.mark_all_read') }}
         </NButton>
       </div>
       <div class="h-[400px]">
@@ -244,7 +246,7 @@ const handleNotificationClick = (item: AdminNotificationResp) => {
             v-else
             class="py-8 text-center"
           >
-            <NEmpty description="暂无未读通知" />
+            <NEmpty :description="$t('admin.header.no_notifications')" />
           </div>
         </ScrollContainer>
       </div>
@@ -254,7 +256,7 @@ const handleNotificationClick = (item: AdminNotificationResp) => {
           secondary
           @click="handleViewAll"
         >
-          查看全部
+          {{ $t('admin.header.view_all') }}
         </NButton>
       </div>
     </div>

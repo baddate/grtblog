@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import {
   NModal,
   NCard,
@@ -69,6 +72,7 @@ function extractHost(url: string): string {
 }
 
 const hasSearched = computed(() => props.query.trim().length > 0)
+
 </script>
 
 <template>
@@ -235,7 +239,7 @@ const hasSearched = computed(() => props.query.trim().length > 0)
               <NInputGroup>
                 <NInput
                   v-model:value="manualUser"
-                  placeholder="用户名，如 grtsinry43"
+                  placeholder="用户名，如 baddate"
                   size="small"
                 >
                   <template #prefix>

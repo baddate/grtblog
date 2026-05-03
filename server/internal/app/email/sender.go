@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/sysconfig"
-	domainemail "github.com/grtsinry43/grtblog-v2/server/internal/domain/email"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
+	domainemail "github.com/baddate/sanblog/server/internal/domain/email"
 )
 
 type Message struct {
@@ -124,7 +124,7 @@ func buildMessage(fromName, fromAddress string, to []string, msg Message) []byte
 	if strings.TrimSpace(fromName) != "" {
 		from = fmt.Sprintf("%s <%s>", strings.TrimSpace(fromName), strings.TrimSpace(fromAddress))
 	}
-	boundary := fmt.Sprintf("grtblog-%d", time.Now().UnixNano())
+	boundary := fmt.Sprintf("sanblog-%d", time.Now().UnixNano())
 	buf := bytes.NewBuffer(nil)
 	buf.WriteString("From: " + from + "\r\n")
 	buf.WriteString("To: " + strings.Join(to, ",") + "\r\n")

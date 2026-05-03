@@ -10,8 +10,8 @@ const emit = defineEmits<{ 'dirty-change': [dirty: boolean] }>()
   <ConfigPanel
     :list-fn="listSysConfigs"
     :update-fn="updateSysConfigs"
-    title="高级设置"
-    description="其他系统配置项"
+    :title="$t('admin.settings.advanced')"
+    :description="$t('admin.settings.advanced_desc')"
     :exclude-groups="[
       'security/turnstile',
       'interaction/comment',

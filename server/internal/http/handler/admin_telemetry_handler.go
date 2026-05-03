@@ -3,8 +3,8 @@ package handler
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/telemetry"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/app/telemetry"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 // AdminTelemetryHandler exposes error telemetry data to the admin dashboard.
@@ -20,7 +20,7 @@ func NewAdminTelemetryHandler(svc *telemetry.Service) *AdminTelemetryHandler {
 // GET /api/v2/admin/telemetry/snapshot
 func (h *AdminTelemetryHandler) GetSnapshot(c *fiber.Ctx) error {
 	if h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "telemetry service 未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.telemetry_service_not_init"))
 	}
 	snap := h.svc.FullSnapshot(c.UserContext())
 	return response.Success(c, snap)
@@ -30,7 +30,7 @@ func (h *AdminTelemetryHandler) GetSnapshot(c *fiber.Ctx) error {
 // GET /api/v2/admin/telemetry/stats
 func (h *AdminTelemetryHandler) GetStats(c *fiber.Ctx) error {
 	if h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "telemetry service 未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.telemetry_service_not_init"))
 	}
 	collector := h.svc.Collector()
 	unique, total := collector.Stats()
@@ -44,7 +44,7 @@ func (h *AdminTelemetryHandler) GetStats(c *fiber.Ctx) error {
 // POST /api/v2/admin/telemetry/reset
 func (h *AdminTelemetryHandler) ResetErrors(c *fiber.Ctx) error {
 	if h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "telemetry service 未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.telemetry_service_not_init"))
 	}
 	h.svc.Collector().Reset()
 	return response.SuccessWithMessage[any](c, nil, "error telemetry reset")
@@ -54,7 +54,7 @@ func (h *AdminTelemetryHandler) ResetErrors(c *fiber.Ctx) error {
 // GET /api/v2/admin/telemetry/report-history
 func (h *AdminTelemetryHandler) GetReportHistory(c *fiber.Ctx) error {
 	if h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "telemetry service 未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.telemetry_service_not_init"))
 	}
 	reporter := h.svc.Reporter()
 	return response.Success(c, fiber.Map{
@@ -66,7 +66,7 @@ func (h *AdminTelemetryHandler) GetReportHistory(c *fiber.Ctx) error {
 // POST /api/v2/admin/telemetry/report-now
 func (h *AdminTelemetryHandler) ReportNow(c *fiber.Ctx) error {
 	if h.svc == nil {
-		return response.NewBizErrorWithMsg(response.ServerError, "telemetry service 未初始化")
+		return response.NewBizErrorWithMsg(response.ServerError, response.Translate(c, "server.handler.telemetry_service_not_init"))
 	}
 	reporter := h.svc.Reporter()
 	rec := reporter.ReportNow(c.UserContext())

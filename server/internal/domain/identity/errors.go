@@ -3,11 +3,11 @@ package identity
 import "errors"
 
 var (
-	ErrUserExists           = errors.New("用户已存在")
-	ErrUserNotFound         = errors.New("用户不存在")
-	ErrInvalidCredentials   = errors.New("用户名或密码不正确")
-	ErrAdminTokenNotFound   = errors.New("管理员令牌不存在")
-	ErrAdminTokenExpired    = errors.New("管理员令牌已过期")
-	ErrOAuthAlreadyBound    = errors.New("第三方账号已被绑定")
-	ErrOAuthBindingNotFound = errors.New("第三方账号绑定不存在")
+	ErrUserExists           = errors.New("USER_EXISTS")
+	ErrUserNotFound         = errors.New("USER_NOT_FOUND")
+	ErrInvalidCredentials   = errors.New("INVALID_CREDENTIALS")
+	ErrAdminTokenNotFound   = errors.New("ADMIN_TOKEN_NOT_FOUND")
+	ErrAdminTokenExpired    = errors.New("ADMIN_TOKEN_EXPIRED")
+	ErrOAuthAlreadyBound    = errors.New("OAUTH_ALREADY_BOUND")
+	ErrOAuthBindingNotFound = errors.New("OAUTH_BINDING_NOT_FOUND")
 )

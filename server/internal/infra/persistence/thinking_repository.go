@@ -6,11 +6,12 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/contentutil"
+	"github.com/baddate/sanblog/server/internal/app/contentutil"
 	"gorm.io/gorm"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/thinking"
-	"github.com/grtsinry43/grtblog-v2/server/internal/infra/persistence/model"
+	"github.com/baddate/sanblog/server/internal/domain/thinking"
+	"github.com/baddate/sanblog/server/internal/infra/i18n"
+	"github.com/baddate/sanblog/server/internal/infra/persistence/model"
 )
 
 type ThinkingRepository struct {
@@ -84,7 +85,7 @@ func (r *ThinkingRepository) Create(ctx context.Context, t *thinking.Thinking) e
 			return err
 		}
 
-		areaID, err := createCommentArea(tx, contentutil.CommentAreaTypeThinking, "思考", strconv.FormatInt(m.ID, 10), m.ID)
+		areaID, err := createCommentArea(tx, contentutil.CommentAreaTypeThinking, i18n.MustLocalize("zh", "server.label.thinking"), strconv.FormatInt(m.ID, 10), m.ID)
 		if err != nil {
 			return err
 		}

@@ -2,8 +2,8 @@ package social
 
 import "errors"
 
-var ErrFriendLinkApplicationNotFound = errors.New("友链申请不存在")
-var ErrFriendLinkNotFound = errors.New("友链不存在")
-var ErrFriendLinkApplicationBlocked = errors.New("友链申请已被封禁")
-var ErrGlobalNotificationNotFound = errors.New("全站通知不存在")
-var ErrAdminNotificationNotFound = errors.New("站内通知不存在")
+var ErrFriendLinkApplicationNotFound = errors.New("FRIEND_LINK_APPLICATION_NOT_FOUND")
+var ErrFriendLinkNotFound = errors.New("FRIEND_LINK_NOT_FOUND")
+var ErrFriendLinkApplicationBlocked = errors.New("FRIEND_LINK_APPLICATION_BLOCKED")
+var ErrGlobalNotificationNotFound = errors.New("GLOBAL_NOTIFICATION_NOT_FOUND")
+var ErrAdminNotificationNotFound = errors.New("ADMIN_NOTIFICATION_NOT_FOUND")

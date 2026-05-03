@@ -4,20 +4,20 @@
 
 <div align="center">
 
-# grtblog
+# sanblog
 
 **现代化博客系统** — 静态先行、实时注水、联合社交
 
-[![GitHub release](https://img.shields.io/github/v/release/grtsinry43/grtblog)](https://github.com/grtsinry43/grtblog/releases)
-[![GitHub top language](https://img.shields.io/github/languages/top/grtsinry43/grtblog)](https://github.com/grtsinry43/grtblog)
-[![GitHub languages count](https://img.shields.io/github/languages/count/grtsinry43/grtblog)](https://github.com/grtsinry43/grtblog)
+[![GitHub release](https://img.shields.io/github/v/release/baddate/sanblog)](https://github.com/baddate/sanblog/releases)
+[![GitHub top language](https://img.shields.io/github/languages/top/baddate/sanblog)](https://github.com/baddate/sanblog)
+[![GitHub languages count](https://img.shields.io/github/languages/count/baddate/sanblog)](https://github.com/baddate/sanblog)
 
 </div>
 
-GrtBlog 是一个面向创作者的博客系统，以纯静态 HTML 分发实现极致首屏速度，通过 WebSocket 实现毫秒级实时更新，并内置联合社交协议让博客不再是孤岛。
+sanblog 是一个面向创作者的博客系统，以纯静态 HTML 分发实现极致首屏速度，通过 WebSocket 实现毫秒级实时更新，并内置联合社交协议让博客不再是孤岛。
 
 > 联合协议仍在内测和修复中，将在 v2.1.0 正式发布。
-> 旧版已归档至 https://github.com/grtsinry43/grtblog-legacy
+> 旧版已归档至 https://github.com/baddate/sanblog-legacy
 
 ## 特性
 
@@ -88,9 +88,9 @@ GrtBlog 是一个面向创作者的博客系统，以纯静态 HTML 分发实现
 **一键安装（推荐）：**
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/grtsinry43/grtblog/main/deploy/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/baddate/sanblog/main/deploy/install.sh)
 # 国内：
-bash <(curl -fsSL https://cnb.cool/grtsinry43/grtblog/-/git/raw/main/deploy/install.sh)
+bash <(curl -fsSL https://cnb.cool/baddate/sanblog/-/git/raw/main/deploy/install.sh)
 ```
 
 脚本会自动检测环境、选择镜像源、生成密钥、下载配置并启动服务。
@@ -100,24 +100,24 @@ bash <(curl -fsSL https://cnb.cool/grtsinry43/grtblog/-/git/raw/main/deploy/inst
 
 ```bash
 # 创建部署目录
-mkdir -p grtblog && cd grtblog
+mkdir -p sanblog && cd sanblog
 
 # 下载部署配置（国际）
-BASE_URL="https://raw.githubusercontent.com/grtsinry43/grtblog/main"
+BASE_URL="https://raw.githubusercontent.com/baddate/sanblog/main"
 # 国内加速：
-# BASE_URL="https://cnb.cool/grtsinry43/grtblog/-/git/raw/main"
+# BASE_URL="https://cnb.cool/baddate/sanblog/-/git/raw/main"
 curl -fsSL "$BASE_URL/deploy/docker-compose.yml" -o docker-compose.yml
 curl -fsSL "$BASE_URL/deploy/.env.example"       -o .env
 mkdir -p nginx
 curl -fsSL "$BASE_URL/deploy/nginx/nginx.conf"    -o nginx/nginx.conf
 
 # 编辑 .env：设置 IMAGE_REPO_PREFIX、APP_VERSION、密码和密钥
-#   IMAGE_REPO_PREFIX=ghcr.io/grtsinry43/
+#   IMAGE_REPO_PREFIX=ghcr.io/baddate/
 #   APP_VERSION=2.0.2              # 查看 Releases 页面获取最新版本
 #   POSTGRES_PASSWORD=<强密码>
 #   AUTH_SECRET=<openssl rand -hex 32>
 # 国内服务器推荐使用 CNB 镜像源：
-#   IMAGE_REPO_PREFIX=docker.cnb.cool/grtsinry43/grtblog/
+#   IMAGE_REPO_PREFIX=docker.cnb.cool/baddate/sanblog/
 
 # 启动
 mkdir -p storage/html storage/uploads storage/geoip
@@ -134,10 +134,10 @@ docker compose up -d
 ### 本地构建部署
 
 ```bash
-git clone https://github.com/grtsinry43/grtblog.git
+git clone https://github.com/baddate/sanblog.git
 # 国内加速：
-# git clone https://cnb.cool/grtsinry43/grtblog.git
-cd grtblog/deploy
+# git clone https://cnb.cool/baddate/sanblog.git
+cd sanblog/deploy
 cp .env.example .env
 # 编辑 .env：设置密码和密钥（IMAGE_REPO_PREFIX 留空）
 
@@ -175,7 +175,7 @@ cd web && pnpm i && pnpm dev     # :5173
 ## 项目结构
 
 ```
-grtblog-v2/
+sanblog/
 ├── server/         # Go 后端（控制平面）
 ├── web/            # SvelteKit 前台（渲染平面）
 ├── admin/          # Vue 3 管理后台
@@ -205,11 +205,11 @@ grtblog-v2/
 
 ## Star History
 
-<a href="https://star-history.com/#grtsinry43/grtblog&Date">
+<a href="https://star-history.com/#baddate/sanblog&Date">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=grtsinry43/grtblog&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=grtsinry43/grtblog&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=grtsinry43/grtblog&type=Date" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=baddate/sanblog&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=baddate/sanblog&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=baddate/sanblog&type=Date" />
  </picture>
 </a>
 

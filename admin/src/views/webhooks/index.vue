@@ -102,7 +102,7 @@ onMounted(() => init())
           <NButton
             secondary
             @click="fetchWebhooks"
-            >刷新</NButton
+            >{{ $t('admin.common.refresh') }}</NButton
           >
           <NButton
             type="primary"

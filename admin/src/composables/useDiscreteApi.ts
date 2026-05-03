@@ -1,16 +1,18 @@
-import { zhCN, dateZhCN, createDiscreteApi } from 'naive-ui'
+import { zhCN, dateZhCN, enUS, dateEnUS, createDiscreteApi } from 'naive-ui'
 import { computed, h } from 'vue'
 
+import { useLocaleStore } from '@/stores/locale'
 import { useTheme } from './useTheme'
 
 import type { ConfigProviderProps } from 'naive-ui'
 
 export function getConfigProviderProps() {
   const { theme, themeOverrides } = useTheme()
+  const localeStore = useLocaleStore()
 
   const configProviderProps = computed<ConfigProviderProps>(() => ({
-    locale: zhCN,
-    dateLocale: dateZhCN,
+    locale: localeStore.isZh ? zhCN : enUS,
+    dateLocale: localeStore.isZh ? dateZhCN : dateEnUS,
     theme: theme.value,
     themeOverrides: themeOverrides.value,
     icons: {

@@ -23,19 +23,19 @@ Update at least these values in `.env`:
 
 Every tagged release triggers a GitHub Actions workflow that builds multi-arch (`linux/amd64` + `linux/arm64`) images.
 
-- `stable` tags push to `ghcr.io/grtsinry43/`, Docker Hub, and CNB
-- `preview` tags push to `ghcr.io/grtsinry43/` and CNB
+- `stable` tags push to `ghcr.io/baddate/`, Docker Hub, and CNB
+- `preview` tags push to `ghcr.io/baddate/` and CNB
 
 三个源的镜像内容完全一致，选择最适合你网络环境的即可：
 
 | 来源 | `IMAGE_REPO_PREFIX` | 适用场景 |
 |------|---------------------|----------|
-| Docker Hub | `grtsinry43/` | 国际通用 |
-| GHCR | `ghcr.io/grtsinry43/` | 国际通用、预发布版本 |
-| CNB（推荐国内） | `docker.cnb.cool/grtsinry43/grtblog/` | 国内服务器加速拉取 |
+| Docker Hub | `baddate/` | 国际通用 |
+| GHCR | `ghcr.io/baddate/` | 国际通用、预发布版本 |
+| CNB（推荐国内） | `docker.cnb.cool/baddate/sanblog/` | 国内服务器加速拉取 |
 
 ```ini
-IMAGE_REPO_PREFIX=ghcr.io/grtsinry43/
+IMAGE_REPO_PREFIX=ghcr.io/baddate/
 APP_VERSION=1.2.3
 APP_UPDATE_CHANNEL=stable
 ```
@@ -43,7 +43,7 @@ APP_UPDATE_CHANNEL=stable
 国内服务器推荐：
 
 ```ini
-IMAGE_REPO_PREFIX=docker.cnb.cool/grtsinry43/grtblog/
+IMAGE_REPO_PREFIX=docker.cnb.cool/baddate/sanblog/
 APP_VERSION=1.2.3
 APP_UPDATE_CHANNEL=stable
 # Docker Hub 镜像加速（nginx/postgres/redis）
@@ -239,7 +239,7 @@ server {
 - Nginx 使用 Docker 内置 DNS (`resolver 127.0.0.11 valid=10s`) 代替 `upstream` 块，容器重建后最多 10s 自动恢复。
 - `renderer` entrypoint 每次启动时清理旧 `_app/` 并拷贝新资源，解决版本堆积问题。
 - `server` entrypoint 自动运行数据库迁移，无需单独的 migrate 服务。
-- Internal service network: `grtblog-internal`.
+- Internal service network: `sanblog-internal`.
 - `server` renders snapshot pages from `HTMLSNAPSHOT_BASE_URL=http://renderer:3000`.
 - `renderer` SSR calls API via `INTERNAL_API_BASE_URL=http://server:8080/api/v2`.
 - Admin SPA 内置于 server 镜像 (`/app/admin/`)，由 Fiber 直接 serve，无需独立容器。

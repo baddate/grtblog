@@ -5,9 +5,9 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	appEvent "github.com/grtsinry43/grtblog-v2/server/internal/app/event"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	appEvent "github.com/baddate/sanblog/server/internal/app/event"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type EventHandler struct{}
@@ -72,11 +72,11 @@ func (h *EventHandler) ListEventCatalog(c *fiber.Ctx) error {
 func (h *EventHandler) GetEventCatalogItem(c *fiber.Ctx) error {
 	name := strings.TrimSpace(c.Params("name"))
 	if name == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "事件名不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.event_name_required"))
 	}
 	item, ok := appEvent.CatalogByName(name)
 	if !ok {
-		return response.NewBizErrorWithMsg(response.NotFound, "事件不存在")
+		return response.NewBizErrorWithMsg(response.NotFound, response.Translate(c, "server.handler.event_not_found"))
 	}
 	return response.Success(c, mapEventDescriptor(item))
 }

@@ -71,7 +71,7 @@ const emit = defineEmits<{
             y-gap="12"
           >
             <NGi>
-              <NFormItem label="名称">
+              <NFormItem :label="$t('admin.common.name')">
                 <NInput
                   v-model:value="form.name"
                   placeholder="如：联合站点推送"
@@ -130,7 +130,7 @@ const emit = defineEmits<{
               </NCollapse>
             </NCheckboxGroup>
           </NFormItem>
-          <NFormItem label="启用">
+          <NFormItem :label="$t('admin.common.enabled')">
             <NSwitch v-model:value="form.isEnabled" />
           </NFormItem>
 
@@ -160,7 +160,7 @@ const emit = defineEmits<{
                   tertiary
                   size="small"
                   @click="emit('removeHeader', index)"
-                  >删除</NButton
+                  >{{ $t('admin.common.delete') }}</NButton
                 >
               </div>
               <div>
@@ -215,7 +215,7 @@ const emit = defineEmits<{
           </NFormItem>
         </NForm>
         <div class="flex justify-end gap-2">
-          <NButton @click="visible = false">取消</NButton>
+          <NButton @click="visible = false">{{ $t('admin.common.cancel') }}</NButton>
           <NButton
             type="primary"
             :loading="saving"

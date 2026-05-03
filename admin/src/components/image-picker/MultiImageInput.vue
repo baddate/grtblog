@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { NButton, NImage, NInput, NInputGroup } from 'naive-ui'
 import { computed, ref } from 'vue'
 
@@ -46,6 +49,7 @@ function handleRemove(index: number) {
   list.splice(index, 1)
   emitJoined(list)
 }
+
 </script>
 
 <template>

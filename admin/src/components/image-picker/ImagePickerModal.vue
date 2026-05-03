@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import {
   NButton,
   NCard,
@@ -91,6 +94,7 @@ watch(
     }
   },
 )
+
 </script>
 
 <template>
@@ -177,7 +181,7 @@ watch(
           />
           <div v-else />
           <div class="flex gap-2">
-            <NButton @click="handleClose">取消</NButton>
+            <NButton @click="handleClose">{{ $t('admin.common.cancel') }}</NButton>
             <NButton
               type="primary"
               :disabled="!selectedUrl"

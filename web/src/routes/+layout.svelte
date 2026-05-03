@@ -32,6 +32,9 @@
 	import { userStore } from '$lib/shared/stores/userStore';
 	import { get } from 'svelte/store';
 
+	import { t } from '$lib/i18n/client';
+	import { createTranslateFn } from '$lib/i18n/server';
+
 	function logClientRuntimeError(
 		kind: 'error' | 'unhandledrejection',
 		message: string,
@@ -66,6 +69,9 @@
 			(isAlbumPhotoPath(fromPath) && isAlbumDetailPath(toPath))
 		);
 	}
+
+	const stripLangPrefix = (pathname: string): string =>
+		pathname.replace(/^\/(zh|en|jp)(?=\/|$)/, '') || '/';
 
 	/**
 	 * Avoid back animation and LCP delay caused by lang time animation.
@@ -260,7 +266,8 @@
 			routeData: page.data,
 			websiteInfo: $websiteInfoStore,
 			origin: page.url.origin,
-			fallbackSiteIcon: siteFavicon
+			fallbackSiteIcon: siteFavicon,
+			t: createTranslateFn(data.translations ?? {})
 		})
 	);
 
@@ -268,7 +275,7 @@
 	const theme = themeManager;
 
 	function openPresenceWindow() {
-		windowStore.open('在线页面', null, 'presence-pages');
+		windowStore.open(t('web.presence.online_pages'), null, 'presence-pages');
 	}
 
 	onMount(() => {
@@ -372,7 +379,7 @@
 	<meta name="description" content={seoMeta.description} />
 	<meta name="keywords" content={seoMeta.keywords} />
 	<meta name="robots" content={seoMeta.robots} />
-	<meta name="author" content="grtinry43" />
+	<meta name="author" content="baddate" />
 	<meta property="og:title" content={seoMeta.ogTitle} />
 	<meta property="og:description" content={seoMeta.ogDescription} />
 	<meta property="og:type" content={seoMeta.ogType} />
@@ -392,8 +399,19 @@
 	<meta name="twitter:title" content={seoMeta.ogTitle} />
 	<meta name="twitter:description" content={seoMeta.ogDescription} />
 	<meta name="twitter:image" content={seoMeta.ogImage} />
+	<!-- hreflang -->
+	{#if seoMeta.canonicalUrl}
+		{@const canonicalPathname = new URL(seoMeta.canonicalUrl).pathname}
+		{@const basePath = stripLangPrefix(canonicalPathname)}
+		{@const origin = page.url.origin}
+		{@const zhUrl = origin + '/zh' + basePath}
+		<link rel="alternate" hreflang="zh" href={zhUrl} />
+		<link rel="alternate" hreflang="en" href={origin + '/en' + basePath} />
+		<link rel="alternate" hreflang="jp" href={origin + '/jp' + basePath} />
+		<link rel="alternate" hreflang="x-default" href={zhUrl} />
+	{/if}
 	<script>
-		// Inline script to prevent theme flash (fallback before Svelte hydrates)
+		// Inline script to prevent theme flas  h (fallback before Svelte hydrates)
 		(function () {
 			try {
 				const theme = localStorage.getItem('theme') || 'system';
@@ -419,7 +437,7 @@
 	{/if}
 	<SiteHealthBanner />
 	<main
-		class="page-wrapper mx-auto {page.url.pathname.startsWith('/timeline')
+		class="page-wrapper mx-auto {stripLangPrefix(page.url.pathname).startsWith('/timeline')
 			? 'max-w-none px-0 py-0'
 			: 'max-w-300 px-4 sm:px-6 lg:px-8 py-10 md:py-16'}"
 	>
@@ -440,7 +458,7 @@
 		aria-live="polite"
 		aria-busy="true"
 	>
-		<Loading size="w-8 h-8" duration={900} class="gap-0" text="正在玩命加载中...莫慌" />
+		<Loading size="w-8 h-8" duration={900} class="gap-0" text={t('web.loading.text')} />
 	</div>
 {/if}
 
@@ -458,7 +476,7 @@
 			loader={() => import('$lib/features/tag/components/TagContentsWindow.svelte')}
 			loaderProps={{ tagId: windowStore.data?.id, tagName: windowStore.data?.name }}
 		/>
-	{:else if windowStore.title === '申请友链'}
+	{:else if windowStore.title === t('web.friend.apply_title')}
 		<QueryRoot
 			loader={() => import('$lib/features/friend-link/components/ApplyFriendForm.svelte')}
 		/>

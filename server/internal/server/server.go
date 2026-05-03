@@ -20,29 +20,30 @@ import (
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/analytics"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/article"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/cleanup"
-	appfed "github.com/grtsinry43/grtblog-v2/server/internal/app/federation"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/health"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/htmlsnapshot"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/isr"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/sysconfig"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/telemetry"
-	"github.com/grtsinry43/grtblog-v2/server/internal/buildinfo"
-	"github.com/grtsinry43/grtblog-v2/server/internal/config"
-	albumdomain "github.com/grtsinry43/grtblog-v2/server/internal/domain/album"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/comment"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/content"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/social"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/router"
-	infraevent "github.com/grtsinry43/grtblog-v2/server/internal/infra/event"
-	fedinfra "github.com/grtsinry43/grtblog-v2/server/internal/infra/federation"
-	"github.com/grtsinry43/grtblog-v2/server/internal/infra/metrics"
-	"github.com/grtsinry43/grtblog-v2/server/internal/infra/persistence"
-	"github.com/grtsinry43/grtblog-v2/server/internal/security/jwt"
-	"github.com/grtsinry43/grtblog-v2/server/internal/security/turnstile"
+	"github.com/baddate/sanblog/server/internal/app/analytics"
+	"github.com/baddate/sanblog/server/internal/app/article"
+	"github.com/baddate/sanblog/server/internal/app/cleanup"
+	appfed "github.com/baddate/sanblog/server/internal/app/federation"
+	"github.com/baddate/sanblog/server/internal/app/health"
+	"github.com/baddate/sanblog/server/internal/app/htmlsnapshot"
+	"github.com/baddate/sanblog/server/internal/app/isr"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
+	"github.com/baddate/sanblog/server/internal/app/telemetry"
+	"github.com/baddate/sanblog/server/internal/buildinfo"
+	"github.com/baddate/sanblog/server/internal/config"
+	albumdomain "github.com/baddate/sanblog/server/internal/domain/album"
+	"github.com/baddate/sanblog/server/internal/domain/comment"
+	"github.com/baddate/sanblog/server/internal/domain/content"
+	"github.com/baddate/sanblog/server/internal/domain/social"
+	"github.com/baddate/sanblog/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/http/router"
+	infraevent "github.com/baddate/sanblog/server/internal/infra/event"
+	fedinfra "github.com/baddate/sanblog/server/internal/infra/federation"
+	"github.com/baddate/sanblog/server/internal/infra/i18n"
+	"github.com/baddate/sanblog/server/internal/infra/metrics"
+	"github.com/baddate/sanblog/server/internal/infra/persistence"
+	"github.com/baddate/sanblog/server/internal/security/jwt"
+	"github.com/baddate/sanblog/server/internal/security/turnstile"
 )
 
 // Server wraps Fiber with configuration and dependencies.
@@ -85,6 +86,11 @@ func New(cfg config.Config, db *gorm.DB) *Server {
 	ctx, cancel := context.WithCancel(context.Background())
 	bodyLimit := sysCfgSvc.UploadMaxSizeBytes(ctx)
 
+	// Initialize i18n bundle
+	if err := i18n.Init("."); err != nil {
+		log.Printf("[server] i18n init warning: %v", err)
+	}
+
 	app := fiber.New(fiber.Config{
 		AppName:           cfg.App.Name,
 		EnablePrintRoutes: cfg.App.Env == "development",
@@ -110,7 +116,11 @@ func New(cfg config.Config, db *gorm.DB) *Server {
 					Location: fmt.Sprintf("%s %s", c.Method(), c.Route().Path),
 					Message:  ae.Error(),
 				})
-				return response.ErrorWithMsg[any](c, ae.Biz, ae.Message)
+				// Use localized message if available; fall back to legacy Msg.
+				if ae.Message != "" {
+					return response.ErrorWithMsg[any](c, ae.Biz, ae.Message)
+				}
+				return response.ErrorFromBizLocalized[any](c, ae.Biz)
 			}
 
 			// 2. Fiber 内置错误（比如 fiber.ErrNotFound / ErrMethodNotAllowed）
@@ -127,18 +137,18 @@ func New(cfg config.Config, db *gorm.DB) *Server {
 				}
 				switch fe.Code {
 				case fiber.StatusNotFound:
-					return response.ErrorFromBiz[any](c, response.NotFound)
+					return response.ErrorFromBizLocalized[any](c, response.NotFound)
 				case fiber.StatusMethodNotAllowed:
-					return response.ErrorFromBiz[any](c, response.MethodNotAllowed)
+					return response.ErrorFromBizLocalized[any](c, response.MethodNotAllowed)
 				default:
-					return response.ErrorFromBiz[any](c, response.ServerError)
+					return response.ErrorFromBizLocalized[any](c, response.ServerError)
 				}
 			}
 
 			// 2.5 领域层常见 sentinel errors → 404
 			if isNotFoundSentinel(err) {
 				logRequestError(c, "not_found", fmt.Sprintf("err=%v", err))
-				return response.ErrorWithMsg[any](c, response.NotFound, err.Error())
+				return response.ErrorFromBizLocalized[any](c, response.NotFound)
 			}
 
 			// 3. 其他未识别错误，统一视为服务器内部错误
@@ -152,7 +162,7 @@ func New(cfg config.Config, db *gorm.DB) *Server {
 					Message:  err.Error(),
 				})
 			}
-			return response.ErrorFromBiz[any](c, response.ServerError)
+			return response.ErrorFromBizLocalized[any](c, response.ServerError)
 		},
 	})
 
@@ -174,6 +184,9 @@ func New(cfg config.Config, db *gorm.DB) *Server {
 			c.Locals("panicRecorded", true)
 		},
 	}))
+
+	// i18n locale detection middleware
+	app.Use(i18n.Middleware())
 
 	// CORS: read allowed origins from sysconfig (site.public_url, site.api_url).
 	app.Use(cors.New(cors.Config{

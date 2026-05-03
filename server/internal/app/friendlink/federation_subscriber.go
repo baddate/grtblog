@@ -8,11 +8,11 @@ import (
 	"strings"
 	"time"
 
-	appEvent "github.com/grtsinry43/grtblog-v2/server/internal/app/event"
-	appfed "github.com/grtsinry43/grtblog-v2/server/internal/app/federation"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/federation"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/social"
-	fedinfra "github.com/grtsinry43/grtblog-v2/server/internal/infra/federation"
+	appEvent "github.com/baddate/sanblog/server/internal/app/event"
+	appfed "github.com/baddate/sanblog/server/internal/app/federation"
+	"github.com/baddate/sanblog/server/internal/domain/federation"
+	"github.com/baddate/sanblog/server/internal/domain/social"
+	fedinfra "github.com/baddate/sanblog/server/internal/infra/federation"
 )
 
 type handlerFunc func(ctx context.Context, event appEvent.Event) error

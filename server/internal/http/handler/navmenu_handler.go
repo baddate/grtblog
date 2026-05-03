@@ -5,11 +5,11 @@ import (
 	"strconv"
 	"strings"
 
+	appnav "github.com/baddate/sanblog/server/internal/app/navigation"
+	"github.com/baddate/sanblog/server/internal/domain/navigation"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/response"
 	"github.com/gofiber/fiber/v2"
-	appnav "github.com/grtsinry43/grtblog-v2/server/internal/app/navigation"
-	"github.com/grtsinry43/grtblog-v2/server/internal/domain/navigation"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
 )
 
 type NavMenuHandler struct {
@@ -63,16 +63,16 @@ func (h *NavMenuHandler) ListAdmin(c *fiber.Ctx) error {
 func (h *NavMenuHandler) Create(c *fiber.Ctx) error {
 	var req contract.CreateNavMenuReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 
 	name := strings.TrimSpace(req.Name)
 	if name == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "菜单名称不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.menu_name_required"))
 	}
 	url := strings.TrimSpace(req.URL)
 	if url == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "菜单链接不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.menu_link_required"))
 	}
 
 	created, err := h.svc.Create(c.Context(), appnav.CreateNavMenuCmd{
@@ -82,10 +82,10 @@ func (h *NavMenuHandler) Create(c *fiber.Ctx) error {
 		Icon:     req.Icon,
 	})
 	if err != nil {
-		return h.mapNavMenuError(err)
+		return h.mapNavMenuError(c, err)
 	}
 
-	return response.SuccessWithMessage[contract.NavMenuResp](c, toNavMenuResp(created), "菜单创建成功")
+	return response.SuccessWithMessage[contract.NavMenuResp](c, toNavMenuResp(created), response.Translate(c, "server.success.menu_created"))
 }
 
 // Update godoc
@@ -101,21 +101,21 @@ func (h *NavMenuHandler) Create(c *fiber.Ctx) error {
 func (h *NavMenuHandler) Update(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的菜单ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_menu_id"))
 	}
 
 	var req contract.UpdateNavMenuReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 
 	name := strings.TrimSpace(req.Name)
 	if name == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "菜单名称不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.menu_name_required"))
 	}
 	url := strings.TrimSpace(req.URL)
 	if url == "" {
-		return response.NewBizErrorWithMsg(response.ParamsError, "菜单链接不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.menu_link_required"))
 	}
 
 	updated, err := h.svc.Update(c.Context(), appnav.UpdateNavMenuCmd{
@@ -127,10 +127,10 @@ func (h *NavMenuHandler) Update(c *fiber.Ctx) error {
 		Sort:     req.Sort,
 	})
 	if err != nil {
-		return h.mapNavMenuError(err)
+		return h.mapNavMenuError(c, err)
 	}
 
-	return response.SuccessWithMessage[contract.NavMenuResp](c, toNavMenuResp(updated), "菜单更新成功")
+	return response.SuccessWithMessage[contract.NavMenuResp](c, toNavMenuResp(updated), response.Translate(c, "server.success.menu_updated"))
 }
 
 // Delete godoc
@@ -144,19 +144,19 @@ func (h *NavMenuHandler) Update(c *fiber.Ctx) error {
 func (h *NavMenuHandler) Delete(c *fiber.Ctx) error {
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
-		return response.NewBizErrorWithMsg(response.ParamsError, "无效的菜单ID")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.invalid_menu_id"))
 	}
 
 	if err := h.svc.Delete(c.Context(), id); err != nil {
 		return err
 	}
 
-	return response.SuccessWithMessage[any](c, nil, "菜单已删除")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.menu_deleted"))
 }
 
-func (h *NavMenuHandler) mapNavMenuError(err error) error {
+func (h *NavMenuHandler) mapNavMenuError(c *fiber.Ctx, err error) error {
 	if errors.Is(err, navigation.ErrInvalidNavMenuIcon) {
-		return response.NewBizErrorWithCause(response.ParamsError, "菜单图标不在白名单中", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.menu_icon_not_in_whitelist"), err)
 	}
 	return err
 }
@@ -173,11 +173,11 @@ func (h *NavMenuHandler) mapNavMenuError(err error) error {
 func (h *NavMenuHandler) Reorder(c *fiber.Ctx) error {
 	var req contract.ReorderNavMenuReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 
 	if len(req.Items) == 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "排序数据不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.reorder_data_required"))
 	}
 
 	items := make([]appnav.NavMenuOrderItem, 0, len(req.Items))
@@ -193,7 +193,7 @@ func (h *NavMenuHandler) Reorder(c *fiber.Ctx) error {
 		return err
 	}
 
-	return response.SuccessWithMessage[any](c, nil, "菜单排序已更新")
+	return response.SuccessWithMessage[any](c, nil, response.Translate(c, "server.success.menu_reordered"))
 }
 
 func toNavMenuResp(item *navigation.NavMenu) contract.NavMenuResp {

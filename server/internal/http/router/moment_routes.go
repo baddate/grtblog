@@ -3,10 +3,10 @@ package router
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/moment"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/handler"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/middleware"
-	"github.com/grtsinry43/grtblog-v2/server/internal/infra/persistence"
+	"github.com/baddate/sanblog/server/internal/app/moment"
+	"github.com/baddate/sanblog/server/internal/http/handler"
+	"github.com/baddate/sanblog/server/internal/http/middleware"
+	"github.com/baddate/sanblog/server/internal/infra/persistence"
 )
 
 func registerMomentPublicRoutes(v2 fiber.Router, deps Dependencies) {
@@ -18,7 +18,7 @@ func registerMomentPublicRoutes(v2 fiber.Router, deps Dependencies) {
 	publicGroup.Get("/:id/same-period-articles", momentHandler.ListSamePeriodArticles)
 	publicGroup.Get("/short/:shortUrl", momentHandler.GetMomentByShortURL) // GET /api/v2/moments/short/abc123
 	publicGroup.Post("/:id/latest", momentHandler.CheckMomentLatest)       // POST /api/v2/moments/123/latest
-	publicGroup.Get("/:id/metrics", momentHandler.GetMomentMetrics)       // GET /api/v2/moments/123/metrics
+	publicGroup.Get("/:id/metrics", momentHandler.GetMomentMetrics)        // GET /api/v2/moments/123/metrics
 
 	v2.Get("/columns/short/:shortUrl/moments", momentHandler.ListMomentsByColumnShortURL)
 }

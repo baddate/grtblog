@@ -8,7 +8,9 @@
 	import MomentDetailPaper from './moment-detail/MomentDetailPaper.svelte';
 	import MomentDetailTocSidebar from './moment-detail/MomentDetailTocSidebar.svelte';
 	import { detailHeroBgSrc } from '$lib/shared/stores/detailHeroBg';
+	import { page } from '$app/state';
 	import { onDestroy } from 'svelte';
+	import { t } from '$lib/i18n/client';
 
 	let { moment }: { moment: MomentDetail } = $props();
 
@@ -16,7 +18,7 @@
 	const dateNo = $derived(formatDateCompact(moment.createdAt));
 	const columnLabel = $derived.by(() => {
 		const name = (moment.columnName || '').trim();
-		return name || '未分类手记';
+		return name || t('web.ui.uncategorized_moment');
 	});
 	const columnSlug = $derived(moment.columnShortUrl ?? '');
 	const toc = $derived(moment.toc ?? []);
@@ -59,7 +61,7 @@
 				<div class="w-1.5 h-1.5 rounded-full bg-ink-300 dark:bg-ink-800/50 shadow-inner"></div>
 				{#if columnSlug}
 					<a
-						href={resolvePath(buildColumnPath(columnSlug))}
+						href={resolvePath(buildColumnPath(columnSlug), page.data.lang)}
 						class="[writing-mode:vertical-rl] text-[11px] font-serif font-bold text-cinnabar-500 tracking-[0.3em] opacity-80 hover:opacity-100 transition-opacity"
 					>
 						{columnLabel}
@@ -83,7 +85,7 @@
 				class="group flex items-center gap-2 text-xs font-serif text-ink-800 dark:text-ink-200 hover:text-cinnabar-500 transition-colors"
 			>
 				<ArrowLeft size={14} class="transition-transform group-hover:-translate-x-1" />
-				<span class="tracking-widest">收起这一页</span>
+				<span class="tracking-widest">{t('web.ui.collapse_page')}</span>
 			</button>
 		</div>
 

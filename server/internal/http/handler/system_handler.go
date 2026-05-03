@@ -14,11 +14,11 @@ import (
 	"golang.org/x/sys/unix"
 	"gorm.io/gorm"
 
-	appEvent "github.com/grtsinry43/grtblog-v2/server/internal/app/event"
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/health"
-	"github.com/grtsinry43/grtblog-v2/server/internal/buildinfo"
-	"github.com/grtsinry43/grtblog-v2/server/internal/config"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	appEvent "github.com/baddate/sanblog/server/internal/app/event"
+	"github.com/baddate/sanblog/server/internal/app/health"
+	"github.com/baddate/sanblog/server/internal/buildinfo"
+	"github.com/baddate/sanblog/server/internal/config"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 type SystemHandler struct {
@@ -57,19 +57,19 @@ func NewSystemHandler(appCfg config.AppConfig, db *gorm.DB, redisClient *redis.C
 }
 
 type SystemStatus struct {
-	App          AppInfo           `json:"app"`
-	CPU          CPUInfo           `json:"cpu"`
-	Memory       MemoryInfo        `json:"memory"`
-	Disk         DiskInfo          `json:"disk"`
-	Storage      StorageInfo       `json:"storage"`
-	Database     DatabaseStatus    `json:"database"`
-	Redis        RedisStatus       `json:"redis"`
-	Platform     PlatformInfo      `json:"platform"`
-	Components   []ComponentHealth `json:"components"`
-	Update       SystemUpdateInfo  `json:"update"`
-	HealthState  uint8             `json:"healthState"`
-	HealthMode   string            `json:"healthMode"`
-	Maintenance  bool              `json:"maintenance"`
+	App         AppInfo           `json:"app"`
+	CPU         CPUInfo           `json:"cpu"`
+	Memory      MemoryInfo        `json:"memory"`
+	Disk        DiskInfo          `json:"disk"`
+	Storage     StorageInfo       `json:"storage"`
+	Database    DatabaseStatus    `json:"database"`
+	Redis       RedisStatus       `json:"redis"`
+	Platform    PlatformInfo      `json:"platform"`
+	Components  []ComponentHealth `json:"components"`
+	Update      SystemUpdateInfo  `json:"update"`
+	HealthState uint8             `json:"healthState"`
+	HealthMode  string            `json:"healthMode"`
+	Maintenance bool              `json:"maintenance"`
 }
 
 type AppInfo struct {

@@ -8,10 +8,10 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/grtsinry43/grtblog-v2/server/internal/app/sysconfig"
-	domainconfig "github.com/grtsinry43/grtblog-v2/server/internal/domain/config"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/contract"
-	"github.com/grtsinry43/grtblog-v2/server/internal/http/response"
+	"github.com/baddate/sanblog/server/internal/app/sysconfig"
+	domainconfig "github.com/baddate/sanblog/server/internal/domain/config"
+	"github.com/baddate/sanblog/server/internal/http/contract"
+	"github.com/baddate/sanblog/server/internal/http/response"
 )
 
 // FederationConfigHandler provides settings-center style APIs for federation_config.
@@ -46,7 +46,7 @@ func (h *FederationConfigHandler) ListFederationConfig(c *fiber.Ctx) error {
 	items = filterFederationConfigsByPrefix(items, "federation.")
 	tree, err := buildSysConfigTree(items)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "配置解析失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.config_parse_failed"), err)
 	}
 	return response.Success(c, tree)
 }
@@ -64,29 +64,29 @@ func (h *FederationConfigHandler) ListFederationConfig(c *fiber.Ctx) error {
 func (h *FederationConfigHandler) UpdateFederationConfig(c *fiber.Ctx) error {
 	var req contract.SysConfigBatchUpdateReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	if len(req.Items) == 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "items 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.items_required"))
 	}
 
 	updates := make([]sysconfig.UpdateItem, 0, len(req.Items))
 	for _, item := range req.Items {
 		key := strings.TrimSpace(item.Key)
 		if key == "" {
-			return response.NewBizErrorWithMsg(response.ParamsError, "key 不能为空")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.key_required"))
 		}
 		if !strings.HasPrefix(key, "federation.") {
-			return response.NewBizErrorWithMsg(response.ParamsError, "仅允许更新 federation.* 配置")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.only_federation_config"))
 		}
 		if key == "federation.instanceURL" && item.Value != nil {
 			var instanceURL string
 			if err := json.Unmarshal(json.RawMessage(*item.Value), &instanceURL); err != nil {
-				return response.NewBizErrorWithMsg(response.ParamsError, "instanceURL 必须为字符串")
+				return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.instance_url_string"))
 			}
 			trimmed := strings.TrimSpace(instanceURL)
 			if trimmed != "" && !strings.HasPrefix(trimmed, "http://") && !strings.HasPrefix(trimmed, "https://") {
-				return response.NewBizErrorWithMsg(response.ParamsError, "instanceURL 必须以 http:// 或 https:// 开头")
+				return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.instance_url_prefix"))
 			}
 		}
 		updates = append(updates, sysconfig.UpdateItem{
@@ -116,9 +116,9 @@ func (h *FederationConfigHandler) UpdateFederationConfig(c *fiber.Ctx) error {
 	updated = filterFederationConfigsByPrefix(updated, "federation.")
 	tree, err := buildSysConfigTree(updated)
 	if err != nil {
-		return response.NewBizErrorWithCause(response.ServerError, "配置解析失败", err)
+		return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.config_parse_failed"), err)
 	}
-	return response.SuccessWithMessage(c, tree, "更新成功")
+	return response.SuccessWithMessage(c, tree, response.Translate(c, "server.success.updated"))
 }
 
 // ExportFederationConfigs exports all federation.* and activitypub.* configs including sensitive values.
@@ -147,11 +147,11 @@ func (h *FederationConfigHandler) ExportFederationConfigs(c *fiber.Ctx) error {
 	for _, item := range fedItems {
 		valueType, err := normalizeValueType(item.ValueType)
 		if err != nil {
-			return response.NewBizErrorWithCause(response.ServerError, "配置解析失败", err)
+			return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.config_parse_failed"), err)
 		}
 		raw, err := valueToJSON(valueType, item.Value)
 		if err != nil {
-			return response.NewBizErrorWithCause(response.ServerError, "配置值序列化失败", err)
+			return response.NewBizErrorWithCause(response.ServerError, response.Translate(c, "server.handler.config_serialize_failed"), err)
 		}
 		var value any
 		if raw != nil {
@@ -183,20 +183,20 @@ func (h *FederationConfigHandler) ExportFederationConfigs(c *fiber.Ctx) error {
 func (h *FederationConfigHandler) ImportFederationConfigs(c *fiber.Ctx) error {
 	var req contract.SysConfigImportReq
 	if err := c.BodyParser(&req); err != nil {
-		return response.NewBizErrorWithCause(response.ParamsError, "请求体解析失败", err)
+		return response.NewBizErrorWithCause(response.ParamsError, response.Translate(c, "server.handler.parse_body_failed"), err)
 	}
 	if len(req.Configs) == 0 {
-		return response.NewBizErrorWithMsg(response.ParamsError, "configs 不能为空")
+		return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.configs_required"))
 	}
 
 	updates := make([]sysconfig.UpdateItem, 0, len(req.Configs))
 	for _, item := range req.Configs {
 		key := strings.TrimSpace(item.Key)
 		if key == "" {
-			return response.NewBizErrorWithMsg(response.ParamsError, "key 不能为空")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.key_required"))
 		}
 		if !strings.HasPrefix(key, "federation.") && !strings.HasPrefix(key, "activitypub.") {
-			return response.NewBizErrorWithMsg(response.ParamsError, "仅允许导入 federation.* 或 activitypub.* 配置")
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.only_fed_act_import"))
 		}
 
 		// Validate instanceURL format
@@ -204,14 +204,14 @@ func (h *FederationConfigHandler) ImportFederationConfigs(c *fiber.Ctx) error {
 			if s, ok := item.Value.(string); ok {
 				trimmed := strings.TrimSpace(s)
 				if trimmed != "" && !strings.HasPrefix(trimmed, "http://") && !strings.HasPrefix(trimmed, "https://") {
-					return response.NewBizErrorWithMsg(response.ParamsError, key+" 必须以 http:// 或 https:// 开头")
+					return response.NewBizErrorWithMsg(response.ParamsError, key+response.Translate(c, "server.handler.config_url_prefix_must_http"))
 				}
 			}
 		}
 
 		encoded, err := json.Marshal(item.Value)
 		if err != nil {
-			return response.NewBizErrorWithMsg(response.ParamsError, "配置值序列化失败: "+key)
+			return response.NewBizErrorWithMsg(response.ParamsError, response.Translate(c, "server.handler.config_serialize_failed")+": "+key)
 		}
 		raw := json.RawMessage(encoded)
 		updates = append(updates, sysconfig.UpdateItem{
@@ -228,7 +228,7 @@ func (h *FederationConfigHandler) ImportFederationConfigs(c *fiber.Ctx) error {
 		return err
 	}
 
-	return response.SuccessWithMessage(c, "导入成功", "导入成功")
+	return response.SuccessWithMessage(c, response.Translate(c, "server.success.import_success"), response.Translate(c, "server.success.import_success"))
 }
 
 func parseAndValidateFederationConfigKeys(raw string, prefix string) ([]string, error) {

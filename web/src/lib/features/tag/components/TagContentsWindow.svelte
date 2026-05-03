@@ -3,6 +3,8 @@
 	import type { TagContents } from '../types';
 	import Loading from '$lib/ui/common/Loading.svelte';
 	import { formatDateDotted } from '$lib/shared/utils/date';
+	import { resolvePath } from '$lib/shared/utils/resolve-path';
+	import { page } from '$app/state';
 
 	let { tagId }: { tagId: number } = $props();
 
@@ -47,7 +49,7 @@
 					<div class="flex flex-col">
 						{#each contents.articles as article (article.id)}
 							<a
-								href="/posts/{article.shortUrl}"
+								href={resolvePath(`/posts/${article.shortUrl}`, page.data.lang)}
 								class="group flex items-baseline justify-between gap-4 border-b border-ink-100/30 py-2 dark:border-ink-800/20"
 							>
 								<span
@@ -75,7 +77,7 @@
 					<div class="flex flex-col">
 						{#each contents.moments as moment (moment.id)}
 							<a
-								href="/moments/{moment.shortUrl}"
+								href={resolvePath(`/moments/${moment.shortUrl}`, page.data.lang)}
 								class="group flex items-baseline justify-between gap-4 border-b border-ink-100/30 py-2 dark:border-ink-800/20"
 							>
 								<span

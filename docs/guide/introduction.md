@@ -1,6 +1,6 @@
-# 什么是 GrtBlog？
+# 什么是 sanblog？
 
-GrtBlog 是一个现代化的博客系统，专为追求极致阅读体验和写作效率的创作者设计。
+sanblog 是一个现代化的博客系统，专为追求极致阅读体验和写作效率的创作者设计。
 
 ## 核心特性
 
@@ -22,9 +22,9 @@ GrtBlog 是一个现代化的博客系统，专为追求极致阅读体验和写
 
 ### 联合社交
 
-GrtBlog 拥有**自有的联合协议**，支持 GrtBlog 实例之间以及与其他平台之间的内容分发、订阅和互动，让你的博客不再是一座孤岛。
+sanblog 拥有**自有的联合协议**，支持 sanblog 实例之间以及与其他平台之间的内容分发、订阅和互动，让你的博客不再是一座孤岛。
 
-此外，GrtBlog 也兼容 ActivityPub 协议，Mastodon、Misskey 等 Fediverse 平台的用户同样可以关注你的博客、接收更新。
+此外，sanblog 也兼容 ActivityPub 协议，Mastodon、Misskey 等 Fediverse 平台的用户同样可以关注你的博客、接收更新。
 
 ### 功能管理后台
 
