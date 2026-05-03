@@ -16,7 +16,7 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			isrDeps: Set<string>;
-			lang: import('$lib/i18n/server').SupportedLang;
+			lang: string;
 			t: import('$lib/i18n/types').TranslateFn;
 		}
 		// interface PageData {}

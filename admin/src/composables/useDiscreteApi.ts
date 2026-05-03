@@ -11,8 +11,8 @@ export function getConfigProviderProps() {
   const localeStore = useLocaleStore()
 
   const configProviderProps = computed<ConfigProviderProps>(() => ({
-    locale: localeStore.isZh ? zhCN : enUS,
-    dateLocale: localeStore.isZh ? dateZhCN : dateEnUS,
+    locale: localeStore.current.startsWith('zh') ? zhCN : enUS,
+    dateLocale: localeStore.current.startsWith('zh') ? dateZhCN : dateEnUS,
     theme: theme.value,
     themeOverrides: themeOverrides.value,
     icons: {

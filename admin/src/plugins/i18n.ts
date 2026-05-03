@@ -14,6 +14,7 @@ const i18n = createI18n({
   legacy: false,
   locale: DEFAULT_LANG,
   fallbackLocale: FALLBACK_LANG,
-  messages,
+  // import.meta.glob returns unknown; cast is safe at this dynamic-import boundary
+  messages: messages as Record<string, Record<string, string>>,
 })
 export default i18n
