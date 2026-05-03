@@ -5,6 +5,8 @@
 	import Button from '$lib/ui/primitives/button/Button.svelte';
 	import { browser } from '$app/environment';
 	import { toast } from 'svelte-sonner';
+	import { resolvePath } from '$lib/shared/utils/resolve-path';
+	import { page } from '$app/state';
 
 	interface Props {
 		title: string;
@@ -46,7 +48,7 @@
 		if (window.history.length > 1) {
 			history.back();
 		} else {
-			window.location.href = '/';
+			window.location.href = resolvePath('/', page.data.lang);
 		}
 	}
 
@@ -104,7 +106,7 @@
 					variant="ghost"
 					size="sm"
 					class="group !h-9 !w-9 !p-0 text-ink-500 hover:bg-ink-100/50 hover:text-ink-900 dark:text-ink-400 dark:hover:bg-ink-800/50 dark:hover:text-ink-100"
-					href="/"
+					href={resolvePath('/', page.data.lang)}
 					title="首页"
 				>
 					<Home size={18} />

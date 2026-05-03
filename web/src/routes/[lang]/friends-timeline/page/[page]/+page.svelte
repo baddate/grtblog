@@ -2,6 +2,7 @@
 	import FriendTimelineList from '$lib/features/friend-timeline/components/FriendTimelineList.svelte';
 	import { friendTimelineListCtx } from '$lib/features/friend-timeline/context';
 	import PageHeader from '$lib/ui/common/PageHeader.svelte';
+	import { t } from '$lib/i18n/client';
 
 	let { data } = $props();
 
@@ -15,10 +16,10 @@
 
 <div class="max-w-5xl mx-auto py-10">
 	<PageHeader
-		title="朋友圈"
+		title={t('web.seo.friends_timeline.title')}
 		tag="Friend Timeline"
-		subtitle="见字如面，相逢在字里行间"
-		description="聚合了友情链接中朋友们的最新文章与动态，感受网络邻居们的思考与生活。"
+		subtitle={t('web.friends_timeline.subtitle')}
+		description={t('web.seo.friends_timeline.desc')}
 	/>
 	<FriendTimelineList />
 </div>

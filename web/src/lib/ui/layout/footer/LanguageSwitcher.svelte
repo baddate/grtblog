@@ -2,7 +2,6 @@
 	import { buildSwitchUrl, setLangCookie } from '$lib/i18n/locale';
 	import type { SupportedLang } from '$lib/i18n/server';
 	import { page } from '$app/state';
-	import { goto } from '$app/navigation';
 
 	type Props = {
 		currentLang: SupportedLang;
@@ -17,7 +16,7 @@
 	function handleSwitch(e: Event) {
 		e.preventDefault();
 		document.cookie = setLangCookie(targetLang);
-		goto(switchUrl);
+		window.location.href = switchUrl;
 	}
 </script>
 

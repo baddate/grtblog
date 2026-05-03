@@ -2,6 +2,7 @@
 	import { windowStore } from '$lib/shared/stores/windowStore.svelte';
 	import type { PublicTag } from '../types';
 	import { BookText, ArrowUpRight } from 'lucide-svelte';
+	import { t } from '$lib/i18n/client';
 
 	let { tags = [] }: { tags: PublicTag[] } = $props();
 
@@ -10,7 +11,7 @@
 
 	function openTagContents(tag: PublicTag) {
 		windowStore.open(
-			`标签 “${tag.name}” 的相关内容`,
+			t('web.tag.contents_title', { name: tag.name }),
 			{ id: tag.id, name: tag.name },
 			'tag-contents'
 		);
@@ -35,10 +36,10 @@
 
 	<div class="relative space-y-6">
 		<PageHeader
-			title="标签档案馆"
+			title={t('web.seo.tags.title')}
 			tag="Tags"
-			subtitle="万物皆有其名"
-			description="按主题整理公开文章。点击任意标签即可打开内容弹窗，快速查看相关文章与手记。"
+			subtitle={t('web.seo.tags.subtitle')}
+			description={t('web.seo.tags.desc')}
 			className="mb-8"
 		/>
 
@@ -57,7 +58,7 @@
 			<div
 				class="rounded-default border border-dashed border-ink-200/80 bg-ink-50/80 py-12 text-center dark:border-ink-800/70 dark:bg-ink-900/40"
 			>
-				<p class="font-serif text-sm italic text-ink-400">暂无可展示标签</p>
+				<p class="font-serif text-sm italic text-ink-400">{t('web.ui.no_tags')}</p>
 			</div>
 		{:else}
 			<div class="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4">

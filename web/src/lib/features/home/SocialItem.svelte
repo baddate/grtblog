@@ -1,6 +1,7 @@
 <script lang="ts">
 	import DynamicLucideIcon from '$lib/ui/icons/DynamicLucideIcon.svelte';
 	import { resolveHref } from '$lib/shared/utils/resolve-path';
+	import { page } from '$app/state';
 
 	const { icon, name, href } = $props<{
 		icon: string;
@@ -17,7 +18,7 @@
 
 <div class="social-item-container hover:text-jade-600 cursor-pointer">
 	<a
-		href={href.startsWith('/') ? resolveHref(href) : href}
+		href={href.startsWith('/') ? resolveHref(href, page.data.lang) : href}
 		data-sveltekit-preload-data={shouldDisablePreloadData(href) ? 'off' : undefined}
 		class="flex items-center gap-2"
 		target="_blank"

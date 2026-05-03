@@ -5,11 +5,10 @@
 	import { createFormatRelativeTime } from '$lib/shared/utils/date';
 	import { buildPostPath } from '$lib/shared/utils/content-path';
 	import { page } from '$app/state';
-	import { createTranslateFn } from '$lib/i18n/server';
+	import { t } from '$lib/i18n/client';
 
 	let { post } = $props<{ post: PostSummary }>();
 
-	const t = $derived(createTranslateFn(page.data.translations ?? {}));
 	const formatRelativeTime = $derived(createFormatRelativeTime(t));
 
 	let mouseX = $state('50%');
@@ -31,7 +30,7 @@
 </script>
 
 <a
-	href={resolvePath(buildPostPath(post.shortUrl))}
+	href={resolvePath(buildPostPath(post.shortUrl), page.data.lang)}
 	class="home-item-card article-item group w-full px-4 py-4 outline-none focus-visible:ring-2 focus-visible:ring-jade-500/30"
 	onmousemove={handleMouseMove}
 	onmouseleave={handleMouseLeave}

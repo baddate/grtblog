@@ -1,5 +1,7 @@
 <script lang="ts">
 	import type { AlbumSummary } from '$lib/features/album/types';
+	import { resolvePath } from '$lib/shared/utils/resolve-path';
+	import { page } from '$app/state';
 
 	let { album }: { album: AlbumSummary } = $props();
 
@@ -9,10 +11,12 @@
 			month: 'long'
 		})
 	);
+
+	const albumUrl = $derived(resolvePath(`/albums/${album.shortUrl}`, page.data.lang));
 </script>
 
 <a
-	href="/albums/{album.shortUrl}"
+	href={albumUrl}
 	class="group relative block overflow-hidden rounded-[3px] transition-all duration-500 hover:-translate-y-1.5 hover:shadow-float"
 >
 	<!-- Cover -->

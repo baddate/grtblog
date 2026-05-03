@@ -1,6 +1,15 @@
-.PHONY: preview-isr release
+.PHONY: preview-isr release admin web server
 preview-isr:
 	@bash ./scripts/preview-isr.sh
+
+web:
+	@cd web && pnpm dev
+
+admin:
+	@cd admin && pnpm dev
+
+server:
+	@cd server && go run ./cmd/api
 
 release:
 ifndef VERSION

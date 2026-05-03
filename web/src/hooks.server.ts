@@ -1,6 +1,6 @@
 import type { Handle, HandleServerError } from '@sveltejs/kit';
 import { ISR_DEPS_HEADER } from '$lib/server/isr-deps';
-import { detectLanguage, loadTranslations, createTranslateFn } from '$lib/i18n/server';
+import { loadTranslations, createTranslateFn } from '$lib/i18n/server';
 import { setLangCookie } from '$lib/i18n/locale';
 import type { SupportedLang } from '$lib/i18n/server';
 
@@ -52,27 +52,20 @@ export const handleError: HandleServerError = ({ error, event, status, message }
 	);
 };
 
+
+
 export const handle: Handle = async ({ event, resolve }) => {
 	// --- i18n language detection ---
-	let lang: SupportedLang;
 	const pathname = event.url.pathname;
-	const LANG_PREFIX_RE = /^\/(zh|en)(\/|$)/;
-	const langMatch = pathname.match(LANG_PREFIX_RE);
+	const NON_DEFAULT_LANG_RE = /^\/(en|jp)(\/|$)/i;
 
-	if (!langMatch) {
-		const cookieLang = event.cookies.get('lang') ?? null;
-		const acceptLang = event.request.headers.get('Accept-Language') ?? null;
-		const detected = detectLanguage(undefined, cookieLang, acceptLang);
-		const redirectPath = `/${detected}${pathname === '/' ? '' : pathname}`;
-		return new Response(null, {
-			status: 302,
-			headers: {
-				Location: redirectPath,
-				'Set-Cookie': setLangCookie(detected),
-			},
-		});
+	let lang: SupportedLang;
+	const langMatch = pathname.match(NON_DEFAULT_LANG_RE);
+	if (langMatch) {
+		lang = langMatch[1].toLowerCase() as SupportedLang;
+	} else {
+		lang = 'zh'; // default language when no explicit lang prefix is present
 	}
-	lang = langMatch[1] as SupportedLang;
 	event.locals.lang = lang;
 	event.locals.t = createTranslateFn(loadTranslations(lang));
 	// --- end i18n ---

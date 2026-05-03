@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { resolvePath } from '$lib/shared/utils/resolve-path';
+	import { resolveHref, resolvePath } from '$lib/shared/utils/resolve-path';
+	import { page } from '$app/state';
+	import { DEFAULT_LANG } from '$lib/i18n/server';
 	import type { NavMenuItem } from '$lib/features/navigation/types';
 	import { buildMomentPath, buildPostPath } from '$lib/shared/utils/content-path';
 	import DynamicLucideIcon from '$lib/ui/icons/DynamicLucideIcon.svelte';
 	import DetailTocNavList from '$lib/ui/detail/DetailTocNavList.svelte';
 	import ThemeIcon from './ThemeIcon.svelte';
 	import { X, ChevronDown, List, Calendar, NotebookPen, FileText, Home } from 'lucide-svelte';
-	import { page } from '$app/state';
 	import { browser } from '$app/environment';
 	import { tick } from 'svelte';
 	import { fly, fade } from 'svelte/transition';
@@ -21,6 +22,8 @@
 	import { resolveHomeThemeConfig } from '$lib/features/home/theme';
 
 	let { menuTree = [] } = $props<{ menuTree: NavMenuItem[] }>();
+
+	const currentLang = $derived(page.data.lang ?? DEFAULT_LANG);
 
 	let isMobileMenuOpen = $state(false);
 	let isTocOpen = $state(false);
@@ -70,10 +73,12 @@
 		return new Date(timestamp * 1000).toLocaleString('zh-CN', { hour12: false });
 	}
 
-	const isActive = (href: string) =>
-		page.url.pathname === href || page.url.pathname.startsWith(href + '/');
+	const isActive = (href: string) => {
+		const resolvedHref = resolveHref(href, currentLang);
+		return page.url.pathname === resolvedHref || page.url.pathname.startsWith(resolvedHref + '/');
+	};
 
-	const isHomePage = $derived(page.url.pathname === '/' || page.url.pathname === '');
+	const isHomePage = $derived(page.url.pathname === resolvePath('/', currentLang));
 
 	const isParentActive = (item: NavMenuItem) => {
 		if (isActive(item.url)) return true;
@@ -298,7 +303,7 @@
 				<div class="flex flex-col gap-1">
 					{#if !isHomePage}
 						<a
-							href={resolvePath('/')}
+							href={resolvePath('/', currentLang)}
 							onclick={handleNavigate}
 							class="mb-2 flex items-center gap-3 rounded-default border border-ink-200 bg-ink-50/50 px-3 py-2 text-ink-700 transition-colors hover:border-jade-200 hover:bg-jade-50/50 dark:border-ink-700 dark:bg-ink-800/40 dark:text-ink-200 dark:hover:border-jade-800"
 						>
@@ -352,7 +357,7 @@
 								{/if}
 
 								<a
-									href={/^(https?:|\/\/)/i.test(item.url) ? item.url : resolvePath(item.url)}
+									href={/^(https?:|\/\/)/i.test(item.url) ? item.url : resolvePath(item.url, currentLang)}
 									onclick={handleNavigate}
 									class="flex min-w-0 flex-1 items-center gap-3 text-left"
 								>
@@ -415,7 +420,7 @@
 									{#each item.children as sub (sub.url)}
 										{@const subActive = isActive(sub.url)}
 										<a
-											href={/^(https?:|\/\/)/i.test(sub.url) ? sub.url : resolvePath(sub.url)}
+											href={/^(https?:|\/\/)/i.test(sub.url) ? sub.url : resolvePath(sub.url, currentLang)}
 											onclick={handleNavigate}
 											class="group/sub relative flex items-center gap-3 rounded-lg ml-2 mr-2 py-2.5 pl-[54px] pr-4 text-left transition-colors
                                             {subActive
@@ -519,7 +524,7 @@
 						<div class="space-y-2.5">
 							{#each $relatedMomentsStore.slice(0, 2) as moment (moment.id)}
 								<a
-									href={resolvePath(buildMomentPath(moment.shortUrl, moment.createdAt))}
+									href={resolvePath(buildMomentPath(moment.shortUrl, moment.createdAt), currentLang)}
 									onclick={handleRelatedNavigate}
 									class="block rounded-default border border-ink-100/80 bg-ink-50/40 p-3 transition-colors hover:border-cinnabar-200 hover:bg-white dark:border-ink-700/70 dark:bg-ink-900/40 dark:hover:border-cinnabar-800"
 								>
@@ -550,7 +555,7 @@
 						<div class="space-y-2.5">
 							{#each $relatedPostsStore.slice(0, 2) as post (post.id)}
 								<a
-									href={resolvePath(buildPostPath(post.shortUrl))}
+									href={resolvePath(buildPostPath(post.shortUrl), currentLang)}
 									onclick={handleRelatedNavigate}
 									class="block rounded-default border border-ink-100/80 bg-ink-50/40 p-3 transition-colors hover:border-jade-200 hover:bg-white dark:border-ink-700/70 dark:bg-ink-900/40 dark:hover:border-jade-800"
 								>

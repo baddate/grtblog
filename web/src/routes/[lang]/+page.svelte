@@ -8,6 +8,7 @@
 	import HomeMomentItem from '$lib/features/moment/components/HomeMomentItem.svelte';
 	import { SlideIn, StaggerList } from '$lib/ui/animation';
 	import { ArrowRight } from 'lucide-svelte';
+	import { t } from '$lib/i18n/client';
 	import type { PageData } from './$types';
 
 	let { data } = $props<{ data: PageData }>();
@@ -27,14 +28,14 @@
 						<div class="flex items-center gap-3">
 							<span class="h-px w-8 bg-jade-500/40"></span>
 							<h2 class="text-xl font-serif font-medium text-ink-900 dark:text-ink-100">
-								最近文章
+								{t('web.ui.recent_posts')}
 							</h2>
 						</div>
 						<a
 							href={resolve('/posts', {})}
 							class="flex items-center gap-1 text-xs font-mono text-ink-400 hover:text-jade-600 dark:hover:text-jade-400 transition-colors group"
 						>
-							<span>查看全部</span>
+							<span>{t('web.ui.view_all')}</span>
 							<ArrowRight size={12} class="group-hover:translate-x-1 transition-transform" />
 						</a>
 					</div>
@@ -56,14 +57,14 @@
 						<div class="flex items-center gap-3">
 							<span class="h-px w-8 bg-jade-500/40"></span>
 							<h2 class="text-xl font-serif font-medium text-ink-900 dark:text-ink-100">
-								最近手记
+								{t('web.ui.recent_moments')}
 							</h2>
 						</div>
 						<a
 							href={resolve('/moments', {})}
 							class="flex items-center gap-1 text-xs font-mono text-ink-400 hover:text-jade-600 dark:hover:text-jade-400 transition-colors group"
 						>
-							<span>查看全部</span>
+							<span>{t('web.ui.view_all')}</span>
 							<ArrowRight size={12} class="group-hover:translate-x-1 transition-transform" />
 						</a>
 					</div>

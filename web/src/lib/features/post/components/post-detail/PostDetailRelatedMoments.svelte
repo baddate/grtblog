@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { resolvePath } from '$lib/shared/utils/resolve-path';
+	import { page } from '$app/state';
 	import { Calendar, NotebookPen, ArrowRight } from 'lucide-svelte';
 	import { postDetailCtx } from '$lib/features/post/context';
 	import { samePostRelatedMoments } from './selector-equals';
@@ -25,7 +26,7 @@
 			</span>
 		</div>
 		<a
-			href={resolvePath('/moments')}
+			href={resolvePath('/moments', page.data.lang)}
 			class="group text-[10px] text-ink-300 transition-colors hover:text-jade-500"
 		>
 			<ArrowRight size={10} class="transition-transform group-hover:translate-x-0.5" />
@@ -42,7 +43,7 @@
 		<div class="space-y-4">
 			{#each $relatedMomentsStore as moment, i (moment.id)}
 				<a
-					href={resolvePath(buildMomentPath(moment.shortUrl, moment.createdAt))}
+					href={resolvePath(buildMomentPath(moment.shortUrl, moment.createdAt), page.data.lang)}
 					class="group block space-y-1.5 rounded-default border border-transparent bg-ink-50/40 p-3 transition-all hover:border-jade-500/10 hover:bg-white hover:shadow-sm dark:bg-ink-900/20 dark:hover:bg-ink-900/40"
 					in:fly={{ x: 10, delay: i * 100 }}
 				>

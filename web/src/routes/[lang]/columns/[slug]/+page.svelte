@@ -5,6 +5,8 @@
 	import { momentListCtx } from '$lib/features/moment/context';
 	import { resolvePath } from '$lib/shared/utils/resolve-path';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
+	import { t } from '$lib/i18n/client';
 
 	let { data } = $props();
 
@@ -12,7 +14,7 @@
 
 	const moments = momentListCtx.selectModelData((d) => d?.items || []);
 	const total = momentListCtx.selectModelData((d) => d?.total ?? 0);
-	const page = momentListCtx.selectModelData((d) => d?.page ?? 1);
+	const currentPage = momentListCtx.selectModelData((d) => d?.page ?? 1);
 	const size = momentListCtx.selectModelData((d) => d?.size ?? 20);
 
 	const totalPages = $derived($size > 0 ? Math.max(1, Math.ceil($total / $size)) : 1);
@@ -23,7 +25,8 @@
 			resolvePath(
 				safePage === 1
 					? `/columns/${data.columnSlug}/`
-					: `/columns/${data.columnSlug}/page/${safePage}/`
+					: `/columns/${data.columnSlug}/page/${safePage}/`,
+				page.data.lang
 			)
 		);
 	};
@@ -40,7 +43,7 @@
 		<span
 			class="text-[10px] tracking-[0.4em] text-ink-800/60 dark:text-ink-200/60 uppercase font-sans block"
 		>
-			「{data.columnName}」专栏下的所有手记
+			{t('web.ui.column_moments_desc', { name: data.columnName })}
 		</span>
 	</header>
 
@@ -51,7 +54,7 @@
 			staggerDelay={80}
 			duration={500}
 			y={16}
-			key="column-{data.columnSlug}-{$page}"
+			key="column-{data.columnSlug}-{$currentPage}"
 		>
 			{#each $moments as moment (moment.id)}
 				<MomentItem {moment} />
@@ -61,12 +64,12 @@
 		<!-- Pagination -->
 		{#if totalPages > 1}
 			<div class="flex justify-center pt-8 pb-12">
-				<Pagination current={$page} total={totalPages} {onPageChange} />
+				<Pagination current={$currentPage} total={totalPages} {onPageChange} />
 			</div>
 		{/if}
 	{:else}
 		<div class="flex flex-col items-center justify-center py-20 text-ink-400">
-			<p>暂无手记</p>
+			<p>{t('web.ui.no_moments')}</p>
 		</div>
 	{/if}
 </div>

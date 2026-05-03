@@ -8,12 +8,13 @@
 	import { authModalStore } from '$lib/shared/stores/authModalStore';
 	import PageHeader from '$lib/ui/common/PageHeader.svelte';
 	import SafeMarkdownView from '$lib/shared/markdown/SafeMarkdownView.svelte';
+	import { t } from '$lib/i18n/client';
 
 	let { data } = $props();
 
 	function handleApplyClick() {
 		if ($userStore.isLogin) {
-			windowStore.open('申请友链');
+			windowStore.open(t('web.friend.apply_title'));
 		} else {
 			authModalStore.open('apply-friend-link');
 		}
@@ -22,13 +23,13 @@
 
 <div class="friends-page max-w-5xl mx-auto py-10 space-y-16">
 	<PageHeader
-		title="友情链接"
+		title={t('web.seo.friends.title')}
 		tag="Friends"
-		subtitle="青山一道同云雨，明月何曾是两乡"
-		description="志同道合者的数字家园，感谢在这个广袤网络中的相遇。"
+		subtitle={t('web.friends.subtitle')}
+		description={t('web.seo.friends.desc')}
 	/>
 
-	<!-- Friends Grid - 直接渲染，确保服务端渲染 SEO -->
+	<!-- Friends Grid -->
 	<div class="friends-content">
 		<FriendLinkGrid links={data.links} />
 	</div>
@@ -42,7 +43,7 @@
 				<h2
 					class="text-sm font-bold text-ink-900 dark:text-ink-100 uppercase tracking-widest mb-6 font-mono text-center"
 				>
-					友链说明
+					{t('web.friends.guidelines_title')}
 				</h2>
 
 				{#if data.applyConfig.requirements}
@@ -52,13 +53,13 @@
 				{:else}
 					<ul class="text-xs text-ink-500 dark:text-ink-400 space-y-3 font-serif">
 						<li class="flex gap-2">
-							<span>•</span> 优先考虑经常更新、内容优质的技术博客或生活记录。
+							<span>•</span> {t('web.friends.guideline_1')}
 						</li>
 						<li class="flex gap-2">
-							<span>•</span> 站点需支持 HTTPS，且排版整洁，无大量广告或误导性内容。
+							<span>•</span> {t('web.friends.guideline_2')}
 						</li>
 						<li class="flex gap-2">
-							<span>•</span> 申请前请先在贵站添加本站链接，这将视作一种友好的相互确认。
+							<span>•</span> {t('web.friends.guideline_3')}
 						</li>
 					</ul>
 				{/if}
@@ -70,12 +71,12 @@
 							class="flex items-center gap-2 px-4 py-2 bg-ink-900 dark:bg-ink-100 text-ink-0 dark:text-ink-950 rounded-default hover:bg-jade-600 dark:hover:bg-jade-400 transition-all duration-300 font-bold text-[11px] shadow-sm group"
 						>
 							<Plus size={14} class="group-hover:rotate-90 transition-transform duration-300" />
-							申请加入
+							{t('web.friends.apply_button')}
 						</button>
 					</div>
 				{:else}
 					<div class="mt-10 text-center text-xs text-ink-400 dark:text-ink-500 font-mono">
-						友链申请暂未开放
+						{t('web.friends.closed_notice')}
 					</div>
 				{/if}
 			</div>

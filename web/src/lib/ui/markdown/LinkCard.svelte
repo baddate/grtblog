@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { resolveHref } from '$lib/shared/utils/resolve-path';
+	import { page } from '$app/state';
 
 	let {
 		children,
@@ -26,7 +27,7 @@
 	const rel = $derived(openInNewTab ? 'noreferrer' : undefined);
 
 	const isExternal = $derived(/^(https?:|mailto:|tel:|#|\/\/)/i.test(href));
-	const resolvedHref = $derived(href && !isExternal ? resolveHref(href) : href || '#');
+	const resolvedHref = $derived(href && !isExternal ? resolveHref(href, page.data.lang) : href || '#');
 	const hostname = $derived.by(() => {
 		try {
 			return new URL(href).hostname;

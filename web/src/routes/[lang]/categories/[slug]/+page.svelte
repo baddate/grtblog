@@ -1,6 +1,7 @@
 <script lang="ts">
 	import PostList from '$lib/features/post/components/PostList.svelte';
 	import { postListCtx } from '$lib/features/post/context';
+	import { t } from '$lib/i18n/client';
 
 	let { data } = $props();
 
@@ -10,5 +11,5 @@
 <PostList
 	basePath="/categories/{data.categorySlug}"
 	title={data.categoryName}
-	description="「{data.categoryName}」分类下的所有文章。"
+	description={t('web.seo.category.desc', { name: data.categoryName })}
 />

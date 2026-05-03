@@ -5,6 +5,7 @@
 	import type { ContentExtInfo } from '$lib/shared/markdown/image-ext-info';
 	import type { PostDetail as PostDetailModel, TOCNode, Tag } from '$lib/features/post/types';
 	import { windowMessage } from '$lib/shared/actions/window-message';
+	import { t } from '$lib/i18n/client';
 	import { postDetailCtx } from '$lib/features/post/context';
 
 	type PreviewPostPayload = {
@@ -40,7 +41,7 @@
 		const nowIso = new Date().toISOString();
 		updateModelData(() => ({
 			id: payload.id ?? 0,
-			title: payload.title ?? '未命名',
+			title: payload.title ?? t('web.ui.untitled'),
 			summary: payload.summary ?? '',
 			aiSummary: null,
 			content: payload.content ?? '',
@@ -85,7 +86,7 @@
 		<PostDetail />
 	{:else}
 		<div class="flex min-h-screen items-center justify-center text-sm text-ink-400">
-			等待预览数据...
+			{t("web.ui.loading_preview")}
 		</div>
 	{/if}
 </div>

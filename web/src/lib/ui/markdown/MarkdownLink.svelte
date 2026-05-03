@@ -3,6 +3,7 @@
 	import { websiteInfoCtx } from '$lib/features/website-info/context';
 	import { getSiteIconUrl, resolveLinkSite } from '$lib/shared/markdown/link-icons';
 	import { resolveHref } from '$lib/shared/utils/resolve-path';
+	import { page } from '$app/state';
 
 	const {
 		href = '',
@@ -75,7 +76,7 @@
 	<a
 		class={`group relative mx-auto my-4 flex max-w-[400px] items-center justify-between gap-3 overflow-hidden rounded-default border border-ink-200/80 bg-white/80 px-4 py-3 shadow-subtle transition-all hover:-translate-y-0.5 hover:shadow-float dark:border-ink-800/60 dark:bg-ink-900/40 no-underline ${className}`.trim()}
 		data-site={site || undefined}
-		href={href && !/^(https?:|mailto:|tel:|#|\/\/)/i.test(href) ? resolveHref(href) : href}
+		href={href && !/^(https?:|mailto:|tel:|#|\/\/)/i.test(href) ? resolveHref(href, page.data.lang) : href}
 		{title}
 		{rel}
 		{target}
@@ -127,7 +128,7 @@
 	<a
 		class={`md-link relative inline-flex max-w-full flex-wrap items-center gap-x-[0.35em] gap-y-[0.15em] break-words [overflow-wrap:anywhere] no-underline ${className}`.trim()}
 		data-site={site || undefined}
-		href={href && !/^(https?:|mailto:|tel:|#|\/\/)/i.test(href) ? resolveHref(href) : href}
+		href={href && !/^(https?:|mailto:|tel:|#|\/\/)/i.test(href) ? resolveHref(href, page.data.lang) : href}
 		{title}
 		{rel}
 		{target}

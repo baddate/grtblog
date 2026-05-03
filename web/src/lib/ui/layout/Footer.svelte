@@ -5,6 +5,7 @@
 	import { onMount } from 'svelte';
 	import LanguageSwitcher from './footer/LanguageSwitcher.svelte';
 	import { page } from '$app/state';
+	import { DEFAULT_LANG } from '$lib/i18n/server';
 
 	type Props = {
 		onlineCount?: number;
@@ -17,7 +18,8 @@
 	const currentYear = new Date().getFullYear();
 	const footerThemeStore = websiteInfoCtx.selectModelData((data) => resolveFooterThemeConfig(data));
 	let nowMs = $state(0);
-	const currentLang = $derived(page.data.lang ?? 'en');
+	const currentLang = $derived(page.data.lang ?? DEFAULT_LANG);
+
 
 	const formatPresenceText = (template: string, count: number): string =>
 		template.replaceAll('{count}', String(count));
@@ -83,7 +85,7 @@
 					<div class="flex flex-wrap gap-x-4 gap-y-2">
 						{#each section.links as link (link.name)}
 							<a
-								href={/^(https?:|mailto:)/i.test(link.href) ? link.href : resolvePath(link.href)}
+								href={/^(https?:|mailto:)/i.test(link.href) ? link.href : resolvePath(link.href, currentLang)}
 								data-sveltekit-preload-data={preloadDataAttr(link.href)}
 								class="text-sm text-ink-500 hover:text-jade-600 dark:hover:text-jade-400 transition-colors"
 							>
@@ -150,7 +152,7 @@
 						{#each section.links as link (link.name)}
 							<li>
 								<a
-									href={/^(https?:|mailto:)/i.test(link.href) ? link.href : resolvePath(link.href)}
+									href={/^(https?:|mailto:)/i.test(link.href) ? link.href : resolvePath(link.href, currentLang)}
 									data-sveltekit-preload-data={preloadDataAttr(link.href)}
 									class="text-sm text-ink-500 hover:text-jade-600 dark:hover:text-jade-400 transition-colors"
 								>

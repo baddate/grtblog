@@ -5,7 +5,7 @@
 	import { createFormatDateCN, isDifferentDay } from '$lib/shared/utils/date';
 	import { calculateReadingTime, createFormatReadingTime } from '$lib/shared/utils/reading-time';
 	import { page } from '$app/state';
-	import { createTranslateFn } from '$lib/i18n/server';
+	import { t } from '$lib/i18n/client';
 	import { ArrowLeft, Calendar, Clock } from 'lucide-svelte';
 	import Icon from '@iconify/svelte';
 	import Button from '$lib/ui/primitives/button/Button.svelte';
@@ -22,7 +22,6 @@
 		(data) => data?.contentUpdatedAt ?? ''
 	);
 	const contentStore = postDetailCtx.selectModelData((data) => data?.content ?? '');
-	const t = $derived(createTranslateFn(page.data.translations ?? {}));
 	const formatDateCN = $derived(createFormatDateCN(t));
 	const formatReadingTime = $derived(createFormatReadingTime(t));
 	const showUpdated = $derived(isDifferentDay($createdAtStore, $contentUpdatedAtStore));
@@ -67,7 +66,7 @@
 			<Badge variant="soft">{t("web.ui.article")}</Badge>
 			{#if $categoryShortUrlStore}
 				<a
-					href={resolvePath(buildCategoryPath($categoryShortUrlStore))}
+					href={resolvePath(buildCategoryPath($categoryShortUrlStore), page.data.lang)}
 					class="font-mono text-[9px] tracking-[0.3em] text-ink-400 uppercase hover:text-jade-600 dark:hover:text-jade-400 transition-colors"
 				>
 					{categoryLabelStore}

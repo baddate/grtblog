@@ -4,6 +4,7 @@
 	import PageDetail from '$lib/features/page/components/PageDetail.svelte';
 	import type { PageDetail as PageDetailModel, TOCNode } from '$lib/features/page/types';
 	import { windowMessage } from '$lib/shared/actions/window-message';
+	import { t } from '$lib/i18n/client';
 
 	type PreviewPagePayload = {
 		id?: number;
@@ -28,7 +29,7 @@
 		const nowIso = new Date().toISOString();
 		pageModel = {
 			id: payload.id ?? 0,
-			title: payload.title ?? '未命名页面',
+			title: payload.title ?? t('web.ui.untitled_page'),
 			description: payload.description ?? null,
 			aiSummary: payload.aiSummary ?? null,
 			toc: payload.toc,
@@ -64,7 +65,7 @@
 		<PageDetail page={pageModel} />
 	{:else}
 		<div class="flex min-h-screen items-center justify-center text-sm text-ink-400">
-			等待预览数据...
+			{t("web.ui.loading_preview")}
 		</div>
 	{/if}
 </div>

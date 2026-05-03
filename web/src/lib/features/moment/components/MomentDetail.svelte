@@ -10,11 +10,9 @@
 	import { detailHeroBgSrc } from '$lib/shared/stores/detailHeroBg';
 	import { page } from '$app/state';
 	import { onDestroy } from 'svelte';
-	import { createTranslateFn } from '$lib/i18n/server';
+	import { t } from '$lib/i18n/client';
 
 	let { moment }: { moment: MomentDetail } = $props();
-
-	const t = $derived(createTranslateFn(page.data.translations ?? {}));
 
 	const dateStr = $derived(formatDateDotted(moment.createdAt));
 	const dateNo = $derived(formatDateCompact(moment.createdAt));
@@ -63,7 +61,7 @@
 				<div class="w-1.5 h-1.5 rounded-full bg-ink-300 dark:bg-ink-800/50 shadow-inner"></div>
 				{#if columnSlug}
 					<a
-						href={resolvePath(buildColumnPath(columnSlug))}
+						href={resolvePath(buildColumnPath(columnSlug), page.data.lang)}
 						class="[writing-mode:vertical-rl] text-[11px] font-serif font-bold text-cinnabar-500 tracking-[0.3em] opacity-80 hover:opacity-100 transition-opacity"
 					>
 						{columnLabel}

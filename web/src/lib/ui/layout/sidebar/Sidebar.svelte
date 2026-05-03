@@ -14,11 +14,18 @@
 	import { windowStore } from '$lib/shared/stores/windowStore.svelte';
 	import { LayoutIcon } from 'lucide-svelte';
 	import { resolveHref } from '$lib/shared/utils/resolve-path';
+	import { DEFAULT_LANG } from '$lib/i18n/server';
 
 	let { menuTree = [] } = $props<{ menuTree: NavMenuItem[] }>();
 
-	const isActive = (href: string) =>
-		page.url.pathname === href || page.url.pathname.startsWith(href + '/');
+	const currentLang = $derived(page.data.lang ?? DEFAULT_LANG);
+
+	const isActive = (href: string) => {
+		const resolvedHref = resolveHref(href, currentLang);
+		return (
+			page.url.pathname === resolvedHref || page.url.pathname.startsWith(resolvedHref + '/')
+		);
+	};
 
 	const isParentActive = (item: NavMenuItem) => {
 		if (isActive(item.url)) return true;
@@ -58,7 +65,7 @@
 				onmouseleave={handleMouseLeave}
 			>
 				<a
-					href={/^(https?:|\/\/)/i.test(item.url) ? item.url : resolveHref(item.url)}
+					href={/^(https?:|\/\/)/i.test(item.url) ? item.url : resolveHref(item.url, currentLang)}
 					aria-label={item.name}
 					class="relative z-20 flex h-10 w-10 items-center justify-center rounded-default transition-all duration-200
                     {active
@@ -90,7 +97,7 @@
 											<a
 												href={/^(https?:|\/\/)/i.test(child.url)
 													? child.url
-													: resolveHref(child.url)}
+													: resolveHref(child.url, currentLang)}
 												class="flex items-center gap-2 rounded-default px-3 py-2 text-sm transition-colors
                                                 {isActive(child.url)
 													? 'bg-ink-100 text-ink-900 font-medium dark:bg-ink-800 dark:text-ink-100'

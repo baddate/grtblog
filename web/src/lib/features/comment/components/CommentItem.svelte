@@ -2,8 +2,7 @@
 	import SafeMarkdownView from '$lib/shared/markdown/SafeMarkdownView.svelte';
 	import type { CommentNode } from '$lib/features/comment/types';
 	import { createRelativeTimeTicker, createFormatRelativeTimeWithSeconds } from '$lib/shared/utils/date';
-	import { page } from '$app/state';
-	import { createTranslateFn } from '$lib/i18n/server';
+	import { t } from '$lib/i18n/client';
 	import { MessageSquare, Monitor, MapPin, Pin, Pencil, Trash2, Check, X } from 'lucide-svelte';
 	import CommentItem from './CommentItem.svelte';
 	import CommentForm from './CommentForm.svelte';
@@ -27,8 +26,6 @@
 	const areaIdStore = commentAreaCtx.selectModelData((data) => data?.areaId ?? 0);
 	const { updateModelData } = commentAreaCtx.useModelActions();
 	const queryClient = useQueryClient();
-
-	const t = $derived(createTranslateFn(page.data.translations ?? {}));
 
 	const editMutation = createMutation(() => ({
 		mutationFn: async () => {
@@ -148,7 +145,7 @@
 
 	const websiteHref = $derived.by(() => normalizeWebsiteUrl(comment.website));
 
-	const formatRelativeTimeWithSeconds = $derived(createFormatRelativeTimeWithSeconds(createTranslateFn(page.data.translations ?? {})));
+	const formatRelativeTimeWithSeconds = $derived(createFormatRelativeTimeWithSeconds(t));
 
 	$effect(() => {
 		const fmtFn = formatRelativeTimeWithSeconds;

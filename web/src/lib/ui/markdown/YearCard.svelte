@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { resolveHref } from '$lib/shared/utils/resolve-path';
+	import { page } from '$app/state';
 
 	let {
 		children,
@@ -19,7 +20,7 @@
 </script>
 
 <a
-	href={url && !/^(https?:|mailto:|tel:|#|\/\/)/i.test(url) ? resolveHref(url) : url || '#'}
+	href={url && !/^(https?:|mailto:|tel:|#|\/\/)/i.test(url) ? resolveHref(url, page.data.lang) : url || '#'}
 	{target}
 	{rel}
 	class="group not-prose relative my-6 flex min-h-[100px] items-stretch overflow-hidden rounded-default border border-ink-200/70 bg-ink-50/20 transition-all duration-300 hover:border-jade-400/40 hover:bg-white hover:shadow-subtle dark:border-ink-800/60 dark:bg-ink-900/40 dark:hover:border-jade-800/80 dark:hover:bg-ink-900/60"

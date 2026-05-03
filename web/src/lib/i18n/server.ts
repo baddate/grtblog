@@ -2,12 +2,10 @@ import type { TranslateFn, TranslationMap } from './types';
 import zh from './generated/zh.json';
 import en from './generated/en.json';
 import { parseAcceptLanguage } from './locale';
+import { SUPPORTED_LANGS, DEFAULT_LANG, FALLBACK_LANG, type SupportedLang } from './constants';
+export { SUPPORTED_LANGS, DEFAULT_LANG, FALLBACK_LANG, type SupportedLang };
 
 const translations: Record<string, TranslationMap> = { zh, en };
-const SUPPORTED_LANGS = ['zh', 'en'] as const;
-export type SupportedLang = (typeof SUPPORTED_LANGS)[number];
-
-export const FALLBACK_LANG: SupportedLang = 'en';
 
 export function isSupportedLang(lang: string): lang is SupportedLang {
   return SUPPORTED_LANGS.includes(lang as SupportedLang);
@@ -38,7 +36,7 @@ export function createTranslateFn(map: TranslationMap): TranslateFn {
 }
 
 export function detectLanguage(
-  urlLang: string | undefined,
+  urlLang: string | undefined | null,
   cookieLang: string | null,
   acceptLanguage: string | null
 ): SupportedLang {

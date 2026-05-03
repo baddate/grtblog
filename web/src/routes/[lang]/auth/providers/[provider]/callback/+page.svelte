@@ -2,13 +2,15 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
+	import { t } from '$lib/i18n/client';
 	import { bindOAuth } from '$lib/features/user-center/api';
 	import { callbackOAuthProvider } from '$lib/features/auth/api';
 	import { consumeOAuthFlowMeta, type OAuthPopupResult } from '$lib/features/auth/oauth-flow';
 	import { setToken } from '$lib/shared/token';
 	import { userStore } from '$lib/shared/stores/userStore';
 
-	let status = $state('正在完成 OAuth 授权...');
+
+	let status = $state(t('web.auth.processing'));
 	let errorText = $state('');
 	let returnTo = $state('/');
 
@@ -29,8 +31,8 @@
 			const state = page.url.searchParams.get('state') ?? '';
 
 			if (!provider || !code || !state) {
-				status = '授权参数缺失';
-				errorText = '缺少 provider/code/state';
+				status = t('web.auth.missing_params');
+				errorText = t('web.auth.missing_detail');
 				return;
 			}
 
@@ -42,7 +44,7 @@
 			try {
 				if (mode === 'bind') {
 					await bindOAuth(provider, { code, state, redirectUri });
-					status = '绑定成功，正在返回...';
+					status = t('web.auth.bind_success');
 					const handled = postResult({
 						type: 'oauth:popup-result',
 						success: true,
@@ -57,7 +59,7 @@
 				const result = await callbackOAuthProvider(provider, { code, state, redirectUri });
 				setToken(result.token);
 				userStore.setUser(result.user);
-				status = '登录成功，正在返回...';
+				status = t('web.auth.login_success');
 
 				const handled = postResult({
 					type: 'oauth:popup-result',
@@ -70,8 +72,8 @@
 				});
 				if (!handled) window.location.replace(returnTo);
 			} catch (err) {
-				const message = err instanceof Error ? err.message : '授权失败';
-				status = '授权失败';
+				const message = err instanceof Error ? err.message : t('web.auth.generic_error');
+				status = t('web.auth.failed');
 				errorText = message;
 				const handled = postResult({
 					type: 'oauth:popup-result',
@@ -98,7 +100,7 @@
 			<p class="mt-3 text-sm text-cinnabar-600 dark:text-cinnabar-400">{errorText}</p>
 		{/if}
 		<p class="mt-3 text-xs text-ink-500 dark:text-ink-400">
-			如果页面没有自动关闭，请返回原页面继续操作。
+			{t('web.auth.manual_close_hint')}
 		</p>
 	</div>
 </section>

@@ -2,6 +2,9 @@
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 	import { onDestroy, onMount, untrack } from 'svelte';
+	import { page } from '$app/state';
+	import { t } from '$lib/i18n/client';
+	import { resolvePath } from '$lib/shared/utils/resolve-path';
 	import type { PageData } from './$types';
 
 	type TransitionRect = {
@@ -32,7 +35,7 @@
 	const total = $derived(data.totalPhotos);
 	const mobileDateStr = $derived(
 		photo.exif?.dateTimeOriginal
-			? new Date(photo.exif.dateTimeOriginal).toLocaleDateString('zh-CN', {
+			? new Date(photo.exif.dateTimeOriginal).toLocaleDateString(page.data.lang === 'zh' ? 'zh-CN' : 'en-US', {
 					year: 'numeric',
 					month: 'long',
 					day: 'numeric'
@@ -480,17 +483,17 @@
 				return;
 			}
 		}
-		goto(`/albums/${album.shortUrl}`);
+		goto(resolvePath(`/albums/${album.shortUrl}`, page.data.lang));
 	}
 	function goPrev() {
 		if (photoIndex > 0)
-			goto(`/albums/${album.shortUrl}/photo/${album.photos[photoIndex - 1].id}`, {
+			goto(resolvePath(`/albums/${album.shortUrl}/photo/${album.photos[photoIndex - 1].id}`, page.data.lang), {
 				replaceState: true
 			});
 	}
 	function goNext() {
 		if (photoIndex < total - 1)
-			goto(`/albums/${album.shortUrl}/photo/${album.photos[photoIndex + 1].id}`, {
+			goto(resolvePath(`/albums/${album.shortUrl}/photo/${album.photos[photoIndex + 1].id}`, page.data.lang), {
 				replaceState: true
 			});
 	}
@@ -732,7 +735,7 @@
 </script>
 
 <svelte:head>
-	<title>{photo.caption || album.title} — 照片</title>
+	<title>{photo.caption || album.title} — {t('web.ui.photo')}</title>
 	<!-- Preload thumbnail so it's available instantly -->
 	<link rel="preload" as="image" href={thumbSrc} />
 </svelte:head>
@@ -767,12 +770,12 @@
 					d="M15 19l-7-7 7-7"
 				/></svg
 			>
-			返回
+			{t('web.ui.go_back')}
 		</button>
 		<!-- Nav prev -->
 		{#if photoIndex > 0}
 			<button
-				aria-label="上一张"
+				aria-label={t('web.ui.prev_aria')}
 				class="absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/12 bg-ink-950/78 p-2 text-white/72 shadow-[0_10px_30px_rgba(0,0,0,0.22)] backdrop-blur-md transition-all hover:border-jade-400/35 hover:bg-jade-500/14 hover:text-jade-200 sm:left-3 sm:p-2.5"
 				onclick={goPrev}
 			>
@@ -789,7 +792,7 @@
 		<!-- Nav next -->
 		{#if photoIndex < total - 1}
 			<button
-				aria-label="下一张"
+				aria-label={t('web.ui.next_aria')}
 				class="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/12 bg-ink-950/78 p-2 text-white/72 shadow-[0_10px_30px_rgba(0,0,0,0.22)] backdrop-blur-md transition-all hover:border-jade-400/35 hover:bg-jade-500/14 hover:text-jade-200 sm:right-3 sm:p-2.5"
 				onclick={goNext}
 			>
@@ -885,7 +888,7 @@
 				<div class="flex min-w-[120px] flex-col">
 					<div class="mb-1 flex items-end justify-between">
 						<span class="text-[11px] font-medium tracking-wide text-white/80"
-							>{hasDedicatedThumbnail ? '加载原图' : '加载照片'}</span
+							>{hasDedicatedThumbnail ? t('web.ui.load_original') : t('web.ui.load_photo')}</span
 						>
 						<span class="font-mono text-[10px] text-jade-400"
 							>{totalBytes > 0 ? `${loadProgress}%` : '···'}</span
@@ -897,7 +900,7 @@
 						>
 					{:else if loadedBytes > 0}
 						<span class="mb-1 block font-mono text-[9px] text-white/35"
-							>已接收 {formatBytes(loadedBytes)}</span
+							>{t('web.ui.received')} {formatBytes(loadedBytes)}</span
 						>
 					{/if}
 					<div class="h-[3px] w-full overflow-hidden rounded-full bg-white/10">
@@ -918,7 +921,7 @@
 			<button
 				class="rounded-[3px] p-1.5 text-white/40 transition-colors hover:bg-jade-500/12 hover:text-jade-300"
 				onclick={zoomOut}
-				title="缩小 (-)"
+				title={t('web.ui.zoom_out_title')}
 			>
 				<svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
 					><path
@@ -932,12 +935,12 @@
 			<button
 				class="min-w-[40px] px-1 text-center font-mono text-[11px] font-semibold text-white/50 transition-colors hover:text-white"
 				onclick={resetView}
-				title="重置 (0)">{zoomPercent}%</button
+				title={t('web.ui.zoom_reset_title')}>{zoomPercent}%</button
 			>
 			<button
 				class="rounded-[3px] p-1.5 text-white/40 transition-colors hover:bg-jade-500/12 hover:text-jade-300"
 				onclick={zoomIn}
-				title="放大 (+)"
+				title={t('web.ui.zoom_in_title')}
 			>
 				<svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
 					><path
@@ -952,7 +955,7 @@
 			<button
 				class="rounded-[3px] p-1.5 text-white/40 transition-colors hover:bg-jade-500/12 hover:text-jade-300"
 				onclick={rotateCW}
-				title="旋转 (R)"
+				title={t('web.ui.rotate_title')}
 			>
 				<svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
 					><path
@@ -966,7 +969,7 @@
 			<button
 				class="rounded-[3px] p-1.5 text-white/40 transition-colors hover:bg-jade-500/12 hover:text-jade-300"
 				onclick={resetView}
-				title="适合大小"
+				title={t('web.ui.fit_size_title')}
 			>
 				<svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
 					><path
@@ -1038,8 +1041,8 @@
 			<div
 				class="mt-4 flex items-center justify-between border-t border-white/6 pt-3 text-[10px] tracking-[0.18em] text-white/32"
 			>
-				<span>详细信息面板</span>
-				<a href="/albums/{album.shortUrl}" class="transition-colors hover:text-jade-300">返回相册</a
+				<span>{t('web.ui.detail_panel')}</span>
+				<a href={resolvePath(`/albums/${album.shortUrl}`, page.data.lang)} class="transition-colors hover:text-jade-300">{t('web.ui.back_album')}</a
 				>
 			</div>
 		</div>
@@ -1082,7 +1085,7 @@
 
 		<div class="mt-6 border-t border-white/5 pt-4">
 			<a
-				href="/albums/{album.shortUrl}"
+				href={resolvePath(`/albums/${album.shortUrl}`, page.data.lang)}
 				class="text-xs text-white/30 transition-colors hover:text-jade-400">← {album.title}</a
 			>
 		</div>
@@ -1090,16 +1093,16 @@
 			<span
 				><kbd class="rounded bg-white/5 px-1">←</kbd><kbd class="ml-0.5 rounded bg-white/5 px-1"
 					>→</kbd
-				> 切换</span
+				> {t('web.ui.switch_photos')}</span
 			>
 			<span
 				><kbd class="rounded bg-white/5 px-1">+</kbd><kbd class="ml-0.5 rounded bg-white/5 px-1"
 					>-</kbd
-				> 缩放</span
+				> {t('web.ui.zoom')}</span
 			>
-			<span><kbd class="rounded bg-white/5 px-1">R</kbd> 旋转</span>
-			<span><kbd class="rounded bg-white/5 px-1">0</kbd> 重置</span>
-			<span><kbd class="rounded bg-white/5 px-1">Esc</kbd> 返回</span>
+			<span><kbd class="rounded bg-white/5 px-1">R</kbd> {t('web.ui.rotate')}</span>
+			<span><kbd class="rounded bg-white/5 px-1">0</kbd> {t('web.ui.reset')}</span>
+			<span><kbd class="rounded bg-white/5 px-1">Esc</kbd> {t('web.ui.go_back')}</span>
 		</div>
 	</aside>
 </div>

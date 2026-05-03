@@ -13,6 +13,9 @@
 	import SafeMarkdownView from '$lib/shared/markdown/SafeMarkdownView.svelte';
 	import FadeIn from '$lib/ui/animation/FadeIn.svelte';
 	import { onDestroy, onMount } from 'svelte';
+	import { page } from '$app/state';
+	import { t } from '$lib/i18n/client';
+	import { resolvePath } from '$lib/shared/utils/resolve-path';
 	import type { PageData } from './$types';
 
 	type TransitionRect = {
@@ -52,11 +55,14 @@
 
 	const dateStr = $derived(
 		$album
-			? new Date($album.createdAt).toLocaleDateString('zh-CN', {
-					year: 'numeric',
-					month: 'long',
-					day: 'numeric'
-				})
+			? new Date($album.createdAt).toLocaleDateString(
+					page.data.lang === 'zh' ? 'zh-CN' : 'en-US',
+					{
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric'
+					}
+				)
 			: ''
 	);
 
@@ -203,7 +209,7 @@
 
 <svelte:head>
 	{#if $album}
-		<title>{$album.title} — 相册</title>
+		<title>{$album.title} — {t('web.ui.album')}</title>
 		{#if $album.description}
 			<meta name="description" content={$album.description} />
 		{/if}
@@ -216,11 +222,11 @@
 		<FadeIn y={12}>
 			<header class="mb-7 sm:mb-16">
 				<a
-					href="/albums"
+					href={resolvePath('/albums', page.data.lang)}
 					class="mb-5 inline-flex items-center gap-1.5 rounded-full border border-ink-200/70 bg-white/85 px-3 py-1.5 text-[11px] tracking-wider text-ink-500 shadow-sm backdrop-blur-sm transition-colors hover:text-jade-600 dark:border-ink-800/70 dark:bg-ink-900/70 dark:text-ink-400 dark:hover:text-jade-400"
 				>
 					<span class="text-[10px]">&larr;</span>
-					<span>返回相册</span>
+					<span>{t('web.ui.back_album')}</span>
 				</a>
 
 				<div class="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
@@ -265,7 +271,7 @@
 					class="mt-4 flex flex-wrap items-center gap-3 text-[11px] font-mono tracking-[0.16em] text-ink-800/45 dark:text-ink-200/45 uppercase"
 				>
 					<span class="flex items-center gap-1.5"
-						>浏览 <RollingNumber value={$metricsStore?.views ?? 0} /></span
+						>{t('web.ui.views')} <RollingNumber value={$metricsStore?.views ?? 0} /></span
 					>
 					<span aria-hidden="true" class="opacity-40">·</span>
 					<ContentLikeButton
@@ -276,7 +282,7 @@
 					/>
 					<span aria-hidden="true" class="opacity-40">·</span>
 					<span class="flex items-center gap-1.5"
-						>评论 <RollingNumber value={$metricsStore?.comments ?? 0} /></span
+						>{t('web.ui.comments')} <RollingNumber value={$metricsStore?.comments ?? 0} /></span
 					>
 				</div>
 
@@ -304,7 +310,7 @@
 		{:else}
 			<div class="py-32 text-center">
 				<p class="font-serif text-lg tracking-wide text-ink-400/50 dark:text-ink-600/50">
-					这本相册还没有照片
+					{t('web.ui.no_photos')}
 				</p>
 			</div>
 		{/if}

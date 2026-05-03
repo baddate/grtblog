@@ -11,6 +11,8 @@
 	import { browser } from '$app/environment';
 	import { onMount, tick } from 'svelte';
 	import { get } from 'svelte/store';
+	import { page } from '$app/state';
+	import { t } from '$lib/i18n/client';
 	import type { PageData } from './$types';
 
 	let { data } = $props<{ data: PageData }>();
@@ -20,7 +22,7 @@
 
 	const items = thinkingListCtx.selectModelData((d) => d?.items || []);
 	const total = thinkingListCtx.selectModelData((d) => d?.total ?? 0);
-	const page = thinkingListCtx.selectModelData((d) => d?.page ?? 1);
+	const currentPage = thinkingListCtx.selectModelData((d) => d?.page ?? 1);
 	const size = thinkingListCtx.selectModelData((d) => d?.size ?? 20);
 
 	onMount(async () => {
@@ -47,9 +49,9 @@
 	const onPageChange = (p: number) => {
 		const safePage = Number.isFinite(p) && p > 1 ? p : 1;
 		if (safePage === 1) {
-			goto(resolvePath('/thinkings/'));
+			goto(resolvePath('/thinkings/', page.data.lang));
 		} else {
-			goto(resolvePath(`/thinkings/page/${safePage}/`));
+			goto(resolvePath(`/thinkings/page/${safePage}/`, page.data.lang));
 		}
 	};
 
@@ -66,10 +68,10 @@
 
 <div class="pt-16 pb-20 max-w-4xl mx-auto">
 	<PageHeader
-		title="思考"
+		title={t('web.seo.thinkings.title')}
 		tag="Thoughts"
-		subtitle="在喧嚣中寻觅一丝宁静"
-		description="记录深思熟虑后的感悟，或是对世界的细微观察。"
+		subtitle={t('web.thinkings.subtitle')}
+		description={t('web.seo.thinkings.desc')}
 	/>
 
 	<div class="min-h-[500px] px-4 sm:px-0">
@@ -79,7 +81,7 @@
 				staggerDelay={60}
 				duration={450}
 				y={12}
-				key={`thinkings-${$page}`}
+				key={`thinkings-${$currentPage}`}
 			>
 				{#each $items as item (item.id)}
 					<ThinkingItem {item} />
@@ -94,17 +96,17 @@
 				>
 					<div class="w-2 h-2 rounded-full bg-ink-200 dark:bg-ink-800"></div>
 				</div>
-				<p>暂无手记...</p>
+				<p>{t('web.ui.no_moments')}...</p>
 			</div>
 		{/if}
 	</div>
 
 	{#if totalPages > 1}
 		<div class="flex justify-center pt-8 pb-4">
-			<Pagination current={$page} total={totalPages} {onPageChange} />
+			<Pagination current={$currentPage} total={totalPages} {onPageChange} />
 		</div>
 	{:else}
-		<div class="mt-12 text-center text-xs text-ink-300 dark:text-ink-600 font-mono">没有更多了</div>
+		<div class="mt-12 text-center text-xs text-ink-300 dark:text-ink-600 font-mono">{t('web.ui.no_more')}</div>
 	{/if}
 </div>
 

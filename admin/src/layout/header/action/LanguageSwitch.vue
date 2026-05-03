@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { NButton } from 'naive-ui'
+
 import { useLocaleStore } from '@/stores/locale'
 
 defineOptions({ name: 'LanguageSwitch' })

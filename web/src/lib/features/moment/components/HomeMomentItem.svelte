@@ -5,11 +5,10 @@
 	import { createFormatRelativeTime } from '$lib/shared/utils/date';
 	import { buildMomentPath } from '$lib/shared/utils/content-path';
 	import { page } from '$app/state';
-	import { createTranslateFn } from '$lib/i18n/server';
+	import { t } from '$lib/i18n/client';
 
 	let { moment } = $props<{ moment: MomentSummary }>();
 
-	const t = $derived(createTranslateFn(page.data.translations ?? {}));
 	const formatRelativeTime = $derived(createFormatRelativeTime(t));
 
 	let mouseX = $state('50%');
@@ -31,7 +30,7 @@
 </script>
 
 <a
-	href={resolvePath(buildMomentPath(moment.shortUrl, moment.createdAt))}
+	href={resolvePath(buildMomentPath(moment.shortUrl, moment.createdAt), page.data.lang)}
 	class="home-item-card moment-item group w-full px-4 py-4 outline-none focus-visible:ring-2 focus-visible:ring-cinnabar-500/30"
 	onmousemove={handleMouseMove}
 	onmouseleave={handleMouseLeave}

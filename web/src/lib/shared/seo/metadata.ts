@@ -85,6 +85,15 @@ const normalizePathname = (pathname: string): string => {
 	return trimmed.endsWith('/') ? trimmed.slice(0, -1) : trimmed;
 };
 
+const stripLangPrefix = (pathname: string): string => {
+	const match = pathname.match(/^\/(zh|en|jp)(\/|$)/);
+	if (match) {
+		const rest = pathname.slice(match[0].length - 1);
+		return rest || '/';
+	}
+	return pathname;
+};
+
 const getPageValue = (
 	routeData: UnknownRecord,
 	key: 'post' | 'moment' | 'page'
@@ -168,14 +177,16 @@ const resolveListPageTitle = (baseTitle: string, page: number | null, t: Transla
 };
 
 export const resolveOgTag = (pathname: string, ogType: string): string => {
+	const p = stripLangPrefix(pathname);
 	if (ogType === 'article') return 'ARTICLE';
-	if (pathname === '/') return 'HOME';
-	if (pathname === '/timeline') return 'TIMELINE';
-	if (pathname === '/tags') return 'TAGS';
+	if (p === '/') return 'HOME';
+	if (p === '/timeline') return 'TIMELINE';
+	if (p === '/tags') return 'TAGS';
 	return 'PAGE';
 };
 
 const resolvePageMeta = (pathname: string, search: string, routeData: UnknownRecord, t: TranslateFn): PageMeta => {
+	const p = stripLangPrefix(pathname);
 	const post = getPageValue(routeData, 'post');
 	if (post) {
 		return {
@@ -223,11 +234,11 @@ const resolvePageMeta = (pathname: string, search: string, routeData: UnknownRec
 		};
 	}
 
-	if (pathname === '/') {
+	if (p === '/') {
 		return { pageTitle: '' };
 	}
 
-	if (pathname === '/posts' || pathname.startsWith('/posts/page/')) {
+	if (p === '/posts' || p.startsWith('/posts/page/')) {
 		const page = parsePageFromPath(pathname) ?? getPaginationPage(routeData);
 		return {
 			pageTitle: resolveListPageTitle(t('web.seo.posts.title'), page, t),
@@ -235,7 +246,7 @@ const resolvePageMeta = (pathname: string, search: string, routeData: UnknownRec
 		};
 	}
 
-	if (pathname === '/moments') {
+	if (p === '/moments') {
 		const page = parsePageFromSearch(search) ?? getPaginationPage(routeData);
 		return {
 			pageTitle: resolveListPageTitle(t('web.seo.moments.title'), page, t),
@@ -243,7 +254,7 @@ const resolvePageMeta = (pathname: string, search: string, routeData: UnknownRec
 		};
 	}
 
-	if (pathname === '/thinkings' || pathname.startsWith('/thinkings/page/')) {
+	if (p === '/thinkings' || p.startsWith('/thinkings/page/')) {
 		const page = parsePageFromPath(pathname) ?? getPaginationPage(routeData);
 		return {
 			pageTitle: resolveListPageTitle(t('web.seo.thinkings.title'), page, t),
@@ -251,14 +262,14 @@ const resolvePageMeta = (pathname: string, search: string, routeData: UnknownRec
 		};
 	}
 
-	if (pathname === '/friends') {
+	if (p === '/friends') {
 		return {
 			pageTitle: t('web.seo.friends.title'),
 			description: t('web.seo.friends.desc')
 		};
 	}
 
-	if (pathname === '/friends-timeline' || pathname.startsWith('/friends-timeline/page/')) {
+	if (p === '/friends-timeline' || p.startsWith('/friends-timeline/page/')) {
 		const page = parsePageFromPath(pathname) ?? getPaginationPage(routeData);
 		return {
 			pageTitle: resolveListPageTitle(t('web.seo.friends_timeline.title'), page, t),
@@ -266,25 +277,25 @@ const resolvePageMeta = (pathname: string, search: string, routeData: UnknownRec
 		};
 	}
 
-	if (pathname === '/tags') {
+	if (p === '/tags') {
 		return {
 			pageTitle: t('web.seo.tags.title'),
 			description: t('web.seo.tags.desc')
 		};
 	}
 
-	if (pathname === '/timeline') {
+	if (p === '/timeline') {
 		return {
 			pageTitle: t('web.seo.timeline.title'),
 			description: t('web.seo.timeline.desc')
 		};
 	}
 
-	if (pathname.startsWith('/auth/providers/')) {
+	if (p.startsWith('/auth/providers/')) {
 		return { pageTitle: t('web.seo.auth_callback') };
 	}
 
-	if (pathname.startsWith('/internal/preview/')) {
+	if (p.startsWith('/internal/preview/')) {
 		return { pageTitle: t('web.seo.content_preview') };
 	}
 
@@ -296,7 +307,7 @@ export const resolveSeoMeta = (input: ResolveSeoMetaInput): ResolvedSeoMeta => {
 	const search = input.search ?? '';
 	const routeData = asRecord(input.routeData) ?? {};
 	const websiteInfo = input.websiteInfo ?? null;
-	const isHomePage = pathname === '/';
+	const isHomePage = stripLangPrefix(pathname) === '/';
 
 	const siteName = readString(websiteInfo?.website_name) || DEFAULT_SITE_NAME;
 	const homeTitle = readString(websiteInfo?.home_title);
@@ -336,9 +347,9 @@ export const resolveSeoMeta = (input: ResolveSeoMetaInput): ResolvedSeoMeta => {
 	const usesGeneratedOgImage = !contentImage;
 
 	const noIndex =
-		pathname.startsWith('/auth/providers/') ||
-		pathname.startsWith('/internal/preview/') ||
-		pathname.startsWith('/internal/');
+		stripLangPrefix(pathname).startsWith('/auth/providers/') ||
+		stripLangPrefix(pathname).startsWith('/internal/preview/') ||
+		stripLangPrefix(pathname).startsWith('/internal/');
 
 	return {
 		title,

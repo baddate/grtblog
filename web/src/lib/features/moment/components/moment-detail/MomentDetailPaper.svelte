@@ -5,9 +5,8 @@
 	import DetailMarkdownContent from '$lib/ui/detail/DetailMarkdownContent.svelte';
 	import DetailActionBar from '$lib/ui/detail/DetailActionBar.svelte';
 	import { createFormatDateCN, isDifferentDay } from '$lib/shared/utils/date';
-	import { page } from '$app/state';
 	import { Sun } from 'lucide-svelte';
-	import { createTranslateFn } from '$lib/i18n/server';
+	import { t } from '$lib/i18n/client';
 	import ContentLikeButton from '$lib/features/analytics/components/ContentLikeButton.svelte';
 	import TagList from '$lib/features/tag/components/TagList.svelte';
 	import { RollingNumber } from '$lib/ui/animation';
@@ -22,7 +21,6 @@
 
 	let { moment, dateStr, dateNo, onActiveAnchorChange, onContentRootChange }: Props = $props();
 
-	const t = $derived(createTranslateFn(page.data.translations ?? {}));
 	const formatDateCN = $derived(createFormatDateCN(t));
 	const showUpdated = $derived(isDifferentDay(moment.createdAt, moment.contentUpdatedAt));
 </script>
