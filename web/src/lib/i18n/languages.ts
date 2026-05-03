@@ -7,6 +7,8 @@ export interface LanguageMeta {
   code: SupportedLang;
   name: string;
   englishName: string;
+  nativeName: string;
+  isDefault: boolean;
 }
 
 // ---- Core constants ----
@@ -18,11 +20,11 @@ export const FALLBACK_LANG: SupportedLang = 'en';
 export const SUPPORTED_LANGS_SET: Set<string> = new Set(SUPPORTED_LANGS);
 
 // ---- Language registry ----
-export const LANGUAGES: Record<SupportedLang, LanguageMeta> = {
-  zh: { code: 'zh', name: '中文', englishName: 'Chinese' },
-  en: { code: 'en', name: 'English', englishName: 'English' },
-  jp: { code: 'jp', name: '日本語', englishName: 'Japanese' },
-};
+export const LANGUAGES: LanguageMeta[] = [
+  { code: 'zh', name: '中文', englishName: 'Chinese', nativeName: '中文', isDefault: true },
+  { code: 'en', name: 'English', englishName: 'English', nativeName: 'English', isDefault: false },
+  { code: 'jp', name: '日本語', englishName: 'Japanese', nativeName: '日本語', isDefault: false },
+];
 
 // ---- Translations map (used by loader) ----
 export const TRANSLATIONS: Record<string, TranslationMap> = { zh, en };
@@ -32,12 +34,15 @@ export const NON_DEFAULT_LANGS: readonly SupportedLang[] = SUPPORTED_LANGS.filte
   (lang) => lang !== DEFAULT_LANG,
 );
 
+// ---- Regex helpers (used by URL parsing) ----
+export const ANY_LANG_RE = new RegExp(`^/(${SUPPORTED_LANGS.join('|')})(/|$)`, 'i');
+export const NON_DEFAULT_LANG_RE = new RegExp(`^/(${NON_DEFAULT_LANGS.join('|')})(/|$)`, 'i');
+
 // ---- Helpers ----
 export function isSupportedLang(lang: string): lang is SupportedLang {
   return SUPPORTED_LANGS.includes(lang as SupportedLang);
 }
 
 export function getLanguageMeta(lang: string): LanguageMeta | undefined {
-  if (isSupportedLang(lang)) return LANGUAGES[lang];
-  return undefined;
+  return LANGUAGES.find((l) => l.code === lang);
 }

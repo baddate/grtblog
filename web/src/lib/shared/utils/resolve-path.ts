@@ -1,6 +1,6 @@
 import { resolve } from '$app/paths';
 import type { PathnameWithSearchOrHash, ResolvedPathname } from '$app/types';
-import { SUPPORTED_LANGS, type SupportedLang } from '$lib/i18n/server';
+import { SUPPORTED_LANGS, isSupportedLang } from '$lib/i18n/languages';
 
 export const isPathnameWithSearchOrHash = (value: string): value is PathnameWithSearchOrHash =>
 	value.startsWith('/');
@@ -12,7 +12,7 @@ export const resolvePath = <T extends PathnameWithSearchOrHash>(
 	lang?: string
 ): ResolvedPathname => {
 	const resolved = resolvePathname(path);
-	if (lang && SUPPORTED_LANGS.includes(lang as SupportedLang)) {
+	if (lang && isSupportedLang(lang)) {
 		return `/${lang}${resolved}` as ResolvedPathname;
 	}
 	return resolved;

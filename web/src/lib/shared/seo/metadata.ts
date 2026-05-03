@@ -1,5 +1,6 @@
 import type { WebsiteInfoMap } from '$lib/features/website-info/types';
 import type { TranslateFn } from '$lib/i18n/types';
+import { ANY_LANG_RE } from '$lib/i18n/languages';
 
 type UnknownRecord = Record<string, unknown>;
 
@@ -86,7 +87,7 @@ const normalizePathname = (pathname: string): string => {
 };
 
 const stripLangPrefix = (pathname: string): string => {
-	const match = pathname.match(/^\/(zh|en|jp)(\/|$)/);
+	const match = pathname.match(ANY_LANG_RE);
 	if (match) {
 		const rest = pathname.slice(match[0].length - 1);
 		return rest || '/';

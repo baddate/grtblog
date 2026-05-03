@@ -1,10 +1,12 @@
 import type { Reroute } from '@sveltejs/kit';
+import { SUPPORTED_LANGS } from '$lib/i18n/languages';
 
-// Reroute: internally add /zh/ prefix for default-language URLs so they match routes/[lang]/...
+const ANY_LANG_RE = new RegExp(`^/(${SUPPORTED_LANGS.join('|')})(/|$)`, 'i');
+
 export const reroute: Reroute = ({ url }) => {
-	const pathname = url.pathname;
-	if (!/^\/(en|jp|zh)(\/|$)/.test(pathname)) {
-		return `/zh${pathname}`;
-	}
-	return pathname;
+  const pathname = url.pathname;
+  if (ANY_LANG_RE.test(pathname)) {
+    return pathname;
+  }
+  return pathname;
 };

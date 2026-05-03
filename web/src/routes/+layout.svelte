@@ -34,6 +34,7 @@
 
 	import { t } from '$lib/i18n/client';
 	import { createTranslateFn } from '$lib/i18n/server';
+	import { LANGUAGES, ANY_LANG_RE } from '$lib/i18n';
 
 	function logClientRuntimeError(
 		kind: 'error' | 'unhandledrejection',
@@ -70,8 +71,13 @@
 		);
 	}
 
-	const stripLangPrefix = (pathname: string): string =>
-		pathname.replace(/^\/(zh|en|jp)(?=\/|$)/, '') || '/';
+	const stripLangPrefix = (pathname: string): string => {
+		const match = pathname.match(ANY_LANG_RE);
+		if (match) {
+			return pathname.slice(match[0].length - 1) || '/';
+		}
+		return pathname;
+	};
 
 	/**
 	 * Avoid back animation and LCP delay caused by lang time animation.
@@ -404,11 +410,15 @@
 		{@const canonicalPathname = new URL(seoMeta.canonicalUrl).pathname}
 		{@const basePath = stripLangPrefix(canonicalPathname)}
 		{@const origin = page.url.origin}
-		{@const zhUrl = origin + '/zh' + basePath}
-		<link rel="alternate" hreflang="zh" href={zhUrl} />
-		<link rel="alternate" hreflang="en" href={origin + '/en' + basePath} />
-		<link rel="alternate" hreflang="jp" href={origin + '/jp' + basePath} />
-		<link rel="alternate" hreflang="x-default" href={zhUrl} />
+		{@const defaultLang = LANGUAGES.find(l => l.isDefault)!}
+		<link rel="alternate" hreflang="x-default" href={origin + basePath} />
+		{#each LANGUAGES as { code }}
+			<link
+				rel="alternate"
+				hreflang={code}
+				href={origin + (code === defaultLang.code ? basePath : '/' + code + basePath)}
+			/>
+		{/each}
 	{/if}
 	<script>
 		// Inline script to prevent theme flas  h (fallback before Svelte hydrates)
