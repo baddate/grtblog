@@ -204,7 +204,7 @@
 		<div
 			class="mb-6 flex items-center gap-3 rounded-default border border-ink-200/70 bg-ink-50/70 px-4 py-3 animate-in slide-in-from-bottom-2 duration-300 dark:border-ink-700/60 dark:bg-ink-800/20"
 		>
-			<div class="flex-shrink-0">
+			<div class="shrink-0">
 				{#if $userStore.userInfo?.avatar}
 					<img
 						src={$userStore.userInfo.avatar}
@@ -339,7 +339,7 @@
 
 		{#if previewMode}
 			<div
-				class="min-h-[140px] rounded-sm border border-ink-200/70 bg-ink-50/60 px-4 py-3 text-sm leading-loose text-ink-900 dark:border-ink-700/60 dark:bg-ink-800/30 dark:text-ink-100"
+				class="min-h-35 rounded-sm border border-ink-200/70 bg-ink-50/60 px-4 py-3 text-sm leading-loose text-ink-900 dark:border-ink-700/60 dark:bg-ink-800/30 dark:text-ink-100"
 			>
 				{#if hasPreviewContent}
 					<SafeMarkdownView {content} />

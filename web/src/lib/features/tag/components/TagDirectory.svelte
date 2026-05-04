@@ -78,7 +78,7 @@
 								>
 									#{tag.name}
 								</p>
-								<p class="font-mono text-[9px] tracking-[0.1em] text-ink-400 uppercase">
+								<p class="font-mono text-[9px] tracking-widest text-ink-400 uppercase">
 									{tag.articleCount} articles
 								</p>
 							</div>

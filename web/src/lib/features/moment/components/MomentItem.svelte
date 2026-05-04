@@ -54,7 +54,7 @@
 	<!-- Card Body -->
 	<div
 		class="
-		relative w-full aspect-[3/4]
+		relative w-full aspect-3/4
 		bg-ink-50 dark:bg-ink-950/40
 		border border-ink-200 dark:border-ink-200/10
 		hover:border-jade-500/30 dark:hover:border-jade-500/40
@@ -105,7 +105,7 @@
 			</span>
 		</div>
 
-		<div class="relative z-[2] flex flex-col flex-1 min-h-0 p-6 {hasImages ? '-mt-3' : ''}">
+		<div class="relative z-2 flex flex-col flex-1 min-h-0 p-6 {hasImages ? '-mt-3' : ''}">
 			<!-- Top Meta -->
 			<div class="flex items-start justify-between mb-4 shrink-0">
 				<div class="flex flex-col gap-1">

@@ -141,7 +141,7 @@
 						width="110"
 						height="110"
 						fetchpriority="high"
-						class="h-[110px] w-[110px] rounded-default object-cover ring-1 ring-ink-100 dark:ring-ink-800 shadow-sm"
+						class="h-27.5 w-27.5 rounded-default object-cover ring-1 ring-ink-100 dark:ring-ink-800 shadow-sm"
 					/>
 				</div>
 			</FadeIn>

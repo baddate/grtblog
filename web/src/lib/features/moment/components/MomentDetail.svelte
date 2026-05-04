@@ -47,7 +47,7 @@
 <StickyHeader title={moment.title} />
 
 <div
-	class="relative z-10 grid gap-10 lg:grid-cols-[1fr_220px] lg:gap-16 max-w-[1200px] mx-auto animate-sheet-enter origin-right pb-24"
+	class="relative z-10 grid gap-10 lg:grid-cols-[1fr_220px] lg:gap-16 max-w-300 mx-auto animate-sheet-enter origin-right pb-24"
 	style="view-transition-name: moment-sheet"
 >
 	<article class="flex-1 w-full relative min-w-0">

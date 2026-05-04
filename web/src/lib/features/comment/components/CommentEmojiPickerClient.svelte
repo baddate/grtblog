@@ -114,7 +114,7 @@
 			bind:this={panelEl}
 			use:portal
 			style={panelStyle}
-			class="fixed z-[1200] rounded-default border border-ink-200/70 dark:border-ink-700/70 bg-white/95 dark:bg-ink-900/95 backdrop-blur-md shadow-xl p-2"
+			class="fixed z-1200 rounded-default border border-ink-200/70 dark:border-ink-700/70 bg-white/95 dark:bg-ink-900/95 backdrop-blur-md shadow-xl p-2"
 		>
 			<div class="mb-1 flex items-center justify-between px-1">
 				<span class="text-[10px] font-mono text-ink-400 dark:text-ink-500 uppercase">Emoji</span>
@@ -130,7 +130,7 @@
 			{#if ready}
 				<emoji-picker bind:this={pickerEl} class="comment-emoji-picker"></emoji-picker>
 			{:else}
-				<div class="w-[320px] h-[380px] flex items-center justify-center text-xs text-ink-400">
+				<div class="w-[320px] h-95 flex items-center justify-center text-xs text-ink-400">
 					加载表情面板中...
 				</div>
 			{/if}

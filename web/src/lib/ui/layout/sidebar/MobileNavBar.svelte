@@ -187,7 +187,7 @@
 		></div>
 
 		<!-- 1. Collapsed Header -->
-		<div class="relative z-10 flex h-[3.25rem] items-center justify-between px-3">
+		<div class="relative z-10 flex h-13 items-center justify-between px-3">
 			<!-- Left: Avatar & Title -->
 			<div class="flex items-center gap-3 overflow-hidden">
 				<button
@@ -417,7 +417,7 @@
 								>
 									<!-- Vertical Line -->
 									<div
-										class="absolute bottom-4 left-[39px] top-0 w-[1px] bg-ink-200 dark:bg-ink-700"
+										class="absolute bottom-4 left-9.75 top-0 w-px bg-ink-200 dark:bg-ink-700"
 									></div>
 
 									{#each item.children as sub (sub.url)}
@@ -427,14 +427,14 @@
 												? sub.url
 												: resolvePath(sub.url, currentLang)}
 											onclick={handleNavigate}
-											class="group/sub relative flex items-center gap-3 rounded-lg ml-2 mr-2 py-2.5 pl-[54px] pr-4 text-left transition-colors
+											class="group/sub relative flex items-center gap-3 rounded-lg ml-2 mr-2 py-2.5 pl-13.5 pr-4 text-left transition-colors
                                             {subActive
 												? 'bg-jade-50/50 dark:bg-jade-900/20'
 												: 'hover:bg-white/60 dark:hover:bg-white/5'}"
 										>
 											<!-- Horizontal Line -->
 											<div
-												class="absolute left-[31px] top-1/2 h-[1px] w-4 bg-ink-200 dark:bg-ink-700"
+												class="absolute left-7.75 top-1/2 h-px w-4 bg-ink-200 dark:bg-ink-700"
 											></div>
 
 											{#if sub.icon}
@@ -443,7 +443,7 @@
 														? 'text-jade-600 dark:text-jade-400'
 														: 'text-ink-400'} transition-colors"
 												>
-													<DynamicLucideIcon name={sub.icon} className="w-[14px] h-[14px]" />
+													<DynamicLucideIcon name={sub.icon} className="w-3.5 h-3.5" />
 												</div>
 											{/if}
 											<span
@@ -485,13 +485,13 @@
 {#if isTocOpen}
 	<div
 		transition:fade={{ duration: 220 }}
-		class="fixed inset-0 z-[55] bg-ink-900/20 backdrop-blur-[2px] md:hidden"
+		class="fixed inset-0 z-55 bg-ink-900/20 backdrop-blur-[2px] md:hidden"
 		onclick={() => (isTocOpen = false)}
 		role="presentation"
 	></div>
 	<aside
 		transition:fly={{ x: 32, duration: 260, easing: cubicOut, opacity: 0 }}
-		class="fixed inset-y-0 right-0 z-[60] h-full w-[82vw] max-w-[360px] border-l border-ink-200/70 bg-white/95 shadow-glass-lg backdrop-blur-xl dark:border-ink-700/70 dark:bg-ink-900/95 md:hidden"
+		class="fixed inset-y-0 right-0 z-60 h-full w-[82vw] max-w-90 border-l border-ink-200/70 bg-white/95 shadow-glass-lg backdrop-blur-xl dark:border-ink-700/70 dark:bg-ink-900/95 md:hidden"
 	>
 		<div
 			class="flex h-14 items-center justify-between border-b border-ink-100/80 px-4 dark:border-ink-800/70"
