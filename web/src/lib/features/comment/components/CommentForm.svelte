@@ -20,6 +20,7 @@
 		writeCommentGuestProfile
 	} from '$lib/features/comment/storage';
 	import CommentEmojiPickerClient from './CommentEmojiPickerClient.svelte';
+	import { t } from '$lib/i18n/client';
 
 	interface Props {
 		parentId?: number;
@@ -46,7 +47,9 @@
 		parentId && $replyingToStore && $replyingToStore.id === parentId ? $replyingToStore : null
 	);
 	const loginDisplayName = $derived(
-		$userStore.userInfo?.nickname || $userStore.userInfo?.username || '已登录用户'
+		$userStore.userInfo?.nickname ||
+			$userStore.userInfo?.username ||
+			t('web.comment.login_identity')
 	);
 	const loginAccount = $derived($userStore.userInfo?.username || '');
 	const contentCount = $derived(Array.from(content).length);
@@ -122,7 +125,7 @@
 			if ($userStore.isLogin) {
 				return await createCommentLogin(undefined, $areaIdStore, { content, parentId, visitorId });
 			}
-			if (!$guestNameStore || !$guestEmailStore) throw new Error('请填写称呼和邮箱');
+			if (!$guestNameStore || !$guestEmailStore) throw new Error(t('web.comment.fill_required'));
 			return await createCommentVisitor(undefined, $areaIdStore, {
 				content,
 				nickName: $guestNameStore,
@@ -135,9 +138,9 @@
 		onSuccess: (created) => {
 			const status = created?.status?.toLowerCase?.() ?? '';
 			if (status === 'pending') {
-				toast.success('评论已提交，审核通过后公开展示');
+				toast.success(t('web.comment.submit_ok'));
 			} else {
-				toast.success('评论发表成功');
+				toast.success(t('web.comment.submitted'));
 			}
 			clearCommentDraft(draftKey);
 			content = '';
@@ -147,7 +150,7 @@
 			queryClient.invalidateQueries({ queryKey: ['comments', $areaIdStore] });
 		},
 		onError: (error) => {
-			toast.error(error instanceof Error ? error.message : '发表失败');
+			toast.error(error instanceof Error ? error.message : t('web.comment.submit_failed'));
 		}
 	}));
 	const isSubmitting = $derived(mutation.isPending);
@@ -155,11 +158,11 @@
 	const handleSubmit = () => {
 		if (mutation.isPending) return;
 		if (!content.trim()) {
-			toast.error('请输入评论内容');
+			toast.error(t('web.comment.empty_content'));
 			return;
 		}
 		if (Array.from(content.trim()).length > commentContentMaxLength) {
-			toast.error(`评论内容不能超过 ${commentContentMaxLength} 字`);
+			toast.error(t('web.comment.too_long', { n: commentContentMaxLength }));
 			return;
 		}
 		mutation.mutate();
@@ -212,13 +215,13 @@
 					<div
 						class="flex h-11 w-11 items-center justify-center rounded-full bg-ink-800 text-sm font-bold text-ink-50 shadow-inner dark:bg-ink-200 dark:text-ink-900"
 					>
-						{loginDisplayName.charAt(0).toUpperCase() || '我'}
+						{loginDisplayName.charAt(0).toUpperCase() || t('web.comment.guest_avatar_fallback')}
 					</div>
 				{/if}
 			</div>
 			<div class="min-w-0 flex-1 leading-tight">
 				<div class="text-[11px] tracking-wider text-ink-800/55 dark:text-ink-200/55">
-					账号评论身份
+					{t('web.comment.account_identity')}
 				</div>
 				<div class="mt-1 truncate text-sm font-medium text-ink-900 dark:text-ink-100">
 					{loginDisplayName}
@@ -244,7 +247,7 @@
 					type="text"
 					value={$guestNameStore}
 					oninput={updateGuestField('guestName')}
-					placeholder="称呼 *"
+					placeholder={t('web.comment.name_placeholder')}
 					variant="underline"
 					icon={nameIcon}
 					inputClass="text-sm font-serif text-ink-900 dark:text-ink-100 placeholder:text-ink-300 dark:placeholder:text-ink-600/50"
@@ -260,7 +263,7 @@
 					type="email"
 					value={$guestEmailStore}
 					oninput={updateGuestField('guestEmail')}
-					placeholder="邮箱 (保密) *"
+					placeholder={t('web.comment.email_placeholder')}
 					variant="underline"
 					icon={mailIcon}
 					inputClass="text-sm font-serif text-ink-900 dark:text-ink-100 placeholder:text-ink-300 dark:placeholder:text-ink-600/50"
@@ -276,7 +279,7 @@
 					type="url"
 					value={$guestSiteStore}
 					oninput={updateGuestField('guestSite')}
-					placeholder="站点"
+					placeholder={t('web.comment.site_placeholder')}
 					variant="underline"
 					icon={linkIcon}
 					inputClass="text-sm font-serif text-ink-900 dark:text-ink-100 placeholder:text-ink-300 dark:placeholder:text-ink-600/50"
@@ -294,8 +297,9 @@
 				<div class="flex items-center gap-2">
 					<MessageSquare size={12} class="opacity-50" />
 					<span
-						>回复 <span class="font-medium text-ink-900 dark:text-ink-100"
-							>@{showReplyingTo.nickName || '匿名'}</span
+						>{t('web.comment.reply')}
+						<span class="font-medium text-ink-900 dark:text-ink-100"
+							>@{showReplyingTo.nickName || t('web.comment.anonymous_user')}</span
 						></span
 					>
 				</div>
@@ -318,7 +322,7 @@
 						: 'bg-ink-200/60 text-ink-800 dark:bg-ink-700/60 dark:text-ink-100'
 				}`}
 			>
-				编辑
+				{t('web.comment.edit')}
 			</button>
 			<button
 				type="button"
@@ -329,7 +333,7 @@
 						: 'text-ink-500 dark:text-ink-400 hover:text-ink-700 dark:hover:text-ink-200'
 				}`}
 			>
-				预览
+				{t('web.comment.preview')}
 			</button>
 		</div>
 
@@ -340,13 +344,13 @@
 				{#if hasPreviewContent}
 					<SafeMarkdownView {content} />
 				{:else}
-					<div class="text-ink-500 dark:text-ink-400">暂无预览内容</div>
+					<div class="text-ink-500 dark:text-ink-400">{t('web.comment.no_preview')}</div>
 				{/if}
 			</div>
 		{:else}
 			<Textarea
 				bind:value={content}
-				placeholder="在此留下您的思绪..."
+				placeholder={t('web.comment.textarea_placeholder')}
 				rows={6}
 				maxLength={commentContentMaxLength}
 				resize="none"
@@ -368,14 +372,14 @@
 								onclick={handleClearDraft}
 								class="text-red-500 hover:text-red-600 transition-colors"
 							>
-								确认清空
+								{t('web.comment.confirm_clear')}
 							</button>
 							<button
 								type="button"
 								onclick={handleCancelClearDraft}
 								class="text-ink-800/40 dark:text-ink-200/40 hover:text-ink-700 dark:hover:text-ink-200 transition-colors"
 							>
-								取消
+								{t('web.comment.cancel')}
 							</button>
 						</span>
 					{:else}
@@ -384,18 +388,16 @@
 							onclick={handleStartClearDraft}
 							class="text-[10px] text-ink-800/40 dark:text-ink-200/40 hover:text-ink-700 dark:hover:text-ink-200 transition-colors font-serif tracking-wider"
 						>
-							清空草稿
+							{t('web.comment.clear_draft')}
 						</button>
 					{/if}
 				</div>
 				<div class="text-[10px] text-ink-800/40 dark:text-ink-200/40 font-serif tracking-wider">
-					支持 <span class="font-mono">Markdown</span> 语法，使用
-					<span class="font-mono">Enter</span>
-					换行
+					{t('web.comment.md_hint')}
 					<span class="ml-2 font-mono">{contentCount}/{commentContentMaxLength}</span>
 					{#if $requireModerationStore}
 						<span class="ml-2 text-amber-600 dark:text-amber-300">
-							当前开启审核，评论会先进入审核队列
+							{t('web.comment.moderation_hint')}
 						</span>
 					{/if}
 				</div>
@@ -406,7 +408,7 @@
 				disabled={isSubmitting}
 				class="flex items-center gap-2 text-xs font-serif tracking-widest text-ink-50 bg-ink-900 dark:bg-ink-200 dark:text-ink-900 hover:bg-jade-600 dark:hover:bg-jade-600 dark:hover:text-white px-8 py-2.5 rounded-default transition-all shadow-sm hover:shadow-md outline-none disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-ink-900 dark:disabled:hover:bg-ink-200 dark:disabled:hover:text-ink-900"
 			>
-				<span>{isSubmitting ? '投递中...' : '投递'}</span>
+				<span>{isSubmitting ? t('web.comment.submitting') : t('web.comment.submit')}</span>
 				<Send size={12} strokeWidth={2} class={isSubmitting ? 'animate-pulse' : ''} />
 			</button>
 		</div>

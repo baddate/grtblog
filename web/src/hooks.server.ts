@@ -2,7 +2,7 @@ import type { Handle, HandleServerError } from '@sveltejs/kit';
 import { ISR_DEPS_HEADER } from '$lib/server/isr-deps';
 import { loadTranslations, createTranslateFn } from '$lib/i18n/server';
 import { setLangCookie } from '$lib/i18n/locale';
-import { DEFAULT_LANG, isSupportedLang, NON_DEFAULT_LANG_RE } from '$lib/i18n/languages';
+import { DEFAULT_LANG, SUPPORTED_LANGS, NON_DEFAULT_LANG_RE } from '$lib/i18n/languages';
 
 const STATIC_FALLBACK_HEADER = 'x-grt-static-fallback';
 const STATIC_MISS_WARN_TTL_MS = 5 * 60 * 1000;
@@ -52,23 +52,23 @@ export const handleError: HandleServerError = ({ error, event, status, message }
 	);
 };
 
-
-
 export const handle: Handle = async ({ event, resolve }) => {
 	// --- i18n language detection ---
 	const pathname = event.url.pathname;
 	const langMatch = pathname.match(NON_DEFAULT_LANG_RE);
-	const lang = langMatch?.[1]?.toLowerCase() ?? DEFAULT_LANG;
-	if (!isSupportedLang(lang)) {
-		throw new Error(`Unsupported language: ${lang}`);
-	}
+	const rawLang = langMatch?.[1];
+	const lang = rawLang
+		? (SUPPORTED_LANGS.find((l) => l.toLowerCase() === rawLang.toLowerCase()) ?? DEFAULT_LANG)
+		: DEFAULT_LANG;
 	event.locals.lang = lang;
 	event.locals.t = createTranslateFn(loadTranslations(lang));
 	// --- end i18n ---
 
 	event.locals.isrDeps = new Set<string>();
 
-	const response = await resolve(event);
+	const response = await resolve(event, {
+		transformPageChunk: ({ html }) => html.replace('lang="en"', `lang="${lang}"`)
+	});
 	const staticFallback = event.request.headers.get(STATIC_FALLBACK_HEADER) === '1';
 	const depList = Array.from(event.locals.isrDeps).sort();
 	logServerResponse(

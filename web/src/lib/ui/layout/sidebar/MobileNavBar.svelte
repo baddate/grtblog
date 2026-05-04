@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { resolveHref, resolvePath } from '$lib/shared/utils/resolve-path';
 	import { page } from '$app/state';
-	import { DEFAULT_LANG } from '$lib/i18n/server';
+	import { DEFAULT_LANG, createTranslateFn } from '$lib/i18n/server';
 	import type { NavMenuItem } from '$lib/features/navigation/types';
 	import { buildMomentPath, buildPostPath } from '$lib/shared/utils/content-path';
 	import DynamicLucideIcon from '$lib/ui/icons/DynamicLucideIcon.svelte';
@@ -24,6 +24,7 @@
 	let { menuTree = [] } = $props<{ menuTree: NavMenuItem[] }>();
 
 	const currentLang = $derived(page.data.lang ?? DEFAULT_LANG);
+	const t = $derived(createTranslateFn(page.data.translations ?? {}));
 
 	let isMobileMenuOpen = $state(false);
 	let isTocOpen = $state(false);
@@ -69,8 +70,8 @@
 	const adminPanelOnline = $derived(ownerStatus.adminPanelOnline === true);
 
 	function formatOwnerTime(timestamp?: number): string {
-		if (!timestamp || !Number.isFinite(timestamp) || timestamp <= 0) return '未知';
-		return new Date(timestamp * 1000).toLocaleString('zh-CN', { hour12: false });
+		if (!timestamp || !Number.isFinite(timestamp) || timestamp <= 0) return t('web.date.unknown');
+		return new Date(timestamp * 1000).toLocaleString(currentLang, { hour12: false });
 	}
 
 	const isActive = (href: string) => {
@@ -275,21 +276,21 @@
 				>
 					<div class="flex items-center justify-between gap-2">
 						<div class="text-xs font-medium text-ink-700 dark:text-ink-200">
-							{ownerOnline ? '站长在线中' : '站长暂时离线'}
+							{ownerOnline ? t('web.owner.online') : t('web.owner.offline')}
 						</div>
 						<span
 							class="rounded-full px-2 py-0.5 text-[10px] {adminPanelOnline
 								? 'bg-jade-100 text-jade-700 dark:bg-jade-900/40 dark:text-jade-300'
 								: 'bg-ink-100 text-ink-500 dark:bg-ink-800 dark:text-ink-300'}"
 						>
-							Admin {adminPanelOnline ? '在线' : '离线'}
+							Admin {adminPanelOnline ? t('web.admin.online') : t('web.admin.offline')}
 						</span>
 					</div>
 					<div class="mt-1 text-[11px] text-ink-500 dark:text-ink-400">
 						{#if ownerOnline}
-							正在使用 {ownerStatus.process || '未知应用'}
+							{t('web.owner.using', { app: ownerStatus.process || t('web.owner.unknown_app') })}
 						{:else}
-							暂无实时活动
+							{t('web.owner.no_activity')}
 						{/if}
 						· {formatOwnerTime(ownerStatus.timestamp)}
 					</div>
@@ -308,7 +309,7 @@
 							class="mb-2 flex items-center gap-3 rounded-default border border-ink-200 bg-ink-50/50 px-3 py-2 text-ink-700 transition-colors hover:border-jade-200 hover:bg-jade-50/50 dark:border-ink-700 dark:bg-ink-800/40 dark:text-ink-200 dark:hover:border-jade-800"
 						>
 							<Home size={16} />
-							<span class="text-sm font-medium">返回首页</span>
+							<span class="text-sm font-medium">{t('web.nav.back_home')}</span>
 						</a>
 					{/if}
 					{#if $userStore.isLogin}
@@ -321,7 +322,7 @@
 							class="mb-2 flex w-full items-center gap-3 rounded-default border border-jade-200 bg-jade-50/70 px-3 py-2 text-jade-700 dark:border-jade-800 dark:bg-jade-900/30 dark:text-jade-200"
 						>
 							<User size={16} />
-							<span class="text-sm font-medium">用户中心</span>
+							<span class="text-sm font-medium">{t('web.nav.user_center')}</span>
 						</button>
 					{:else}
 						<button
@@ -333,7 +334,7 @@
 							}}
 						>
 							<User size={16} />
-							<span class="text-sm font-medium">登录</span>
+							<span class="text-sm font-medium">{t('web.nav.login')}</span>
 						</button>
 					{/if}
 
@@ -357,7 +358,9 @@
 								{/if}
 
 								<a
-									href={/^(https?:|\/\/)/i.test(item.url) ? item.url : resolvePath(item.url, currentLang)}
+									href={/^(https?:|\/\/)/i.test(item.url)
+										? item.url
+										: resolvePath(item.url, currentLang)}
 									onclick={handleNavigate}
 									class="flex min-w-0 flex-1 items-center gap-3 text-left"
 								>
@@ -420,7 +423,9 @@
 									{#each item.children as sub (sub.url)}
 										{@const subActive = isActive(sub.url)}
 										<a
-											href={/^(https?:|\/\/)/i.test(sub.url) ? sub.url : resolvePath(sub.url, currentLang)}
+											href={/^(https?:|\/\/)/i.test(sub.url)
+												? sub.url
+												: resolvePath(sub.url, currentLang)}
 											onclick={handleNavigate}
 											class="group/sub relative flex items-center gap-3 rounded-lg ml-2 mr-2 py-2.5 pl-[54px] pr-4 text-left transition-colors
                                             {subActive
@@ -492,7 +497,7 @@
 			class="flex h-14 items-center justify-between border-b border-ink-100/80 px-4 dark:border-ink-800/70"
 		>
 			<span class="font-mono text-[10px] font-bold tracking-[0.2em] text-ink-400 uppercase">
-				本页导航
+				{t('web.nav.page_nav')}
 			</span>
 			<button
 				class="rounded-full p-1 text-ink-500 transition-colors hover:bg-ink-100 hover:text-ink-900 dark:text-ink-400 dark:hover:bg-ink-800 dark:hover:text-ink-100"
@@ -518,13 +523,16 @@
 						<div class="flex items-center gap-2 text-cinnabar-600 dark:text-cinnabar-400">
 							<NotebookPen size={14} />
 							<span class="font-mono text-[10px] font-bold tracking-[0.14em] uppercase">
-								同期手记
+								{t('web.nav.related_moments')}
 							</span>
 						</div>
 						<div class="space-y-2.5">
 							{#each $relatedMomentsStore.slice(0, 2) as moment (moment.id)}
 								<a
-									href={resolvePath(buildMomentPath(moment.shortUrl, moment.createdAt), currentLang)}
+									href={resolvePath(
+										buildMomentPath(moment.shortUrl, moment.createdAt),
+										currentLang
+									)}
 									onclick={handleRelatedNavigate}
 									class="block rounded-default border border-ink-100/80 bg-ink-50/40 p-3 transition-colors hover:border-cinnabar-200 hover:bg-white dark:border-ink-700/70 dark:bg-ink-900/40 dark:hover:border-cinnabar-800"
 								>
@@ -549,7 +557,7 @@
 						<div class="flex items-center gap-2 text-jade-600 dark:text-jade-400">
 							<FileText size={14} />
 							<span class="font-mono text-[10px] font-bold tracking-[0.14em] uppercase">
-								同期文章
+								{t('web.nav.related_articles')}
 							</span>
 						</div>
 						<div class="space-y-2.5">

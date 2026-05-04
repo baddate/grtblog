@@ -6,6 +6,7 @@
 	import { goto } from '$app/navigation';
 	import { buildMomentPath } from '$lib/shared/utils/content-path';
 	import { isDifferentDay } from '$lib/shared/utils/date';
+	import { t } from '$lib/i18n/client';
 
 	interface Props {
 		moment: MomentSummary;
@@ -27,7 +28,7 @@
 	const showUpdated = $derived(isDifferentDay(moment.createdAt, moment.contentUpdatedAt));
 	const columnLabel = $derived.by(() => {
 		const name = (moment.columnName || '').trim();
-		return name || '未分类手记';
+		return name || t('web.ui.uncategorized_moment');
 	});
 	const hasImages = $derived(!!(moment.image && moment.image.length > 0));
 
@@ -111,7 +112,7 @@
 					<div class="flex items-center gap-2">
 						<span class="font-mono text-[10px] text-ink-400 dark:text-ink-500 tracking-wider">
 							{formattedDate}{#if showUpdated}<span class="text-ink-300 dark:text-ink-600 ml-1"
-									>（更新于 {formattedUpdatedDate}）</span
+									>{t('web.ui.updated_at')} {formattedUpdatedDate}</span
 								>{/if}
 						</span>
 						{#if moment.isTop}
@@ -151,11 +152,13 @@
 			>
 				<div class="flex items-center gap-3 text-[10px] font-mono text-ink-400">
 					<span class="flex items-center gap-1">
-						浏览 {moment.views}
+						{t('web.ui.views')}
+						{moment.views}
 					</span>
 					<span class="opacity-30">/</span>
 					<span class="flex items-center gap-1">
-						评论 {moment.comments}
+						{t('web.ui.comments')}
+						{moment.comments}
 					</span>
 				</div>
 

@@ -8,6 +8,7 @@
 	import PageHeader from '$lib/ui/common/PageHeader.svelte';
 	import Pagination from '$lib/ui/primitives/pagination/Pagination.svelte';
 	import MomentItem from './MomentItem.svelte';
+	import { t } from '$lib/i18n/client';
 
 	interface Props {
 		moments: MomentListResponse;
@@ -33,16 +34,21 @@
 
 	function onPageChange(nextPage: number) {
 		const safePage = Number.isFinite(nextPage) && nextPage > 1 ? nextPage : 1;
-		goto(resolvePath(safePage === 1 ? `${basePath}/` : `${basePath}/page/${safePage}/`, pageState.data.lang));
+		goto(
+			resolvePath(
+				safePage === 1 ? `${basePath}/` : `${basePath}/page/${safePage}/`,
+				pageState.data.lang
+			)
+		);
 	}
 </script>
 
 <div class="w-full max-w-5xl mx-auto px-6 md:px-0 py-16">
 	<PageHeader
-		title="手记"
+		title={t('web.seo.moments.title')}
 		tag="Moments"
-		subtitle="碎碎念，亦是生活的注脚"
-		description="捕捉转瞬即逝的灵感与生活碎片。在这里，文字与心情一同流淌。"
+		subtitle={t('web.seo.moments.subtitle')}
+		description={t('web.seo.moments.desc')}
 	/>
 
 	{#if $list.length > 0}
@@ -65,7 +71,7 @@
 		{/if}
 	{:else}
 		<div class="flex flex-col items-center justify-center py-20 text-ink-400">
-			<p>暂无手记</p>
+			<p>{t('web.ui.no_moments')}</p>
 		</div>
 	{/if}
 </div>

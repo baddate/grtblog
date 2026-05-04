@@ -9,7 +9,8 @@ export function parseAcceptLanguage(header: string | null): string | null {
 		const first = header.split(',')[0];
 		if (!first) return null;
 		const tag = first.split(';')[0].trim();
-		return tag.toLowerCase();
+		const primaryLang = tag.split('-')[0];
+		return primaryLang.toLowerCase();
 	} catch {
 		return null;
 	}

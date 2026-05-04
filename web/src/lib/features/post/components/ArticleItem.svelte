@@ -6,6 +6,7 @@
 	import type { PostSummary } from '$lib/features/post/types';
 	import { buildPostPath, buildCategoryPath } from '$lib/shared/utils/content-path';
 	import { isDifferentDay } from '$lib/shared/utils/date';
+	import { t } from '$lib/i18n/client';
 
 	let { post } = $props<{ post: PostSummary }>();
 
@@ -48,7 +49,7 @@
 
 	<!-- Excerpt -->
 	<p class="text-ink-500 dark:text-ink-400 text-xs sm:text-sm leading-relaxed line-clamp-2">
-		{post.summary || '暂无摘要'}
+		{post.summary || t('web.ui.no_summary')}
 	</p>
 
 	<!-- Meta Row -->
@@ -60,7 +61,7 @@
 			<Calendar size={14} strokeWidth={1.5} />
 			<span>{formatDate(post.createdAt)}</span>
 			{#if showUpdated}<span class="text-ink-300 dark:text-ink-600"
-					>（更新于 {formatDate(post.contentUpdatedAt)}）</span
+					>（{t('web.ui.updated_at')} {formatDate(post.contentUpdatedAt)}）</span
 				>{/if}
 		</div>
 
@@ -72,12 +73,12 @@
 				onclick={handleCategoryClick}
 			>
 				<Sparkles size={14} strokeWidth={1.5} />
-				<span>{post.categoryName || '未分类'}</span>
+				<span>{post.categoryName || t('web.ui.uncategorized')}</span>
 			</button>
 		{:else}
 			<div class="flex items-center gap-1.5">
 				<Sparkles size={14} strokeWidth={1.5} />
-				<span>{post.categoryName || '未分类'}</span>
+				<span>{post.categoryName || t('web.ui.uncategorized')}</span>
 			</div>
 		{/if}
 
@@ -104,7 +105,7 @@
 					class="opacity-0 group-hover:opacity-100 group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5 transition-all"
 				/>
 				<span class="opacity-0 group-hover:opacity-100 transition-opacity text-[10px]"
-					>查看原文</span
+					>{t('web.ui.view_original')}</span
 				>
 			</div>
 		</div>

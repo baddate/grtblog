@@ -8,7 +8,7 @@ import { resolveHref, resolvePath } from '$lib/shared/utils/resolve-path';
 
 describe('resolvePath', () => {
 	it('keeps the zh prefix when rendering zh links', () => {
-		expect(resolvePath('/posts', 'zh')).toBe('/zh/posts');
+		expect(resolvePath('/posts', 'zh-Hans')).toBe('/zh-Hans/posts');
 	});
 
 	it('keeps the en prefix when rendering en links', () => {
@@ -18,6 +18,6 @@ describe('resolvePath', () => {
 
 describe('resolveHref', () => {
 	it('keeps the zh prefix for relative site links', () => {
-		expect(resolveHref('/posts', 'zh')).toBe('/zh/posts');
+		expect(resolveHref('/posts', 'zh-Hans')).toBe('/zh-Hans/posts');
 	});
 });
