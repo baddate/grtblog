@@ -35,17 +35,52 @@ const frontendTech = [
   { name: 'Vue 3', icon: 'ph--vue-logo', color: '#42b883', desc: t('admin.about.tech_vue_desc') },
   { name: 'Naive UI', icon: null, color: '#75B93F', desc: t('admin.about.tech_naive_ui_desc') },
   { name: 'Vite', icon: 'ph--lightning', color: '#9499ff', desc: t('admin.about.tech_vite_desc') },
-  { name: 'TailwindCSS 4', icon: 'ph--wind', color: '#00bcff', desc: t('admin.about.tech_tailwind_desc') },
-  { name: 'TypeScript', icon: 'ph--file-ts', color: '#3178C6', desc: t('admin.about.tech_typescript_desc') },
-  { name: 'Pinia', icon: 'ph--tree-structure', color: '#FFD859', desc: t('admin.about.tech_pinia_desc') },
+  {
+    name: 'TailwindCSS 4',
+    icon: 'ph--wind',
+    color: '#00bcff',
+    desc: t('admin.about.tech_tailwind_desc'),
+  },
+  {
+    name: 'TypeScript',
+    icon: 'ph--file-ts',
+    color: '#3178C6',
+    desc: t('admin.about.tech_typescript_desc'),
+  },
+  {
+    name: 'Pinia',
+    icon: 'ph--tree-structure',
+    color: '#FFD859',
+    desc: t('admin.about.tech_pinia_desc'),
+  },
 ]
 
 const backendTech = [
   { name: 'Go', icon: 'ph--code', color: '#00ADD8', desc: t('admin.about.tech_go_desc') },
-  { name: 'Fiber', icon: 'ph--rocket-launch', color: '#00ACD7', desc: t('admin.about.tech_fiber_desc') },
-  { name: 'PostgreSQL', icon: 'ph--database', color: '#4169E1', desc: t('admin.about.tech_postgresql_desc') },
-  { name: 'Redis', icon: 'ph--hard-drives', color: '#DC382D', desc: t('admin.about.tech_redis_desc') },
-  { name: 'SvelteKit', icon: 'ph--monitor', color: '#FF3E00', desc: t('admin.about.tech_sveltekit_desc') },
+  {
+    name: 'Fiber',
+    icon: 'ph--rocket-launch',
+    color: '#00ACD7',
+    desc: t('admin.about.tech_fiber_desc'),
+  },
+  {
+    name: 'PostgreSQL',
+    icon: 'ph--database',
+    color: '#4169E1',
+    desc: t('admin.about.tech_postgresql_desc'),
+  },
+  {
+    name: 'Redis',
+    icon: 'ph--hard-drives',
+    color: '#DC382D',
+    desc: t('admin.about.tech_redis_desc'),
+  },
+  {
+    name: 'SvelteKit',
+    icon: 'ph--monitor',
+    color: '#FF3E00',
+    desc: t('admin.about.tech_sveltekit_desc'),
+  },
 ]
 
 const features = [
@@ -54,9 +89,21 @@ const features = [
     title: t('admin.about.feature_markdown_title'),
     desc: t('admin.about.feature_markdown_desc'),
   },
-  { icon: 'ph--newspaper', title: t('admin.about.feature_content_title'), desc: t('admin.about.feature_content_desc') },
-  { icon: 'ph--cloud-arrow-up', title: t('admin.about.feature_media_title'), desc: t('admin.about.feature_media_desc') },
-  { icon: 'ph--shield-check', title: t('admin.about.feature_security_title'), desc: t('admin.about.feature_security_desc') },
+  {
+    icon: 'ph--newspaper',
+    title: t('admin.about.feature_content_title'),
+    desc: t('admin.about.feature_content_desc'),
+  },
+  {
+    icon: 'ph--cloud-arrow-up',
+    title: t('admin.about.feature_media_title'),
+    desc: t('admin.about.feature_media_desc'),
+  },
+  {
+    icon: 'ph--shield-check',
+    title: t('admin.about.feature_security_title'),
+    desc: t('admin.about.feature_security_desc'),
+  },
   {
     icon: 'ph--arrows-clockwise',
     title: t('admin.about.feature_event_title'),
@@ -121,7 +168,9 @@ onMounted(async () => {
 
     <!-- Section 2: Tech Stack -->
     <div>
-      <h2 class="mb-3 text-base font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.about.section_frontend') }}</h2>
+      <h2 class="mb-3 text-base font-medium text-neutral-700 dark:text-neutral-200">
+        {{ $t('admin.about.section_frontend') }}
+      </h2>
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <div
           v-for="tech in frontendTech"
@@ -156,7 +205,9 @@ onMounted(async () => {
     </div>
 
     <div>
-      <h2 class="mb-3 text-base font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.about.section_backend') }}</h2>
+      <h2 class="mb-3 text-base font-medium text-neutral-700 dark:text-neutral-200">
+        {{ $t('admin.about.section_backend') }}
+      </h2>
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <div
           v-for="tech in backendTech"
@@ -185,7 +236,9 @@ onMounted(async () => {
 
     <!-- Section 3: Features -->
     <div>
-      <h2 class="mb-3 text-base font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.about.section_features') }}</h2>
+      <h2 class="mb-3 text-base font-medium text-neutral-700 dark:text-neutral-200">
+        {{ $t('admin.about.section_features') }}
+      </h2>
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <div
           v-for="feat in features"
@@ -212,7 +265,9 @@ onMounted(async () => {
 
     <!-- Section 4: Architecture Overview -->
     <div>
-      <h2 class="mb-3 text-base font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.about.section_architecture') }}</h2>
+      <h2 class="mb-3 text-base font-medium text-neutral-700 dark:text-neutral-200">
+        {{ $t('admin.about.section_architecture') }}
+      </h2>
       <div
         class="rounded border border-naive-border bg-naive-card p-5 transition-[background-color,border-color]"
       >
@@ -222,9 +277,9 @@ onMounted(async () => {
             class="flex flex-col items-center gap-2 rounded-lg bg-neutral-50 p-4 dark:bg-neutral-800/50"
           >
             <span class="iconify size-6 text-sky-500 ph--cloud" />
-            <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200"
-              >{{ $t('admin.about.architecture_api') }}</span
-            >
+            <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{
+              $t('admin.about.architecture_api')
+            }}</span>
             <div class="flex flex-wrap justify-center gap-1.5">
               <NTag
                 size="tiny"
@@ -258,9 +313,9 @@ onMounted(async () => {
             class="flex flex-col items-center gap-2 rounded-lg bg-neutral-50 p-4 dark:bg-neutral-800/50"
           >
             <span class="iconify size-6 text-orange-500 ph--browser" />
-            <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200"
-              >{{ $t('admin.about.architecture_ssr') }}</span
-            >
+            <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{
+              $t('admin.about.architecture_ssr')
+            }}</span>
             <div class="flex flex-wrap justify-center gap-1.5">
               <NTag
                 size="tiny"
@@ -289,9 +344,9 @@ onMounted(async () => {
             class="flex flex-col items-center gap-2 rounded-lg bg-neutral-50 p-4 dark:bg-neutral-800/50"
           >
             <span class="iconify size-6 text-emerald-500 ph--layout" />
-            <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200"
-              >{{ $t('admin.about.architecture_admin') }}</span
-            >
+            <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200">{{
+              $t('admin.about.architecture_admin')
+            }}</span>
             <div class="flex flex-wrap justify-center gap-1.5">
               <NTag
                 size="tiny"
@@ -320,7 +375,9 @@ onMounted(async () => {
 
     <!-- Section 5: Dependencies -->
     <div>
-      <h2 class="mb-3 text-base font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.about.section_dependencies') }}</h2>
+      <h2 class="mb-3 text-base font-medium text-neutral-700 dark:text-neutral-200">
+        {{ $t('admin.about.section_dependencies') }}
+      </h2>
       <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
         <div
           class="rounded border border-naive-border bg-naive-card p-4 transition-[background-color,border-color]"
