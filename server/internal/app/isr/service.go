@@ -298,11 +298,13 @@ func (s *Service) DiscoverRoutes(ctx context.Context) ([]string, error) {
 		}
 	}
 
-	// Expand all routes with language prefix for zh/en dual-language ISR.
-	langs := []string{"zh", "en"}
-	expanded := make([]string, 0, len(routes)*len(langs))
+	// Expand routes for all supported languages. Default language (zh-Hans)
+	// has no prefix; non-default languages get their BCP 47 prefix.
+	nonDefaultLangs := []string{"en", "ja", "zh-Hant"}
+	expanded := make([]string, 0, len(routes)*(len(nonDefaultLangs)+1))
 	for _, route := range routes {
-		for _, lang := range langs {
+		expanded = append(expanded, route)
+		for _, lang := range nonDefaultLangs {
 			expanded = append(expanded, "/"+lang+route)
 		}
 	}
