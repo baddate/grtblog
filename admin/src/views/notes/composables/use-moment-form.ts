@@ -2,6 +2,8 @@ import { useMessage } from 'naive-ui'
 import { reactive, ref, computed, onMounted, toRef } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
+import i18n from '@/plugins/i18n'
+const { t } = i18n.global
 import { useLeaveConfirm } from '@/composables'
 import { useImageExtInfo } from '@/composables/use-image-ext-info'
 import { createMoment, getMoment, updateMoment } from '@/services/moments'
@@ -91,7 +93,7 @@ export function useMomentForm() {
       return data
     } catch (e) {
       console.error(e)
-      message.error('无法加载手记数据')
+      message.error(t('admin.album.load_failed'))
       router.replace({ name: 'noteList' })
       return null
     } finally {
@@ -100,9 +102,9 @@ export function useMomentForm() {
   }
 
   async function save() {
-    if (!form.title.trim()) return message.error('请输入标题')
-    if (!form.content.trim()) return message.error('请输入正文内容')
-    if (!isCreating.value && !form.shortUrl.trim()) return message.error('短链接不能为空')
+    if (!form.title.trim()) return message.error(t('admin.validation.title_required'))
+    if (!form.content.trim()) return message.error(t('admin.validation.content_required'))
+    if (!isCreating.value && !form.shortUrl.trim()) return message.error(t('admin.validation.short_url_required'))
 
     saving.value = true
     try {
@@ -127,19 +129,19 @@ export function useMomentForm() {
           ...basePayload,
           shortUrl: form.shortUrl || undefined,
         })
-        message.success('创建成功')
+        message.success(t('admin.common.create_success'))
       } else {
         await updateMoment(momentId.value!, {
           ...basePayload,
           shortUrl: form.shortUrl,
         })
-        message.success('更新成功')
+        message.success(t('admin.common.update_success'))
       }
 
       initialSnapshot.value = takeSnapshot()
       router.push({ name: 'noteList' })
     } catch (e: any) {
-      message.error(e.message || '保存失败')
+      message.error(e.message || t('admin.common.save_failed'))
     } finally {
       saving.value = false
     }
@@ -147,10 +149,10 @@ export function useMomentForm() {
 
   useLeaveConfirm({
     when: isDirty,
-    title: '未保存的更改',
-    content: '当前内容未保存，确定要离开吗？',
-    positiveText: '离开',
-    negativeText: '继续编辑',
+    title: t('admin.leave_confirm.unsaved_title'),
+    content: t('admin.leave_confirm.content'),
+    positiveText: t('admin.leave_confirm.positive'),
+    negativeText: t('admin.leave_confirm.negative'),
   })
 
   onMounted(fetch)

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { NButton, NForm, NFormItem, NGi, NGrid, NInput } from 'naive-ui'
 
 import type { FormInst, FormItemRule } from 'naive-ui'
@@ -32,33 +35,33 @@ const emit = defineEmits<{
       >
         <NGi>
           <NFormItem
-            label="昵称"
+            :label="$t('admin.form.nickname')"
             path="nickname"
           >
             <NInput
               v-model:value="form.nickname"
-              placeholder="请输入您的昵称"
+              :placeholder="$t('admin.placeholder.nickname')"
             />
           </NFormItem>
         </NGi>
         <NGi>
           <NFormItem
-            label="电子邮箱"
+            :label="$t('admin.form.email')"
             path="email"
           >
             <NInput
               v-model:value="form.email"
-              placeholder="请输入电子邮箱"
+              :placeholder="$t('admin.placeholder.email')"
             />
           </NFormItem>
         </NGi>
       </NGrid>
-      <NFormItem label="头像地址 (URL)">
+      <NFormItem :label="$t('admin.user.avatar_url')">
         <NInput
           v-model:value="form.avatar"
           type="textarea"
           :rows="2"
-          placeholder="如果您有外部头像链接，也可以直接填入此处"
+          :placeholder="$t('admin.placeholder.avatar_external')"
         />
       </NFormItem>
       <div class="mt-4">
@@ -67,7 +70,7 @@ const emit = defineEmits<{
           size="large"
           strong
           @click="emit('submit')"
-          >保存基本信息</NButton
+          >{{ t('admin.action.save_profile') }}</NButton
         >
       </div>
     </NForm>

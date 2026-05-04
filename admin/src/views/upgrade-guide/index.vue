@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import {
   NButton,
   NConfigProvider,
@@ -34,6 +35,7 @@ defineOptions({
   name: 'UpgradeGuidePage',
 })
 
+const { t } = useI18n()
 const message = useMessage()
 const preferencesStore = usePreferencesStore()
 const configProviderProps = getConfigProviderProps()
@@ -98,7 +100,7 @@ async function checkState() {
     }
   } catch (error) {
     if (!(error instanceof ApiError)) {
-      message.error('获取状态失败')
+      message.error(t('admin.upgrade_guide.load_state_failed'))
     }
   } finally {
     loading.value = false
@@ -130,7 +132,7 @@ async function finishCurrentStep(skip: boolean) {
       try {
         await applyEnabledFeatures([guide], featureStates, sitePublicUrl.value)
       } catch {
-        message.warning('部分功能配置失败，可在设置中手动配置')
+        message.warning(t('admin.upgrade_guide.partial_config_failed'))
       }
     }
 
@@ -145,13 +147,13 @@ async function finishCurrentStep(skip: boolean) {
       }
       currentStepIndex.value++
     } else {
-      message.success('升级引导已完成')
+      message.success(t('admin.upgrade_guide.completed'))
       await router.replace({ path: '/' })
     }
   } catch (error) {
     if (handleAuthError(error)) return
     if (!(error instanceof ApiError)) {
-      message.error('操作失败，请稍后重试')
+      message.error(t('admin.upgrade_guide.operation_failed'))
     }
   } finally {
     submitting.value = false
@@ -163,10 +165,14 @@ async function finishCurrentStep(skip: boolean) {
 const leftPanelFeatures = computed(() => {
   const guide = currentGuide.value
   if (!guide) return []
-  return guide.features.map((f, i) => ({
-    index: i + 1,
-    label: `${f.label} — ${f.description.length > 30 ? f.description.slice(0, 30) + '...' : f.description}`,
-  }))
+  return guide.features.map((f, i) => {
+    const label = t(guide.translationKey + '.features.' + f.id + '.label')
+    const desc = t(guide.translationKey + '.features.' + f.id + '.description')
+    return {
+      index: i + 1,
+      label: `${label} — ${desc.length > 30 ? desc.slice(0, 30) + '...' : desc}`,
+    }
+  })
 })
 
 const latestVersion = computed(() => {
@@ -197,7 +203,7 @@ const latestVersion = computed(() => {
         class="m-auto"
         size="large"
       >
-        <template #description>正在加载...</template>
+        <template #description>{{ $t('admin.common.loading') }}</template>
       </NSpin>
 
       <template v-else-if="guides.length > 0 && currentGuide">
@@ -232,7 +238,7 @@ const latestVersion = computed(() => {
               <NH1
                 class="mb-6 text-4xl leading-tight font-bold tracking-tight text-neutral-900 dark:text-white"
               >
-                欢迎来到
+                {{ $t('admin.upgrade_guide.welcome') }}
                 <br />
                 <span :style="{ color: `rgb(var(--primary-color-rgb))` }"
                   >V{{ latestVersion }}</span
@@ -242,8 +248,8 @@ const latestVersion = computed(() => {
               <div
                 class="text-base leading-relaxed font-light text-neutral-500 dark:text-neutral-400"
               >
-                <p class="mb-3">此次更新带来了一些新功能。</p>
-                <p>以下向导将帮助您快速了解和配置这些新特性。</p>
+                <p class="mb-3">{{ $t('admin.upgrade_guide.new_features') }}</p>
+                <p>{{ $t('admin.upgrade_guide.wizard_intro') }}</p>
               </div>
 
               <!-- Feature bullet list from current guide -->
@@ -311,13 +317,13 @@ const latestVersion = computed(() => {
                   round
                   :bordered="false"
                 >
-                  {{ currentGuide.tag }}
+                  {{ t(currentGuide.translationKey + '.tag') }}
                 </NTag>
                 <NH2 class="mt-3 mb-0 text-2xl font-bold tracking-tight">
-                  {{ currentGuide.title }}
+                  {{ t(currentGuide.translationKey + '.title') }}
                 </NH2>
                 <p class="mt-2 text-[13px] leading-relaxed text-neutral-500">
-                  {{ currentGuide.description }}
+                  {{ t(currentGuide.translationKey + '.description') }}
                 </p>
               </div>
 
@@ -338,7 +344,7 @@ const latestVersion = computed(() => {
                   :disabled="submitting"
                   @click="finishCurrentStep(true)"
                 >
-                  暂时跳过
+                  {{ $t('admin.upgrade_guide.skip') }}
                 </NButton>
 
                 <NButton
@@ -348,7 +354,7 @@ const latestVersion = computed(() => {
                   @click="finishCurrentStep(false)"
                   class="min-w-25 shadow-sm"
                 >
-                  {{ hasAnyEnabled ? '启用并继续' : '继续' }}
+                  {{ hasAnyEnabled ? $t('admin.upgrade_guide.enable_and_continue') : $t('admin.upgrade_guide.continue') }}
                 </NButton>
               </div>
             </div>

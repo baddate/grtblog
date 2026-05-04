@@ -1,9 +1,12 @@
 import { reactive, type Ref } from 'vue'
 
 import { getFederationInstances, fetchRemotePosts } from '@/services/federation-admin'
+import i18n from '@/plugins/i18n'
 
 import type { FederationInstanceResp, FederationRemotePostResp } from '@/types/federation'
 import type { EditorView } from '@codemirror/view'
+
+const __ = i18n.global.t
 
 /** URL 格式校验：必须是合法域名或 http(s) URL */
 const URL_PATTERN =
@@ -76,7 +79,7 @@ export function useCitationPicker(view: Ref<EditorView | undefined>) {
     }
     if (!URL_PATTERN.test(trimmed)) {
       state.urlValid = false
-      state.urlError = '请输入有效的域名或 URL'
+      state.urlError = __('admin.markdown_editor.citation_invalid_url')
       return false
     }
     state.urlValid = true

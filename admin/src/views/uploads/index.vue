@@ -13,6 +13,9 @@ import {
   useMessage,
 } from 'naive-ui'
 
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { ScrollContainer } from '@/components'
 import { formatFileSize } from '@/utils/format'
 
@@ -61,7 +64,7 @@ const {
       <NCard :bordered="false">
         <div class="header-row">
           <div class="header-main">
-            <div class="page-title">文件管理</div>
+            <div class="page-title">{{ $t('admin.upload.file_management') }}</div>
             <NTabs
               v-model:value="activeFilter"
               size="small"
@@ -69,15 +72,15 @@ const {
             >
               <NTabPane
                 name="all"
-                tab="全部"
+                :tab="$t('admin.filter.all')"
               />
               <NTabPane
                 name="picture"
-                tab="图片"
+                :tab="$t('admin.upload.tab_image')"
               />
               <NTabPane
                 name="file"
-                tab="文件"
+                :tab="$t('admin.upload.tab_file')"
               />
             </NTabs>
           </div>
@@ -87,7 +90,7 @@ const {
               :loading="syncing"
               @click="handleSync"
             >
-              同步索引
+              {{ $t('admin.upload.sync_index') }}
             </NButton>
             <FileUploader
               :upload-type="uploadType"
@@ -104,14 +107,14 @@ const {
         :bordered="false"
       >
         <div class="empty-container">
-          <NEmpty description="暂无文件" />
+          <NEmpty :description="$t('admin.upload.no_files')" />
         </div>
       </NCard>
 
       <NCard
         v-if="uploadTasks.length > 0"
         :bordered="false"
-        title="上传进度"
+        :title="$t('admin.upload.progress_title')"
       >
         <div class="upload-task-list">
           <div
@@ -127,7 +130,7 @@ const {
                   :type="task.type === 'picture' ? 'success' : 'info'"
                   :bordered="false"
                 >
-                  {{ task.type === 'picture' ? '图片' : '文件' }}
+                  {{ task.type === 'picture' ? $t('admin.upload.tab_image') : $t('admin.upload.tab_file') }}
                 </NTag>
                 <NTag
                   size="small"
@@ -141,7 +144,7 @@ const {
                   :bordered="false"
                 >
                   {{
-                    task.status === 'success' ? '完成' : task.status === 'error' ? '失败' : '上传中'
+                    task.status === 'success' ? $t('admin.upload.completed') : task.status === 'error' ? $t('admin.status.failed') : $t('admin.upload.uploading')
                   }}
                 </NTag>
               </div>
@@ -208,14 +211,14 @@ const {
     <NModal
       v-model:show="deleteModalVisible"
       preset="dialog"
-      title="确认删除"
+      :title="$t('admin.common.delete_confirm')"
       type="warning"
-      positive-text="删除"
-      negative-text="取消"
+      :positive-text="$t('admin.common.delete')"
+      :negative-text="$t('admin.common.cancel')"
       @positive-click="handleDelete"
     >
-      <p>确定要删除文件 "{{ deletingFile?.name }}" 吗？</p>
-      <p style="color: #f5222d; margin-top: 8px">此操作将永久删除文件，无法恢复。</p>
+      <p>{{ $t('admin.upload.delete_confirm', { name: deletingFile?.name }) }}</p>
+      <p style="color: #f5222d; margin-top: 8px">{{ $t('admin.upload.delete_warning') }}</p>
     </NModal>
 
     <NModal
@@ -223,7 +226,7 @@ const {
       preset="card"
       style="max-width: 800px"
     >
-      <template #header><span>图片预览</span></template>
+      <template #header><span>{{ $t('admin.upload.preview_image') }}</span></template>
       <div class="preview-container">
         <NImage :src="previewImageUrl" />
       </div>

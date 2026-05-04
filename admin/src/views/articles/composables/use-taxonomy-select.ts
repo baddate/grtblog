@@ -1,5 +1,8 @@
 import { ref, onMounted, reactive, type Ref, computed } from 'vue'
 
+import i18n from '@/plugins/i18n'
+const { t } = i18n.global
+
 import { listCategories, listTags, createTag, createCategory } from '@/services/taxonomy'
 
 import type { ArticleTag } from '@/services/articles'
@@ -67,7 +70,7 @@ export function useTaxonomySelect(
           ids.push(created.id)
           nextDynamicTags.push(created.name)
         } catch (e) {
-          message.error(`创建标签 "${trimmed}" 失败`)
+          message.error(t('admin.article.create_tag_failed', { name: trimmed }))
         }
       }
     }
@@ -96,19 +99,19 @@ export function useTaxonomySelect(
   })
 
   async function createNewCategory() {
-    if (!newCatModal.name || !newCatModal.slug) return message.error('请填写完整')
+    if (!newCatModal.name || !newCatModal.slug) return message.error(t('admin.common.fill_required'))
 
     newCatModal.loading = true
     try {
       const res = await createCategory({ name: newCatModal.name, shortUrl: newCatModal.slug })
       categoryOptions.value.push({ label: res.name, value: res.id })
       formCategoryId.value = res.id // 自动选中
-      message.success('分类创建成功')
+      message.success(t('admin.service.create_success'))
       newCatModal.show = false
       newCatModal.name = ''
       newCatModal.slug = ''
     } catch (e) {
-      message.error('分类创建失败')
+      message.error(t('admin.article.create_category_failed'))
     } finally {
       newCatModal.loading = false
     }

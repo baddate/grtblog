@@ -2,6 +2,8 @@ import { useMessage } from 'naive-ui'
 import { reactive, computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
+import i18n from '@/plugins/i18n'
+const { t } = i18n.global
 import { getPage, createPage, updatePage } from '@/services/page'
 
 export function usePageForm() {
@@ -58,17 +60,17 @@ export function usePageForm() {
       }
       if (isCreating.value) {
         await createPage(payload)
-        message.success('页面创建成功')
+        message.success(t('admin.page.create_success'))
       } else {
         await updatePage(Number(id.value), payload)
-        message.success('页面更新成功')
+        message.success(t('admin.page.update_success'))
       }
       router.push({ name: 'pageList' })
     } catch (error) {
       if (error instanceof Error) {
         message.error(error.message)
       } else {
-        message.error('保存失败')
+        message.error(t('admin.common.save_failed'))
       }
     } finally {
       saving.value = false

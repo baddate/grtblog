@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import {
   NAlert,
   NCard,
@@ -41,7 +44,7 @@ const emit = defineEmits<{
     @update:show="emit('update:visible', $event)"
   >
     <NDrawerContent
-      title="投递详情"
+      :title="$t('admin.webhooks.history.detail_title')"
       closable
       header-style="padding: 20px 24px"
       body-style="padding: 0"
@@ -49,10 +52,10 @@ const emit = defineEmits<{
       <ScrollContainer wrapper-class="flex flex-col gap-4">
         <NEmpty
           v-if="!activeHistory"
-          description="暂无投递详情"
+          :description="$t('admin.webhooks.history.no_detail')"
         />
         <template v-else>
-          <NCard title="概览">
+          <NCard :title="$t('admin.webhooks.history.overview')">
             <NTable
               size="small"
               :bordered="false"
@@ -60,23 +63,23 @@ const emit = defineEmits<{
             >
               <tbody>
                 <tr>
-                  <th class="w-24 text-xs text-[var(--text-color-3)]">事件</th>
+                  <th class="w-24 text-xs text-[var(--text-color-3)]">{{ $t('admin.webhooks.event') }}</th>
                   <td class="font-medium">{{ activeHistory.eventName || '-' }}</td>
                 </tr>
                 <tr>
-                  <th class="text-xs text-[var(--text-color-3)]">Webhook</th>
+                  <th class="text-xs text-[var(--text-color-3)]">{{ $t('admin.webhooks.history.webhook') }}</th>
                   <td>
                     {{ webhookMap.get(activeHistory.webhookId) || `#${activeHistory.webhookId}` }}
                   </td>
                 </tr>
                 <tr>
-                  <th class="text-xs text-[var(--text-color-3)]">请求 URL</th>
+                  <th class="text-xs text-[var(--text-color-3)]">{{ $t('admin.webhooks.history.request_url') }}</th>
                   <td class="font-mono text-xs break-words">
                     {{ activeHistory.requestUrl || '-' }}
                   </td>
                 </tr>
                 <tr>
-                  <th class="text-xs text-[var(--text-color-3)]">状态</th>
+                  <th class="text-xs text-[var(--text-color-3)]">{{ $t('admin.common.status') }}</th>
                   <td>
                     <NTag
                       size="small"
@@ -88,20 +91,20 @@ const emit = defineEmits<{
                   </td>
                 </tr>
                 <tr>
-                  <th class="text-xs text-[var(--text-color-3)]">测试</th>
+                  <th class="text-xs text-[var(--text-color-3)]">{{ $t('admin.webhooks.history.is_test') }}</th>
                   <td>
                     <NTag
                       v-if="activeHistory.isTest"
                       size="small"
                       type="warning"
                       :bordered="false"
-                      >是</NTag
+                      >{{ $t('admin.common.yes') }}</NTag
                     >
-                    <span v-else>否</span>
+                    <span v-else>{{ $t('admin.common.no') }}</span>
                   </td>
                 </tr>
                 <tr>
-                  <th class="text-xs text-[var(--text-color-3)]">时间</th>
+                  <th class="text-xs text-[var(--text-color-3)]">{{ $t('admin.webhooks.history.time') }}</th>
                   <td>{{ formatDate(activeHistory.createdAt) }}</td>
                 </tr>
               </tbody>
@@ -115,7 +118,7 @@ const emit = defineEmits<{
             >
               <NTabPane
                 name="request"
-                tab="请求"
+                :tab="$t('admin.webhooks.history.tab_request')"
               >
                 <NSpace
                   vertical
@@ -144,7 +147,7 @@ const emit = defineEmits<{
               </NTabPane>
               <NTabPane
                 name="response"
-                tab="响应"
+                :tab="$t('admin.webhooks.history.tab_response')"
               >
                 <NSpace
                   vertical
@@ -180,7 +183,7 @@ const emit = defineEmits<{
                     v-else
                     type="info"
                     :show-icon="false"
-                    >无错误信息</NAlert
+                    >{{ $t('admin.webhooks.history.no_error') }}</NAlert
                   >
                 </NSpace>
               </NTabPane>

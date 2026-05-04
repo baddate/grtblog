@@ -11,6 +11,7 @@ import {
   useMessage,
 } from 'naive-ui'
 import { defineComponent, reactive } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import { ScrollContainer } from '@/components'
 import { useTable } from '@/composables/table/use-table'
@@ -22,6 +23,7 @@ import type { DataTableColumns } from 'naive-ui'
 export default defineComponent({
   name: 'FriendLinkApplications',
   setup() {
+    const { t } = useI18n()
     const message = useMessage()
 
     const appsFilter = reactive({
@@ -38,16 +40,16 @@ export default defineComponent({
     const handleAppStatusUpdate = async (id: number, status: string) => {
       try {
         await friendLinkService.updateApplicationStatus(id, status)
-        message.success('状态变更成功')
+        message.success(t('admin.service.status_updated'))
         refreshApps()
       } catch (e: any) {
-        message.error(e.message || '操作失败')
+        message.error(e.message || t('admin.service.operation_failed'))
       }
     }
 
     const appColumns: DataTableColumns<FriendLinkApplication> = [
       {
-        title: '申请信息',
+        title: t('admin.friend.application_info'),
         key: 'info',
         render: (row) => (
           <NThing
@@ -67,7 +69,7 @@ export default defineComponent({
         ),
       },
       {
-        title: '来源',
+        title: t('admin.friend.channel'),
         key: 'channel',
         width: 100,
         render: (row) => (
@@ -78,7 +80,7 @@ export default defineComponent({
         ),
       },
       {
-        title: '留言',
+        title: t('admin.friend.message'),
         key: 'message',
         minWidth: 220,
         render: (row) => {
@@ -99,7 +101,7 @@ export default defineComponent({
         },
       },
       {
-        title: '状态',
+        title: t('admin.table.status'),
         key: 'status',
         width: 90,
         render: (row) => {
@@ -120,22 +122,22 @@ export default defineComponent({
         },
       },
       {
-        title: '时间',
+        title: t('admin.table.created_at'),
         key: 'createdAt',
         width: 160,
       },
       {
-        title: '操作',
+        title: t('admin.table.actions'),
         key: 'actions',
         width: 150,
         render: (row) => (
           <NDropdown
             trigger='click'
             options={[
-              { label: '通过 (Approve)', key: 'approved' },
-              { label: '拒绝 (Reject)', key: 'rejected' },
-              { label: '封禁 (Block)', key: 'blocked' },
-              { label: '重置为待审核 (Pending)', key: 'pending' },
+              { label: `${t('admin.action.approve')} (Approve)`, key: 'approved' },
+              { label: `${t('admin.action.reject')} (Reject)`, key: 'rejected' },
+              { label: `${t('admin.action.block')} (Block)`, key: 'blocked' },
+              { label: `${t('admin.action.pending')} (Pending)`, key: 'pending' },
             ]}
             onSelect={(key: string) => handleAppStatusUpdate(row.id, key)}
           >
@@ -143,7 +145,7 @@ export default defineComponent({
               size='tiny'
               secondary
             >
-              变更状态
+              {t('admin.friend.change_status')}
             </NButton>
           </NDropdown>
         ),
@@ -153,19 +155,19 @@ export default defineComponent({
     return () => (
       <ScrollContainer wrapper-class='p-4'>
         <NCard
-          title='友链申请审核'
+          title={t('admin.card.friend_applications')}
           class='h-full'
         >
           <div class='mb-4 flex gap-2'>
             <NSelect
               value={appsFilter.status}
-              placeholder='状态筛选'
+              placeholder={t('admin.placeholder.filter_status')}
               clearable
               options={[
-                { label: '待审核 (Pending)', value: 'pending' },
-                { label: '已通过 (Approved)', value: 'approved' },
-                { label: '已拒绝 (Rejected)', value: 'rejected' },
-                { label: '已封禁 (Blocked)', value: 'blocked' },
+                { label: `${t('admin.filter.pending')} (Pending)`, value: 'pending' },
+                { label: `${t('admin.filter.approved')} (Approved)`, value: 'approved' },
+                { label: `${t('admin.filter.rejected')} (Rejected)`, value: 'rejected' },
+                { label: `${t('admin.filter.blocked')} (Blocked)`, value: 'blocked' },
               ]}
               class='w-40'
               onUpdateValue={(v) => {
@@ -177,7 +179,7 @@ export default defineComponent({
               secondary
               onClick={refreshApps}
             >
-              刷新
+              {t('admin.common.refresh')}
             </NButton>
           </div>
           <NDataTable

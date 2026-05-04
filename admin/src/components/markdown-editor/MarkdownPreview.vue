@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, nextTick, onBeforeUnmount, render, h, type Component } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import { useMarkdownIt } from '@/composables/markdown-it/use-markdown-it.ts'
 import { getMarkdownComponent } from '@/composables/markdown/shared/components'
@@ -27,6 +28,8 @@ const containerRef = ref<HTMLElement | null>(null)
 const { isDark } = toRefsPreferencesStore()
 const { html } = useMarkdownIt(() => props.source, {}, [() => isDark.value])
 const renderKey = ref(0)
+
+const { t } = useI18n()
 
 const escapeHtml = (value = '') =>
   value
@@ -123,10 +126,10 @@ const mountDynamicComponents = async () => {
       const safeName = escapeHtml(componentName || 'unknown')
       const propsHtml = buildPropsHtml(componentName || 'unknown', componentProps)
       el.innerHTML = `<div class="md-component-fallback">
-        <span class="md-component-fallback__label">自定义组件</span>
+        <span class="md-component-fallback__label">${t('admin.editor.custom_component')}</span>
         <span class="md-component-fallback__name">${safeName}</span>
         ${propsHtml}
-        <span class="md-component-fallback__hint">将在最终页面预览时展示</span>
+        <span class="md-component-fallback__hint">${t('admin.editor.preview_placeholder')}</span>
       </div>`
     }
   })

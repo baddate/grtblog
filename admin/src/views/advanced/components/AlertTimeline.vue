@@ -17,10 +17,10 @@ defineProps<{
   <div
     class="rounded border border-naive-border bg-naive-card p-5 transition-[background-color,border-color]"
   >
-    <div class="mb-4 text-base font-medium text-neutral-600 dark:text-neutral-300">系统告警流</div>
+    <div class="mb-4 text-base font-medium text-neutral-600 dark:text-neutral-300">{{ $t('admin.advanced.system_alerts') }}</div>
     <NEmpty
       v-if="!alerts?.length"
-      description="暂无告警"
+      :description="$t('admin.advanced.no_alerts')"
     />
     <NTimeline v-else>
       <NTimelineItem

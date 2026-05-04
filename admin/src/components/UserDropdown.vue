@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 import { useQuery } from '@tanstack/vue-query'
 import { NDropdown } from 'naive-ui'
 import { computed, h } from 'vue'
@@ -47,7 +49,10 @@ const userDropdownOptions = computed(() => [
         class: `iconify ph--circle-fill size-3 ${ownerOnline.value ? 'text-emerald-500' : 'text-gray-400'}`,
       }),
     key: 'owner-status',
-    label: `站长状态：${ownerOnline.value ? '在线' : '离线'} / 面板${panelOnline.value ? '在线' : '离线'}`,
+    label: t('admin.user_dropdown.owner_status', {
+      owner: ownerOnline.value ? t('admin.user_dropdown.owner_online') : t('admin.user_dropdown.owner_offline'),
+      panel: panelOnline.value ? t('admin.user_dropdown.panel_online') : t('admin.user_dropdown.panel_offline'),
+    }),
     disabled: true,
   },
   {
@@ -56,19 +61,21 @@ const userDropdownOptions = computed(() => [
         class: `iconify ph--circle-fill size-3 ${wsConnected.value ? 'text-emerald-500' : 'text-orange-500'}`,
       }),
     key: 'ws-status',
-    label: `实时 WS：${wsConnected.value ? '已连接' : '重连中'}`,
+    label: t('admin.user_dropdown.ws_status', {
+      status: wsConnected.value ? t('admin.user_dropdown.ws_connected') : t('admin.user_dropdown.ws_reconnecting'),
+    }),
     disabled: true,
   },
   {
     icon: () => h('span', { class: 'iconify ph--app-window size-4 text-gray-400' }),
     key: 'owner-app',
-    label: `应用：${appText.value}`,
+    label: t('admin.user_dropdown.app', { app: appText.value }),
     disabled: true,
   },
   {
     icon: () => h('span', { class: 'iconify ph--music-note-simple size-4 text-gray-400' }),
     key: 'owner-media',
-    label: `媒体：${mediaText.value}`,
+    label: t('admin.user_dropdown.media', { media: mediaText.value }),
     disabled: true,
   },
   {
@@ -78,12 +85,12 @@ const userDropdownOptions = computed(() => [
   {
     icon: () => h('span', { class: 'iconify ph--user size-5' }),
     key: 'user',
-    label: '个人中心',
+    label: t('admin.user_dropdown.user_center'),
   },
   {
     icon: () => h('span', { class: 'iconify ph--sign-out size-5' }),
     key: 'signOut',
-    label: '退出登录',
+    label: t('admin.user_dropdown.sign_out'),
   },
 ])
 

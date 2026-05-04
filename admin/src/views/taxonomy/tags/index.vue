@@ -53,7 +53,7 @@ async function openContents(row: TagItem) {
   try {
     contentsData.value = await getTagContents(row.id)
   } catch (e: any) {
-    message.error(e?.message || '获取关联内容失败')
+    message.error(e?.message || t('admin.service.tag_contents_failed'))
   } finally {
     contentsLoading.value = false
   }
@@ -61,7 +61,7 @@ async function openContents(row: TagItem) {
 
 const columns: DataTableColumns<TagItem> = [
   { title: t('admin.table.id'), key: 'id', width: 80 },
-  { title: '标签名称', key: 'name', minWidth: 220 },
+  { title: t('admin.tag.name'), key: 'name', minWidth: 220 },
   {
     title: t('admin.common.updated_at'),
     key: 'updatedAt',
@@ -79,13 +79,13 @@ const columns: DataTableColumns<TagItem> = [
           { size: 'small', tertiary: true, onClick: () => openContents(row) },
           {
             icon: () => h('div', { class: 'iconify ph--article' }),
-            default: () => '关联内容',
+            default: () => t('admin.tag.related_content'),
           },
         ),
         h(
           NButton,
           { size: 'small', tertiary: true, onClick: () => openEdit(row) },
-          { default: () => '编辑' },
+          { default: () => t('admin.common.edit') },
         ),
         h(
           NPopconfirm,
@@ -95,37 +95,37 @@ const columns: DataTableColumns<TagItem> = [
               h(
                 NButton,
                 { size: 'small', type: 'error', secondary: true },
-                { default: () => '删除' },
+                { default: () => t('admin.common.delete') },
               ),
-            default: () => '确认删除该标签？',
+            default: () => t('admin.common.delete_confirm'),
           },
         ),
       ]),
   },
 ]
 
-const modalTitle = ref('新建标签')
+const modalTitle = ref(t('admin.action.create_tag'))
 
 async function fetchData() {
   loading.value = true
   try {
     items.value = await listTags()
   } catch (error: any) {
-    message.error(error?.message || '获取标签列表失败')
+    message.error(error?.message || t('admin.service.tag_list_failed'))
   } finally {
     loading.value = false
   }
 }
 
 function openCreate() {
-  modalTitle.value = '新建标签'
+  modalTitle.value = t('admin.action.create_tag')
   editingId.value = null
   formModel.name = ''
   editVisible.value = true
 }
 
 function openEdit(row: TagItem) {
-  modalTitle.value = '编辑标签'
+  modalTitle.value = t('admin.action.edit_tag')
   editingId.value = row.id
   formModel.name = row.name
   editVisible.value = true
@@ -134,7 +134,7 @@ function openEdit(row: TagItem) {
 async function handleSubmit() {
   const name = formModel.name.trim()
   if (!name) {
-    message.warning('请输入标签名称')
+    message.warning(t('admin.validation.tag_name_required'))
     return
   }
 
@@ -142,15 +142,15 @@ async function handleSubmit() {
   try {
     if (editingId.value) {
       await updateTag(editingId.value, { name })
-      message.success('标签已更新')
+      message.success(t('admin.service.tag_updated'))
     } else {
       await createTag(name)
-      message.success('标签已创建')
+      message.success(t('admin.service.tag_created'))
     }
     editVisible.value = false
     await fetchData()
   } catch (error: any) {
-    message.error(error?.message || '保存失败')
+    message.error(error?.message || t('admin.service.save_failed'))
   } finally {
     saving.value = false
   }
@@ -162,7 +162,7 @@ async function handleDelete(row: TagItem) {
     message.success(t('admin.common.delete_success'))
     await fetchData()
   } catch (error: any) {
-    message.error(error?.message || '删除失败')
+    message.error(error?.message || t('admin.service.delete_failed'))
   }
 }
 
@@ -177,12 +177,12 @@ onMounted(() => {
     wrapper-class="p-4"
     :scrollbar-props="{ trigger: 'none' }"
   >
-    <NCard title="标签管理">
+    <NCard :title="$t('admin.card.tag_list')">
       <template #header-extra>
         <NButton
           type="primary"
           @click="openCreate"
-          >新建标签</NButton
+          >{{ $t('admin.action.create_tag') }}</NButton
         >
       </template>
 
@@ -200,10 +200,10 @@ onMounted(() => {
       :loading="saving"
       @confirm="handleSubmit"
     >
-      <NFormItem label="标签名称">
+      <NFormItem :label="$t('admin.tag.name')">
         <NInput
           v-model:value="formModel.name"
-          placeholder="请输入标签名称"
+          :placeholder="$t('admin.placeholder.name')"
         />
       </NFormItem>
     </FormModal>
@@ -214,7 +214,7 @@ onMounted(() => {
       width="380"
     >
       <NDrawerContent
-        :title="`「${contentsTag?.name ?? ''}」关联内容`"
+        :title="$t('admin.tag.related_content_with_name', { name: contentsTag?.name ?? '' })""
         :native-scrollbar="false"
         closable
         header-style="padding: 20px 24px;"
@@ -227,7 +227,7 @@ onMounted(() => {
               <div>
                 <div class="mb-2 flex items-center gap-2 text-sm font-medium">
                   <div class="iconify ph--article" />
-                  <span>文章</span>
+                  <span>{{ $t('admin.tag.section_article') }}</span>
                   <NTag
                     size="small"
                     :bordered="false"
@@ -256,7 +256,7 @@ onMounted(() => {
                 </div>
                 <NEmpty
                   v-else
-                  description="无关联文章"
+                  :description="$t('admin.tag.no_articles')"
                   size="small"
                   class="py-3"
                 />
@@ -266,7 +266,7 @@ onMounted(() => {
               <div>
                 <div class="mb-2 flex items-center gap-2 text-sm font-medium">
                   <div class="iconify ph--notebook" />
-                  <span>手记</span>
+                  <span>{{ $t('admin.tag.section_moment') }}</span>
                   <NTag
                     size="small"
                     :bordered="false"
@@ -295,7 +295,7 @@ onMounted(() => {
                 </div>
                 <NEmpty
                   v-else
-                  description="无关联手记"
+                  :description="$t('admin.tag.no_moments')"
                   size="small"
                   class="py-3"
                 />
@@ -306,7 +306,7 @@ onMounted(() => {
             v-else-if="!contentsLoading"
             class="py-8"
           >
-            <NEmpty description="加载失败" />
+            <NEmpty :description="$t('admin.service.load_failed')" />
           </div>
         </NSpin>
       </NDrawerContent>

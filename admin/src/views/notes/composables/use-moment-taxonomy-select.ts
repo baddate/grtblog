@@ -1,5 +1,7 @@
 import { ref, onMounted, reactive, computed } from 'vue'
 
+import i18n from '@/plugins/i18n'
+const { t } = i18n.global
 import { listColumns, listTags, createTag, createColumn } from '@/services/taxonomy'
 
 import type { MomentTopic } from '@/services/moments'
@@ -57,7 +59,7 @@ export function useMomentTaxonomySelect(
           ids.push(created.id)
           nextDynamicTopics.push(created.name)
         } catch (e) {
-          message.error('创建话题失败')
+          message.error(t('admin.moment.create_topic_failed'))
         }
       }
     }
@@ -75,8 +77,8 @@ export function useMomentTaxonomySelect(
   }
 
   async function createNewColumn() {
-    if (!newColumnModal.name.trim()) return message.error('请输入分区名称')
-    if (!newColumnModal.slug.trim()) return message.error('请输入分区短链接')
+    if (!newColumnModal.name.trim()) return message.error(t('admin.validation.name_required'))
+    if (!newColumnModal.slug.trim()) return message.error(t('admin.validation.short_url_required'))
 
     newColumnModal.loading = true
     try {
@@ -90,7 +92,7 @@ export function useMomentTaxonomySelect(
       newColumnModal.name = ''
       newColumnModal.slug = ''
     } catch (e) {
-      message.error('创建分区失败')
+      message.error(t('admin.moment.create_column_failed'))
     } finally {
       newColumnModal.loading = false
     }

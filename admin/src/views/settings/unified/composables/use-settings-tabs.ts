@@ -1,6 +1,9 @@
 import { ref, reactive, watch, type Component, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
+import i18n from '@/plugins/i18n'
+const __ = i18n.global.t
+
 import AdvancedTab from '../components/tabs/AdvancedTab.vue'
 import AiTab from '../components/tabs/AiTab.vue'
 import ApiTokensTab from '../components/tabs/ApiTokensTab.vue'
@@ -25,31 +28,66 @@ export interface SettingsTab {
 export const settingsTabs: SettingsTab[] = [
   {
     key: 'site-info',
-    label: '基本信息',
+    label: __('admin.settings.site_info'),
     icon: 'iconify ph--globe-hemisphere-west',
     component: SiteInfoTab,
   },
   {
     key: 'theme-extend',
-    label: '主题扩展',
+    label: __('admin.settings.theme_extend'),
     icon: 'iconify ph--paint-brush',
     component: ThemeExtendTab,
     fillHeight: true,
   },
   {
     key: 'security',
-    label: '安全与登录',
+    label: __('admin.settings.security'),
     icon: 'iconify ph--shield-check',
     component: SecurityTab,
   },
-  { key: 'content', label: '内容与评论', icon: 'iconify ph--article', component: ContentTab },
-  { key: 'email', label: '邮件', icon: 'iconify ph--envelope', component: EmailTab },
-  { key: 'webhook', label: 'Webhook', icon: 'iconify ph--webhooks-logo', component: WebhookTab },
-  { key: 'federation', label: '联合', icon: 'iconify ph--circles-three', component: FederationTab },
-  { key: 'ai', label: 'AI', icon: 'iconify ph--robot', component: AiTab },
-  { key: 'api-tokens', label: 'API Tokens', icon: 'iconify ph--key', component: ApiTokensTab },
-  { key: 'telemetry', label: '遥测', icon: 'iconify ph--chart-line-up', component: TelemetryTab },
-  { key: 'advanced', label: '高级', icon: 'iconify ph--gear', component: AdvancedTab },
+  {
+    key: 'content',
+    label: __('admin.settings.content'),
+    icon: 'iconify ph--article',
+    component: ContentTab,
+  },
+  {
+    key: 'email',
+    label: __('admin.settings.email_config_section'),
+    icon: 'iconify ph--envelope',
+    component: EmailTab,
+  },
+  {
+    key: 'webhook',
+    label: __('admin.settings.webhook'),
+    icon: 'iconify ph--webhooks-logo',
+    component: WebhookTab,
+  },
+  {
+    key: 'federation',
+    label: __('admin.settings.federation'),
+    icon: 'iconify ph--circles-three',
+    component: FederationTab,
+  },
+  { key: 'ai', label: __('admin.settings.ai'), icon: 'iconify ph--robot', component: AiTab },
+  {
+    key: 'api-tokens',
+    label: __('admin.settings.api_tokens'),
+    icon: 'iconify ph--key',
+    component: ApiTokensTab,
+  },
+  {
+    key: 'telemetry',
+    label: __('admin.settings.telemetry'),
+    icon: 'iconify ph--chart-line-up',
+    component: TelemetryTab,
+  },
+  {
+    key: 'advanced',
+    label: __('admin.settings.advanced'),
+    icon: 'iconify ph--gear',
+    component: AdvancedTab,
+  },
 ]
 
 const validKeys = new Set(settingsTabs.map((t) => t.key))

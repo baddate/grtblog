@@ -155,7 +155,7 @@ const handleChildUpdate = (element: NavMenuItem, newChildren: NavMenuItem[]) => 
           <!-- 描述/URL -->
           <template #description>
             <div class="truncate text-xs text-gray-400">
-              {{ element.url || '无链接' }}
+              {{ element.url || t('admin.navigation.no_link') }}
             </div>
           </template>
 
@@ -172,7 +172,7 @@ const handleChildUpdate = (element: NavMenuItem, newChildren: NavMenuItem[]) => 
                   @click="emit('add-child', element)"
                 >
                   <template #icon><NIcon :component="Add" /></template>
-                  子项
+                  {{ t('admin.navigation.add_child') }}
                 </NButton>
                 <NButton
                   secondary
@@ -180,14 +180,14 @@ const handleChildUpdate = (element: NavMenuItem, newChildren: NavMenuItem[]) => 
                   @click="emit('edit', element)"
                 >
                   <template #icon><NIcon :component="CreateOutline" /></template>
-                  编辑
+                  {{ t('admin.common.edit') }}
                 </NButton>
               </NButtonGroup>
 
               <NPopconfirm
                 @positive-click="emit('delete', element)"
-                negative-text="手滑了"
-                positive-text="确定删除"
+                :negative-text="t('admin.navigation.slip')"
+                :positive-text="t('admin.common.delete')"
               >
                 <template #trigger>
                   <NButton
@@ -198,8 +198,7 @@ const handleChildUpdate = (element: NavMenuItem, newChildren: NavMenuItem[]) => 
                     <template #icon><NIcon :component="TrashBinOutline" /></template>
                   </NButton>
                 </template>
-                确定要删除“{{ element.name }}”吗？<br />
-                <span class="text-xs text-gray-400">如果是目录，子菜单也会被删除。</span>
+                {{ t('admin.navigation.confirm_delete_with_children', { name: element.name }) }}
               </NPopconfirm>
             </NSpace>
           </template>
@@ -229,11 +228,11 @@ const handleChildUpdate = (element: NavMenuItem, newChildren: NavMenuItem[]) => 
   <!-- 空状态 -->
   <NEmpty
     v-else
-    description="暂无菜单"
+    :description="t('admin.navigation.empty')"
     class="rounded-lg border border-dashed border-gray-200 py-8 dark:border-neutral-800"
   >
     <template #extra>
-      <div class="text-xs text-gray-400">还没有菜单呀，点击添加吧～</div>
+      <div class="text-xs text-gray-400">{{ t('admin.navigation.empty_hint') }}</div>
     </template>
   </NEmpty>
 </template>

@@ -8,6 +8,7 @@ import {
   NPopconfirm,
   useDialog,
 } from 'naive-ui'
+import { useI18n } from 'vue-i18n'
 import { defineComponent, onMounted, ref, Transition } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -23,6 +24,7 @@ export default defineComponent({
   name: 'ThinkingList',
   setup() {
     const router = useRouter()
+    const { t } = useI18n()
     const dialog = useDialog()
     const { message } = useDiscreteApi()
     const { data, loading, pagination, refresh } = useTable<ThinkingListItem>(listThinkings)
@@ -38,10 +40,10 @@ export default defineComponent({
 
     const handleDelete = (id: number) => {
       dialog.warning({
-        title: '确认删除',
-        content: '删除后无法恢复，是否继续？',
-        positiveText: '确认',
-        negativeText: '取消',
+        title: t('admin.common.delete_confirm'),
+        content: t('admin.common.delete_confirm_content'),
+        positiveText: t('admin.common.confirm'),
+        negativeText: t('admin.common.cancel'),
         onPositiveClick: async () => {
           await deleteThinking(id)
           await refresh()
@@ -59,10 +61,10 @@ export default defineComponent({
       try {
         await batchDeleteThinkings({ ids })
         checkedRowKeys.value = []
-        message.success('批量删除成功')
+        message.success(t('admin.service.batch_delete_success'))
         refresh()
       } catch (err) {
-        message.error(err instanceof Error ? err.message : '操作失败')
+        message.error(err instanceof Error ? err.message : t('admin.service.operation_failed'))
       }
     }
 
@@ -71,7 +73,7 @@ export default defineComponent({
         type: 'selection',
       },
       {
-        title: '内容',
+        title: t('admin.table.content'),
         key: 'content',
         minWidth: 300,
         ellipsis: { tooltip: true },
@@ -80,13 +82,13 @@ export default defineComponent({
         ),
       },
       {
-        title: '作者',
+        title: t('admin.table.author'),
         key: 'authorName',
         width: 140,
         render: (row) => row.authorName || <span class='text-gray-400'>-</span>,
       },
       {
-        title: '数据 (阅/赞/评)',
+        title: t('admin.table.metrics'),
         key: 'metrics',
         width: 180,
         render: (row) => (
@@ -96,13 +98,13 @@ export default defineComponent({
         ),
       },
       {
-        title: '更新时间',
+        title: t('admin.table.updated_at'),
         key: 'updatedAt',
         width: 180,
         render: (row) => new Date(row.updatedAt).toLocaleString(),
       },
       {
-        title: '操作',
+        title: t('admin.table.actions'),
         key: 'actions',
         width: 180,
         fixed: 'right',
@@ -114,7 +116,7 @@ export default defineComponent({
               secondary
               onClick={() => handleEdit(row.id)}
             >
-              编辑
+              {t('admin.common.edit')}
             </NButton>
             <NButton
               size='small'
@@ -122,7 +124,7 @@ export default defineComponent({
               secondary
               onClick={() => handleDelete(row.id)}
             >
-              删除
+              {t('admin.common.delete')}
             </NButton>
           </NSpace>
         ),
@@ -137,7 +139,7 @@ export default defineComponent({
       <ScrollContainer wrapperClass='flex flex-col gap-y-4'>
         <NCard bordered={false}>
           <div class='flex items-center justify-between'>
-            <div class='text-lg font-medium'>思考列表</div>
+            <div class='text-lg font-medium'>{t('admin.card.thinking_list')}</div>
             <NSpace
               align='center'
               size={12}
@@ -152,7 +154,7 @@ export default defineComponent({
                       type='info'
                       size='small'
                     >
-                      已选 {checkedRowKeys.value.length} 项
+                      {t('admin.badge.selected_count', { n: checkedRowKeys.value.length })}
                     </NTag>
                     <NPopconfirm onPositiveClick={handleBatchDelete}>
                       {{
@@ -162,10 +164,13 @@ export default defineComponent({
                             type='error'
                             secondary
                           >
-                            批量删除
+                            {t('admin.action.batch_delete')}
                           </NButton>
                         ),
-                        default: () => `确定删除选中的 ${checkedRowKeys.value.length} 条思考吗？`,
+                        default: () =>
+                          t('admin.confirm.batch_delete_thinkings', {
+                            n: checkedRowKeys.value.length,
+                          }),
                       }}
                     </NPopconfirm>
                   </NSpace>
@@ -175,7 +180,7 @@ export default defineComponent({
                 type='primary'
                 onClick={handleCreate}
               >
-                新建思考
+                {t('admin.action.create_thinking')}
               </NButton>
             </NSpace>
           </div>

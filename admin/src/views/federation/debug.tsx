@@ -1,6 +1,7 @@
 import { NCard, NButton, NInput, NForm, NFormItem, NAlert, NCode } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import { defineComponent, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import { ScrollContainer } from '@/components'
 import { checkFederationRemote } from '@/services/federation-admin'
@@ -9,6 +10,7 @@ export default defineComponent({
   name: 'FederationDebug',
   setup() {
     const message = useMessage()
+    const { t } = useI18n()
     const targetUrl = ref('')
     const loading = ref(false)
     const error = ref('')
@@ -17,7 +19,7 @@ export default defineComponent({
     const handleCheck = async () => {
       const url = targetUrl.value.trim()
       if (!url) {
-        message.warning('请输入远端实例地址')
+        message.warning(t('admin.federation.enter_url'))
         return
       }
       loading.value = true
@@ -25,9 +27,9 @@ export default defineComponent({
       result.value = null
       try {
         result.value = await checkFederationRemote(url)
-        message.success('已获取远端信息')
+        message.success(t('admin.federation.fetched_remote_info'))
       } catch (err: any) {
-        error.value = err?.message || '请求失败'
+        error.value = err?.message || t('admin.federation.request_failed')
       } finally {
         loading.value = false
       }
@@ -43,7 +45,7 @@ export default defineComponent({
             wordWrap
           />
         ) : (
-          <div class='text-xs text-neutral-400'>暂无数据</div>
+          <div class='text-xs text-neutral-400'>{t('admin.federation.no_data')}</div>
         )}
       </div>
     )
@@ -53,15 +55,15 @@ export default defineComponent({
         <NCard>
           <div class='space-y-6'>
             <div>
-              <div class='text-base font-semibold'>联邦调试</div>
-              <div class='text-xs text-neutral-500'>拉取远端 manifest / public-key / endpoints</div>
+              <div class='text-base font-semibold'>{t('admin.federation.debug_title')}</div>
+              <div class='text-xs text-neutral-500'>{t('admin.federation.debug_desc')}</div>
             </div>
 
             <NForm
               labelPlacement='left'
               labelWidth={120}
             >
-              <NFormItem label='远端地址'>
+              <NFormItem label={t('admin.federation.remote_url')}>
                 <div class='flex w-full gap-2'>
                   <NInput
                     v-model:value={targetUrl.value}
@@ -72,7 +74,7 @@ export default defineComponent({
                     loading={loading.value}
                     onClick={handleCheck}
                   >
-                    检查
+                    {t('admin.federation.check')}
                   </NButton>
                 </div>
               </NFormItem>
@@ -81,7 +83,7 @@ export default defineComponent({
             {error.value && (
               <NAlert
                 type='error'
-                title='请求失败'
+                title={t('admin.federation.request_failed')}
               >
                 {error.value}
               </NAlert>

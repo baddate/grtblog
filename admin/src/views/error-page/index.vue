@@ -762,7 +762,7 @@ const prevCode = ref(0)
           size="large"
           type="primary"
           @click="router.replace('/')"
-          >回到首页</NButton
+          >{{ $t('admin.error.back_home') }}</NButton
         >
         <slot />
       </div>

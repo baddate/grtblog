@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import {
   NAlert,
   NButton,
@@ -111,34 +114,34 @@ const requiredTrimmedRule = (message: string): FormItemRule => ({
 })
 
 const rules: Record<string, FormItemRule[]> = {
-  username: [requiredTrimmedRule('请输入管理员账号')],
-  nickname: [requiredTrimmedRule('请输入昵称')],
+  username: [requiredTrimmedRule(t('admin.validation.username_required'))],
+  nickname: [requiredTrimmedRule(t('admin.validation.nickname_required'))],
   email: [
     {
       validator: (_rule, value: string) => {
         const email = (value || '').trim()
-        if (!email) return new Error('请输入邮箱')
+        if (!email) return new Error(t('admin.validation.email_required'))
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-          return new Error('请输入有效邮箱地址')
+          return new Error(t('admin.validation.invalid_email'))
         }
         return true
       },
       trigger: ['input', 'blur'],
     },
   ],
-  password: [{ required: true, message: '请输入密码', trigger: ['input', 'blur'] }],
+  password: [{ required: true, message: t('admin.validation.password_required'), trigger: ['input', 'blur'] }],
   confirmPassword: [
-    { required: true, message: '请再次输入密码', trigger: ['input', 'blur'] },
+    { required: true, message: t('admin.validation.confirm_password_required'), trigger: ['input', 'blur'] },
     {
       validator: () => form.password === form.confirmPassword,
-      message: '两次输入的密码不一致',
+      message: t('admin.validation.password_mismatch'),
       trigger: ['input', 'blur'],
     },
   ],
-  websiteName: [requiredTrimmedRule('请输入站点名称')],
-  publicUrl: [requiredTrimmedRule('请输入站点公开地址')],
-  description: [requiredTrimmedRule('请输入一句话描述')],
-  keywords: [requiredTrimmedRule('请输入关键词')],
+  websiteName: [requiredTrimmedRule(t('admin.validation.site_name_required'))],
+  publicUrl: [requiredTrimmedRule(t('admin.validation.public_url_required'))],
+  description: [requiredTrimmedRule(t('admin.validation.description_required'))],
+  keywords: [requiredTrimmedRule(t('admin.validation.keywords_required'))],
 }
 
 const needsAccountSetup = computed(() => !setupState.value?.hasUser)
@@ -164,7 +167,7 @@ async function loadSetupState() {
     }
   } catch (error) {
     if (!(error instanceof ApiError)) {
-      message.error('获取初始化状态失败，请稍后重试')
+      message.error(t('admin.init.load_failed'))
     }
   } finally {
     loadingState.value = false
@@ -248,7 +251,7 @@ async function submitSetup() {
     try {
       await applyEnabledFeatures(allGuides, featureStates, normalizePublicURL(form.publicUrl))
     } catch {
-      message.warning('部分功能配置失败，可在设置中手动配置')
+      message.warning(t('admin.init.feature_config_failed'))
     }
 
     // Mark all upgrade guides as completed for fresh install
@@ -266,14 +269,14 @@ async function submitSetup() {
     }
 
     if (bootstrapFailed) {
-      message.warning('初始化完成，但全量页面渲染触发失败，可在高级页手动执行一次')
+      message.warning(t('admin.init.bootstrap_failed'))
     } else {
-      message.success('初始化完成，已触发全量页面渲染')
+      message.success(t('admin.init.bootstrap_success'))
     }
     await router.replace({ path: '/' })
   } catch (error) {
     if (error instanceof ApiError) return
-    message.error('初始化失败，请稍后重试')
+    message.error(t('admin.init.init_failed'))
   } finally {
     submitting.value = false
   }
@@ -306,7 +309,7 @@ onMounted(() => {
         size="large"
         v-if="loadingState"
       >
-        <template #description>正在加载环境...</template>
+        <template #description>{{ $t('admin.init.loading_environment') }}</template>
       </NSpin>
 
       <template v-else-if="setupState">
@@ -348,16 +351,16 @@ onMounted(() => {
               <NH1
                 class="mb-6 text-4xl leading-tight font-bold tracking-tight text-neutral-900 dark:text-white"
               >
-                开启您的
+                {{ $t('admin.init.brand_start') }}
                 <br />
-                <span :style="{ color: `rgb(var(--primary-color-rgb))` }">创作之旅</span>
+                <span :style="{ color: `rgb(var(--primary-color-rgb))` }">{{ $t('admin.init.brand_journey') }}</span>
               </NH1>
 
               <div
                 class="text-base leading-relaxed font-light text-neutral-500 dark:text-neutral-400"
               >
-                <p class="mb-3">只需简单几步，即可构建您的专属个人空间。</p>
-                <p>精致的写作体验与强大的管理功能，让分享变得前所未有的简单。</p>
+                <p class="mb-3">{{ $t('admin.init.brand_desc1') }}</p>
+                <p>{{ $t('admin.init.brand_desc2') }}</p>
               </div>
 
               <div
@@ -396,19 +399,19 @@ onMounted(() => {
                 <NH2 class="m-0 text-2xl font-bold tracking-tight">
                   {{
                     currentStep === 1
-                      ? '创建管理员'
+                      ? $t('admin.init.step_account')
                       : currentStep === 2
-                        ? '站点基本信息'
-                        : '新功能配置'
+                        ? $t('admin.init.step_site')
+                        : $t('admin.init.step_features')
                   }}
                 </NH2>
                 <p class="mt-2 text-[13px] leading-relaxed text-neutral-500">
                   {{
                     currentStep === 1
-                      ? '请设置您的超级管理员账户。'
+                      ? $t('admin.init.step_account_desc')
                       : currentStep === 2
-                        ? '完善站点的基础元数据。'
-                        : '选择要启用的新功能，也可以稍后在设置中配置。'
+                        ? $t('admin.init.step_site_desc')
+                        : $t('admin.init.step_features_desc')
                   }}
                 </p>
               </div>
@@ -433,56 +436,56 @@ onMounted(() => {
                     class="space-y-0.5"
                   >
                     <NFormItem
-                      label="账号"
+                      :label="$t('admin.init.label_username')"
                       path="username"
                     >
                       <NInput
                         v-model:value="form.username"
-                        placeholder="admin"
+                        :placeholder="t('admin.init.placeholder_username')"
                       >
                       </NInput>
                     </NFormItem>
                     <NFormItem
-                      label="昵称"
+                      :label="$t('admin.init.label_nickname')"
                       path="nickname"
                     >
                       <NInput
                         v-model:value="form.nickname"
-                        placeholder="显示的名称"
+                        :placeholder="t('admin.init.placeholder_nickname')"
                       >
                       </NInput>
                     </NFormItem>
                     <NFormItem
-                      label="密码"
+                      :label="$t('admin.init.label_password')"
                       path="password"
                     >
                       <NInput
                         v-model:value="form.password"
                         type="password"
                         show-password-on="click"
-                        placeholder="设置登录密码"
+                        :placeholder="t('admin.init.placeholder_password')"
                       >
                       </NInput>
                     </NFormItem>
                     <NFormItem
-                      label="确认密码"
+                      :label="$t('admin.init.label_confirm_password')"
                       path="confirmPassword"
                     >
                       <NInput
                         v-model:value="form.confirmPassword"
                         type="password"
                         show-password-on="click"
-                        placeholder="再次输入确认"
+                        :placeholder="t('admin.init.placeholder_confirm_password')"
                       >
                       </NInput>
                     </NFormItem>
                     <NFormItem
-                      label="邮箱"
+                      :label="$t('admin.init.label_email')"
                       path="email"
                     >
                       <NInput
                         v-model:value="form.email"
-                        placeholder="example@domain.com"
+                        :placeholder="t('admin.init.placeholder_email')"
                       >
                       </NInput>
                     </NFormItem>
@@ -494,44 +497,44 @@ onMounted(() => {
                     class="space-y-0.5"
                   >
                     <NFormItem
-                      label="站点名称"
+                      :label="$t('admin.init.label_site_name')"
                       path="websiteName"
                     >
                       <NInput
                         v-model:value="form.websiteName"
-                        placeholder="我的博客"
+                        :placeholder="t('admin.init.placeholder_site_name')"
                       >
                       </NInput>
                     </NFormItem>
                     <NFormItem
-                      label="公开地址 (URL)"
+                      :label="$t('admin.init.label_public_url')"
                       path="publicUrl"
                     >
                       <NInput
                         v-model:value="form.publicUrl"
-                        placeholder="https://..."
+                        :placeholder="t('admin.init.placeholder_public_url')"
                       >
                       </NInput>
                     </NFormItem>
                     <NFormItem
-                      label="一句话描述"
+                      :label="$t('admin.init.label_description')"
                       path="description"
                     >
                       <NInput
                         v-model:value="form.description"
                         type="textarea"
-                        placeholder="分享技术与生活..."
+                        :placeholder="t('admin.init.placeholder_description')"
                         :rows="2"
                         class="resize-none"
                       />
                     </NFormItem>
                     <NFormItem
-                      label="关键词"
+                      :label="$t('admin.init.label_keywords')"
                       path="keywords"
                     >
                       <NInput
                         v-model:value="form.keywords"
-                        placeholder="Tag1, Tag2..."
+                        :placeholder="t('admin.init.placeholder_keywords')"
                       >
                       </NInput>
                     </NFormItem>
@@ -559,7 +562,7 @@ onMounted(() => {
                   size="medium"
                   @click="currentStep--"
                 >
-                  上一步
+                  {{ $t('admin.init.prev_step') }}
                 </NButton>
                 <div v-else></div>
 
@@ -570,7 +573,7 @@ onMounted(() => {
                   @click="handleNextStep"
                   class="min-w-25 shadow-sm"
                 >
-                  {{ currentStep === totalSteps ? '开始使用' : '继续' }}
+                  {{ currentStep === totalSteps ? $t('admin.init.start') : $t('admin.init.next_step') }}
                 </NButton>
               </div>
             </div>
@@ -612,16 +615,16 @@ onMounted(() => {
               <NH1
                 class="mb-6 text-4xl leading-tight font-bold tracking-tight text-neutral-900 dark:text-white"
               >
-                开启您的
+                {{ $t('admin.init.brand_start') }}
                 <br />
-                <span :style="{ color: `rgb(var(--primary-color-rgb))` }">创作之旅</span>
+                <span :style="{ color: `rgb(var(--primary-color-rgb))` }">{{ $t('admin.init.brand_journey') }}</span>
               </NH1>
 
               <div
                 class="text-base leading-relaxed font-light text-neutral-500 dark:text-neutral-400"
               >
-                <p class="mb-3">只需简单几步，即可构建您的专属个人空间。</p>
-                <p>精致的写作体验与强大的管理功能，让分享变得前所未有的简单。</p>
+                <p class="mb-3">{{ $t('admin.init.brand_desc1') }}</p>
+                <p>{{ $t('admin.init.brand_desc2') }}</p>
               </div>
 
               <div
@@ -645,17 +648,17 @@ onMounted(() => {
               >
                 <div class="mb-4 flex items-center justify-between"></div>
                 <h3 class="text-base font-semibold text-neutral-800 dark:text-neutral-100">
-                  就要完成了！
+                  {{ $t('admin.init.almost_done') }}
                 </h3>
                 <p class="mt-2 text-sm leading-6 text-neutral-600 dark:text-neutral-300">
-                  站点存在管理员用户，但站点基础信息还未完善噢。
+                  {{ $t('admin.init.site_info_incomplete') }}
                 </p>
                 <NAlert
                   type="warning"
                   :show-icon="false"
                   class="mt-4 mb-6"
                 >
-                  请登录后将进入设置 > 站点信息，补全站点名称、公开地址、描述和关键词等信息。
+                  {{ $t('admin.init.site_info_alert') }}
                 </NAlert>
                 <NButton
                   type="primary"
@@ -663,7 +666,7 @@ onMounted(() => {
                   block
                   @click="goToSignIn"
                 >
-                  前往登录并完善站点信息
+                  {{ $t('admin.init.go_to_signin') }}
                 </NButton>
               </NCard>
             </div>

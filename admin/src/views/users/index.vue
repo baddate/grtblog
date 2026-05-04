@@ -71,18 +71,18 @@ const columns = computed<DataTableColumns<SiteUser>>(() => [
     width: 72,
   },
   {
-    title: '用户名',
+    title: t('admin.user.username'),
     key: 'username',
     width: 160,
   },
   {
-    title: '昵称',
+    title: t('admin.user.nickname'),
     key: 'nickname',
     width: 140,
     render: (row) => row.nickname || '-',
   },
   {
-    title: '邮箱',
+    title: t('admin.user.email'),
     key: 'email',
     minWidth: 220,
     ellipsis: {
@@ -91,14 +91,14 @@ const columns = computed<DataTableColumns<SiteUser>>(() => [
     render: (row) => row.email || '-',
   },
   {
-    title: '角色',
+    title: t('admin.user.role'),
     key: 'isAdmin',
     width: 90,
     render: (row) =>
       h(
         NTag,
         { type: row.isAdmin ? 'success' : 'default', size: 'small', bordered: false },
-        { default: () => (row.isAdmin ? '管理员' : '用户') },
+        { default: () => (row.isAdmin ? t('admin.user.role_admin') : t('admin.user.role_user')) },
       ),
   },
   {
@@ -109,7 +109,7 @@ const columns = computed<DataTableColumns<SiteUser>>(() => [
       h(
         NTag,
         { type: row.isActive ? 'success' : 'warning', size: 'small', bordered: false },
-        { default: () => (row.isActive ? '启用' : '停用') },
+        { default: () => (row.isActive ? t('admin.status.enabled') : t('admin.status.disabled')) },
       ),
   },
   {
@@ -126,7 +126,7 @@ const columns = computed<DataTableColumns<SiteUser>>(() => [
       h(
         NButton,
         { size: 'small', tertiary: true, onClick: () => openEdit(row) },
-        { default: () => '编辑' },
+        { default: () => t('admin.common.edit') },
       ),
   },
 ])
@@ -176,11 +176,11 @@ async function saveEdit() {
       isActive: formModel.isActive,
       isAdmin: formModel.isAdmin,
     })
-    message.success('用户信息已更新')
+    message.success(t('admin.service.update_success'))
     editVisible.value = false
     refresh()
   } catch (error: any) {
-    message.error(error?.message || '更新失败')
+    message.error(error?.message || t('admin.service.update_status_failed'))
   } finally {
     saving.value = false
   }
@@ -193,14 +193,14 @@ async function saveEdit() {
     wrapper-class="p-4"
     :scrollbar-props="{ trigger: 'none' }"
   >
-    <NCard title="本站用户管理">
+    <NCard :title="$t('admin.card.user_list')">
       <NSpace
         class="mb-4"
         align="center"
       >
         <NInput
           v-model:value="keyword"
-          placeholder="搜索用户名 / 昵称 / 邮箱"
+          :placeholder="$t('admin.placeholder.search_user')"
           clearable
           style="width: 280px"
           @keyup.enter="doSearch"
@@ -209,24 +209,24 @@ async function saveEdit() {
           v-model:value="adminFilter"
           style="width: 140px"
           :options="[
-            { label: '全部角色', value: 'all' },
-            { label: '管理员', value: 'true' },
-            { label: '普通用户', value: 'false' },
+            { label: $t('admin.filter.all_roles'), value: 'all' },
+            { label: $t('admin.user.role_admin'), value: 'true' },
+            { label: $t('admin.user.role_user'), value: 'false' },
           ]"
         />
         <NSelect
           v-model:value="activeFilter"
           style="width: 140px"
           :options="[
-            { label: '全部状态', value: 'all' },
-            { label: '已启用', value: 'true' },
-            { label: '已停用', value: 'false' },
+            { label: $t('admin.filter.all_status'), value: 'all' },
+            { label: $t('admin.status.active'), value: 'true' },
+            { label: $t('admin.status.inactive'), value: 'false' },
           ]"
         />
         <NButton
           type="primary"
           @click="doSearch"
-          >查询</NButton
+          >{{ $t('admin.common.search') }}</NButton
         >
         <NButton @click="resetSearch">{{ $t('admin.common.reset') }}</NButton>
       </NSpace>
@@ -243,26 +243,26 @@ async function saveEdit() {
 
     <FormModal
       v-model:show="editVisible"
-      title="编辑用户"
+      :title="$t('admin.common.edit')"
       :loading="saving"
       @confirm="saveEdit"
     >
-      <NFormItem label="用户名">
+      <NFormItem :label="$t('admin.user.username')">
         <NInput
           :value="formModel.username"
           disabled
         />
       </NFormItem>
-      <NFormItem label="昵称">
+      <NFormItem :label="$t('admin.user.nickname')">
         <NInput
           v-model:value="formModel.nickname"
-          placeholder="请输入昵称"
+          :placeholder="$t('admin.placeholder.name')"
         />
       </NFormItem>
-      <NFormItem label="邮箱">
+      <NFormItem :label="$t('admin.user.email')">
         <NInput
           v-model:value="formModel.email"
-          placeholder="请输入邮箱（可留空）"
+          :placeholder="$t('admin.placeholder.email_optional')"
         />
       </NFormItem>
       <NFormItem :label="$t('admin.common.enabled')">
@@ -271,7 +271,7 @@ async function saveEdit() {
           :disabled="isEditingSelf"
         />
       </NFormItem>
-      <NFormItem label="管理员">
+      <NFormItem :label="$t('admin.user.role_admin')">
         <NSwitch
           v-model:value="formModel.isAdmin"
           :disabled="isEditingSelf"

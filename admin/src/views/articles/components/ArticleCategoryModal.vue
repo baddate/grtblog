@@ -16,7 +16,7 @@ defineEmits<{
     style="width: 420px; max-width: 90vw"
   >
     <NCard
-      title="新建分类"
+      :title="$t('admin.category.create')"
       size="small"
     >
       <NForm
@@ -30,16 +30,16 @@ defineEmits<{
         >
           <NInput
             v-model:value="modal.name"
-            placeholder="例如：随笔"
+            :placeholder="$t('admin.placeholder.category_name_example')"
           />
         </NFormItem>
         <NFormItem
-          label="短链接"
+          :label="$t('admin.table.short_url')"
           :show-feedback="false"
         >
           <NInput
             v-model:value="modal.slug"
-            placeholder="例如：notes"
+            :placeholder="$t('admin.placeholder.category_slug_example')"
           />
         </NFormItem>
       </NForm>
@@ -53,7 +53,7 @@ defineEmits<{
           type="primary"
           :loading="modal.loading"
           @click="$emit('create')"
-          >创建并选择</NButton
+          >{{ $t('admin.action.create_and_select') }}</NButton
         >
       </div>
     </NCard>

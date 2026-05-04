@@ -33,9 +33,9 @@ const columns: DataTableColumns<FederationReviewItemResp> = [
       return h(NTag, { type: 'info', bordered: false }, { default: () => row.type })
     },
   },
-  { title: '摘要', key: 'summary', ellipsis: { tooltip: true } },
+  { title: t('admin.federation.summary'), key: 'summary', ellipsis: { tooltip: true } },
   {
-    title: '申请时间',
+    title: t('admin.federation.requested_at'),
     key: 'requested_at',
     width: 180,
     render: (row) => new Date(row.requested_at).toLocaleString(),
@@ -57,7 +57,7 @@ const columns: DataTableColumns<FederationReviewItemResp> = [
                 type: 'success',
                 onClick: () => handleApprove(row),
               },
-              { default: () => '批准' },
+              { default: () => t('admin.action.approve') },
             ),
             h(
               NButton,
@@ -66,7 +66,7 @@ const columns: DataTableColumns<FederationReviewItemResp> = [
                 type: 'error',
                 onClick: () => openRejectModal(row),
               },
-              { default: () => '拒绝' },
+              { default: () => t('admin.action.reject') },
             ),
           ],
         },
@@ -83,11 +83,11 @@ const { mutate: approveMutation } = useMutation({
     return Promise.reject(new Error('Unknown type'))
   },
   onSuccess: () => {
-    message.success('已批准')
+    message.success(t('admin.service.operation_success'))
     queryClient.invalidateQueries({ queryKey: ['federation-pending-reviews'] })
   },
   onError: (err: any) => {
-    message.error('批准失败: ' + (err.message || 'Unknown error'))
+    message.error(t('admin.service.operation_failed') + ': ' + (err.message || 'Unknown error'))
   },
 })
 
@@ -113,12 +113,12 @@ const { mutate: rejectMutation, isPending: isRejecting } = useMutation({
     return Promise.reject(new Error('Unknown type'))
   },
   onSuccess: () => {
-    message.success('已拒绝')
+    message.success(t('admin.service.operation_success'))
     queryClient.invalidateQueries({ queryKey: ['federation-pending-reviews'] })
     showRejectModal.value = false
   },
   onError: (err: any) => {
-    message.error('拒绝失败: ' + (err.message || 'Unknown error'))
+    message.error(t('admin.service.operation_failed') + ': ' + (err.message || 'Unknown error'))
   },
 })
 
@@ -138,7 +138,7 @@ function confirmReject() {
   <ScrollContainer wrapper-class="flex flex-col gap-y-4">
     <NCard :bordered="false">
       <div class="flex items-center justify-between">
-        <div class="text-lg font-medium">待审核列表</div>
+        <div class="text-lg font-medium">{{ $t('admin.card.federation_reviews') }}</div>
         <div class="flex items-center gap-2">
           <NButton
             secondary
@@ -146,7 +146,7 @@ function confirmReject() {
             :loading="isPending"
             @click="queryClient.invalidateQueries({ queryKey: ['federation-pending-reviews'] })"
           >
-            刷新
+            {{ $t('admin.common.refresh') }}
           </NButton>
         </div>
       </div>
@@ -168,9 +168,9 @@ function confirmReject() {
     <NModal
       v-model:show="showRejectModal"
       preset="dialog"
-      title="拒绝申请"
-      positive-text="确认拒绝"
-      negative-text="取消"
+      :title="$t('admin.federation.reject_application')"
+      :positive-text="$t('admin.confirm.confirm_reject')"
+      :negative-text="$t('admin.common.cancel')"
       @positive-click="confirmReject"
       @negative-click="showRejectModal = false"
       :loading="isRejecting"
@@ -179,7 +179,7 @@ function confirmReject() {
         <NInput
           v-model:value="rejectReason"
           type="textarea"
-          placeholder="拒绝理由 (选填)"
+          :placeholder="t('admin.placeholder.reject_reason')"
         />
       </div>
     </NModal>

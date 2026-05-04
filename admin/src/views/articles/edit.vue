@@ -3,6 +3,7 @@ import { PreviewLink20Regular } from '@vicons/fluent'
 import { PaperPlaneOutline, SaveOutline } from '@vicons/ionicons5'
 import { NButton, NButtonGroup, NInput, NPopover, useMessage } from 'naive-ui'
 import { computed, onMounted, onUnmounted, ref, toRaw, toRef, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 // 组件
 import MarkdownEditor from '@/components/markdown-editor/MarkdownEditor.vue'
@@ -34,6 +35,7 @@ import type { FederationOutboundInteractionResp } from '@/types/federation'
 defineOptions({ name: 'ArticleEdit' })
 
 const message = useMessage()
+const { t } = useI18n()
 
 // 1. 初始化表单核心逻辑
 const { form, saving, imageProcessing, isCreating, fetch, save, extInfo, baseExtInfo } =
@@ -99,8 +101,8 @@ const {
 // 6. 计算属性
 const stats = computed(() => getStats(form.content))
 const actionLabel = computed(() => {
-  if (!form.isPublished) return '保存'
-  return isCreating.value ? '发布' : '发布新版本'
+  if (!form.isPublished) return t('admin.common.save')
+  return isCreating.value ? t('admin.article.publish') : t('admin.article.publish_new_version')
 })
 const actionIcon = computed(() => (form.isPublished ? PaperPlaneOutline : SaveOutline))
 const {
@@ -130,8 +132,8 @@ function formatDateTime(value?: string | null) {
 }
 
 const apStatusText = computed(() => {
-  if (isCreating.value) return '未创建'
-  return loadedArticle.value?.activityPubObjectId ? '已发布' : '未发布'
+  if (isCreating.value) return t('admin.federation.status_not_created')
+  return loadedArticle.value?.activityPubObjectId ? t('admin.federation.status_published') : t('admin.federation.status_not_published')
 })
 
 const apLastPublishedAtText = computed(() =>
@@ -145,7 +147,7 @@ const canRepublishToActivityPub = computed(
 async function handleRepublishActivityPub() {
   if (!loadedArticle.value?.id) return
   if (!form.isPublished) {
-    message.warning('请先设为发布并保存，再手动补发')
+    message.warning(t('admin.article.publish_first_tip'))
     return
   }
   apPublishing.value = true
@@ -157,9 +159,9 @@ async function handleRepublishActivityPub() {
     loadedArticle.value.activityPubObjectId =
       resp.object_id || loadedArticle.value.activityPubObjectId
     loadedArticle.value.activityPubLastPublishedAt = resp.published_at
-    message.success(`补发完成：成功 ${resp.success_count}，失败 ${resp.failure_count}`)
+    message.success(t('admin.service.republish_result', { success: resp.success_count, failure: resp.failure_count }))
   } catch (err) {
-    message.error(err instanceof Error ? err.message : '补发失败')
+    message.error(err instanceof Error ? err.message : t('admin.service.republish_failed'))
   } finally {
     apPublishing.value = false
   }
@@ -316,31 +318,31 @@ function outboundStatusText(status?: string | null) {
   const normalized = (status || '').trim().toLowerCase()
   switch (normalized) {
     case 'queued':
-      return '排队中'
+      return t('admin.federation.outbound_queued')
     case 'sending':
-      return '投递中'
+      return t('admin.federation.outbound_sending')
     case 'accepted':
-      return '已接收'
+      return t('admin.federation.outbound_accepted')
     case 'approved':
-      return '已通过'
+      return t('admin.federation.outbound_approved')
     case 'rejected':
-      return '已拒绝'
+      return t('admin.federation.outbound_rejected')
     case 'failed':
-      return '失败'
+      return t('admin.federation.outbound_failed')
     case 'timeout':
-      return '超时'
+      return t('admin.federation.outbound_timeout')
     case 'dead':
-      return '终止'
+      return t('admin.federation.outbound_dead')
     default:
-      return normalized || '未知'
+      return normalized || t('admin.federation.outbound_unknown')
   }
 }
 
 function signalStatusText(row: FederationSignalRow) {
-  if (row.outbound) return `队列：${outboundStatusText(row.outbound.status)}`
-  if (row.deliveredAt) return '已记录（未发现出站记录）'
-  if (row.inContent) return '正文存在，待触发'
-  return '已脱离正文'
+  if (row.outbound) return t('admin.federation.signal_status_queued', { status: outboundStatusText(row.outbound.status) })
+  if (row.deliveredAt) return t('admin.federation.signal_status_delivered')
+  if (row.inContent) return t('admin.federation.signal_status_in_content')
+  return t('admin.federation.signal_status_removed')
 }
 
 async function fetchFederationInteractions(articleID?: number) {
@@ -357,7 +359,7 @@ async function fetchFederationInteractions(articleID?: number) {
     federationOutbounds.value = data.outbound ?? []
   } catch (err) {
     federationOutbounds.value = []
-    federationInteractionsError.value = err instanceof Error ? err.message : '加载联合状态失败'
+    federationInteractionsError.value = err instanceof Error ? err.message : t('admin.service.load_federation_failed')
   } finally {
     federationInteractionsLoading.value = false
   }
@@ -388,12 +390,12 @@ async function handleResetFederationSignal(row: FederationSignalRow) {
     applyFederationResetResult(result.extInfo ?? null)
     await fetchFederationInteractions(loadedArticle.value.id)
     if (result.retriggered) {
-      message.success('已重置并重新触发该联合条目')
+      message.success(t('admin.federation.reset_signal_retriggered'))
     } else {
-      message.success('已重置该联合条目（当前未触发出站）')
+      message.success(t('admin.federation.reset_signal_no_outbound'))
     }
   } catch (err) {
-    message.error(err instanceof Error ? err.message : '重置失败')
+    message.error(err instanceof Error ? err.message : t('admin.federation.reset_failed'))
   } finally {
     setSignalResetLoading(row.key, false)
   }
@@ -407,12 +409,12 @@ async function handleResetAllFederationSignals() {
     applyFederationResetResult(result.extInfo ?? null)
     await fetchFederationInteractions(loadedArticle.value.id)
     if (result.retriggered) {
-      message.success('已重置全部联合条目并重新触发')
+      message.success(t('admin.federation.reset_all_retriggered'))
     } else {
-      message.success('已重置全部联合条目（当前未触发出站）')
+      message.success(t('admin.federation.reset_all_no_outbound'))
     }
   } catch (err) {
-    message.error(err instanceof Error ? err.message : '重置失败')
+    message.error(err instanceof Error ? err.message : t('admin.federation.reset_failed'))
   } finally {
     resetAllFederationLoading.value = false
   }
@@ -558,7 +560,7 @@ watch([isYearSummary, yearSummaryYear], () => {
       <div class="flex w-full items-center gap-4 sm:flex-1">
         <NInput
           v-model:value="form.title"
-          placeholder="在这里开始你的写作吧..."
+          :placeholder="$t('admin.placeholder.start_writing')"
           :bordered="false"
           class="flex-1 text-xl! leading-tight font-bold sm:text-2xl!"
           style="--n-caret-color: var(--primary-color); background-color: transparent"
@@ -571,7 +573,7 @@ watch([isYearSummary, yearSummaryYear], () => {
           <span class="text-xs leading-none">/posts/</span>
           <input
             v-model="form.shortUrl"
-            placeholder="请填写短链接"
+            :placeholder="$t('admin.placeholder.short_url')"
             class="w-24 border-b border-current/30 p-0 pb-0.5 text-[11px] leading-none focus:border-primary focus:outline-none sm:w-32"
           />
         </div>
@@ -593,14 +595,14 @@ watch([isYearSummary, yearSummaryYear], () => {
             :ghost="form.isPublished"
             @click="form.isPublished = false"
           >
-            草稿
+            {{ $t('admin.status.draft') }}
           </NButton>
           <NButton
             :type="form.isPublished ? 'primary' : 'default'"
             :ghost="!form.isPublished"
             @click="form.isPublished = true"
           >
-            发布
+            {{ $t('admin.status.published') }}
           </NButton>
         </NButtonGroup>
 
@@ -609,7 +611,7 @@ watch([isYearSummary, yearSummaryYear], () => {
             v-if="imageProcessing"
             class="text-xs text-amber-600"
           >
-            正在处理图片…
+            {{ $t('admin.article.processing_images') }}
           </span>
           <NButton
             quaternary
@@ -704,7 +706,7 @@ watch([isYearSummary, yearSummaryYear], () => {
                   size="small"
                   class="w-full justify-start px-2"
                   @click="previewMode = 'markdown'"
-                  >Markdown 预览</NButton
+                  >{{ $t('admin.editor.preview_markdown') }}</NButton
                 >
                 <NButton
                   :type="previewMode === 'page' ? 'primary' : 'default'"
@@ -712,7 +714,7 @@ watch([isYearSummary, yearSummaryYear], () => {
                   size="small"
                   class="w-full justify-start px-2"
                   @click="previewMode = 'page'"
-                  >网页预览</NButton
+                  >{{ $t('admin.editor.preview_page') }}</NButton
                 >
               </div>
             </NPopover>
@@ -738,7 +740,7 @@ watch([isYearSummary, yearSummaryYear], () => {
               v-else
               class="flex h-full items-center justify-center text-sm opacity-60"
             >
-              请先在站点信息中设置 public_url
+              {{ $t('admin.article.set_public_url') }}
             </div>
           </div>
         </div>

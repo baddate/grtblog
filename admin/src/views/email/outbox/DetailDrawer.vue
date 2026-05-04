@@ -71,13 +71,13 @@ function statusTagType(status?: string) {
 function statusLabel(status?: string) {
   switch (status) {
     case 'pending':
-      return '等待中'
+      return t('admin.email.status_pending')
     case 'sending':
-      return '发送中'
+      return t('admin.email.status_sending')
     case 'sent':
-      return '已发送'
+      return t('admin.status.sent')
     case 'failed':
-      return '失败'
+      return t('admin.status.failed')
     default:
       return status ?? '-'
   }
@@ -96,7 +96,7 @@ function handleClose() {
     @update:show="(val) => emit('update:show', val)"
   >
     <NDrawerContent
-      title="邮件出站详情"
+      :title="$t('admin.email.outbox_detail')"
       closable
     >
       <div
@@ -107,19 +107,19 @@ function handleClose() {
           bordered
           :column="1"
           label-placement="left"
-          title="基本信息"
+          :title="$t('admin.email.basic_info')"
         >
-          <NDescriptionsItem label="ID">{{ displayItem.id }}</NDescriptionsItem>
-          <NDescriptionsItem label="主题">{{ displayItem.subject }}</NDescriptionsItem>
-          <NDescriptionsItem label="模板编码">{{ displayItem.templateCode }}</NDescriptionsItem>
-          <NDescriptionsItem label="事件名">
+          <NDescriptionsItem :label="$t('admin.table.id')">{{ displayItem.id }}</NDescriptionsItem>
+          <NDescriptionsItem :label="$t('admin.form.subject')">{{ displayItem.subject }}</NDescriptionsItem>
+          <NDescriptionsItem :label="$t('admin.email.template_code')">{{ displayItem.templateCode }}</NDescriptionsItem>
+          <NDescriptionsItem :label="$t('admin.email.event_name')">
             <NTag
               type="info"
               size="small"
               >{{ displayItem.eventName }}</NTag
             >
           </NDescriptionsItem>
-          <NDescriptionsItem label="收件人">{{
+          <NDescriptionsItem :label="$t('admin.form.recipient')">{{
             displayItem.toEmails?.join(', ') || '-'
           }}</NDescriptionsItem>
           <NDescriptionsItem :label="$t('admin.common.status')">
@@ -132,7 +132,7 @@ function handleClose() {
           <NDescriptionsItem :label="$t('admin.common.created_at')">{{
             new Date(displayItem.createdAt).toLocaleString()
           }}</NDescriptionsItem>
-          <NDescriptionsItem label="发送时间">{{
+          <NDescriptionsItem :label="$t('admin.email.label_sent_at')">{{
             displayItem.sentAt ? new Date(displayItem.sentAt).toLocaleString() : '-'
           }}</NDescriptionsItem>
         </NDescriptions>
@@ -141,16 +141,16 @@ function handleClose() {
           bordered
           :column="1"
           label-placement="left"
-          title="重试信息"
+          :title="$t('admin.email.retry_info')"
         >
-          <NDescriptionsItem label="重试次数">{{ displayItem.retryCount }}</NDescriptionsItem>
-          <NDescriptionsItem label="下次重试">{{
+          <NDescriptionsItem :label="$t('admin.email.label_retry_count')">{{ displayItem.retryCount }}</NDescriptionsItem>
+          <NDescriptionsItem :label="$t('admin.email.next_retry')">{{
             displayItem.nextRetryAt ? new Date(displayItem.nextRetryAt).toLocaleString() : '-'
           }}</NDescriptionsItem>
         </NDescriptions>
 
         <div v-if="displayItem.lastError">
-          <h3 class="mb-2 font-bold">错误信息</h3>
+          <h3 class="mb-2 font-bold">{{ $t('admin.email.label_error_info') }}</h3>
           <NCode
             :code="displayItem.lastError"
             language="text"
@@ -166,7 +166,7 @@ function handleClose() {
             <NTabPane
               v-if="displayItem.htmlBody"
               name="html"
-              tab="HTML 正文"
+              :tab="$t('admin.email.tab_html_body')"
             >
               <div
                 class="max-h-80 overflow-auto rounded border p-2"
@@ -176,7 +176,7 @@ function handleClose() {
             <NTabPane
               v-if="displayItem.textBody"
               name="text"
-              tab="纯文本"
+              :tab="$t('admin.email.tab_text_body')"
             >
               <NCode
                 :code="displayItem.textBody"

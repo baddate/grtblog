@@ -1,13 +1,16 @@
+import i18n from '@/plugins/i18n'
 import { createRouter, createWebHistory } from 'vue-router'
 
 import type { RouteRecordRaw } from 'vue-router'
+
+const __ = i18n.global.t
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/init',
     name: 'init',
     meta: {
-      title: '初始化',
+      title: () => __('admin.init.title'),
     },
     component: () => import('@/views/init/index.vue'),
   },
@@ -15,7 +18,7 @@ const routes: RouteRecordRaw[] = [
     path: '/sign-in',
     name: 'signIn',
     meta: {
-      title: '登录',
+      title: () => __('admin.signin.title'),
     },
     component: () => import('@/views/sign-in/index.vue'),
   },
@@ -23,7 +26,7 @@ const routes: RouteRecordRaw[] = [
     path: '/upgrade-guide',
     name: 'upgradeGuide',
     meta: {
-      title: '升级引导',
+      title: () => __('admin.init.upgrade_guide'),
     },
     component: () => import('@/views/upgrade-guide/index.vue'),
   },
@@ -31,7 +34,7 @@ const routes: RouteRecordRaw[] = [
     name: 'errorPage',
     path: '/:pathMatch(.*)*',
     meta: {
-      title: '错误页',
+      title: () => __('admin.error.generic_title'),
     },
     component: () => import('@/views/error-page/index.vue'),
   },

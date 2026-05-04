@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 import { useQuery } from '@tanstack/vue-query'
 import { DocumentTextOutline, NewspaperOutline, ChatbubbleEllipsesOutline } from '@vicons/ionicons5'
 import { NSpin, NTag, NText, NIcon } from 'naive-ui'
@@ -42,8 +44,8 @@ const { data: moment, isLoading: isLoadingMoment } = useQuery({
 const displayTitle = computed(() => {
   if (isArticle.value && article.value) return article.value.title
   if (isPage.value && page.value) return page.value.title
-  if (isMoment.value && moment.value) return moment.value.title || '动态'
-  return props.initialTitle || '未知来源'
+  if (isMoment.value && moment.value) return moment.value.title || t('admin.comment_source.moment')
+  return props.initialTitle || t('admin.comment_source.unknown')
 })
 
 const displayLink = computed(() => {
@@ -54,11 +56,11 @@ const displayLink = computed(() => {
 })
 
 const typeTag = computed(() => {
-  if (isArticle.value) return { type: 'info' as const, icon: DocumentTextOutline, label: '文章' }
-  if (isPage.value) return { type: 'success' as const, icon: NewspaperOutline, label: '页面' }
+  if (isArticle.value) return { type: 'info' as const, icon: DocumentTextOutline, label: t('admin.comment_source.article') }
+  if (isPage.value) return { type: 'success' as const, icon: NewspaperOutline, label: t('admin.comment_source.page') }
   if (isMoment.value)
-    return { type: 'warning' as const, icon: ChatbubbleEllipsesOutline, label: '动态' }
-  return { type: 'default' as const, icon: undefined, label: props.type || '其他' }
+    return { type: 'warning' as const, icon: ChatbubbleEllipsesOutline, label: t('admin.comment_source.moment') }
+  return { type: 'default' as const, icon: undefined, label: props.type || t('admin.comment_source.other') }
 })
 </script>
 

@@ -1,5 +1,9 @@
 import { onUnmounted, ref, type Ref } from 'vue'
 
+import i18n from '@/plugins/i18n'
+
+const __ = i18n.global.t
+
 type TurnstileApi = {
   render: (container: HTMLElement, options: Record<string, unknown>) => string
   remove: (widgetId: string) => void
@@ -23,7 +27,7 @@ function loadTurnstileScript(): Promise<void> {
     script.async = true
     script.defer = true
     script.onload = () => resolve()
-    script.onerror = () => reject(new Error('Turnstile 脚本加载失败'))
+    script.onerror = () => reject(new Error(__('admin.turnstile.script_load_failed')))
     document.head.appendChild(script)
   })
 
@@ -45,7 +49,7 @@ function waitForTurnstile(timeoutMs = 3000): Promise<void> {
       }
       if (Date.now() - start > timeoutMs) {
         window.clearInterval(timer)
-        reject(new Error('Turnstile API 未就绪'))
+        reject(new Error(__('admin.turnstile.api_not_ready')))
       }
     }, 50)
   })
@@ -103,11 +107,11 @@ export function useTurnstile(containerRef: Ref<HTMLElement | null>, siteKey: Ref
         },
         'error-callback': () => {
           token.value = ''
-          error.value = 'Turnstile 验证失败'
+          error.value = __('admin.turnstile.verification_failed')
         },
       })
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Turnstile 加载失败'
+      error.value = e instanceof Error ? e.message : __('admin.turnstile.load_failed')
     }
   }
 

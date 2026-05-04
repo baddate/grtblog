@@ -9,6 +9,7 @@ import {
   NTooltip,
   NDropdown,
 } from 'naive-ui'
+import { useI18n } from 'vue-i18n'
 import { defineComponent, onMounted, ref, Transition } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -31,6 +32,7 @@ export default defineComponent({
   name: 'NoteList',
   setup() {
     const router = useRouter()
+    const { t } = useI18n()
     const { message } = useDiscreteApi()
     const { data, loading, pagination, refresh } = useTable<MomentListItem>(listMoments)
     const checkedRowKeys = ref<DataTableRowKey[]>([])
@@ -53,7 +55,7 @@ export default defineComponent({
         const item = list?.find((info) => info.key === 'public_url')
         publicUrl.value = item?.value?.trim() ?? ''
       } catch (err) {
-        message.error(err instanceof Error ? err.message : '加载站点地址失败')
+        message.error(err instanceof Error ? err.message : t('admin.service.load_site_url_failed'))
       }
     }
 
@@ -72,10 +74,10 @@ export default defineComponent({
     const handleDelete = async (id: number) => {
       try {
         await deleteMoment(id)
-        message.success('删除成功')
+        message.success(t('admin.service.delete_success'))
         refresh()
       } catch (err) {
-        message.error(err instanceof Error ? err.message : '删除失败')
+        message.error(err instanceof Error ? err.message : t('admin.service.delete_failed'))
       }
     }
 
@@ -87,9 +89,11 @@ export default defineComponent({
       try {
         await batchSetMomentPublished({ ids: [row.id], isPublished: !row.isPublished })
         row.isPublished = !row.isPublished
-        message.success(row.isPublished ? '已发布' : '已设为草稿')
+        message.success(
+          row.isPublished ? t('admin.service.published') : t('admin.service.set_draft'),
+        )
       } catch (err) {
-        message.error(err instanceof Error ? err.message : '操作失败')
+        message.error(err instanceof Error ? err.message : t('admin.service.operation_failed'))
       }
     }
 
@@ -97,9 +101,9 @@ export default defineComponent({
       try {
         await batchSetMomentTop({ ids: [row.id], isTop: !row.isTop })
         row.isTop = !row.isTop
-        message.success(row.isTop ? '已置顶' : '已取消置顶')
+        message.success(row.isTop ? t('admin.service.pinned') : t('admin.service.unpinned'))
       } catch (err) {
-        message.error(err instanceof Error ? err.message : '操作失败')
+        message.error(err instanceof Error ? err.message : t('admin.service.operation_failed'))
       }
     }
 
@@ -112,9 +116,13 @@ export default defineComponent({
           if (ids.includes(item.id)) item.isPublished = isPublished
         })
         checkedRowKeys.value = []
-        message.success(isPublished ? '批量发布成功' : '批量取消发布成功')
+        message.success(
+          isPublished
+            ? t('admin.service.batch_publish_success')
+            : t('admin.service.batch_unpublish_success'),
+        )
       } catch (err) {
-        message.error(err instanceof Error ? err.message : '操作失败')
+        message.error(err instanceof Error ? err.message : t('admin.service.operation_failed'))
       }
     }
 
@@ -124,16 +132,16 @@ export default defineComponent({
       try {
         await batchDeleteMoments({ ids })
         checkedRowKeys.value = []
-        message.success('批量删除成功')
+        message.success(t('admin.service.batch_delete_success'))
         refresh()
       } catch (err) {
-        message.error(err instanceof Error ? err.message : '操作失败')
+        message.error(err instanceof Error ? err.message : t('admin.service.operation_failed'))
       }
     }
 
     const batchPublishOptions = [
-      { label: '设为已发布', key: 'publish' },
-      { label: '设为草稿', key: 'unpublish' },
+      { label: t('admin.action.mark_published'), key: 'publish' },
+      { label: t('admin.action.mark_draft'), key: 'unpublish' },
     ]
 
     const handleBatchPublishSelect = (key: string) => {
@@ -145,7 +153,7 @@ export default defineComponent({
         type: 'selection',
       },
       {
-        title: '标题',
+        title: t('admin.table.title'),
         key: 'title',
         minWidth: 280,
         render: (row) => (
@@ -159,10 +167,8 @@ export default defineComponent({
                   ),
                   default: () => (
                     <div class='flex flex-col gap-y-0.5'>
-                      <span class='font-bold'>热门手记</span>
-                      <span class='text-xs opacity-80'>
-                        热门标准：浏览量 &gt; 1000 或 点赞数 &gt; 50
-                      </span>
+                      <span class='font-bold'>{t('admin.badge.hot')}</span>
+                      <span class='text-xs opacity-80'>{t('admin.badge.hot_tip')}</span>
                     </div>
                   ),
                 }}
@@ -184,13 +190,13 @@ export default defineComponent({
         sorter: 'default',
       },
       {
-        title: '分区',
+        title: t('admin.table.column'),
         key: 'columnName',
         width: 140,
         render: (row) => row.columnName || <span class='text-gray-400'>-</span>,
       },
       {
-        title: '话题',
+        title: t('admin.table.topic'),
         key: 'topics',
         minWidth: 160,
         render: (row) => {
@@ -211,7 +217,7 @@ export default defineComponent({
         },
       },
       {
-        title: '是否发布',
+        title: t('admin.table.is_published'),
         key: 'isPublished',
         width: 100,
         render: (row) => (
@@ -225,7 +231,8 @@ export default defineComponent({
               bordered={false}
             >
               {{
-                default: () => (row.isPublished ? '已发布' : '草稿'),
+                default: () =>
+                  row.isPublished ? t('admin.status.published') : t('admin.status.draft'),
                 icon: () => (
                   <span
                     class={`iconify ${row.isPublished ? 'ph--check-circle' : 'ph--circle-dashed'} size-3.5`}
@@ -238,7 +245,7 @@ export default defineComponent({
         sorter: (row1, row2) => Number(row1.isPublished) - Number(row2.isPublished),
       },
       {
-        title: '属性',
+        title: t('admin.table.attributes'),
         key: 'attributes',
         width: 160,
         render: (row) => (
@@ -253,7 +260,8 @@ export default defineComponent({
                 bordered={false}
               >
                 {{
-                  default: () => (row.isTop ? '置顶' : '未置顶'),
+                  default: () =>
+                    row.isTop ? t('admin.status.pinned') : t('admin.status.unpinned'),
                   icon: () => (
                     <span
                       class={`iconify ${row.isTop ? 'ph--push-pin-fill' : 'ph--push-pin'} size-3.5`}
@@ -268,7 +276,7 @@ export default defineComponent({
                 type='success'
                 bordered={false}
               >
-                原创
+                {t('admin.status.original')}
               </NTag>
             ) : (
               <NTag
@@ -276,28 +284,28 @@ export default defineComponent({
                 type='default'
                 bordered={false}
               >
-                转载
+                {t('admin.status.reprint')}
               </NTag>
             )}
           </NSpace>
         ),
       },
       {
-        title: '浏览',
+        title: t('admin.table.views'),
         key: 'views',
         width: 80,
         render: (row) => <span class='font-mono text-xs text-gray-500'>{row.views}</span>,
         sorter: 'default',
       },
       {
-        title: '点赞',
+        title: t('admin.table.likes'),
         key: 'likes',
         width: 80,
         render: (row) => <span class='font-mono text-xs text-gray-500'>{row.likes}</span>,
         sorter: 'default',
       },
       {
-        title: '创建时间',
+        title: t('admin.table.created_at'),
         key: 'createdAt',
         width: 180,
         render: (row) => new Date(row.createdAt).toLocaleString(),
@@ -305,7 +313,7 @@ export default defineComponent({
           new Date(row1.createdAt).getTime() - new Date(row2.createdAt).getTime(),
       },
       {
-        title: '更新时间',
+        title: t('admin.table.updated_at'),
         key: 'updatedAt',
         width: 180,
         render: (row) => new Date(row.updatedAt).toLocaleString(),
@@ -313,7 +321,7 @@ export default defineComponent({
           new Date(row1.updatedAt).getTime() - new Date(row2.updatedAt).getTime(),
       },
       {
-        title: '操作',
+        title: t('admin.table.actions'),
         key: 'actions',
         width: 160,
         fixed: 'right',
@@ -325,7 +333,7 @@ export default defineComponent({
               secondary
               onClick={() => handleEdit(row.id)}
             >
-              编辑
+              {t('admin.common.edit')}
             </NButton>
             <NPopconfirm
               onPositiveClick={() => handleDelete(row.id)}
@@ -336,12 +344,12 @@ export default defineComponent({
                     type='error'
                     secondary
                   >
-                    删除
+                    {t('admin.common.delete')}
                   </NButton>
                 ),
               }}
             >
-              确定删除吗？
+              {t('admin.confirm.delete_confirm')}
             </NPopconfirm>
           </NSpace>
         ),
@@ -356,7 +364,7 @@ export default defineComponent({
       <ScrollContainer wrapperClass='flex flex-col gap-y-4'>
         <NCard bordered={false}>
           <div class='flex items-center justify-between'>
-            <div class='text-lg font-medium'>手记列表</div>
+            <div class='text-lg font-medium'>{t('admin.card.moment_list')}</div>
             <NSpace
               align='center'
               size={12}
@@ -371,7 +379,7 @@ export default defineComponent({
                       type='info'
                       size='small'
                     >
-                      已选 {checkedRowKeys.value.length} 项
+                      {t('admin.badge.selected_count', { n: checkedRowKeys.value.length })}
                     </NTag>
                     <NDropdown
                       options={batchPublishOptions}
@@ -381,7 +389,7 @@ export default defineComponent({
                         size='small'
                         secondary
                       >
-                        批量发布
+                        {t('admin.action.batch_publish')}
                       </NButton>
                     </NDropdown>
                     <NPopconfirm onPositiveClick={handleBatchDelete}>
@@ -392,10 +400,13 @@ export default defineComponent({
                             type='error'
                             secondary
                           >
-                            批量删除
+                            {t('admin.action.batch_delete')}
                           </NButton>
                         ),
-                        default: () => `确定删除选中的 ${checkedRowKeys.value.length} 条手记吗？`,
+                        default: () =>
+                          t('admin.confirm.batch_delete_moments', {
+                            n: checkedRowKeys.value.length,
+                          }),
                       }}
                     </NPopconfirm>
                   </NSpace>
@@ -405,7 +416,7 @@ export default defineComponent({
                 type='primary'
                 onClick={handleCreate}
               >
-                新建手记
+                {t('admin.action.create_moment')}
               </NButton>
             </NSpace>
           </div>

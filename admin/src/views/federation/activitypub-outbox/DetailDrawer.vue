@@ -78,8 +78,8 @@ function statusTagType(status?: string) {
 }
 
 const columns: DataTableColumns<ActivityPubDeliveryDetailResp> = [
-  { title: 'Inbox', key: 'inbox', minWidth: 220, ellipsis: { tooltip: true } },
-  { title: 'ActorID', key: 'actor_id', minWidth: 220, ellipsis: { tooltip: true } },
+  { title: t('admin.table.inbox'), key: 'inbox', minWidth: 220, ellipsis: { tooltip: true } },
+  { title: t('admin.federation.actor_id'), key: 'actor_id', minWidth: 220, ellipsis: { tooltip: true } },
   {
     title: t('admin.common.status'),
     key: 'status',
@@ -93,9 +93,9 @@ const columns: DataTableColumns<ActivityPubDeliveryDetailResp> = [
     },
   },
   { title: 'HTTP', key: 'http_status', width: 80 },
-  { title: '错误', key: 'error', minWidth: 220, ellipsis: { tooltip: true } },
+  { title: t('admin.table.error_message'), key: 'error', minWidth: 220, ellipsis: { tooltip: true } },
   {
-    title: '投递时间',
+    title: t('admin.federation.delivered_at'),
     key: 'delivered_at',
     width: 170,
     render(row) {
@@ -109,10 +109,10 @@ async function handleRetry() {
   retrying.value = true
   try {
     detail.value = await retryActivityPubOutbox(displayItem.value.id)
-    message.success('重试完成')
+    message.success(t('admin.service.operation_success'))
     emit('refresh')
   } catch (err: any) {
-    message.error(err?.message || '重试失败')
+    message.error(err?.message || t('admin.service.operation_failed'))
   } finally {
     retrying.value = false
   }
@@ -127,7 +127,7 @@ async function handleRetry() {
     @update:show="(v) => emit('update:show', v)"
   >
     <NDrawerContent
-      title="ActivityPub 出站详情"
+      :title="$t('admin.federation.activity_detail')"
       closable
     >
       <div
@@ -138,9 +138,9 @@ async function handleRetry() {
           bordered
           :column="2"
           label-placement="left"
-          title="基本信息"
+          :title="$t('admin.federation.basic_info')"
         >
-          <NDescriptionsItem label="ID">{{ displayItem.id }}</NDescriptionsItem>
+          <NDescriptionsItem :label="$t('admin.table.id')">{{ displayItem.id }}</NDescriptionsItem>
           <NDescriptionsItem :label="$t('admin.common.status')"
             ><NTag
               :type="statusTagType(displayItem.status)"
@@ -148,35 +148,35 @@ async function handleRetry() {
               >{{ displayItem.status }}</NTag
             ></NDescriptionsItem
           >
-          <NDescriptionsItem label="SourceType">{{ displayItem.source_type }}</NDescriptionsItem>
-          <NDescriptionsItem label="TriggerSource">{{
+          <NDescriptionsItem :label="$t('admin.federation.source_type')">{{ displayItem.source_type }}</NDescriptionsItem>
+          <NDescriptionsItem :label="$t('admin.federation.trigger_source')">{{
             displayItem.trigger_source
           }}</NDescriptionsItem>
-          <NDescriptionsItem label="ActivityID">{{ displayItem.activity_id }}</NDescriptionsItem>
-          <NDescriptionsItem label="ObjectID">{{ displayItem.object_id }}</NDescriptionsItem>
-          <NDescriptionsItem label="统计"
+          <NDescriptionsItem :label="$t('admin.federation.activity_id')">{{ displayItem.activity_id }}</NDescriptionsItem>
+          <NDescriptionsItem :label="$t('admin.federation.object_id')">{{ displayItem.object_id }}</NDescriptionsItem>
+          <NDescriptionsItem :label="$t('admin.federation.delivery_stats')"
             >{{ displayItem.success_count }}/{{ displayItem.total_targets }}</NDescriptionsItem
           >
-          <NDescriptionsItem label="耗时(ms)">{{
+          <NDescriptionsItem :label="$t('admin.federation.duration_ms')">{{
             displayItem.duration_ms ?? '-'
           }}</NDescriptionsItem>
-          <NDescriptionsItem label="开始时间">{{
+          <NDescriptionsItem :label="$t('admin.federation.started_at')">{{
             displayItem.started_at ? new Date(displayItem.started_at).toLocaleString() : '-'
           }}</NDescriptionsItem>
-          <NDescriptionsItem label="结束时间">{{
+          <NDescriptionsItem :label="$t('admin.federation.finished_at')">{{
             displayItem.finished_at ? new Date(displayItem.finished_at).toLocaleString() : '-'
           }}</NDescriptionsItem>
         </NDescriptions>
 
         <div>
           <div class="mb-2 flex items-center justify-between">
-            <h3 class="font-medium">投递明细</h3>
+            <h3 class="font-medium">{{ $t('admin.federation.delivery_details') }}</h3>
             <NButton
               v-if="canRetry"
               type="warning"
               :loading="retrying"
               @click="handleRetry"
-              >重试失败投递</NButton
+              >{{ $t('admin.action.retry_failed') }}</NButton
             >
           </div>
           <NDataTable
@@ -188,7 +188,7 @@ async function handleRetry() {
         </div>
 
         <div>
-          <h3 class="mb-2 font-medium">Activity JSON</h3>
+          <h3 class="mb-2 font-medium">{{ $t('admin.federation.activity_json') }}</h3>
           <NCode
             :code="activityCode"
             language="json"

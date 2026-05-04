@@ -3,8 +3,11 @@ import { onBeforeUnmount } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 
 import { useComponentModifier } from '@/composables'
+import i18n from '@/plugins/i18n'
 
 import type { Ref } from 'vue'
+
+const __ = i18n.global.t
 
 interface LeaveConfirmOptions {
   when: Ref<boolean> | (() => boolean)
@@ -22,10 +25,10 @@ export function useLeaveConfirm(options: LeaveConfirmOptions) {
   const dialog = useDialog()
   const { getModalModifier } = useComponentModifier()
 
-  const title = options.title ?? '未保存的更改'
-  const content = options.content ?? '你有未保存的更改，确定要离开吗？'
-  const positiveText = options.positiveText ?? '离开'
-  const negativeText = options.negativeText ?? '取消'
+  const title = options.title ?? __('admin.leave_confirm.unsaved_title')
+  const content = options.content ?? __('admin.leave_confirm.content')
+  const positiveText = options.positiveText ?? __('admin.leave_confirm.positive')
+  const negativeText = options.negativeText ?? __('admin.leave_confirm.negative')
 
   const handleBeforeUnload = (event: BeforeUnloadEvent) => {
     if (!resolveWhen(options.when)) return

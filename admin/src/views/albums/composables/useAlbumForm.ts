@@ -1,6 +1,8 @@
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 
+import i18n from '@/plugins/i18n'
+const { t } = i18n.global
 import { useDiscreteApi } from '@/composables/useDiscreteApi'
 import {
   getAlbum,
@@ -51,7 +53,7 @@ export function useAlbumForm() {
       photos.value = detail.photos ?? []
       isDirty.value = false
     } catch (err) {
-      message.error(err instanceof Error ? err.message : '加载相册失败')
+      message.error(err instanceof Error ? err.message : t('admin.album.load_failed'))
     } finally {
       loading.value = false
     }
@@ -59,7 +61,7 @@ export function useAlbumForm() {
 
   async function save() {
     if (!form.title.trim()) {
-      message.warning('请输入相册标题')
+      message.warning(t('admin.album.title_required'))
       return
     }
 
@@ -74,7 +76,7 @@ export function useAlbumForm() {
           isPublished: form.isPublished,
           allowComment: form.allowComment,
         })
-        message.success('相册更新成功')
+        message.success(t('admin.album.update_success'))
       } else {
         const created = await createAlbum({
           title: form.title,
@@ -84,7 +86,7 @@ export function useAlbumForm() {
           isPublished: form.isPublished,
           allowComment: form.allowComment,
         })
-        message.success('相册创建成功')
+        message.success(t('admin.album.create_success'))
         isDirty.value = false
         router.replace({ name: 'albumEdit', params: { id: created.id } })
         return
@@ -92,7 +94,7 @@ export function useAlbumForm() {
       isDirty.value = false
       await fetch()
     } catch (err) {
-      message.error(err instanceof Error ? err.message : '保存失败')
+      message.error(err instanceof Error ? err.message : t('admin.album.save_failed'))
     } finally {
       saving.value = false
     }
@@ -107,10 +109,10 @@ export function useAlbumForm() {
     }))
     try {
       await addPhotos(albumId.value, { photos: payloads })
-      message.success(`已添加 ${items.length} 张照片`)
+      message.success(t('admin.album.photos_added', { n: items.length }))
       await fetch()
     } catch (err) {
-      message.error(err instanceof Error ? err.message : '添加照片失败')
+      message.error(err instanceof Error ? err.message : t('admin.album.add_photos_failed'))
     }
   }
 
@@ -126,10 +128,10 @@ export function useAlbumForm() {
         exif: data.exif ?? existing.exif ?? null,
         sortOrder: data.sortOrder ?? existing.sortOrder,
       })
-      message.success('照片已更新')
+      message.success(t('admin.album.photo_updated'))
       await fetch()
     } catch (err) {
-      message.error(err instanceof Error ? err.message : '更新照片失败')
+      message.error(err instanceof Error ? err.message : t('admin.album.update_photo_failed'))
     }
   }
 
@@ -137,10 +139,10 @@ export function useAlbumForm() {
     if (!isEdit.value) return
     try {
       await deletePhotoApi(albumId.value, photoId)
-      message.success('照片已删除')
+      message.success(t('admin.album.photo_deleted'))
       await fetch()
     } catch (err) {
-      message.error(err instanceof Error ? err.message : '删除照片失败')
+      message.error(err instanceof Error ? err.message : t('admin.album.delete_photo_failed'))
     }
   }
 
@@ -150,7 +152,7 @@ export function useAlbumForm() {
       await reorderPhotos(albumId.value, { photoIds })
       await fetch()
     } catch (err) {
-      message.error(err instanceof Error ? err.message : '排序失败')
+      message.error(err instanceof Error ? err.message : t('admin.album.reorder_failed'))
     }
   }
 
@@ -165,10 +167,10 @@ export function useAlbumForm() {
   onBeforeRouteLeave((_to, _from, next) => {
     if (isDirty.value) {
       dialog.warning({
-        title: '未保存的更改',
-        content: '当前有未保存的更改，是否离开？',
-        positiveText: '离开',
-        negativeText: '留下',
+        title: t('admin.album.unsaved_title'),
+        content: t('admin.album.unsaved_content'),
+        positiveText: t('admin.album.leave'),
+        negativeText: t('admin.album.stay'),
         onPositiveClick: () => next(),
         onNegativeClick: () => next(false),
       })

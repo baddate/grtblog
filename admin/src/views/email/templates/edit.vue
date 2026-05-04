@@ -146,7 +146,7 @@ async function fetchDetail() {
         await fetchEventDetails(form.eventName)
       }
     } else {
-      message.error('模版不存在')
+      message.error(t('admin.email.template_not_found'))
       router.push('/email/templates')
     }
   } finally {
@@ -156,7 +156,7 @@ async function fetchDetail() {
 
 async function handleSave() {
   if (!form.code || !form.name || !form.eventName) {
-    message.error('请填写必填项')
+    message.error(t('admin.common.fill_required'))
     return
   }
 
@@ -184,7 +184,7 @@ async function handlePreview() {
         variables = JSON.parse(previewData.variables)
       }
     } catch (e) {
-      message.error('JSON 格式错误，请检查变量')
+      message.error(t('admin.email.invalid_json_variables'))
       return
     }
 
@@ -261,7 +261,7 @@ onMounted(async () => {
               <NIcon><ArrowLeft24Regular /></NIcon>
             </template>
           </NButton>
-          <div class="text-lg font-bold">{{ isEdit ? '编辑模版' : '新建模版' }}</div>
+          <div class="text-lg font-bold">{{ isEdit ? $t('admin.email.edit_template') : $t('admin.email.new_template') }}</div>
         </div>
         <NSpace>
           <NButton
@@ -269,14 +269,14 @@ onMounted(async () => {
             secondary
             @click="previewModalVisible = true"
           >
-            预览 & 调试
+            {{ $t('admin.email.preview_debug') }}
           </NButton>
           <NButton
             type="primary"
             :loading="saving"
             @click="handleSave"
           >
-            保存
+            {{ $t('admin.common.save') }}
           </NButton>
         </NSpace>
       </div>
@@ -285,13 +285,13 @@ onMounted(async () => {
     <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
       <div class="lg:col-span-2">
         <NCard
-          title="模版内容"
+          :title="$t('admin.email.template_content')"
           content-style="padding-bottom: 0;"
         >
-          <NFormItem label="邮件主题">
+          <NFormItem :label="$t('admin.form.subject')">
             <NInput
               v-model:value="form.subjectTemplate"
-              placeholder="支持模版变量，如：Welcome {{.Name}}"
+              :placeholder="$t('admin.email.placeholder_subject_template')"
             />
           </NFormItem>
 
@@ -299,7 +299,7 @@ onMounted(async () => {
             v-if="currentEventFields.length > 0"
             class="mb-4"
           >
-            <div class="mb-2 text-xs text-gray-500">可用事件变量:</div>
+            <div class="mb-2 text-xs text-gray-500">{{ $t('admin.email.available_variables') }}</div>
             <NSpace size="small">
               <NTag
                 v-for="field in currentEventFields"
@@ -324,7 +324,7 @@ onMounted(async () => {
           >
             <NTabPane
               name="html"
-              tab="HTML 内容"
+              :tab="$t('admin.email.tab_html')"
             >
               <HtmlEditor
                 v-model="form.htmlTemplate"
@@ -334,12 +334,12 @@ onMounted(async () => {
             </NTabPane>
             <NTabPane
               name="text"
-              tab="纯文本内容"
+              :tab="$t('admin.email.tab_text')"
             >
               <NInput
                 v-model:value="form.textTemplate"
                 type="textarea"
-                placeholder="纯文本备选内容..."
+                :placeholder="$t('admin.email.placeholder_text_alternative')"
                 :rows="20"
                 class="font-mono"
               />
@@ -348,46 +348,46 @@ onMounted(async () => {
         </NCard>
       </div>
       <div>
-        <NCard title="基本设置">
+        <NCard :title="$t('admin.email.basic_settings')">
           <NForm
             label-placement="top"
             :disabled="loading"
           >
-            <NFormItem label="模版编码 (Key)">
+            <NFormItem :label="$t('admin.email.template_code')">
               <NInput
                 v-model:value="form.code"
-                placeholder="唯一标识，如：welcome_email"
+                :placeholder="$t('admin.email.placeholder_template_code')"
                 :disabled="isEdit"
               />
             </NFormItem>
-            <NFormItem label="模版名称">
+            <NFormItem :label="$t('admin.email.template_name')">
               <NInput
                 v-model:value="form.name"
-                placeholder="便于管理的名称"
+                :placeholder="$t('admin.email.placeholder_template_name')"
               />
             </NFormItem>
-            <NFormItem label="触发事件">
+            <NFormItem :label="$t('admin.email.template_event')">
               <NSelect
                 v-model:value="form.eventName"
                 :options="eventOptions"
                 filterable
                 :disabled="isInternal"
-                placeholder="选择关联的系统事件"
+                :placeholder="$t('admin.email.placeholder_select_event')"
               />
               <div
                 v-if="isInternal"
                 class="mt-1 text-xs text-neutral-400"
               >
-                内置模版不允许更改触发事件
+                {{ $t('admin.email.locked_event_hint') }}
               </div>
             </NFormItem>
-            <NFormItem label="默认收件人">
+            <NFormItem :label="$t('admin.email.default_recipients')">
               <NSelect
                 v-model:value="form.toEmails"
                 multiple
                 tag
                 filterable
-                placeholder="输入邮箱后回车..."
+                :placeholder="$t('admin.email.placeholder_recipients')"
               />
             </NFormItem>
             <NFormItem :label="$t('admin.common.enabled')">
@@ -402,12 +402,12 @@ onMounted(async () => {
       v-model:show="previewModalVisible"
       preset="card"
       style="width: 900px; max-width: 90vw"
-      title="预览与调试"
+      :title="$t('admin.email.preview_debug')"
     >
       <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div class="flex flex-col gap-4">
           <NCard
-            title="测试数据 (JSON)"
+            :title="$t('admin.email.test_data_json')"
             size="small"
           >
             <template #header-extra>
@@ -416,7 +416,7 @@ onMounted(async () => {
                 secondary
                 @click="handlePreview"
                 :loading="previewLoading"
-                >渲染预览</NButton
+                >{{ $t('admin.email.render_preview') }}</NButton
               >
             </template>
             <TemplateEditor v-model="previewData.variables" />

@@ -18,6 +18,9 @@ import {
   NNumberAnimation,
   NResult,
 } from 'naive-ui'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { ref, onMounted, computed } from 'vue'
 
 import { PageHeader, ScrollContainer } from '@/components'
@@ -75,14 +78,14 @@ const getStatusType = (usage: number) => {
   <ScrollContainer wrapper-class="p-4 md:p-6 space-y-6">
     <!-- Header -->
     <PageHeader
-      title="系统状态"
+      :title="$t('admin.monitor.title')"
       icon="ph--desktop"
-      description="实时监控应用运行各项指标"
+      :description="$t('admin.monitor.description')"
     >
       <template #description>
         <p class="mt-1 pl-1 text-sm text-gray-500">
-          实时监控应用运行各项指标
-          <span class="ml-2 text-xs opacity-75">更新于 {{ lastUpdated.toLocaleTimeString() }}</span>
+          {{ $t('admin.monitor.description') }}
+          <span class="ml-2 text-xs opacity-75">{{ $t('admin.monitor.updated_at', { time: lastUpdated.toLocaleTimeString() }) }} {{ lastUpdated.toLocaleTimeString() }}</span>
         </p>
       </template>
       <template #actions>
@@ -96,7 +99,7 @@ const getStatusType = (usage: number) => {
           <template #icon>
             <NIcon :component="ArrowClockwise24Regular" />
           </template>
-          刷新
+          {{ $t('admin.common.refresh') }}
         </NButton>
       </template>
     </PageHeader>
@@ -119,7 +122,7 @@ const getStatusType = (usage: number) => {
               :bordered="false"
               class="h-full"
             >
-              <NStatistic label="运行时间">
+              <NStatistic :label="$t('admin.system.uptime')">
                 {{ status.app.uptime }}
               </NStatistic>
             </NCard>
@@ -130,7 +133,7 @@ const getStatusType = (usage: number) => {
               :bordered="false"
               class="h-full"
             >
-              <NStatistic label="Go 版本">
+              <NStatistic :label="$t('admin.system.go_version')">
                 {{ status.app.goVersion }}
               </NStatistic>
             </NCard>
@@ -141,7 +144,7 @@ const getStatusType = (usage: number) => {
               :bordered="false"
               class="h-full"
             >
-              <NStatistic label="CPU 核心">
+              <NStatistic :label="$t('admin.monitor.cpu_cores')">
                 <NNumberAnimation
                   :from="0"
                   :to="status.cpu.cores"
@@ -158,7 +161,7 @@ const getStatusType = (usage: number) => {
               :bordered="false"
               class="h-full"
             >
-              <NStatistic label="操作系统">
+              <NStatistic :label="$t('admin.monitor.os')">
                 {{ status.platform.os }}
                 <template #suffix>
                   <span class="text-xs text-gray-400">/ {{ status.platform.arch }}</span>
@@ -178,14 +181,14 @@ const getStatusType = (usage: number) => {
           <!-- Memory -->
           <NGi>
             <NCard
-              title="内存概览"
+              :title="$t('admin.monitor.memory_overview')"
               :bordered="false"
               size="small"
             >
               <div class="mb-6 flex items-center justify-between px-2">
                 <div class="space-y-1">
                   <div class="text-3xl font-light text-primary">{{ memoryPercentage }}%</div>
-                  <div class="text-xs text-gray-500">当前使用率</div>
+                  <div class="text-xs text-gray-500">{{ $t('admin.monitor.current_usage') }}</div>
                 </div>
                 <NProgress
                   type="circle"
@@ -202,16 +205,16 @@ const getStatusType = (usage: number) => {
                 label-placement="left"
                 content-style="text-align: right;"
               >
-                <NDescriptionsItem label="当前分配 (Alloc)">{{
+                <NDescriptionsItem :label="$t('admin.monitor.memory_alloc')">{{
                   formatBytes(status.memory.alloc)
                 }}</NDescriptionsItem>
-                <NDescriptionsItem label="累积分配 (Total)">{{
+                <NDescriptionsItem :label="$t('admin.monitor.memory_total')">{{
                   formatBytes(status.memory.totalAlloc)
                 }}</NDescriptionsItem>
-                <NDescriptionsItem label="系统占用 (Sys)">{{
+                <NDescriptionsItem :label="$t('admin.monitor.memory_sys')">{{
                   formatBytes(status.memory.sys)
                 }}</NDescriptionsItem>
-                <NDescriptionsItem label="GC 次数">{{ status.memory.numGC }}</NDescriptionsItem>
+                <NDescriptionsItem :label="$t('admin.monitor.gc_count')">{{ status.memory.numGC }}</NDescriptionsItem>
               </NDescriptions>
             </NCard>
           </NGi>
@@ -219,14 +222,14 @@ const getStatusType = (usage: number) => {
           <!-- Disk -->
           <NGi>
             <NCard
-              title="磁盘空间"
+              :title="$t('admin.monitor.disk_space')"
               :bordered="false"
               size="small"
             >
               <div class="mb-6 flex items-center justify-between px-2">
                 <div class="space-y-1">
                   <div class="text-3xl font-light text-primary">{{ diskPercentage }}%</div>
-                  <div class="text-xs text-gray-500">已使用</div>
+                  <div class="text-xs text-gray-500">{{ $t('admin.monitor.used') }}</div>
                 </div>
                 <!-- Visualization of disk space -->
                 <div class="w-1/3">
@@ -245,17 +248,17 @@ const getStatusType = (usage: number) => {
                 label-placement="left"
                 content-style="text-align: right;"
               >
-                <NDescriptionsItem label="挂载路径">
+                <NDescriptionsItem :label="$t('admin.monitor.mount_path')">
                   <span
                     class="inline-block max-w-37.5 truncate align-bottom"
                     :title="status.disk.path"
                     >{{ status.disk.path }}</span
                   >
                 </NDescriptionsItem>
-                <NDescriptionsItem label="容量状态">
+                <NDescriptionsItem :label="$t('admin.monitor.capacity_status')">
                   {{ formatBytes(status.disk.used) }} / {{ formatBytes(status.disk.all) }}
                 </NDescriptionsItem>
-                <NDescriptionsItem label="应用存储占用">
+                <NDescriptionsItem :label="$t('admin.monitor.app_storage')">
                   {{ formatBytes(status.storage.size) }}
                   <span class="ml-1 text-xs text-gray-400">({{ status.storage.path }})</span>
                 </NDescriptionsItem>
@@ -273,7 +276,7 @@ const getStatusType = (usage: number) => {
         >
           <NGi>
             <NCard
-              title="服务连接状态"
+              :title="$t('admin.monitor.service_status')"
               :bordered="false"
               size="small"
             >
@@ -299,23 +302,23 @@ const getStatusType = (usage: number) => {
                     size="small"
                     label-placement="left"
                   >
-                    <NDescriptionsItem label="驱动">{{ status.database.driver }}</NDescriptionsItem>
-                    <NDescriptionsItem label="版本">{{
+                    <NDescriptionsItem :label="$t('admin.monitor.driver')">{{ status.database.driver }}</NDescriptionsItem>
+                    <NDescriptionsItem :label="$t('admin.monitor.version')">{{
                       status.database.version || '-'
                     }}</NDescriptionsItem>
-                    <NDescriptionsItem label="打开连接">{{
+                    <NDescriptionsItem :label="$t('admin.monitor.open_connections')">{{
                       status.database.poolStats.openConnections
                     }}</NDescriptionsItem>
-                    <NDescriptionsItem label="使用中">{{
+                    <NDescriptionsItem :label="$t('admin.monitor.in_use')">{{
                       status.database.poolStats.inUse
                     }}</NDescriptionsItem>
-                    <NDescriptionsItem label="空闲连接">{{
+                    <NDescriptionsItem :label="$t('admin.monitor.idle_connections')">{{
                       status.database.poolStats.idle
                     }}</NDescriptionsItem>
-                    <NDescriptionsItem label="最大连接">{{
+                    <NDescriptionsItem :label="$t('admin.monitor.max_connections')">{{
                       status.database.poolStats.maxOpenConnections
                     }}</NDescriptionsItem>
-                    <NDescriptionsItem label="等待计数">{{
+                    <NDescriptionsItem :label="$t('admin.monitor.wait_count')">{{
                       status.database.poolStats.waitCount
                     }}</NDescriptionsItem>
                   </NDescriptions>
@@ -341,15 +344,15 @@ const getStatusType = (usage: number) => {
                       size="small"
                       label-placement="left"
                     >
-                      <NDescriptionsItem label="版本">{{
+                      <NDescriptionsItem :label="$t('admin.monitor.version')">{{
                         status.redis.version || '-'
                       }}</NDescriptionsItem>
-                      <NDescriptionsItem label="内存使用">{{
+                      <NDescriptionsItem :label="$t('admin.monitor.redis_memory')">{{
                         status.redis.usedMemory
                       }}</NDescriptionsItem>
                       <NDescriptionsItem :label="$t('admin.common.status')">
                         {{
-                          status.redis.status === 'connected' ? '连接正常，准备就绪' : '连接失败'
+                          status.redis.status === 'connected' ? $t('admin.monitor.redis_connected') : $t('admin.monitor.redis_disconnected')
                         }}
                       </NDescriptionsItem>
                     </NDescriptions>
@@ -368,13 +371,13 @@ const getStatusType = (usage: number) => {
         >
           <NGi>
             <NCard
-              title="组件健康状态位"
+              :title="$t('admin.monitor.component_health')"
               :bordered="false"
               size="small"
             >
               <NEmpty
                 v-if="!status.components?.length"
-                description="暂无组件状态"
+                :description="$t('admin.monitor.no_components')"
               />
               <NSpace v-else>
                 <NTag
@@ -401,8 +404,8 @@ const getStatusType = (usage: number) => {
         <!-- Raw Info Footer (Collapsible or subtle) -->
         <div class="text-center">
           <span class="text-xs text-gray-400"
-            >系统版本: {{ status.app.version
-            }}{{ status.app.commit ? ` (${status.app.commit})` : '' }} | 启动时间:
+            >{{ $t('admin.system.version') }}: {{ status.app.version
+            }}{{ status.app.commit ? ` (${status.app.commit})` : '' }} | {{ $t('admin.monitor.start_time') }}:
             {{ new Date(status.app.startTime).toLocaleString() }}</span
           >
         </div>
@@ -410,12 +413,12 @@ const getStatusType = (usage: number) => {
       <NResult
         v-else-if="!loading"
         status="info"
-        title="暂无数据"
-        description="无法获取系统监控信息，请检查后端服务是否正常运行。"
+        :title="$t('admin.common.no_data')"
+        :description="$t('admin.monitor.no_data_desc')"
         class="mt-20"
       >
         <template #footer>
-          <NButton @click="fetchData">重试</NButton>
+          <NButton @click="fetchData">{{ $t('admin.common.retry') }}</NButton>
         </template>
       </NResult>
     </NSpin>

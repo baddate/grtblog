@@ -14,6 +14,9 @@ import {
 } from 'naive-ui'
 import { watch } from 'vue'
 
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { PageHeader, ScrollContainer } from '@/components'
 
 import AlertTimeline from './components/AlertTimeline.vue'
@@ -54,7 +57,7 @@ watch(timelineWindow, () => queryClient.invalidateQueries({ queryKey: ['obs-time
 <template>
   <ScrollContainer wrapper-class="p-4 md:p-6 space-y-4">
     <PageHeader
-      title="高级信息 / Observability"
+      :title="$t('admin.advanced.title')"
       icon="ph--desktop"
       class="mb-4"
     >
@@ -63,12 +66,12 @@ watch(timelineWindow, () => queryClient.invalidateQueries({ queryKey: ['obs-time
           size="small"
           type="info"
           round
-          >实时</NTag
+          >{{ $t('admin.advanced.realtime_badge') }}</NTag
         >
       </template>
       <template #actions>
         <span class="mr-2 text-xs whitespace-nowrap text-neutral-400">
-          最后刷新：{{ lastRefreshAt.toLocaleTimeString() }}
+          {{ $t('admin.advanced.last_refresh', { time: lastRefreshAt.toLocaleTimeString() }) }}
         </span>
         <NSelect
           v-model:value="timelineWindow"
@@ -83,7 +86,7 @@ watch(timelineWindow, () => queryClient.invalidateQueries({ queryKey: ['obs-time
           @click="refreshAll"
         >
           <template #icon><NIcon :component="ArrowClockwise24Regular" /></template>
-          刷新
+          {{ $t('admin.common.refresh') }}
         </NButton>
       </template>
     </PageHeader>
@@ -168,25 +171,25 @@ watch(timelineWindow, () => queryClient.invalidateQueries({ queryKey: ['obs-time
           class="flex flex-col rounded border border-naive-border bg-naive-card p-5 transition-[background-color,border-color]"
         >
           <div class="mb-4 text-base font-medium text-neutral-600 dark:text-neutral-300">
-            控制平面概况
+            {{ $t('admin.advanced.control_plane') }}
           </div>
           <NDescriptions
             :column="2"
             size="small"
           >
-            <NDescriptionsItem label="RPS">{{
+            <NDescriptionsItem :label="$t('admin.advanced.rps')">{{
               controlData?.api.rps?.toFixed(2)
             }}</NDescriptionsItem>
-            <NDescriptionsItem label="P95 延迟"
+            <NDescriptionsItem :label="$t('admin.advanced.p95_latency')"
               >{{ controlData?.api.p95LatencyMs?.toFixed(1) }} ms</NDescriptionsItem
             >
-            <NDescriptionsItem label="API 错误率">{{
+            <NDescriptionsItem :label="$t('admin.advanced.api_error_rate')">{{
               formatPercent(controlData?.api.errorRate)
             }}</NDescriptionsItem>
-            <NDescriptionsItem label="Go Goroutines">{{
+            <NDescriptionsItem :label="$t('admin.advanced.go_goroutines')">{{
               controlData?.goRuntime.numGoroutine
             }}</NDescriptionsItem>
-            <NDescriptionsItem label="DB 连接状态">
+            <NDescriptionsItem :label="$t('admin.advanced.db_connection_status')">
               <NTag
                 :type="controlData?.database.status === 'connected' ? 'success' : 'error'"
                 size="small"
@@ -195,7 +198,7 @@ watch(timelineWindow, () => queryClient.invalidateQueries({ queryKey: ['obs-time
                 {{ controlData?.database.status || 'unknown' }}
               </NTag>
             </NDescriptionsItem>
-            <NDescriptionsItem label="DB 等待">{{
+            <NDescriptionsItem :label="$t('admin.advanced.db_wait')">{{
               controlData?.database.waitCount
             }}</NDescriptionsItem>
           </NDescriptions>
@@ -208,34 +211,34 @@ watch(timelineWindow, () => queryClient.invalidateQueries({ queryKey: ['obs-time
           class="flex flex-col rounded border border-naive-border bg-naive-card p-5 transition-[background-color,border-color]"
         >
           <div class="mb-4 text-base font-medium text-neutral-600 dark:text-neutral-300">
-            实时与存储
+            {{ $t('admin.advanced.realtime_storage') }}
           </div>
           <NDescriptions
             :column="2"
             size="small"
           >
-            <NDescriptionsItem label="WS 在线">{{
+            <NDescriptionsItem :label="$t('admin.advanced.ws_online')">{{
               realtimeData?.snapshot.currentOnline
             }}</NDescriptionsItem>
-            <NDescriptionsItem label="WS 广播错误率">{{
+            <NDescriptionsItem :label="$t('admin.advanced.ws_broadcast_error_rate')">{{
               formatPercent(realtimeData?.snapshot.broadcastErrorRate)
             }}</NDescriptionsItem>
-            <NDescriptionsItem label="WS Fanout P95"
+            <NDescriptionsItem :label="$t('admin.advanced.ws_fanout_p95')"
               >{{ realtimeData?.snapshot.broadcastP95Ms?.toFixed(1) }} ms</NDescriptionsItem
             >
-            <NDescriptionsItem label="平均接收人数">{{
+            <NDescriptionsItem :label="$t('admin.advanced.avg_recipients')">{{
               realtimeData?.snapshot.avgRecipients?.toFixed(2)
             }}</NDescriptionsItem>
-            <NDescriptionsItem label="HTML 存储">{{
+            <NDescriptionsItem :label="$t('admin.advanced.html_storage')">{{
               formatBytes(storageData?.storageHtml.size)
             }}</NDescriptionsItem>
-            <NDescriptionsItem label="日志存储">{{
+            <NDescriptionsItem :label="$t('admin.advanced.log_storage')">{{
               formatBytes(storageData?.storageLogs.size)
             }}</NDescriptionsItem>
           </NDescriptions>
           <div class="mt-4 border-t border-neutral-100 pt-4 dark:border-neutral-800">
             <div class="mb-1 flex items-center justify-between">
-              <span class="text-xs text-neutral-500">Redis 队列深度</span>
+              <span class="text-xs text-neutral-500">{{ $t('admin.advanced.redis_queue_depth') }}</span>
               <span class="text-xs text-neutral-400">{{
                 storageData?.redis.analyticsQueueDepth || 0
               }}</span>
@@ -264,7 +267,7 @@ watch(timelineWindow, () => queryClient.invalidateQueries({ queryKey: ['obs-time
       class="rounded border border-naive-border bg-naive-card p-5 transition-[background-color,border-color]"
     >
       <div class="mb-4 flex items-center justify-between">
-        <div class="text-base font-medium text-neutral-600 dark:text-neutral-300">更新检查</div>
+        <div class="text-base font-medium text-neutral-600 dark:text-neutral-300">{{ $t('admin.advanced.update_check') }}</div>
         <NTag
           size="small"
           :type="updateTagType() as any"
@@ -272,27 +275,27 @@ watch(timelineWindow, () => queryClient.invalidateQueries({ queryKey: ['obs-time
         >
           {{
             updateInfo?.status === 'error'
-              ? '检查失败'
+              ? $t('admin.advanced.check_failed')
               : updateInfo?.status === 'disabled'
-                ? '已关闭'
+                ? $t('admin.common.disabled')
                 : updateInfo?.hasUpdate
-                  ? '可更新'
-                  : '已最新'
+                  ? $t('admin.advanced.update_available_status')
+                  : $t('admin.advanced.up_to_date')
           }}
         </NTag>
       </div>
       <NEmpty
         v-if="!updateInfo"
-        description="暂无更新信息"
+        :description="$t('admin.advanced.no_update_info')"
       />
       <NDescriptions
         v-else
         :column="2"
         size="small"
       >
-        <NDescriptionsItem label="当前版本">{{ updateInfo.currentVersion }}</NDescriptionsItem>
-        <NDescriptionsItem label="更新通道">{{ updateInfo.channel }}</NDescriptionsItem>
-        <NDescriptionsItem label="目标版本">
+        <NDescriptionsItem :label="$t('admin.advanced.current_version')">{{ updateInfo.currentVersion }}</NDescriptionsItem>
+        <NDescriptionsItem :label="$t('admin.advanced.update_channel')">{{ updateInfo.channel }}</NDescriptionsItem>
+        <NDescriptionsItem :label="$t('admin.advanced.target_version')">
           {{ updateInfo.targetRelease?.tag || '-' }}
           <NTag
             v-if="updateInfo.targetRelease?.prerelease"
@@ -300,16 +303,16 @@ watch(timelineWindow, () => queryClient.invalidateQueries({ queryKey: ['obs-time
             size="tiny"
             type="warning"
             round
-            >测试版</NTag
+            >{{ $t('admin.advanced.prerelease') }}</NTag
           >
         </NDescriptionsItem>
-        <NDescriptionsItem label="检查时间">{{
+        <NDescriptionsItem :label="$t('admin.advanced.check_time')">{{
           updateInfo.checkedAt ? new Date(updateInfo.checkedAt).toLocaleString() : '-'
         }}</NDescriptionsItem>
       </NDescriptions>
       <div class="mt-3 flex items-center justify-between gap-2">
         <span class="text-xs text-neutral-500">{{
-          updateInfo?.message || '版本来源：GitHub Releases / Git tags'
+          updateInfo?.message || $t('admin.advanced.version_source')
         }}</span>
         <NButton
           v-if="updateInfo?.releaseNotesUrl || updateInfo?.upgradeUrl"
@@ -319,7 +322,7 @@ watch(timelineWindow, () => queryClient.invalidateQueries({ queryKey: ['obs-time
           :href="updateInfo.releaseNotesUrl || updateInfo.upgradeUrl"
           target="_blank"
         >
-          查看说明
+          {{ $t('admin.advanced.view_release_notes') }}
         </NButton>
       </div>
     </div>

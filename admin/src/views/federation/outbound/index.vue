@@ -46,7 +46,7 @@ const columns: DataTableColumns<FederationOutboundDeliveryResp> = [
       return h(NTag, { type: 'info', bordered: false }, { default: () => row.type })
     },
   },
-  { title: '目标实例', key: 'target_instance_url', minWidth: 200, ellipsis: { tooltip: true } },
+  { title: t('admin.federation.target_instance'), key: 'target_instance_url', minWidth: 200, ellipsis: { tooltip: true } },
   {
     title: t('admin.common.status'),
     key: 'status',
@@ -63,7 +63,7 @@ const columns: DataTableColumns<FederationOutboundDeliveryResp> = [
     },
   },
   {
-    title: '尝试次数',
+    title: t('admin.federation.attempt_count'),
     key: 'attempt_count',
     width: 100,
     render: (row) => `${row.attempt_count}/${row.max_attempts}`,
@@ -85,7 +85,7 @@ const columns: DataTableColumns<FederationOutboundDeliveryResp> = [
           size: 'small',
           onClick: () => openDetail(row),
         },
-        { default: () => '详情' },
+        { default: () => t('admin.action.view_details') },
       )
     },
   },
@@ -101,18 +101,18 @@ function openDetail(row: FederationOutboundDeliveryResp) {
 }
 
 const typeOptions = [
-  { label: '全部类型', value: null },
-  { label: '友链申请', value: 'friend_link' },
-  { label: '引用通知', value: 'citation' },
-  { label: '提及通知', value: 'mention' },
+  { label: t('admin.filter.all'), value: null },
+  { label: t('admin.federation.type_friend_link'), value: 'friend_link' },
+  { label: t('admin.federation.type_citation'), value: 'citation' },
+  { label: t('admin.federation.type_mention'), value: 'mention' },
 ] as any
 
 const statusOptions = [
-  { label: '全部状态', value: null },
-  { label: '等待中', value: 'pending' },
-  { label: '成功', value: 'success' },
-  { label: '失败', value: 'failed' },
-  { label: '重试中', value: 'retrying' },
+  { label: t('admin.filter.all_status'), value: null },
+  { label: t('admin.status.pending'), value: 'pending' },
+  { label: t('admin.status.success'), value: 'success' },
+  { label: t('admin.status.failed'), value: 'failed' },
+  { label: t('admin.status.queued'), value: 'retrying' },
 ] as any
 
 </script>
@@ -121,11 +121,11 @@ const statusOptions = [
   <ScrollContainer wrapper-class="flex flex-col gap-y-4">
     <NCard :bordered="false">
       <div class="flex items-center justify-between">
-        <div class="text-lg font-medium">出站记录</div>
+        <div class="text-lg font-medium">{{ $t('admin.card.federation_outbound') }}</div>
         <div class="flex items-center gap-2">
           <NInput
             v-model:value="searchRequestId"
-            placeholder="搜索 Request ID"
+            :placeholder="t('admin.placeholder.search_request_id')"
             clearable
             class="w-60"
           />
@@ -133,14 +133,14 @@ const statusOptions = [
             v-model:value="filterType"
             :options="typeOptions"
             class="w-40"
-            placeholder="类型"
+            :placeholder="$t('admin.placeholder.type')"
             clearable
           />
           <NSelect
             v-model:value="filterStatus"
             :options="statusOptions"
             class="w-40"
-            placeholder="状态"
+            :placeholder="$t('admin.placeholder.filter_status')"
             clearable
           />
         </div>

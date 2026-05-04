@@ -61,31 +61,31 @@ const {
 
 const columns = computed<DataTableColumns<VisitorProfile>>(() => [
   {
-    title: '访客 ID',
+    title: t('admin.visitor.visitor_id'),
     key: 'visitorId',
     minWidth: 220,
     ellipsis: { tooltip: true },
     render: (row) => h('code', {}, row.visitorId),
   },
-  { title: '昵称', key: 'nickName', width: 120, render: (row) => row.nickName || '-' },
+  { title: t('admin.user.nickname'), key: 'nickName', width: 120, render: (row) => row.nickName || '-' },
   {
-    title: '邮箱',
+    title: t('admin.user.email'),
     key: 'email',
     minWidth: 180,
     ellipsis: { tooltip: true },
     render: (row) => row.email || '-',
   },
-  { title: '地区', key: 'location', width: 140, render: (row) => row.location || '-' },
+  { title: t('admin.visitor.location'), key: 'location', width: 140, render: (row) => row.location || '-' },
   {
-    title: '设备',
+    title: t('admin.visitor.device'),
     key: 'device',
     minWidth: 180,
     render: (row) => [row.browser, row.platform].filter(Boolean).join(' / ') || '-',
   },
-  { title: '浏览', key: 'totalViews', width: 90 },
-  { title: '点赞', key: 'totalLikes', width: 90 },
-  { title: '评论', key: 'totalComments', width: 90 },
-  { title: '最近活跃', key: 'lastSeenAt', width: 180, render: (row) => formatDate(row.lastSeenAt) },
+  { title: t('admin.table.views'), key: 'totalViews', width: 90 },
+  { title: t('admin.table.likes'), key: 'totalLikes', width: 90 },
+  { title: t('admin.table.comments'), key: 'totalComments', width: 90 },
+  { title: t('admin.visitor.last_visit'), key: 'lastSeenAt', width: 180, render: (row) => formatDate(row.lastSeenAt) },
   {
     title: t('admin.common.actions'),
     key: 'actions',
@@ -94,7 +94,7 @@ const columns = computed<DataTableColumns<VisitorProfile>>(() => [
       h(
         NButton,
         { size: 'small', tertiary: true, onClick: () => openProfile(row.visitorId) },
-        { default: () => '详情' },
+        { default: () => t('admin.action.view_details') },
       ),
   },
 ])
@@ -122,7 +122,7 @@ async function openProfile(visitorId: string) {
     currentProfile.value = detail.profile
     recentComments.value = detail.recentComments || []
   } catch (error: any) {
-    message.error(error?.message || '获取访客详情失败')
+    message.error(error?.message || t('admin.service.load_failed'))
     detailVisible.value = false
   } finally {
     detailLoading.value = false
@@ -137,7 +137,7 @@ async function openProfile(visitorId: string) {
     :scrollbar-props="{ trigger: 'none' }"
   >
     <NCard
-      title="访客画像管理"
+      :title="$t('admin.visitor.profile_management')"
       class="mb-4"
     >
       <template #header-extra>
@@ -145,7 +145,7 @@ async function openProfile(visitorId: string) {
           <NTag
             size="small"
             :bordered="false"
-            >数据来源：{{ dataSourceLabel }}</NTag
+            >{{ $t('admin.visitor.data_source') }}{{ dataSourceLabel }}</NTag
           >
           <NSelect
             v-model:value="insightDays"
@@ -161,22 +161,22 @@ async function openProfile(visitorId: string) {
       >
         <NCard size="small"
           ><NStatistic
-            label="1天活跃访客"
+            :label="$t('admin.visitor.active_1d')"
             :value="insights.segments.active1d"
         /></NCard>
         <NCard size="small"
           ><NStatistic
-            label="7天活跃访客"
+            :label="$t('admin.visitor.active_7d')"
             :value="insights.segments.active7d"
         /></NCard>
         <NCard size="small"
           ><NStatistic
-            label="30天活跃访客"
+            :label="$t('admin.visitor.active_30d')"
             :value="insights.segments.active30d"
         /></NCard>
         <NCard size="small"
           ><NStatistic
-            label="高活跃访客"
+            :label="$t('admin.visitor.highly_engaged')"
             :value="insights.segments.highlyEngaged"
         /></NCard>
       </div>
@@ -187,22 +187,22 @@ async function openProfile(visitorId: string) {
       >
         <NCard
           size="small"
-          title="来源分布"
+          :title="$t('admin.visitor.source_distribution')"
         >
           <template #header-extra>
             <NSpace align="center">
               <NTag
                 size="tiny"
                 :bordered="false"
-                >用户行为埋点聚合</NTag
+                >{{ $t('admin.visitor.event_aggregation') }}</NTag
               >
               <NSelect
                 v-model:value="sourceTab"
                 style="width: 120px"
                 :options="[
-                  { label: '操作系统', value: 'platform' },
-                  { label: '浏览器', value: 'browser' },
-                  { label: '地区', value: 'location' },
+                  { label: $t('admin.visitor.os'), value: 'platform' },
+                  { label: $t('admin.visitor.browser'), value: 'browser' },
+                  { label: $t('admin.visitor.location'), value: 'location' },
                 ]"
               />
             </NSpace>
@@ -215,13 +215,13 @@ async function openProfile(visitorId: string) {
 
         <NCard
           size="small"
-          title="行为漏斗"
+          :title="$t('admin.visitor.behavior_funnel')"
         >
           <template #header-extra>
             <NTag
               size="tiny"
               :bordered="false"
-              >用户行为埋点聚合</NTag
+              >{{ $t('admin.visitor.event_aggregation') }}</NTag
             >
           </template>
           <div
@@ -229,12 +229,12 @@ async function openProfile(visitorId: string) {
             style="height: 280px"
           />
           <NSpace class="mt-2">
-            <NTag type="info">点赞率 {{ toPercent(insights.funnel.likeRate) }}</NTag>
+            <NTag type="info">{{ $t('admin.visitor.like_rate') }} {{ toPercent(insights.funnel.likeRate) }}</NTag>
             <NTag type="warning"
-              >评论率(按浏览) {{ toPercent(insights.funnel.commentRateByView) }}</NTag
+              >{{ $t('admin.visitor.comment_rate_by_view') }} {{ toPercent(insights.funnel.commentRateByView) }}</NTag
             >
             <NTag type="success"
-              >评论率(按点赞) {{ toPercent(insights.funnel.commentRateByLike) }}</NTag
+              >{{ $t('admin.visitor.comment_rate_by_like') }} {{ toPercent(insights.funnel.commentRateByLike) }}</NTag
             >
           </NSpace>
         </NCard>
@@ -243,14 +243,14 @@ async function openProfile(visitorId: string) {
       <NCard
         v-if="insights"
         size="small"
-        title="活跃趋势"
+        :title="$t('admin.visitor.activity_trend')"
         class="mt-4"
       >
         <template #header-extra>
           <NTag
             size="tiny"
             :bordered="false"
-            >用户行为埋点聚合</NTag
+            >{{ $t('admin.visitor.event_aggregation') }}</NTag
           >
         </template>
         <div
@@ -260,14 +260,14 @@ async function openProfile(visitorId: string) {
       </NCard>
     </NCard>
 
-    <NCard title="访客列表">
+    <NCard :title="$t('admin.card.visitor_list')">
       <NSpace
         class="mb-4"
         align="center"
       >
         <NInput
           v-model:value="keyword"
-          placeholder="搜索 visitorId / 昵称 / 邮箱 / IP / 地区 / 设备"
+          :placeholder="$t('admin.placeholder.search_visitor')"
           clearable
           style="width: 380px"
           @keyup.enter="doSearch"
@@ -275,7 +275,7 @@ async function openProfile(visitorId: string) {
         <NButton
           type="primary"
           @click="doSearch"
-          >查询</NButton
+          >{{ $t('admin.common.search') }}</NButton
         >
         <NButton @click="resetSearch">{{ $t('admin.common.reset') }}</NButton>
       </NSpace>

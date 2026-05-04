@@ -10,6 +10,9 @@ import { useIntervalFn, useScroll } from '@vueuse/core'
 import { NButton, NCard, NEmpty, NIcon, NLog, NSpin, NTag } from 'naive-ui'
 import { nextTick, ref, watch } from 'vue'
 
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { ScrollContainer } from '@/components'
 import { getSystemLogs } from '@/services/system'
 import { toRefsPreferencesStore } from '@/stores'
@@ -90,7 +93,7 @@ watch(logInstRef, (val) => {
           class="text-xl text-primary"
         />
         <!-- User requested "fine" (thin) font -->
-        <div class="text-lg font-light">系统日志 / System Logs</div>
+        <div class="text-lg font-light">{{ $t('admin.monitor.system_logs') }}</div>
       </div>
       <div class="flex items-center gap-2">
         <NTag
@@ -103,7 +106,7 @@ watch(logInstRef, (val) => {
           <template #icon>
             <NIcon :component="isAutoScroll ? Play16Filled : Pause16Filled" />
           </template>
-          {{ isAutoScroll ? '自动追踪' : '已暂停追踪' }}
+          {{ isAutoScroll ? $t('admin.monitor.auto_scroll') : $t('admin.monitor.scroll_paused') }}
         </NTag>
         <div class="mx-1 h-4 w-[1px] bg-neutral-200 dark:bg-neutral-800"></div>
         <NButton
@@ -113,7 +116,7 @@ watch(logInstRef, (val) => {
           @click="() => refetch()"
         >
           <template #icon><NIcon :component="ArrowClockwise24Regular" /></template>
-          刷新日志
+          {{ $t('admin.monitor.refresh_logs') }}
         </NButton>
       </div>
     </div>
@@ -137,20 +140,20 @@ watch(logInstRef, (val) => {
           v-if="isError"
           class="absolute inset-0 flex flex-col items-center justify-center gap-2 text-rose-500"
         >
-          <div class="text-lg">加载日志失败</div>
+          <div class="text-lg">{{ $t('admin.monitor.log_load_failed') }}</div>
           <NButton
             size="small"
             secondary
             type="error"
             @click="() => refetch()"
-            >重试</NButton
+            >{{ $t('admin.common.retry') }}</NButton
           >
         </div>
 
         <!-- Empty State -->
         <NEmpty
           v-else-if="logs && logs.length === 0"
-          description="暂无日志数据"
+          :description="$t('admin.monitor.no_logs')"
           class="absolute inset-0 flex items-center justify-center"
         />
 
@@ -184,7 +187,7 @@ watch(logInstRef, (val) => {
               @click="handleResumeAutoScroll"
             >
               <template #icon><NIcon :component="Play16Filled" /></template>
-              回到底部
+              {{ $t('admin.monitor.scroll_to_bottom') }}
             </NButton>
           </div>
         </div>

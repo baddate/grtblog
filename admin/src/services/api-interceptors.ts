@@ -1,4 +1,8 @@
+import i18n from '@/plugins/i18n'
+
 import { useDiscreteApi } from '@/composables'
+
+const __ = i18n.global.t
 import router from '@/router'
 import { toRefsUserStore, useUserStore, pinia } from '@/stores'
 
@@ -27,6 +31,6 @@ export function setupApiInterceptors() {
         return
       }
     }
-    message.error(error.message || '网络异常，请稍后重试')
+    message.error(error.message || __('admin.service.network_error'))
   })
 }

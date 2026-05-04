@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { computed, ref } from 'vue'
 
 import { useHealthStore } from '@/stores'
@@ -12,8 +15,8 @@ const modeConfig = computed(() => {
     case 'maintenance':
       return {
         icon: 'ph--wrench-bold',
-        label: '维护模式',
-        desc: '站点当前处于维护状态',
+        label: t('admin.health_banner.maintenance'),
+        desc: t('admin.health_banner.maintenance_desc'),
         bg: 'bg-amber-500/10 border-amber-500/30',
         text: 'text-amber-600 dark:text-amber-400',
         iconColor: 'text-amber-500',
@@ -21,8 +24,8 @@ const modeConfig = computed(() => {
     case 'degraded':
       return {
         icon: 'ph--warning-bold',
-        label: '服务降级',
-        desc: '部分非核心组件异常，功能可能受限',
+        label: t('admin.health_banner.degraded'),
+        desc: t('admin.health_banner.degraded_desc'),
         bg: 'bg-orange-500/10 border-orange-500/30',
         text: 'text-orange-600 dark:text-orange-400',
         iconColor: 'text-orange-500',
@@ -30,8 +33,8 @@ const modeConfig = computed(() => {
     case 'critical':
       return {
         icon: 'ph--warning-octagon-bold',
-        label: '严重故障',
-        desc: '数据库不可用，服务严重受限',
+        label: t('admin.health_banner.critical'),
+        desc: t('admin.health_banner.critical_desc'),
         bg: 'bg-red-500/10 border-red-500/30',
         text: 'text-red-600 dark:text-red-400',
         iconColor: 'text-red-500',
@@ -39,8 +42,8 @@ const modeConfig = computed(() => {
     case 'outage':
       return {
         icon: 'ph--x-circle-bold',
-        label: '完全宕机',
-        desc: 'Backend 或 Nginx 不可用',
+        label: t('admin.health_banner.outage'),
+        desc: t('admin.health_banner.outage_desc'),
         bg: 'bg-red-600/10 border-red-600/30',
         text: 'text-red-700 dark:text-red-300',
         iconColor: 'text-red-600',
@@ -98,7 +101,7 @@ const componentList = computed(() => {
           :class="modeConfig.text"
           @click="expanded = !expanded"
         >
-          {{ expanded ? '收起' : '详情' }}
+          {{ expanded ? $t('admin.health_banner.collapse') : $t('admin.health_banner.details') }}
           <span
             class="iconify transition-transform"
             :class="expanded ? 'ph--caret-up-bold' : 'ph--caret-down-bold'"
@@ -120,8 +123,8 @@ const componentList = computed(() => {
           :class="modeConfig.text"
         >
           <div class="flex items-center gap-4 text-xs">
-            <span class="font-mono opacity-70">状态码: {{ stateBinaryStr }}</span>
-            <span class="opacity-70">模式: {{ healthStore.mode }}</span>
+            <span class="font-mono opacity-70">{{ $t('admin.health_banner.state_code') }} {{ stateBinaryStr }}</span>
+            <span class="opacity-70">{{ $t('admin.health_banner.mode_label') }} {{ healthStore.mode }}</span>
           </div>
           <div class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs">
             <span

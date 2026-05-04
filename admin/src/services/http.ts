@@ -1,6 +1,10 @@
+import i18n from '@/plugins/i18n'
+
 import { $fetch, FetchError } from 'ofetch'
 
 import type { FetchOptions, FetchResponse } from 'ofetch'
+
+const __ = i18n.global.t
 
 export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '/api/v2').replace(/\/$/, '')
 
@@ -122,7 +126,7 @@ export async function request<T>(path: string, options: FetchOptions = {}): Prom
     }
 
     if (status < 200 || status >= 300) {
-      throw new ApiError(payload?.msg || `请求失败（${status}）`, {
+      throw new ApiError(payload?.msg || __('admin.service.request_failed_status', { status }), {
         code: payload?.code,
         bizErr: payload?.bizErr,
         status,
@@ -131,11 +135,11 @@ export async function request<T>(path: string, options: FetchOptions = {}): Prom
     }
 
     if (!payload) {
-      throw new ApiError('无法解析服务端响应', { status })
+      throw new ApiError(__('admin.service.parse_error'), { status })
     }
 
     if (payload.code !== 0) {
-      throw new ApiError(payload.msg || payload.bizErr || '请求失败', {
+      throw new ApiError(payload.msg || payload.bizErr || __('admin.service.request_failed'), {
         code: payload.code,
         bizErr: payload.bizErr,
         status,
@@ -162,7 +166,7 @@ export async function request<T>(path: string, options: FetchOptions = {}): Prom
       }
       throw err
     }
-    const err = new ApiError('网络异常，请稍后重试')
+    const err = new ApiError(__('admin.service.network_error'))
     for (const interceptor of errorInterceptors) {
       await interceptor(err)
     }

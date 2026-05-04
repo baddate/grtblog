@@ -46,33 +46,33 @@ const columns = computed<DataTableColumns<GlobalNotificationItem>>(() => [
     width: 80,
   },
   {
-    title: '内容',
+    title: t('admin.notification.content'),
     key: 'content',
     minWidth: 200,
     ellipsis: { tooltip: true },
     render: (row) => h('div', { class: 'truncate max-w-md' }, row.content),
   },
   {
-    title: '开始时间',
+    title: t('admin.notification.publish_at'),
     key: 'publishAt',
     width: 180,
     render: (row) => formatDate(row.publishAt),
   },
   {
-    title: '结束时间',
+    title: t('admin.notification.expire_at'),
     key: 'expireAt',
     width: 180,
     render: (row) => formatDate(row.expireAt),
   },
   {
-    title: '允许"不再提示"',
+    title: t('admin.notification.allow_close'),
     key: 'allowClose',
     width: 180,
     render: (row) =>
       h(
         NTag,
         { size: 'small', type: row.allowClose ? 'success' : 'warning', bordered: false },
-        { default: () => (row.allowClose ? '是' : '否') },
+        { default: () => (row.allowClose ? t('admin.common.yes') : t('admin.common.no')) },
       ),
   },
   {
@@ -93,7 +93,7 @@ const columns = computed<DataTableColumns<GlobalNotificationItem>>(() => [
                 type: 'primary',
                 onClick: () => openEdit(row),
               },
-              { default: () => '编辑' },
+              { default: () => t('admin.common.edit') },
             ),
             h(
               NPopconfirm,
@@ -109,9 +109,9 @@ const columns = computed<DataTableColumns<GlobalNotificationItem>>(() => [
                       secondary: true,
                       type: 'error',
                     },
-                    { default: () => '删除' },
+                    { default: () => t('admin.common.delete') },
                   ),
-                default: () => '确认删除该通知？',
+                default: () => t('admin.notification.confirm_delete'),
               },
             ),
           ],
@@ -131,7 +131,7 @@ const formParams = ref({
   allowClose: true,
 })
 
-const formTitle = computed(() => (editingId.value ? '编辑通知' : '新建通知'))
+const formTitle = computed(() => (editingId.value ? t('admin.action.edit_notification') : t('admin.action.create_notification')))
 
 function openCreate() {
   editingId.value = null
@@ -157,7 +157,7 @@ function openEdit(row: GlobalNotificationItem) {
 
 async function handleSave() {
   if (!formParams.value.content) {
-    message.error('请输入内容')
+    message.error(t('admin.validation.content_required'))
     return
   }
   saving.value = true
@@ -198,12 +198,12 @@ async function handleDelete(row: GlobalNotificationItem) {
 
 <template>
   <ScrollContainer wrapper-class="p-4">
-    <NCard title="全站通知管理">
+    <NCard :title="$t('admin.card.notification_list')">
       <template #header-extra>
         <NButton
           type="primary"
           @click="openCreate"
-          >新建通知</NButton
+          >{{ $t('admin.action.create_notification') }}</NButton
         >
       </template>
 
@@ -226,17 +226,17 @@ async function handleDelete(row: GlobalNotificationItem) {
       @confirm="handleSave"
     >
       <NFormItem
-        label="内容"
+        :label="$t('admin.notification.content')"
         required
       >
         <NInput
           v-model:value="formParams.content"
           type="textarea"
-          placeholder="请输入通知内容"
+          :placeholder="$t('admin.notification.placeholder_content')"
         />
       </NFormItem>
       <NFormItem
-        label="开始时间"
+        :label="$t('admin.notification.publish_at')"
         required
       >
         <NDatePicker
@@ -246,7 +246,7 @@ async function handleDelete(row: GlobalNotificationItem) {
         />
       </NFormItem>
       <NFormItem
-        label="结束时间"
+        :label="$t('admin.notification.expire_at')"
         required
       >
         <NDatePicker
@@ -256,7 +256,7 @@ async function handleDelete(row: GlobalNotificationItem) {
         />
       </NFormItem>
       <NFormItem>
-        <template #label>允许&ldquo;不再提示&rdquo;</template>
+        <template #label>{{ $t('admin.notification.allow_close') }}</template>
         <NSwitch v-model:value="formParams.allowClose" />
       </NFormItem>
     </FormModal>

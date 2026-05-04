@@ -1,3 +1,7 @@
+import i18n from '@/plugins/i18n'
+
+const __ = i18n.global.t
+
 import { useQuery, useQueryClient } from '@tanstack/vue-query'
 import { useIntervalFn } from '@vueuse/core'
 import { computed, ref } from 'vue'
@@ -20,8 +24,8 @@ export function useObservability() {
   const timelineWindow = ref<'24h' | '7d'>('24h')
 
   const windowOptions = [
-    { label: '最近 24 小时', value: '24h' },
-    { label: '最近 7 天', value: '7d' },
+    { label: __('admin.advanced.window_24h'), value: '24h' },
+    { label: __('admin.advanced.window_7d'), value: '7d' },
   ]
 
   const nowISO = () => new Date().toISOString()
@@ -123,42 +127,42 @@ export function useObservability() {
     const ov = overviewData.value
     return [
       {
-        title: 'API 请求(5m)',
+        title: __('admin.advanced.card_api_requests'),
         value: ov?.api.requests ?? 0,
         suffix: 'req',
         iconClass: 'iconify ph--arrows-left-right-bold text-indigo-50 dark:text-indigo-150',
         iconBgClass:
           'text-indigo-500/5 bg-indigo-400 ring-4 ring-indigo-200 dark:bg-indigo-650 dark:ring-indigo-500/30 transition-all',
-        description: '最近5分钟请求',
+        description: __('admin.advanced.card_api_requests_desc'),
       },
       {
-        title: 'API 错误率',
+        title: __('admin.advanced.card_error_rate'),
         value: (ov?.api.errorRate ?? 0) * 100,
         suffix: '%',
         precision: 2,
         iconClass: 'iconify ph--warning-circle-bold text-rose-50 dark:text-rose-150',
         iconBgClass:
           'text-rose-500/5 bg-rose-400 ring-4 ring-rose-200 dark:bg-rose-650 dark:ring-rose-500/30 transition-all',
-        description: '接口调用异常比例',
+        description: __('admin.advanced.card_error_rate_desc'),
       },
       {
-        title: '在线连接',
+        title: __('admin.advanced.card_online_connections'),
         value: ov?.realtime.currentOnline ?? 0,
         suffix: 'ws',
         iconClass: 'iconify ph--users-three-bold text-blue-50 dark:text-blue-150',
         iconBgClass:
           'text-blue-500/5 bg-blue-400 ring-4 ring-blue-200 dark:bg-blue-650 dark:ring-blue-500/30 transition-all',
-        description: '实时 WebSocket 连接',
+        description: __('admin.advanced.card_online_connections_desc'),
       },
       {
-        title: '联合成功率(24h)',
+        title: __('admin.advanced.card_federation_success'),
         value: (ov?.federation.deliverySuccessRate ?? 0) * 100,
         suffix: '%',
         precision: 2,
         iconClass: 'iconify ph--planet-bold text-emerald-50 dark:text-emerald-150',
         iconBgClass:
           'text-emerald-500/5 bg-emerald-400 ring-4 ring-emerald-200 dark:bg-emerald-650 dark:ring-emerald-500/30 transition-all',
-        description: '联合投递成功率',
+        description: __('admin.advanced.card_federation_success_desc'),
       },
     ]
   })

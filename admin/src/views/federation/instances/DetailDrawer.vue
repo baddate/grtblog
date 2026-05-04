@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { useQuery } from '@tanstack/vue-query'
 import { useWindowSize } from '@vueuse/core'
 import {
@@ -59,7 +62,7 @@ watch(
     :width="drawerWidth"
   >
     <NDrawerContent
-      title="实例详情"
+      :title="$t('admin.federation.instance_detail')"
       closable
       :native-scrollbar="false"
     >
@@ -78,13 +81,13 @@ watch(
             bordered
             :column="1"
             label-placement="left"
-            title="基础信息"
+            :title="$t('admin.federation.basic_info')"
           >
-            <NDescriptionsItem label="ID">{{ instance.id }}</NDescriptionsItem>
-            <NDescriptionsItem label="域名">{{ instance.base_url }}</NDescriptionsItem>
+            <NDescriptionsItem :label="$t('admin.table.id')">{{ instance.id }}</NDescriptionsItem>
+            <NDescriptionsItem :label="$t('admin.federation.domain')">{{ instance.base_url }}</NDescriptionsItem>
             <NDescriptionsItem :label="$t('admin.common.name')">{{ instance.name || '-' }}</NDescriptionsItem>
             <NDescriptionsItem :label="$t('admin.common.description')">{{ instance.description || '-' }}</NDescriptionsItem>
-            <NDescriptionsItem label="协议版本">{{
+            <NDescriptionsItem :label="$t('admin.federation.protocol_version')">{{
               instance.protocol_version || '-'
             }}</NDescriptionsItem>
             <NDescriptionsItem :label="$t('admin.common.status')">
@@ -100,10 +103,10 @@ watch(
                 {{ instance.status }}
               </NTag>
             </NDescriptionsItem>
-            <NDescriptionsItem label="最后可见">{{
+            <NDescriptionsItem :label="$t('admin.federation.last_seen')">{{
               instance.last_seen_at ? new Date(instance.last_seen_at).toLocaleString() : '-'
             }}</NDescriptionsItem>
-            <NDescriptionsItem label="加入时间">{{
+            <NDescriptionsItem :label="$t('admin.common.created_at')">{{
               new Date(instance.created_at).toLocaleString()
             }}</NDescriptionsItem>
           </NDescriptions>
@@ -112,11 +115,11 @@ watch(
             bordered
             :column="1"
             label-placement="left"
-            title="技术细节"
+            :title="$t('admin.federation.tech_details')"
           >
-            <NDescriptionsItem label="Key ID">{{ instance.key_id || '-' }}</NDescriptionsItem>
+            <NDescriptionsItem :label="$t('admin.federation.key_id')">{{ instance.key_id || '-' }}</NDescriptionsItem>
             <NDescriptionsItem
-              label="Remote Error"
+              :label="$t('admin.federation.remote_error')"
               v-if="instance.remote_error"
             >
               <span class="text-red-500">{{ instance.remote_error }}</span>
@@ -127,11 +130,11 @@ watch(
             bordered
             :column="1"
             label-placement="left"
-            title="实例元数据"
+            :title="$t('admin.federation.instance_metadata')"
             v-if="instance.manifest?.software"
           >
-            <NDescriptionsItem label="软件">
-              {{ instance.manifest.software?.name || 'Unknown' }}
+            <NDescriptionsItem :label="$t('admin.federation.software')">
+              {{ instance.manifest.software?.name || '-' }}
               {{ instance.manifest.software?.version || '' }}
             </NDescriptionsItem>
           </NDescriptions>
@@ -140,48 +143,48 @@ watch(
             bordered
             :column="1"
             label-placement="left"
-            title="策略配置 (Policies)"
+            :title="$t('admin.federation.policy_config')"
             v-if="instance.policies"
           >
-            <NDescriptionsItem label="允许引用 (Citation)">
+            <NDescriptionsItem :label="$t('admin.federation.allow_citation')">
               <NTag
                 :type="instance.policies.allow_citation ? 'success' : 'error'"
                 size="small"
               >
-                {{ instance.policies.allow_citation ? '允许' : '禁止' }}
+                {{ instance.policies.allow_citation ? $t('admin.federation.allow') : $t('admin.federation.disallow') }}
               </NTag>
             </NDescriptionsItem>
-            <NDescriptionsItem label="允许提及 (Mention)">
+            <NDescriptionsItem :label="$t('admin.federation.allow_mention')">
               <NTag
                 :type="instance.policies.allow_mention ? 'success' : 'error'"
                 size="small"
               >
-                {{ instance.policies.allow_mention ? '允许' : '禁止' }}
+                {{ instance.policies.allow_mention ? $t('admin.federation.allow') : $t('admin.federation.disallow') }}
               </NTag>
             </NDescriptionsItem>
-            <NDescriptionsItem label="自动通过友链/引用">
+            <NDescriptionsItem :label="$t('admin.federation.auto_approve')">
               <NTag
                 :type="instance.policies.auto_approve_friendlink_citation ? 'success' : 'warning'"
                 size="small"
               >
-                {{ instance.policies.auto_approve_friendlink_citation ? '开启' : '关闭' }}
+                {{ instance.policies.auto_approve_friendlink_citation ? $t('admin.federation.enabled') : $t('admin.federation.disabled') }}
               </NTag>
             </NDescriptionsItem>
-            <NDescriptionsItem label="强制 HTTPS">
+            <NDescriptionsItem :label="$t('admin.federation.require_https')">
               <NTag
                 :type="instance.policies.require_https ? 'success' : 'warning'"
                 size="small"
               >
-                {{ instance.policies.require_https ? '开启' : '关闭' }}
+                {{ instance.policies.require_https ? $t('admin.federation.enabled') : $t('admin.federation.disabled') }}
               </NTag>
             </NDescriptionsItem>
-            <NDescriptionsItem label="最大缓存时间">
-              {{ instance.policies.max_cache_age }} 秒
+            <NDescriptionsItem :label="$t('admin.federation.max_cache_age')">
+              {{ instance.policies.max_cache_age }} {{ $t('admin.federation.seconds') }}
             </NDescriptionsItem>
           </NDescriptions>
 
           <div v-if="instance.public_key">
-            <h3 class="mb-2 font-bold">Public Key</h3>
+            <h3 class="mb-2 font-bold">{{ $t('admin.federation.public_key') }}</h3>
             <NCode
               :code="instance.public_key"
               language="text"
@@ -207,7 +210,7 @@ watch(
               />
               <NEmpty
                 v-else
-                description="无数据"
+                :description="$t('admin.common.no_data')"
               />
             </NTabPane>
             <NTabPane
@@ -223,7 +226,7 @@ watch(
               />
               <NEmpty
                 v-else
-                description="无数据"
+                :description="$t('admin.common.no_data')"
               />
             </NTabPane>
             <NTabPane
@@ -239,7 +242,7 @@ watch(
               />
               <NEmpty
                 v-else
-                description="无数据"
+                :description="$t('admin.common.no_data')"
               />
             </NTabPane>
           </NTabs>
@@ -248,7 +251,7 @@ watch(
           v-else
           class="flex justify-center p-8"
         >
-          <NEmpty description="未找到实例信息" />
+          <NEmpty :description="$t('admin.federation.instance_not_found')" />
         </div>
       </ScrollContainer>
     </NDrawerContent>

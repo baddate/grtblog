@@ -115,7 +115,7 @@ function onInputKeydown(e: KeyboardEvent) {
         class="ai-panel-upper"
       >
         <div class="ai-diff-header">
-          <span class="ai-diff-title">变更预览</span>
+          <span class="ai-diff-title">{{ $t('admin.editor.diff_title') }}</span>
           <span class="ai-diff-stats">
             <span class="ai-diff-stat-removed">-{{ diffStats.removed }}</span>
             <span class="ai-diff-stat-added">+{{ diffStats.added }}</span>
@@ -150,7 +150,7 @@ function onInputKeydown(e: KeyboardEvent) {
           class="ai-input"
           :value="instruction"
           :disabled="phase === 'streaming'"
-          placeholder="输入改写指令，如：扩写、改为正式语气、翻译为英文..."
+          :placeholder="$t('admin.editor.ai_placeholder')"
           @input="emit('update:instruction', ($event.target as HTMLInputElement).value)"
           @keydown="onInputKeydown"
         />
@@ -158,7 +158,7 @@ function onInputKeydown(e: KeyboardEvent) {
           <template v-if="phase === 'diff'">
             <button
               class="ai-btn ai-btn--reject"
-              title="放弃"
+              :title="$t('admin.editor.reject_btn')"
               @click="emit('reject')"
             >
               <NIcon
@@ -168,14 +168,14 @@ function onInputKeydown(e: KeyboardEvent) {
             </button>
             <button
               class="ai-btn ai-btn--accept"
-              title="采纳"
+              :title="$t('admin.editor.accept_btn')"
               @click="emit('accept')"
             >
               <NIcon
                 :component="Checkmark20Filled"
                 :size="14"
               />
-              <span>采纳</span>
+              <span>{{ $t('admin.editor.accept_btn') }}</span>
             </button>
           </template>
           <template v-else-if="phase === 'streaming'">
@@ -185,7 +185,7 @@ function onInputKeydown(e: KeyboardEvent) {
             <button
               class="ai-btn ai-btn--send"
               :disabled="!instruction.trim()"
-              title="发送"
+              :title="$t('admin.editor.send_btn')"
               @click="emit('execute')"
             >
               <NIcon

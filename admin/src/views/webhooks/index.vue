@@ -14,6 +14,9 @@ import {
 } from 'naive-ui'
 import { onMounted, ref } from 'vue'
 
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { ScrollContainer } from '@/components'
 
 import WebhookFormDrawer from './components/WebhookFormDrawer.vue'
@@ -95,8 +98,8 @@ onMounted(() => init())
     <NCard>
       <div class="flex flex-wrap items-start justify-between gap-4">
         <div class="space-y-1">
-          <div class="text-lg font-semibold">Webhook 管理</div>
-          <div class="text-xs text-[var(--text-color-3)]">配置事件推送、测试与投递记录。</div>
+          <div class="text-lg font-semibold">{{ $t('admin.webhook.management') }}</div>
+          <div class="text-xs text-[var(--text-color-3)]">{{ $t('admin.webhook.desc') }}</div>
         </div>
         <NSpace align="center">
           <NButton
@@ -107,7 +110,7 @@ onMounted(() => init())
           <NButton
             type="primary"
             @click="openCreate"
-            >新建 Webhook</NButton
+            >{{ $t('admin.action.create_webhook') }}</NButton
           >
         </NSpace>
       </div>
@@ -119,27 +122,27 @@ onMounted(() => init())
       >
         <NGi
           ><NStatistic
-            label="Webhook 总数"
+            :label="$t('admin.webhook.total')"
             tabular-nums
             >{{ totalWebhooks }}</NStatistic
           ></NGi
         >
         <NGi
           ><NStatistic
-            label="启用中"
+            :label="$t('admin.status.enabled')"
             tabular-nums
             >{{ enabledCount }}</NStatistic
           ></NGi
         >
         <NGi
           ><NStatistic
-            label="已停用"
+            :label="$t('admin.status.disabled')"
             tabular-nums
             >{{ disabledCount }}</NStatistic
           ></NGi
         >
         <NGi>
-          <NStatistic label="最近投递">
+          <NStatistic :label="$t('admin.webhook.last_delivery')">
             <NTag
               size="small"
               :bordered="false"
@@ -160,7 +163,7 @@ onMounted(() => init())
     >
       <NTabPane
         name="list"
-        tab="Webhook 列表"
+        :tab="$t('admin.card.webhook_list')"
       >
         <WebhookTable
           v-model:list-filters="listFilters"
@@ -177,7 +180,7 @@ onMounted(() => init())
 
       <NTabPane
         name="history"
-        tab="投递历史"
+        :tab="$t('admin.webhook.delivery_history')"
       >
         <WebhookHistoryPanel
           v-model:history-filters="historyFilters"

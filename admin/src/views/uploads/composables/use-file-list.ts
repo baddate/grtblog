@@ -1,5 +1,7 @@
 import { computed, onMounted, ref } from 'vue'
 
+import i18n from '@/plugins/i18n'
+
 import {
   deleteFile,
   downloadFile,
@@ -100,7 +102,7 @@ export function useFileList(message: {
       total.value = response.total
     } catch (error) {
       if (showError) {
-        message.error('加载文件列表失败')
+        message.error(i18n.global.t('admin.upload.load_failed'))
       }
       console.error(error)
     } finally {
@@ -141,7 +143,9 @@ export function useFileList(message: {
       })
       options.onFinish?.()
       message.success(
-        response.duplicated ? `${response.name} 已存在，已复用` : `${response.name} 上传成功`,
+        response.duplicated
+          ? i18n.global.t('admin.upload.exist_reuse', { name: response.name })
+          : i18n.global.t('admin.upload.upload_success', { name: response.name }),
       )
       await fetchFiles(false)
     } catch (error) {
@@ -149,10 +153,10 @@ export function useFileList(message: {
         ...baseTask,
         percentage: 0,
         status: 'error',
-        error: error instanceof Error ? error.message : '上传失败',
+        error: error instanceof Error ? error.message : i18n.global.t('admin.upload.failed'),
       })
       options.onError?.()
-      message.error(error instanceof Error ? error.message : '上传失败')
+      message.error(error instanceof Error ? error.message : i18n.global.t('admin.upload.failed'))
       console.error(error)
     } finally {
       uploadPendingCount.value = Math.max(0, uploadPendingCount.value - 1)
@@ -165,11 +169,18 @@ export function useFileList(message: {
     try {
       const result = await syncUploads()
       message.success(
-        `同步完成：扫描 ${result.scanned}，索引 ${result.indexed}，新增 ${result.created}，更新 ${result.updated}，删除 ${result.deleted}，跳过重复 ${result.skippedDuplicates}`,
+        i18n.global.t('admin.upload.sync_result', {
+          scanned: result.scanned,
+          indexed: result.indexed,
+          created: result.created,
+          updated: result.updated,
+          deleted: result.deleted,
+          skipped: result.skippedDuplicates,
+        }),
       )
       await fetchFiles()
     } catch (error) {
-      message.error('同步文件索引失败')
+      message.error(i18n.global.t('admin.upload.sync_failed'))
       console.error(error)
     } finally {
       syncing.value = false
@@ -180,9 +191,9 @@ export function useFileList(message: {
     try {
       const base = publicUrl.value ? normalizePublicUrl(publicUrl.value) : window.location.origin
       await navigator.clipboard.writeText(`${base}${file.publicUrl}`)
-      message.success('链接已复制到剪贴板')
+      message.success(i18n.global.t('admin.upload.copy_success'))
     } catch (error) {
-      message.error('复制失败')
+      message.error(i18n.global.t('admin.upload.copy_failed'))
       console.error(error)
     }
   }
@@ -195,16 +206,16 @@ export function useFileList(message: {
 
   async function handleRename() {
     if (!renamingFile.value || !newFileName.value.trim()) {
-      message.warning('请输入文件名')
+      message.warning(i18n.global.t('admin.upload.rename_required'))
       return
     }
     try {
       await renameFile(renamingFile.value.id, { name: newFileName.value.trim() })
-      message.success('重命名成功')
+      message.success(i18n.global.t('admin.upload.rename_success'))
       renameModalVisible.value = false
       await fetchFiles()
     } catch (error) {
-      message.error('重命名失败')
+      message.error(i18n.global.t('admin.upload.rename_failed'))
       console.error(error)
     }
   }
@@ -218,12 +229,12 @@ export function useFileList(message: {
     if (!deletingFile.value) return
     try {
       await deleteFile(deletingFile.value.id)
-      message.success('删除成功')
+      message.success(i18n.global.t('admin.common.delete_success'))
       deleteModalVisible.value = false
       if (files.value.length === 1 && page.value > 1) page.value--
       await fetchFiles()
     } catch (error) {
-      message.error('删除失败')
+      message.error(i18n.global.t('admin.upload.delete_failed'))
       console.error(error)
     }
   }
@@ -231,9 +242,9 @@ export function useFileList(message: {
   async function handleDownload(file: UploadFileResponse) {
     try {
       await downloadFile(file.id, file.name)
-      message.success('下载开始')
+      message.success(i18n.global.t('admin.upload.download_start'))
     } catch (error) {
-      message.error('下载失败')
+      message.error(i18n.global.t('admin.upload.download_failed'))
       console.error(error)
     }
   }

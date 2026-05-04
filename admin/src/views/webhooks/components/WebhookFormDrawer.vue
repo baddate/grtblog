@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import {
   NButton,
   NCheckbox,
@@ -74,15 +77,15 @@ const emit = defineEmits<{
               <NFormItem :label="$t('admin.common.name')">
                 <NInput
                   v-model:value="form.name"
-                  placeholder="如：联合站点推送"
+                  :placeholder="t('admin.webhooks.name_placeholder')"
                 />
               </NFormItem>
             </NGi>
             <NGi>
-              <NFormItem label="URL">
+              <NFormItem :label="$t('admin.common.url')">
                 <NInput
                   v-model:value="form.url"
-                  placeholder="https://example.com/webhook"
+                  :placeholder="t('admin.webhooks.url_placeholder')"
                 />
               </NFormItem>
             </NGi>
@@ -90,10 +93,9 @@ const emit = defineEmits<{
 
           <NDivider
             class="!-mx-4 !mb-0 !w-[calc(100%+2rem)] max-sm:!-mx-2 max-sm:!w-[calc(100%+1rem)]"
-            >事件订阅</NDivider
+            >{{ $t('admin.webhooks.event_subscription') }}</NDivider
           >
-          <NFormItem
-            label="订阅事件"
+          <NFormItem :label="$t('admin.webhooks.subscribe_events')"
             :show-label="false"
           >
             <NCheckboxGroup
@@ -134,8 +136,11 @@ const emit = defineEmits<{
             <NSwitch v-model:value="form.isEnabled" />
           </NFormItem>
 
-          <NDivider>请求配置</NDivider>
-          <NFormItem label="Headers">
+          <NDivider
+            class="!-mx-4 !mb-0 !w-[calc(100%+2rem)] max-sm:!-mx-2 max-sm:!w-[calc(100%+1rem)]"
+            >{{ $t('admin.webhooks.request_config') }}</NDivider
+          >
+          <NFormItem :label="$t('admin.webhooks.headers')">
             <div class="flex w-full flex-col gap-2">
               <div
                 v-for="(row, index) in form.headers"
@@ -145,14 +150,14 @@ const emit = defineEmits<{
                 <div class="w-40">
                   <NInput
                     v-model:value="row.key"
-                    placeholder="Header Key"
+                    :placeholder="t('admin.webhooks.header_key_placeholder')"
                     class="w-full"
                   />
                 </div>
                 <div class="min-w-0 flex-1">
                   <NInput
                     v-model:value="row.value"
-                    placeholder="Header Value"
+                    :placeholder="t('admin.webhooks.header_value_placeholder')"
                     class="w-full"
                   />
                 </div>
@@ -167,19 +172,19 @@ const emit = defineEmits<{
                 <NButton
                   size="small"
                   @click="emit('addHeader')"
-                  >添加 Header</NButton
+                  >{{ $t('admin.webhooks.add_header') }}</NButton
                 >
               </div>
             </div>
           </NFormItem>
-          <NFormItem label="Payload 模板">
+          <NFormItem :label="$t('admin.webhooks.payload_template')">
             <div class="flex w-full flex-col gap-2">
               <div class="flex justify-end">
                 <NButton
                   size="small"
                   tertiary
                   @click="emit('formatPayload')"
-                  >格式化</NButton
+                  >{{ $t('admin.webhooks.format') }}</NButton
                 >
               </div>
               <TemplateEditor
@@ -190,7 +195,7 @@ const emit = defineEmits<{
                 v-if="validVariables.length > 0"
                 class="rounded border bg-gray-50 p-3 text-xs dark:border-neutral-700 dark:bg-neutral-800"
               >
-                <div class="mb-2 text-gray-500">可用变量：</div>
+                <div class="mb-2 text-gray-500">{{ $t('admin.webhooks.available_variables') }}</div>
                 <NSpace size="small">
                   <NTag
                     v-for="v in validVariables"
@@ -209,7 +214,7 @@ const emit = defineEmits<{
                 v-else
                 class="rounded border bg-gray-50 p-3 text-xs text-gray-400 dark:border-neutral-700 dark:bg-neutral-800"
               >
-                * 选择上方事件以查看特定事件变量
+                * {{ $t('admin.webhooks.select_event_hint') }}
               </div>
             </div>
           </NFormItem>

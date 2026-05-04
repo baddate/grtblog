@@ -21,8 +21,8 @@ const emit = defineEmits<{
 <template>
   <NFormItem :show-feedback="false">
     <template #label>
-      <span>AI 摘要</span>
-      <span class="ml-1 text-xs opacity-50">用于正文前的总结导读</span>
+      <span>{{ $t('admin.ai.ai_summary') }}</span>
+      <span class="ml-1 text-xs opacity-50">{{ $t('admin.ai.summary_guide_hint') }}</span>
     </template>
     <NInput
       :value="modelValue ?? ''"
@@ -40,7 +40,7 @@ const emit = defineEmits<{
       @click="emit('generate')"
     >
       <template #icon><div class="iconify ph--sparkle" /></template>
-      AI 生成导读摘要
+      {{ $t('admin.ai.generate_summary') }}
     </NButton>
     <div
       v-if="loading || result"
@@ -61,13 +61,13 @@ const emit = defineEmits<{
         size="small"
         quaternary
         @click="emit('dismiss')"
-        >放弃</NButton
+        >{{ $t('admin.common.cancel') }}</NButton
       >
       <NButton
         size="small"
         type="primary"
         @click="emit('adopt')"
-        >采纳</NButton
+        >{{ $t('admin.ai.adopt') }}</NButton
       >
     </div>
   </div>

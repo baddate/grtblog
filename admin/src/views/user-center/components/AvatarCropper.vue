@@ -48,7 +48,7 @@ async function handleConfirm() {
     :show="visible"
     preset="card"
     style="max-width: 600px"
-    title="裁剪头像"
+    :title="t('admin.user.crop_avatar')"
     :mask-closable="false"
     :closable="!isUploading"
     @update:show="emit('update:visible', $event)"
@@ -67,7 +67,7 @@ async function handleConfirm() {
           type="primary"
           :loading="isUploading"
           @click="handleConfirm"
-          >确认并上传</NButton
+          >{{ t('admin.user.confirm_upload') }}</NButton
         >
       </div>
     </template>

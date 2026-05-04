@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { useMessage } from 'naive-ui'
 import { computed } from 'vue'
 
@@ -13,9 +16,9 @@ const { user } = toRefsUserStore()
 
 const message = useMessage()
 
-const displayName = computed(() => user.value.nickname || user.value.username || '未命名用户')
+const displayName = computed(() => user.value.nickname || user.value.username || t('admin.common.unnamed_user'))
 const displaySubtitle = computed(
-  () => user.value.email || (user.value.roles && user.value.roles[0]) || '暂无介绍',
+  () => user.value.email || (user.value.roles && user.value.roles[0]) || t('admin.common.no_intro'),
 )
 
 const handleUserPanelClick = () => {

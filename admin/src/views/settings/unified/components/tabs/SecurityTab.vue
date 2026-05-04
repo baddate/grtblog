@@ -393,7 +393,7 @@ onMounted(fetchProviders)
             placeholder="github / google"
           />
         </NFormItem>
-        <NFormItem label="显示名">
+        <NFormItem :label="$t('admin.ai.display_name')">
           <NInput
             v-model:value="form.displayName"
             placeholder="GitHub"
@@ -407,7 +407,7 @@ onMounted(fetchProviders)
         </NFormItem>
         <NFormItem
           label="Client Secret"
-          :feedback="editing ? '留空则保持原值' : ''"
+          :feedback="editing ? $t('admin.settings.keep_blank_for_original') : ''"
         >
           <NInput
             v-model:value="form.clientSecret"

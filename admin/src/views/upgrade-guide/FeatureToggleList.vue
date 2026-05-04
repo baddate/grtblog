@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { NAlert, NSwitch } from 'naive-ui'
+import { useI18n } from 'vue-i18n'
 
 import type { UpgradeGuideVersion } from './registry'
+
+const { t } = useI18n()
 
 defineProps<{
   /** One or more guide versions to render */
@@ -30,16 +33,16 @@ function toggle(featureId: string, value: boolean) {
         class="mb-2"
       >
         <div class="text-xs font-semibold tracking-wide text-neutral-400 uppercase">
-          {{ guide.tag }}
+          {{ t(guide.translationKey + '.tag') }}
         </div>
         <div class="mt-1 text-sm font-medium text-neutral-700 dark:text-neutral-200">
-          {{ guide.title }}
+          {{ t(guide.translationKey + '.title') }}
         </div>
         <p
           v-if="guide.description"
           class="mt-1 text-xs text-neutral-500"
         >
-          {{ guide.description }}
+          {{ t(guide.translationKey + '.description') }}
         </p>
       </div>
 
@@ -59,11 +62,11 @@ function toggle(featureId: string, value: boolean) {
                   :style="primaryColorRgb ? { color: `rgb(${primaryColorRgb})` } : undefined"
                 ></span>
                 <span class="text-sm font-medium text-neutral-800 dark:text-neutral-100">
-                  {{ feature.label }}
+                  {{ t(guide.translationKey + '.features.' + feature.id + '.label') }}
                 </span>
               </div>
               <p class="mt-2 text-xs leading-relaxed text-neutral-500">
-                {{ feature.description }}
+                {{ t(guide.translationKey + '.features.' + feature.id + '.description') }}
               </p>
             </div>
             <NSwitch
@@ -81,7 +84,7 @@ function toggle(featureId: string, value: boolean) {
         :show-icon="false"
         class="text-xs"
       >
-        {{ guide.hint }}
+        {{ t(guide.translationKey + '.hint') }}
       </NAlert>
     </template>
   </div>

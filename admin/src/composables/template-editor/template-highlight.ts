@@ -8,6 +8,10 @@ import {
   type ViewUpdate,
 } from '@codemirror/view'
 
+import i18n from '@/plugins/i18n'
+
+const __ = i18n.global.t
+
 export const setTemplateVariables = StateEffect.define<string[]>()
 
 export const templateVariablesField = StateField.define<string[]>({
@@ -27,7 +31,7 @@ export const templateVariablesField = StateField.define<string[]>({
 const templateToken = Decoration.mark({ class: 'cm-template-token' })
 const templateInvalid = Decoration.mark({
   class: 'cm-template-invalid',
-  attributes: { title: '未知模板变量' },
+  attributes: { title: __('admin.template.unknown_variable') },
 })
 
 function normalizeExpr(expr: string) {
@@ -138,7 +142,7 @@ export const templateTooltipExtension = hoverTooltip((view, pos, side) => {
     create() {
       const dom = document.createElement('div')
       dom.className = 'cm-template-tooltip'
-      dom.textContent = '未知模板变量'
+      dom.textContent = __('admin.template.unknown_variable')
       return { dom }
     },
   }

@@ -1,5 +1,7 @@
 import { computed, ref } from 'vue'
 
+import i18n from '@/plugins/i18n'
+const { t } = i18n.global
 import { listWebsiteInfo } from '@/services/website-info'
 
 import type { MessageApi } from 'naive-ui'
@@ -44,7 +46,7 @@ export function usePreviewFrame<TPayload>(options: UsePreviewFrameOptions<TPaylo
       publicUrl.value = item?.value?.trim() ?? ''
     } catch (error) {
       if (options.message) {
-        options.message.error(error instanceof Error ? error.message : '加载站点地址失败')
+        options.message.error(error instanceof Error ? error.message : t('admin.common.site_url_load_failed'))
       } else {
         console.error(error)
       }

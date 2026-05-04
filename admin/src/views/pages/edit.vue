@@ -139,7 +139,7 @@ watch(previewUrl, () => {
       <div class="flex w-full items-center gap-4 sm:flex-1">
         <NInput
           v-model:value="form.title"
-          placeholder="页面标题..."
+          :placeholder="$t('admin.placeholder.title')"
           :bordered="false"
           class="flex-1 text-xl! leading-tight font-bold sm:text-2xl!"
           style="--n-caret-color: var(--primary-color); background-color: transparent"
@@ -152,7 +152,7 @@ watch(previewUrl, () => {
           <span class="text-xs leading-none">/pages/</span>
           <input
             v-model="form.shortUrl"
-            placeholder="请填写短链接"
+            :placeholder="$t('admin.placeholder.short_url')"
             class="w-24 border-b border-current/30 p-0 pb-0.5 text-[11px] leading-none focus:border-primary focus:outline-none sm:w-32"
           />
         </div>
@@ -185,7 +185,7 @@ watch(previewUrl, () => {
             class="px-5 font-medium shadow-sm active:scale-95"
           >
             <template #icon><SaveOutline /></template>
-            保存
+            {{ $t('admin.common.save') }}
           </NButton>
         </div>
       </div>
@@ -230,7 +230,7 @@ watch(previewUrl, () => {
                   size="small"
                   class="w-full justify-start px-2"
                   @click="previewMode = 'markdown'"
-                  >Markdown 预览</NButton
+                  >{{ $t('admin.page.preview_markdown') }}</NButton
                 >
                 <NButton
                   :type="previewMode === 'page' ? 'primary' : 'default'"
@@ -238,7 +238,7 @@ watch(previewUrl, () => {
                   size="small"
                   class="w-full justify-start px-2"
                   @click="previewMode = 'page'"
-                  >网页预览</NButton
+                  >{{ $t('admin.page.preview_web') }}</NButton
                 >
               </div>
             </NPopover>
@@ -264,7 +264,7 @@ watch(previewUrl, () => {
               v-else
               class="flex h-full items-center justify-center text-sm opacity-60"
             >
-              请先在站点设置中配置 public_url
+              {{ $t('admin.page.preview_url_missing') }}
             </div>
           </div>
         </div>
@@ -277,7 +277,7 @@ watch(previewUrl, () => {
       width="400"
     >
       <NDrawerContent
-        title="页面设置"
+        :title="$t('admin.page.settings')"
         :native-scrollbar="false"
         closable
         header-style="padding: 24px;"
@@ -287,7 +287,7 @@ watch(previewUrl, () => {
           <div class="space-y-4">
             <div class="flex items-center gap-2 text-sm font-medium">
               <div class="iconify ph--article" />
-              <span>元信息</span>
+              <span>{{ $t('admin.page.meta_info') }}</span>
             </div>
             <NForm
               label-placement="top"
@@ -301,7 +301,7 @@ watch(previewUrl, () => {
                 <NInput
                   v-model:value="form.description"
                   type="textarea"
-                  placeholder="简短的页面描述..."
+                  :placeholder="$t('admin.placeholder.page_description')"
                   :autosize="{ minRows: 2, maxRows: 4 }"
                 />
               </NFormItem>
@@ -310,7 +310,7 @@ watch(previewUrl, () => {
                 :loading="aiSummaryLoading"
                 :result="aiSummaryResult"
                 :done="aiSummaryDone"
-                placeholder="AI 生成的内容导读，展示在正文之前..."
+                :placeholder="$t('admin.placeholder.ai_summary_guide')"
                 :disabled="!form.content?.trim()"
                 @update:model-value="form.aiSummary = $event"
                 @generate="handleAISummary"
@@ -323,18 +323,18 @@ watch(previewUrl, () => {
           <div class="space-y-4">
             <div class="flex items-center gap-2 text-sm font-medium">
               <div class="iconify ph--toggle-left" />
-              <span>属性</span>
+              <span>{{ $t('admin.page.properties') }}</span>
             </div>
             <div class="grid grid-cols-2 gap-4">
               <div class="flex items-center justify-between rounded-lg px-4 py-3">
-                <span class="text-sm">是否启用</span>
+                <span class="text-sm">{{ $t('admin.page.is_enabled') }}</span>
                 <NSwitch
                   v-model:value="form.isEnabled"
                   size="small"
                 />
               </div>
               <div class="flex items-center justify-between rounded-lg px-4 py-3">
-                <span class="text-sm">允许评论</span>
+                <span class="text-sm">{{ $t('admin.page.allow_comment') }}</span>
                 <NSwitch
                   v-model:value="form.allowComment"
                   size="small"

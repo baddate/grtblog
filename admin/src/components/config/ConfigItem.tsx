@@ -1,5 +1,6 @@
 import { NFormItem, NInput, NInputNumber, NSelect, NSwitch, NTag } from 'naive-ui'
 import { defineComponent, type PropType } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import ImageInput from '@/components/image-picker/ImageInput.vue'
 
@@ -14,6 +15,8 @@ export default defineComponent({
     visible: { type: Function as PropType<(i: SysConfigItem) => boolean>, required: true },
   },
   setup(props) {
+    const { t } = useI18n()
+
     return () => {
       const { item, valueMap, jsonBufferMap, visible } = props
 
@@ -31,7 +34,7 @@ export default defineComponent({
               bordered={false}
               class='origin-left scale-90'
             >
-              敏感
+              {t('admin.config.sensitive')}
             </NTag>
           )}
           <NTag
@@ -57,7 +60,7 @@ export default defineComponent({
               v-model:value={valueMap[item.key]}
               showButton={false}
               clearable
-              placeholder='请输入数字'
+              placeholder={t('admin.placeholder.number')}
             />
           )
           break
@@ -80,7 +83,7 @@ export default defineComponent({
               v-model:value={jsonBufferMap[item.key]}
               type='textarea'
               autosize={{ minRows: 2, maxRows: 6 }}
-              placeholder='请输入 JSON'
+              placeholder={t('admin.placeholder.json')}
               style={{ fontFamily: 'monospace' }}
             />
           )
@@ -103,7 +106,7 @@ export default defineComponent({
                 v-model:value={valueMap[item.key]}
                 type='textarea'
                 autosize={{ minRows: 2, maxRows: 10 }}
-                placeholder={item.isSensitive ? '********** (留空不更新)' : ''}
+                placeholder={item.isSensitive ? t('admin.placeholder.sensitive_unchanged') : ''}
               />
             )
           } else {
@@ -114,7 +117,7 @@ export default defineComponent({
                 type={inputType}
                 clearable
                 showPasswordOn='click'
-                placeholder={item.isSensitive ? '********** (留空不更新)' : ''}
+                placeholder={item.isSensitive ? t('admin.placeholder.sensitive_unchanged') : ''}
               />
             )
           }

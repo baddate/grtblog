@@ -43,6 +43,8 @@ export interface UpgradeGuideFeature {
 export interface UpgradeGuideVersion {
   /** Must match the version string registered on the backend */
   version: string
+  /** i18n translation key prefix for this version's content */
+  translationKey: string
   /** Tag shown above the title, e.g. "v2.1 新功能" */
   tag: string
   /** Section heading */
@@ -62,6 +64,7 @@ export interface UpgradeGuideVersion {
 export const upgradeGuideRegistry: UpgradeGuideVersion[] = [
   {
     version: '2.1',
+    translationKey: 'admin.upgrade_guide.v2_1',
     tag: 'v2.1 新功能',
     title: '联合与互联',
     description: '选择是否为您的站点启用联合功能。这些选项可以随时在设置中更改。',

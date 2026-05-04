@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 defineOptions({
   name: 'ComingSoon',
 })
@@ -36,7 +39,7 @@ withDefaults(
     <span
       class="inline-block rounded-full border border-naive-border bg-naive-card px-4 py-1.5 text-xs text-neutral-400 transition-[background-color,border-color]"
     >
-      即将在未来版本中推出
+      {{ t('admin.coming_soon.future') }}
     </span>
   </div>
 </template>

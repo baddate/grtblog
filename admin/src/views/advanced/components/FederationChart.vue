@@ -71,7 +71,7 @@ onUnmounted(() => {
   >
     <div class="flex items-center justify-between px-5 pt-4">
       <span class="text-base font-medium text-neutral-600 dark:text-neutral-300"
-        >联邦出站状态分布</span
+        >{{ $t('admin.advanced.federation_status') }}</span
       >
     </div>
     <div class="flex-1 px-4 pt-2 pb-4">

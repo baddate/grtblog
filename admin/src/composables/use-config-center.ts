@@ -1,6 +1,10 @@
 import { useMessage } from 'naive-ui'
 import { ref, reactive, computed, onMounted } from 'vue'
 
+import i18n from '@/plugins/i18n'
+
+const __ = i18n.global.t
+
 import { firstVisibleCollapsiblePath } from './sysconfig-tree-visibility'
 
 import type {
@@ -113,7 +117,7 @@ export function useConfigCenter(listFn: ConfigListFn, updateFn: ConfigUpdateFn) 
         try {
           parsed = JSON.parse(text)
         } catch {
-          throw new Error(`配置 ${item.label || key} 的 JSON 格式错误`)
+          throw new Error(__('admin.config_center.json_format_error', { label: item.label || key }))
         }
 
         if (!isSameValue(parsed, originalMap[key])) {
@@ -157,7 +161,7 @@ export function useConfigCenter(listFn: ConfigListFn, updateFn: ConfigUpdateFn) 
       const firstPath = firstVisibleCollapsiblePath(data.groups, isItemVisible)
       expandedGroups.value = firstPath ? [firstPath] : []
     } catch (e: any) {
-      message.error(e.message || '加载配置失败')
+      message.error(e.message || __('admin.service.load_failed'))
     } finally {
       loading.value = false
     }
@@ -173,7 +177,7 @@ export function useConfigCenter(listFn: ConfigListFn, updateFn: ConfigUpdateFn) 
     }
 
     if (updates.length === 0) {
-      message.warning('没有检测到更改')
+      message.warning(__('admin.service.no_changes'))
       return
     }
 
@@ -182,9 +186,9 @@ export function useConfigCenter(listFn: ConfigListFn, updateFn: ConfigUpdateFn) 
       const updated = await updateFn(updates)
       tree.value = updated
       seedMaps(updated)
-      message.success('保存成功')
+      message.success(__('admin.service.save_success'))
     } catch (e: any) {
-      message.error(e.message || '保存失败')
+      message.error(e.message || __('admin.service.save_failed'))
     } finally {
       saving.value = false
     }

@@ -20,6 +20,7 @@ import {
   NAutoComplete,
 } from 'naive-ui'
 import { computed, onMounted, onUnmounted, ref, watch, toRef } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import MultiImageInput from '@/components/image-picker/MultiImageInput.vue'
 import MarkdownEditor from '@/components/markdown-editor/MarkdownEditor.vue'
@@ -42,6 +43,7 @@ import type { MomentDetail } from '@/services/moments'
 defineOptions({ name: 'NoteEdit' })
 
 const message = useMessage()
+const { t } = useI18n()
 
 const { form, saving, imageProcessing, isCreating, fetch, save } = useMomentForm()
 
@@ -91,8 +93,8 @@ const {
 
 const stats = computed(() => getStats(form.content))
 const actionLabel = computed(() => {
-  if (!form.isPublished) return '保存'
-  return isCreating.value ? '发布' : '发布新版本'
+  if (!form.isPublished) return t('admin.common.save')
+  return isCreating.value ? t('admin.article.publish') : t('admin.article.publish_new_version')
 })
 const actionIcon = computed(() => (form.isPublished ? PaperPlaneOutline : SaveOutline))
 const {
@@ -122,8 +124,8 @@ function formatDateTime(value?: string | null) {
 }
 
 const apStatusText = computed(() => {
-  if (isCreating.value) return '未创建'
-  return loadedMoment.value?.activityPubObjectId ? '已发布' : '未发布'
+  if (isCreating.value) return t('admin.federation.status_not_created')
+  return loadedMoment.value?.activityPubObjectId ? t('admin.federation.status_published') : t('admin.federation.status_not_published')
 })
 
 const apLastPublishedAtText = computed(() =>
@@ -137,7 +139,7 @@ const canRepublishToActivityPub = computed(
 async function handleRepublishActivityPub() {
   if (!loadedMoment.value?.id) return
   if (!form.isPublished) {
-    message.warning('请先设为发布并保存，再手动补发')
+    message.warning(t('admin.article.publish_first_tip'))
     return
   }
   apPublishing.value = true
@@ -149,9 +151,9 @@ async function handleRepublishActivityPub() {
     loadedMoment.value.activityPubObjectId =
       resp.object_id || loadedMoment.value.activityPubObjectId
     loadedMoment.value.activityPubLastPublishedAt = resp.published_at
-    message.success(`补发完成：成功 ${resp.success_count}，失败 ${resp.failure_count}`)
+    message.success(t('admin.service.republish_result', { success: resp.success_count, failure: resp.failure_count }))
   } catch (err) {
-    message.error(err instanceof Error ? err.message : '补发失败')
+    message.error(err instanceof Error ? err.message : t('admin.service.republish_failed'))
   } finally {
     apPublishing.value = false
   }
@@ -184,7 +186,7 @@ function buildPreviewPayload() {
       const topicOption = topicOptions.value.find((option) => option.value === id)
       const dynamicName = dynamicTopics.value[index]
       const name = (topicOption?.label ? String(topicOption.label) : dynamicName || '').trim()
-      return { id, name: name || `话题 ${id}` }
+      return { id, name: name || t('admin.moment.topic_fallback', { id }) }
     }),
     metrics: loadedMoment.value ? { views: 0, likes: 0, comments: 0 } : undefined,
     isPublished: form.isPublished,
@@ -249,7 +251,7 @@ watch(previewUrl, () => {
       <div class="flex w-full items-center gap-4 sm:flex-1">
         <NInput
           v-model:value="form.title"
-          placeholder="在这里开始你的记录..."
+          :placeholder="$t('admin.placeholder.start_writing_note')"
           :bordered="false"
           class="flex-1 text-xl! leading-tight font-bold sm:text-2xl!"
           style="--n-caret-color: var(--primary-color); background-color: transparent"
@@ -262,7 +264,7 @@ watch(previewUrl, () => {
           <span class="text-xs leading-none">/moments/</span>
           <input
             v-model="form.shortUrl"
-            placeholder="请填写短链接"
+            :placeholder="$t('admin.placeholder.short_url')"
             class="w-24 border-b border-current/30 p-0 pb-0.5 text-[11px] leading-none focus:border-primary focus:outline-none sm:w-32"
           />
         </div>
@@ -284,14 +286,14 @@ watch(previewUrl, () => {
             :ghost="form.isPublished"
             @click="form.isPublished = false"
           >
-            草稿
+            {{ $t('admin.status.draft') }}
           </NButton>
           <NButton
             :type="form.isPublished ? 'primary' : 'default'"
             :ghost="!form.isPublished"
             @click="form.isPublished = true"
           >
-            发布
+            {{ $t('admin.status.published') }}
           </NButton>
         </NButtonGroup>
 
@@ -300,7 +302,7 @@ watch(previewUrl, () => {
             v-if="imageProcessing"
             class="text-xs text-amber-600"
           >
-            正在处理图片…
+            {{ $t('admin.article.processing_images') }}
           </span>
           <NButton
             quaternary
@@ -395,7 +397,7 @@ watch(previewUrl, () => {
                   size="small"
                   class="w-full justify-start px-2"
                   @click="previewMode = 'markdown'"
-                  >Markdown 预览</NButton
+                  >{{ $t('admin.editor.preview_markdown') }}</NButton
                 >
                 <NButton
                   :type="previewMode === 'page' ? 'primary' : 'default'"
@@ -403,7 +405,7 @@ watch(previewUrl, () => {
                   size="small"
                   class="w-full justify-start px-2"
                   @click="previewMode = 'page'"
-                  >网页预览</NButton
+                  >{{ $t('admin.editor.preview_page') }}</NButton
                 >
               </div>
             </NPopover>
@@ -429,7 +431,7 @@ watch(previewUrl, () => {
               v-else
               class="flex h-full items-center justify-center text-sm opacity-60"
             >
-              请先在站点设置中配置 public_url
+              {{ $t('admin.article.set_public_url') }}
             </div>
           </div>
         </div>
@@ -442,7 +444,7 @@ watch(previewUrl, () => {
       width="400"
     >
       <NDrawerContent
-        title="手记设置"
+        :title="$t('admin.moment.settings')"
         :native-scrollbar="false"
         closable
         header-style="padding: 24px;"
@@ -452,7 +454,7 @@ watch(previewUrl, () => {
           <div class="space-y-4">
             <div class="flex items-center gap-2 text-sm font-medium">
               <div class="iconify ph--tag" />
-              <span>分区与话题</span>
+              <span>{{ $t('admin.moment.taxonomy') }}</span>
             </div>
             <NForm
               label-placement="top"
@@ -460,14 +462,14 @@ watch(previewUrl, () => {
               class="space-y-4"
             >
               <NFormItem
-                label="分区"
+                :label="$t('admin.moment.column_label')"
                 :show-feedback="false"
               >
                 <div class="flex w-full items-center gap-2">
                   <NSelect
                     v-model:value="form.columnId"
                     :options="columnOptions"
-                    placeholder="选择分区"
+                    :placeholder="$t('admin.placeholder.select_column')"
                     clearable
                     filterable
                     class="flex-1"
@@ -481,7 +483,7 @@ watch(previewUrl, () => {
                 </div>
               </NFormItem>
               <NFormItem
-                label="话题"
+                :label="$t('admin.moment.topic_label')"
                 :show-feedback="false"
               >
                 <div class="flex w-full flex-col gap-2">
@@ -493,7 +495,7 @@ watch(previewUrl, () => {
                     <NAutoComplete
                       v-model:value="topicSearchValue"
                       :options="autoCompleteOptions"
-                      placeholder="搜索或创建话题"
+                      :placeholder="$t('admin.placeholder.search_or_create_topic')"
                       class="flex-1"
                       @select="addTopicFromSearch"
                       :input-props="{
@@ -506,7 +508,7 @@ watch(previewUrl, () => {
                       quaternary
                       size="small"
                       @click="addTopicFromSearch(topicSearchValue)"
-                      >添加</NButton
+                      >{{ $t('admin.common.add') }}</NButton
                     >
                   </div>
                 </div>
@@ -519,7 +521,7 @@ watch(previewUrl, () => {
           <div class="space-y-4">
             <div class="flex items-center gap-2 text-sm font-medium">
               <div class="iconify ph--article" />
-              <span>元信息</span>
+              <span>{{ $t('admin.moment.metadata') }}</span>
             </div>
             <NForm
               label-placement="top"
@@ -528,13 +530,13 @@ watch(previewUrl, () => {
             >
               <NFormItem :show-feedback="false">
                 <template #label>
-                  <span>摘要</span>
-                  <span class="ml-1 text-xs opacity-50">用于外显描述、OG 信息、SEO</span>
+                  <span>{{ $t('admin.article.summary') }}</span>
+                  <span class="ml-1 text-xs opacity-50">{{ $t('admin.moment.summary_hint') }}</span>
                 </template>
                 <NInput
                   v-model:value="form.summary"
                   type="textarea"
-                  placeholder="外显摘要，用于列表卡片、网页描述、社交分享..."
+                  :placeholder="$t('admin.placeholder.summary_external')"
                   :autosize="{ minRows: 2, maxRows: 4 }"
                 />
               </NFormItem>
@@ -543,7 +545,7 @@ watch(previewUrl, () => {
                 :loading="aiSummaryLoading"
                 :result="aiSummaryResult"
                 :done="aiSummaryDone"
-                placeholder="AI 生成的内容导读，展示在正文之前..."
+                :placeholder="$t('admin.placeholder.ai_summary_guide')"
                 :disabled="!form.content?.trim()"
                 @update:model-value="form.aiSummary = $event"
                 @generate="handleAISummary"
@@ -551,7 +553,7 @@ watch(previewUrl, () => {
                 @dismiss="dismissAISummary"
               />
               <NFormItem
-                label="配图"
+                :label="$t('admin.moment.images')"
                 :show-feedback="false"
               >
                 <MultiImageInput v-model:value="form.image" />
@@ -564,25 +566,25 @@ watch(previewUrl, () => {
           <div class="space-y-4">
             <div class="flex items-center gap-2 text-sm font-medium">
               <div class="iconify ph--toggle-left" />
-              <span>属性</span>
+              <span>{{ $t('admin.moment.properties') }}</span>
             </div>
             <div class="grid grid-cols-2 gap-4">
               <div class="flex items-center justify-between rounded-lg px-4 py-3">
-                <span class="text-sm">置顶</span
+                <span class="text-sm">{{ $t('admin.form.is_pin') }}</span
                 ><NSwitch
                   v-model:value="form.isTop"
                   size="small"
                 />
               </div>
               <div class="flex items-center justify-between rounded-lg px-4 py-3">
-                <span class="text-sm">允许评论</span
+                <span class="text-sm">{{ $t('admin.form.allow_comment') }}</span
                 ><NSwitch
                   v-model:value="form.allowComment"
                   size="small"
                 />
               </div>
               <div class="flex items-center justify-between rounded-lg px-4 py-3">
-                <span class="text-sm">原创</span
+                <span class="text-sm">{{ $t('admin.form.is_original') }}</span
                 ><NSwitch
                   v-model:value="form.isOriginal"
                   size="small"
@@ -591,8 +593,8 @@ watch(previewUrl, () => {
               <div class="col-span-2 rounded-lg px-4 py-3">
                 <div class="flex items-start justify-between gap-4">
                   <div class="min-w-0 space-y-1">
-                    <div class="text-sm">ActivityPub：{{ apStatusText }}</div>
-                    <div class="text-xs opacity-70">最近发布：{{ apLastPublishedAtText }}</div>
+                    <div class="text-sm">{{ $t('admin.federation.activitypub_status', { status: apStatusText }) }}</div>
+                    <div class="text-xs opacity-70">{{ $t('admin.federation.last_published', { time: apLastPublishedAtText }) }}</div>
                     <div
                       v-if="loadedMoment?.activityPubObjectId"
                       class="text-xs break-all opacity-70"
@@ -607,7 +609,7 @@ watch(previewUrl, () => {
                     :disabled="!canRepublishToActivityPub || apPublishing"
                     @click="handleRepublishActivityPub"
                   >
-                    手动补发
+                    {{ $t('admin.action.republish') }}
                   </NButton>
                 </div>
               </div>
@@ -622,7 +624,7 @@ watch(previewUrl, () => {
       style="width: 420px; max-width: 90vw"
     >
       <NCard
-        title="新建分区"
+        :title="$t('admin.action.create_column')"
         size="small"
       >
         <NForm
@@ -636,16 +638,16 @@ watch(previewUrl, () => {
           >
             <NInput
               v-model:value="newColumnModal.name"
-              placeholder="例如：日常"
+              :placeholder="$t('admin.placeholder.column_name_example')"
             />
           </NFormItem>
           <NFormItem
-            label="短链接"
+            :label="$t('admin.column.short_url')"
             :show-feedback="false"
           >
             <NInput
               v-model:value="newColumnModal.slug"
-              placeholder="例如：daily"
+              :placeholder="$t('admin.placeholder.column_slug_example')"
             />
           </NFormItem>
         </NForm>
@@ -659,7 +661,7 @@ watch(previewUrl, () => {
             type="primary"
             :loading="newColumnModal.loading"
             @click="createNewColumn"
-            >创建并选择</NButton
+            >{{ $t('admin.action.create_and_select') }}</NButton
           >
         </div>
       </NCard>

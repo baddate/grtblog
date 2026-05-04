@@ -32,40 +32,40 @@ const dependenciesCodeHighlight = ref('')
 const devDependenciesCodeHighlight = ref('')
 
 const frontendTech = [
-  { name: 'Vue 3', icon: 'ph--vue-logo', color: '#42b883', desc: '渐进式 JavaScript 框架' },
-  { name: 'Naive UI', icon: null, color: '#75B93F', desc: '企业级 Vue 3 组件库' },
-  { name: 'Vite', icon: 'ph--lightning', color: '#9499ff', desc: '下一代前端构建工具' },
-  { name: 'TailwindCSS 4', icon: 'ph--wind', color: '#00bcff', desc: '原子化 CSS 框架' },
-  { name: 'TypeScript', icon: 'ph--file-ts', color: '#3178C6', desc: '类型安全的 JavaScript' },
-  { name: 'Pinia', icon: 'ph--tree-structure', color: '#FFD859', desc: 'Vue 状态管理' },
+  { name: 'Vue 3', icon: 'ph--vue-logo', color: '#42b883', desc: t('admin.about.tech_vue_desc') },
+  { name: 'Naive UI', icon: null, color: '#75B93F', desc: t('admin.about.tech_naive_ui_desc') },
+  { name: 'Vite', icon: 'ph--lightning', color: '#9499ff', desc: t('admin.about.tech_vite_desc') },
+  { name: 'TailwindCSS 4', icon: 'ph--wind', color: '#00bcff', desc: t('admin.about.tech_tailwind_desc') },
+  { name: 'TypeScript', icon: 'ph--file-ts', color: '#3178C6', desc: t('admin.about.tech_typescript_desc') },
+  { name: 'Pinia', icon: 'ph--tree-structure', color: '#FFD859', desc: t('admin.about.tech_pinia_desc') },
 ]
 
 const backendTech = [
-  { name: 'Go', icon: 'ph--code', color: '#00ADD8', desc: '高性能后端语言' },
-  { name: 'Fiber', icon: 'ph--rocket-launch', color: '#00ACD7', desc: 'Express 风格 Go 框架' },
-  { name: 'PostgreSQL', icon: 'ph--database', color: '#4169E1', desc: '关系型数据库' },
-  { name: 'Redis', icon: 'ph--hard-drives', color: '#DC382D', desc: '缓存与消息队列' },
-  { name: 'SvelteKit', icon: 'ph--monitor', color: '#FF3E00', desc: '前台 SSR 渲染引擎' },
+  { name: 'Go', icon: 'ph--code', color: '#00ADD8', desc: t('admin.about.tech_go_desc') },
+  { name: 'Fiber', icon: 'ph--rocket-launch', color: '#00ACD7', desc: t('admin.about.tech_fiber_desc') },
+  { name: 'PostgreSQL', icon: 'ph--database', color: '#4169E1', desc: t('admin.about.tech_postgresql_desc') },
+  { name: 'Redis', icon: 'ph--hard-drives', color: '#DC382D', desc: t('admin.about.tech_redis_desc') },
+  { name: 'SvelteKit', icon: 'ph--monitor', color: '#FF3E00', desc: t('admin.about.tech_sveltekit_desc') },
 ]
 
 const features = [
   {
     icon: 'ph--article',
-    title: 'Markdown 写作',
-    desc: '组件块扩展：相册、提示框、时间轴、链接卡片',
+    title: t('admin.about.feature_markdown_title'),
+    desc: t('admin.about.feature_markdown_desc'),
   },
-  { icon: 'ph--newspaper', title: '内容管理', desc: '文章、动态、思考、页面的完整生命周期管理' },
-  { icon: 'ph--cloud-arrow-up', title: '媒体资源', desc: '图片与文件上传、预览、重命名与批量管理' },
-  { icon: 'ph--shield-check', title: '安全与权限', desc: 'JWT 认证、OAuth 绑定、登录限流' },
+  { icon: 'ph--newspaper', title: t('admin.about.feature_content_title'), desc: t('admin.about.feature_content_desc') },
+  { icon: 'ph--cloud-arrow-up', title: t('admin.about.feature_media_title'), desc: t('admin.about.feature_media_desc') },
+  { icon: 'ph--shield-check', title: t('admin.about.feature_security_title'), desc: t('admin.about.feature_security_desc') },
   {
     icon: 'ph--arrows-clockwise',
-    title: '事件驱动更新',
-    desc: '内容变更触发异步刷新，WebSocket 推送实时更新',
+    title: t('admin.about.feature_event_title'),
+    desc: t('admin.about.feature_event_desc'),
   },
   {
     icon: 'ph--chart-line-up',
-    title: '数据分析',
-    desc: '访客画像、行为漏斗、流量趋势、可观测性监控',
+    title: t('admin.about.feature_analytics_title'),
+    desc: t('admin.about.feature_analytics_desc'),
   },
 ]
 
@@ -112,17 +112,16 @@ onMounted(async () => {
         >
       </div>
       <p class="mt-1 text-sm font-medium text-neutral-500 dark:text-neutral-400">
-        面向创作者与读者的全栈内容平台
+        {{ $t('admin.about.tagline') }}
       </p>
       <p class="mt-3 max-w-3xl text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
-        sanblog 由 Go API、SvelteKit 前台、Vue 后台与共享 Markdown 组件能力组成，本后台为 Lithe
-        Admin 的二次开发版本， 专为内容管理、发布与运营流程定制。
+        {{ $t('admin.about.description') }}
       </p>
     </div>
 
     <!-- Section 2: Tech Stack -->
     <div>
-      <h2 class="mb-3 text-base font-medium text-neutral-700 dark:text-neutral-200">前端技术</h2>
+      <h2 class="mb-3 text-base font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.about.section_frontend') }}</h2>
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <div
           v-for="tech in frontendTech"
@@ -157,7 +156,7 @@ onMounted(async () => {
     </div>
 
     <div>
-      <h2 class="mb-3 text-base font-medium text-neutral-700 dark:text-neutral-200">后端技术</h2>
+      <h2 class="mb-3 text-base font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.about.section_backend') }}</h2>
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <div
           v-for="tech in backendTech"
@@ -186,7 +185,7 @@ onMounted(async () => {
 
     <!-- Section 3: Features -->
     <div>
-      <h2 class="mb-3 text-base font-medium text-neutral-700 dark:text-neutral-200">核心能力</h2>
+      <h2 class="mb-3 text-base font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.about.section_features') }}</h2>
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <div
           v-for="feat in features"
@@ -213,7 +212,7 @@ onMounted(async () => {
 
     <!-- Section 4: Architecture Overview -->
     <div>
-      <h2 class="mb-3 text-base font-medium text-neutral-700 dark:text-neutral-200">架构概览</h2>
+      <h2 class="mb-3 text-base font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.about.section_architecture') }}</h2>
       <div
         class="rounded border border-naive-border bg-naive-card p-5 transition-[background-color,border-color]"
       >
@@ -224,7 +223,7 @@ onMounted(async () => {
           >
             <span class="iconify size-6 text-sky-500 ph--cloud" />
             <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200"
-              >Go API 服务</span
+              >{{ $t('admin.about.architecture_api') }}</span
             >
             <div class="flex flex-wrap justify-center gap-1.5">
               <NTag
@@ -260,28 +259,28 @@ onMounted(async () => {
           >
             <span class="iconify size-6 text-orange-500 ph--browser" />
             <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200"
-              >SvelteKit 前台</span
+              >{{ $t('admin.about.architecture_ssr') }}</span
             >
             <div class="flex flex-wrap justify-center gap-1.5">
               <NTag
                 size="tiny"
                 round
-                >SSR 渲染</NTag
+                >{{ $t('admin.about.tag_ssr') }}</NTag
               >
               <NTag
                 size="tiny"
                 round
-                >静态快照</NTag
+                >{{ $t('admin.about.tag_static_snapshot') }}</NTag
               >
               <NTag
                 size="tiny"
                 round
-                >内容哈希</NTag
+                >{{ $t('admin.about.tag_content_hash') }}</NTag
               >
             </div>
             <div class="flex items-center gap-1 text-xs text-neutral-400">
               <span class="iconify size-3.5 ph--arrow-right" />
-              <span>HTML 快照发布</span>
+              <span>{{ $t('admin.about.architecture_html_snapshot') }}</span>
             </div>
           </div>
 
@@ -291,7 +290,7 @@ onMounted(async () => {
           >
             <span class="iconify size-6 text-emerald-500 ph--layout" />
             <span class="text-sm font-medium text-neutral-700 dark:text-neutral-200"
-              >Vue 3 后台</span
+              >{{ $t('admin.about.architecture_admin') }}</span
             >
             <div class="flex flex-wrap justify-center gap-1.5">
               <NTag
@@ -312,7 +311,7 @@ onMounted(async () => {
             </div>
             <div class="flex items-center gap-1 text-xs text-neutral-400">
               <span class="iconify size-3.5 ph--arrows-left-right" />
-              <span>WebSocket 实时通信</span>
+              <span>{{ $t('admin.about.architecture_ws_comm') }}</span>
             </div>
           </div>
         </div>
@@ -321,7 +320,7 @@ onMounted(async () => {
 
     <!-- Section 5: Dependencies -->
     <div>
-      <h2 class="mb-3 text-base font-medium text-neutral-700 dark:text-neutral-200">依赖信息</h2>
+      <h2 class="mb-3 text-base font-medium text-neutral-700 dark:text-neutral-200">{{ $t('admin.about.section_dependencies') }}</h2>
       <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
         <div
           class="rounded border border-naive-border bg-naive-card p-4 transition-[background-color,border-color]"

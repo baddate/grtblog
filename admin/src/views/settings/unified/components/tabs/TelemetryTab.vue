@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 import {
   NButton,
   NCard,
@@ -58,7 +60,7 @@ async function fetchData() {
         .find((c) => c.key === 'telemetry.enabled')
     enabled.value = enabledCfg?.value === 'true' || enabledCfg?.value === true
   } catch {
-    message.error('加载遥测数据失败')
+    message.error(t('admin.service.load_failed'))
   } finally {
     loading.value = false
   }
@@ -70,11 +72,11 @@ async function toggleEnabled(val: boolean) {
   enabled.value = val // optimistic update
   try {
     await updateSysConfigs([{ key: 'telemetry.enabled', value: String(val) }])
-    message.success(val ? '遥测已启用' : '遥测已禁用')
+    message.success(val ? t('admin.telemetry.enabled') : t('admin.telemetry.disabled'))
     await fetchData()
   } catch {
     enabled.value = prev // rollback on failure
-    message.error('切换失败')
+    message.error(t('admin.service.operation_failed'))
   } finally {
     loadingToggle.value = false
   }
@@ -85,13 +87,13 @@ async function doReportNow() {
   try {
     const rec = await triggerTelemetryReport()
     if (rec.status === 'success') {
-      message.success('上报成功')
+      message.success(t('admin.telemetry.report_success'))
     } else {
-      message.warning(`上报结果: ${rec.status} — ${rec.message}`)
+      message.warning(t('admin.telemetry.report_result', { status: rec.status, message: rec.message }))
     }
     await fetchData()
   } catch {
-    message.error('上报请求失败')
+    message.error(t('admin.telemetry.report_failed'))
   } finally {
     reporting.value = false
   }
@@ -100,10 +102,10 @@ async function doReportNow() {
 async function doReset() {
   try {
     await resetTelemetryErrors()
-    message.success('错误数据已清空')
+    message.success(t('admin.telemetry.errors_cleared'))
     await fetchData()
   } catch {
-    message.error('清空失败')
+    message.error(t('admin.telemetry.clear_failed'))
   }
 }
 
@@ -111,11 +113,11 @@ const featureList = computed(() => {
   if (!snapshot.value) return []
   const f = snapshot.value.instance.features
   return [
-    { label: '联合协议', enabled: f.federationEnabled },
-    { label: 'ActivityPub', enabled: f.activityPubEnabled },
-    { label: '邮件通知', enabled: f.emailEnabled },
-    { label: 'Turnstile', enabled: f.turnstileEnabled },
-    { label: '评论（关闭）', enabled: f.commentsDisabled },
+    { label: t('admin.telemetry.feature_federation'), enabled: f.federationEnabled },
+    { label: t('admin.telemetry.feature_activitypub'), enabled: f.activityPubEnabled },
+    { label: t('admin.telemetry.feature_email'), enabled: f.emailEnabled },
+    { label: t('admin.telemetry.feature_turnstile'), enabled: f.turnstileEnabled },
+    { label: t('admin.telemetry.feature_comments'), enabled: f.commentsDisabled },
   ]
 })
 
@@ -140,7 +142,7 @@ onMounted(() => fetchData())
     <!-- Header -->
     <NCard
       size="small"
-      title="匿名遥测"
+      :title="$t('admin.telemetry.title')"
     >
       <template #header-extra>
         <NSpace
@@ -152,8 +154,8 @@ onMounted(() => fetchData())
             :loading="loadingToggle"
             @update:value="toggleEnabled"
           >
-            <template #checked>启用上报</template>
-            <template #unchecked>已禁用</template>
+            <template #checked>{{ $t('admin.telemetry.enable_reporting') }}</template>
+            <template #unchecked>{{ $t('admin.telemetry.disabled') }}</template>
           </NSwitch>
           <NButton
             size="small"
@@ -162,22 +164,19 @@ onMounted(() => fetchData())
             :disabled="!enabled"
             @click="doReportNow"
           >
-            立即上报
+            {{ $t('admin.telemetry.report_now') }}
           </NButton>
           <NButton
             size="small"
             quaternary
             @click="fetchData"
           >
-            刷新
+            {{ $t('admin.common.refresh') }}
           </NButton>
         </NSpace>
       </template>
       <p class="text-sm opacity-60">
-        匿名收集脱敏后的错误摘要和运行指标，帮助改进
-        sanblog。不包含任何个人信息、文章内容或访客数据。
-        您可以在下方预览将要上报的完整数据。sanblog 是开源项目，遥测相关的所有代码均可在 GitHub
-        上查看、审计和提出问题。
+        {{ $t('admin.telemetry.description') }}
       </p>
     </NCard>
 
@@ -193,25 +192,25 @@ onMounted(() => fetchData())
     >
       <NCard size="small">
         <NStatistic
-          label="唯一错误"
+          :label="$t('admin.telemetry.unique_errors')"
           :value="snapshot.summary.uniqueErrors"
         />
       </NCard>
       <NCard size="small">
         <NStatistic
-          label="错误总数"
+          :label="$t('admin.telemetry.total_errors')"
           :value="snapshot.summary.totalErrors"
         />
       </NCard>
       <NCard size="small">
         <NStatistic
-          label="唯一 Panic"
+          :label="$t('admin.telemetry.unique_panics')"
           :value="snapshot.summary.uniquePanics"
         />
       </NCard>
       <NCard size="small">
         <NStatistic
-          label="Panic 总数"
+          :label="$t('admin.telemetry.total_panics')"
           :value="snapshot.summary.totalPanics"
         />
       </NCard>
@@ -220,7 +219,7 @@ onMounted(() => fetchData())
     <!-- Data preview -->
     <NCollapse v-if="snapshot">
       <NCollapseItem
-        title="实例信息"
+        :title="$t('admin.telemetry.instance_info')"
         name="instance"
       >
         <NDescriptions
@@ -229,16 +228,16 @@ onMounted(() => fetchData())
           bordered
           size="small"
         >
-          <NDescriptionsItem label="Instance ID">{{
+          <NDescriptionsItem :label="$t('admin.telemetry.instance_id')">{{
             snapshot.instance.instanceId
           }}</NDescriptionsItem>
-          <NDescriptionsItem label="版本">{{ snapshot.instance.version }}</NDescriptionsItem>
-          <NDescriptionsItem label="Go 版本">{{ snapshot.instance.goVersion }}</NDescriptionsItem>
-          <NDescriptionsItem label="系统"
+          <NDescriptionsItem :label="$t('admin.telemetry.version')">{{ snapshot.instance.version }}</NDescriptionsItem>
+          <NDescriptionsItem :label="$t('admin.telemetry.go_version')">{{ snapshot.instance.goVersion }}</NDescriptionsItem>
+          <NDescriptionsItem :label="$t('admin.telemetry.os')"
             >{{ snapshot.instance.os }}/{{ snapshot.instance.arch }}</NDescriptionsItem
           >
-          <NDescriptionsItem label="部署模式">{{ snapshot.instance.deployMode }}</NDescriptionsItem>
-          <NDescriptionsItem label="运行时间"
+          <NDescriptionsItem :label="$t('admin.telemetry.deploy_mode')">{{ snapshot.instance.deployMode }}</NDescriptionsItem>
+          <NDescriptionsItem :label="$t('admin.telemetry.uptime')"
             >{{ Math.floor(snapshot.instance.uptimeSeconds / 3600) }}h</NDescriptionsItem
           >
         </NDescriptions>
@@ -257,7 +256,7 @@ onMounted(() => fetchData())
       </NCollapseItem>
 
       <NCollapseItem
-        title="运行指标"
+        :title="$t('admin.telemetry.run_metrics')"
         name="metrics"
       >
         <NDescriptions
@@ -266,43 +265,43 @@ onMounted(() => fetchData())
           bordered
           size="small"
         >
-          <NDescriptionsItem label="文章数">{{
+          <NDescriptionsItem :label="$t('admin.telemetry.articles_total')">{{
             snapshot.metrics.content.articlesTotal
           }}</NDescriptionsItem>
-          <NDescriptionsItem label="手记数">{{
+          <NDescriptionsItem :label="$t('admin.telemetry.moments_total')">{{
             snapshot.metrics.content.momentsTotal
           }}</NDescriptionsItem>
-          <NDescriptionsItem label="评论数">{{
+          <NDescriptionsItem :label="$t('admin.telemetry.comments_total')">{{
             snapshot.metrics.content.commentsTotal
           }}</NDescriptionsItem>
-          <NDescriptionsItem label="友链数">{{
+          <NDescriptionsItem :label="$t('admin.telemetry.friend_links_total')">{{
             snapshot.metrics.content.friendLinksTotal
           }}</NDescriptionsItem>
-          <NDescriptionsItem label="请求总数 (24h)">{{
+          <NDescriptionsItem :label="$t('admin.telemetry.requests_total')">{{
             snapshot.metrics.traffic.requestTotal
           }}</NDescriptionsItem>
-          <NDescriptionsItem label="5xx 错误率"
+          <NDescriptionsItem :label="$t('admin.telemetry.error_rate_5xx')"
             >{{ (snapshot.metrics.traffic.errorRate5xx * 100).toFixed(2) }}%</NDescriptionsItem
           >
-          <NDescriptionsItem label="P95 延迟"
+          <NDescriptionsItem :label="$t('admin.telemetry.p95_latency')"
             >{{ snapshot.metrics.traffic.p95LatencyMs.toFixed(0) }}ms</NDescriptionsItem
           >
-          <NDescriptionsItem label="ISR 渲染"
+          <NDescriptionsItem :label="$t('admin.telemetry.isr_renders')"
             >{{ snapshot.metrics.isr.renderSuccess }}/{{
               snapshot.metrics.isr.renderTotal
             }}</NDescriptionsItem
           >
-          <NDescriptionsItem label="联合投递 (24h)">{{
+          <NDescriptionsItem :label="$t('admin.telemetry.federation_outbound')">{{
             snapshot.metrics.federation.outboundTotal
           }}</NDescriptionsItem>
-          <NDescriptionsItem label="WS 连接数">{{
+          <NDescriptionsItem :label="$t('admin.telemetry.ws_connections')">{{
             snapshot.metrics.realtime.wsConnectionsCurrent
           }}</NDescriptionsItem>
         </NDescriptions>
       </NCollapseItem>
 
       <NCollapseItem
-        title="错误摘要"
+        :title="$t('admin.telemetry.error_summary')"
         name="errors"
       >
         <NSpace vertical>
@@ -312,10 +311,10 @@ onMounted(() => fetchData())
                 size="tiny"
                 quaternary
                 type="warning"
-                >清空错误数据</NButton
+                >{{ $t('admin.telemetry.clear_errors') }}</NButton
               >
             </template>
-            确定清空所有已收集的错误数据？
+            {{ $t('admin.telemetry.clear_confirm') }}
           </NPopconfirm>
           <template v-if="snapshot.errors?.length">
             <NCard
@@ -338,7 +337,7 @@ onMounted(() => fetchData())
           </template>
           <NEmpty
             v-else
-            description="暂无错误"
+            :description="$t('admin.telemetry.no_errors')"
           />
           <template v-if="snapshot.panics?.length">
             <div class="mt-2 text-sm font-medium">Panics</div>
@@ -364,7 +363,7 @@ onMounted(() => fetchData())
       </NCollapseItem>
 
       <NCollapseItem
-        title="原始 JSON"
+        :title="$t('admin.telemetry.raw_json')"
         name="raw"
       >
         <NScrollbar style="max-height: 400px">
@@ -379,7 +378,7 @@ onMounted(() => fetchData())
     <!-- Report history -->
     <NCard
       size="small"
-      title="上报历史"
+      :title="$t('admin.telemetry.report_history')"
     >
       <NTimeline v-if="reportHistory.length">
         <NTimelineItem
@@ -398,7 +397,7 @@ onMounted(() => fetchData())
       </NTimeline>
       <NEmpty
         v-else
-        description="暂无上报记录"
+        :description="$t('admin.telemetry.no_reports')"
       />
     </NCard>
   </div>

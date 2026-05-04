@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+
 import {
   NButton,
   NCard,
@@ -23,6 +25,7 @@ import { useProfile } from './composables/use-profile'
 
 defineOptions({ name: 'UserCenter' })
 
+const { t } = useI18n()
 const message = useMessage()
 
 const {
@@ -82,7 +85,7 @@ const {
                 </div>
               </div>
               <div class="text-center">
-                <div class="text-xl font-medium">{{ user.nickname || '未设置昵称' }}</div>
+                <div class="text-xl font-medium">{{ user.nickname || $t('admin.user.no_nickname') }}</div>
                 <div class="text-sm text-neutral-500">@{{ user.username }}</div>
               </div>
               <div class="mt-4 flex flex-wrap justify-center gap-2">
@@ -91,20 +94,20 @@ const {
                   type="success"
                   size="small"
                   round
-                  >已激活</NTag
+                  >{{ $t('admin.user.activated') }}</NTag
                 >
                 <NTag
                   v-if="user.isAdmin"
                   type="primary"
                   size="small"
                   round
-                  >管理员</NTag
+                  >{{ $t('admin.user.administrator') }}</NTag
                 >
               </div>
               <NDivider />
               <div class="flex w-full justify-around">
                 <NStatistic
-                  label="注册天数"
+                  :label="t('admin.user.registration_days')"
                   tabular-nums
                   >{{ registrationDays }}</NStatistic
                 >
@@ -113,7 +116,7 @@ const {
           </NCard>
 
           <NCard
-            title="基本信息"
+            :title="t('admin.user.basic_info')"
             size="small"
             :bordered="false"
           >
@@ -128,7 +131,7 @@ const {
                 </span>
               </div>
               <div class="flex justify-between">
-                <span class="text-neutral-400">注册日期</span>
+                <span class="text-neutral-400">{{ $t('admin.user.registration_date') }}</span>
                 <span>{{
                   user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '-'
                 }}</span>
@@ -154,7 +157,7 @@ const {
           >
             <NTabPane
               name="profile"
-              tab="个人资料"
+              :tab="t('admin.user.tab_profile')"
             >
               <ProfileForm
                 v-model:form="profileForm"
@@ -167,7 +170,7 @@ const {
 
             <NTabPane
               name="security"
-              tab="安全设置"
+              :tab="t('admin.user.tab_security')"
             >
               <PasswordForm
                 v-model:form="passwordForm"
@@ -180,7 +183,7 @@ const {
 
             <NTabPane
               name="binding"
-              tab="账号绑定"
+              :tab="t('admin.user.tab_binding')"
             >
               <OAuthBindings
                 :loading="oauthLoading"

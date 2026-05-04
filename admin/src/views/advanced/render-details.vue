@@ -70,7 +70,7 @@ const { data: pageStateData, isPending } = useQuery({
 const bootstrapMutation = useMutation({
   mutationFn: bootstrapObservabilityPages,
   onSuccess: (data) => {
-    message.success(`冷启动完成：共 ${data.totalRoutes} 路由，成功渲染 ${data.renderedCount} 次`)
+    message.success(t('admin.observability.bootstrap_complete', { total: data.totalRoutes, rendered: data.renderedCount }))
     queryClient.invalidateQueries({ queryKey: ['obs-pages'] })
   },
 })
@@ -80,7 +80,7 @@ const invalidateMutation = useMutation({
   onSuccess: (data) => {
     lastInvalidateReport.value = data
     message.success(
-      `更新完成：候选 ${ensureArray(data.candidateUrls).length}，已渲染 ${ensureArray(data.rendered).length}`,
+      t('admin.observability.invalidate_complete', { candidates: ensureArray(data.candidateUrls).length, rendered: ensureArray(data.rendered).length }),
     )
     queryClient.invalidateQueries({ queryKey: ['obs-pages'] })
   },
@@ -94,7 +94,7 @@ const invalidatePending = computed(() => invalidateMutation.isPending.value)
 
 const renderColumns: DataTableColumns<ObservabilityRenderRecord> = [
   {
-    title: '页面',
+    title: t('admin.observability.page'),
     key: 'urlPath',
     minWidth: 240,
     ellipsis: { tooltip: true },
@@ -115,25 +115,25 @@ const renderColumns: DataTableColumns<ObservabilityRenderRecord> = [
       ),
   },
   {
-    title: '触发源',
+    title: t('admin.observability.trigger_source'),
     key: 'trigger',
     width: 180,
     ellipsis: { tooltip: true },
   },
   {
-    title: '依赖数',
+    title: t('admin.observability.deps_count'),
     key: 'depsCount',
     width: 90,
     render: (row) => row.deps?.length ?? 0,
   },
   {
-    title: '更新文件',
+    title: t('admin.observability.updated_files'),
     key: 'updatedFiles',
     width: 90,
     render: (row) => row.updatedFiles?.length ?? 0,
   },
   {
-    title: '耗时',
+    title: t('admin.observability.duration'),
     key: 'durationMs',
     width: 90,
     render: (row) => `${row.durationMs}ms`,
@@ -186,7 +186,7 @@ function triggerInvalidate() {
   const depKeys = splitByLine(depKeysInput.value)
   const urls = splitByLine(urlsInput.value)
   if (depKeys.length === 0 && urls.length === 0) {
-    message.warning('至少填写 depKeys 或 urls 之一')
+    message.warning(t('admin.observability.fill_depkeys_or_urls'))
     return
   }
   invalidateMutation.mutate({
@@ -207,7 +207,7 @@ function triggerInvalidate() {
           :component="Flash24Regular"
           class="text-xl text-primary"
         />
-        <div class="text-lg font-medium">高级信息 / 渲染详情</div>
+        <div class="text-lg font-medium">{{ $t('admin.observability.render_details') }}</div>
       </div>
       <div class="flex items-center gap-2">
         <NButton
@@ -217,7 +217,7 @@ function triggerInvalidate() {
           @click="refreshPageState"
         >
           <template #icon><NIcon :component="ArrowClockwise24Regular" /></template>
-          刷新状态
+          {{ $t('admin.common.refresh') }}
         </NButton>
         <NButton
           size="small"
@@ -226,7 +226,7 @@ function triggerInvalidate() {
           @click="triggerBootstrap"
         >
           <template #icon><NIcon :component="Rocket24Regular" /></template>
-          冷启动全量渲染
+          {{ $t('admin.observability.cold_bootstrap') }}
         </NButton>
       </div>
     </div>
@@ -234,35 +234,35 @@ function triggerInvalidate() {
     <NSpin :show="isPending">
       <div class="grid grid-cols-1 gap-4 lg:grid-cols-12">
         <NCard
-          title="ISR 状态"
+          :title="$t('admin.observability.isr_status')"
           class="lg:col-span-6"
         >
           <NDescriptions
             :column="2"
             size="small"
           >
-            <NDescriptionsItem label="队列深度">{{ snapshot?.queueDepth ?? 0 }}</NDescriptionsItem>
-            <NDescriptionsItem label="依赖键">{{ snapshot?.depKeyCount ?? 0 }}</NDescriptionsItem>
-            <NDescriptionsItem label="页面键">{{ snapshot?.urlKeyCount ?? 0 }}</NDescriptionsItem>
-            <NDescriptionsItem label="已追踪页面">{{
+            <NDescriptionsItem :label="$t('admin.observability.queue_depth')">{{ snapshot?.queueDepth ?? 0 }}</NDescriptionsItem>
+            <NDescriptionsItem :label="$t('admin.observability.dep_keys')">{{ snapshot?.depKeyCount ?? 0 }}</NDescriptionsItem>
+            <NDescriptionsItem :label="$t('admin.observability.url_keys')">{{ snapshot?.urlKeyCount ?? 0 }}</NDescriptionsItem>
+            <NDescriptionsItem :label="$t('admin.observability.tracked_pages')">{{
               snapshot?.trackedPages?.length ?? 0
             }}</NDescriptionsItem>
-            <NDescriptionsItem label="路由总数">{{ routeCatalog?.total ?? 0 }}</NDescriptionsItem>
-            <NDescriptionsItem label="路由截断">{{
-              routeCatalog?.truncated ? '是' : '否'
+            <NDescriptionsItem :label="$t('admin.observability.total_routes')">{{ routeCatalog?.total ?? 0 }}</NDescriptionsItem>
+            <NDescriptionsItem :label="$t('admin.observability.routes_truncated')">{{
+              routeCatalog?.truncated ? $t('admin.common.yes') : $t('admin.common.no')
             }}</NDescriptionsItem>
           </NDescriptions>
           <div class="mt-3 text-xs text-neutral-500">
-            最近引导：{{
+            {{ $t('admin.observability.last_bootstrap') }}：{{
               bootstrapReport?.finishedAt
                 ? new Date(bootstrapReport.finishedAt).toLocaleString()
-                : '无'
+                : $t('admin.common.none')
             }}
           </div>
         </NCard>
 
         <NCard
-          title="手动触发更新"
+          :title="$t('admin.observability.manual_invalidate')"
           class="lg:col-span-6"
         >
           <div class="space-y-3">
@@ -277,17 +277,17 @@ function triggerInvalidate() {
               v-model:value="depKeysInput"
               type="textarea"
               :autosize="{ minRows: 3, maxRows: 6 }"
-              placeholder="depKeys，一行一个，例如：&#10;post:list:page:1&#10;post:detail:123"
+              :placeholder="$t('admin.observability.placeholder_dep_keys')"
             />
             <NInput
               v-model:value="urlsInput"
               type="textarea"
               :autosize="{ minRows: 3, maxRows: 6 }"
-              placeholder="urls，一行一个，例如：&#10;/&#10;/posts/example"
+              :placeholder="$t('admin.observability.placeholder_urls')"
             />
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2 text-xs text-neutral-500">
-                <span>同步渲染</span>
+                <span>{{ $t('admin.observability.sync_render') }}</span>
                 <NSwitch v-model:value="syncRender" />
               </div>
               <NButton
@@ -295,7 +295,7 @@ function triggerInvalidate() {
                 :loading="invalidatePending"
                 @click="triggerInvalidate"
               >
-                触发更新
+                {{ $t('admin.observability.trigger_update') }}
               </NButton>
             </div>
           </div>
@@ -304,12 +304,12 @@ function triggerInvalidate() {
 
       <div class="grid grid-cols-1 gap-4 lg:grid-cols-12">
         <NCard
-          title="页面目录树"
+          :title="$t('admin.observability.page_tree')"
           class="lg:col-span-7"
         >
           <NEmpty
             v-if="!treeOptions.length"
-            description="暂无页面目录"
+            :description="$t('admin.observability.no_page_tree')"
           />
           <NTree
             v-else
@@ -321,12 +321,12 @@ function triggerInvalidate() {
         </NCard>
 
         <NCard
-          title="路由目录"
+          :title="$t('admin.observability.route_catalog')"
           class="lg:col-span-5"
         >
           <NEmpty
             v-if="!routeCatalog?.items?.length"
-            description="暂无路由目录"
+            :description="$t('admin.observability.no_route_catalog')"
           />
           <NSpace
             v-else
@@ -347,15 +347,15 @@ function triggerInvalidate() {
             type="info"
             :show-icon="false"
           >
-            路由列表已截断，可调大 route_limit 查询更多。
+            {{ $t('admin.observability.routes_truncated_hint') }}
           </NAlert>
         </NCard>
       </div>
 
-      <NCard title="本次更新回执">
+      <NCard :title="$t('admin.observability.invalidate_receipt')">
         <NEmpty
           v-if="!lastInvalidateReport"
-          description="尚未触发手动更新"
+          :description="$t('admin.observability.no_invalidate_yet')"
         />
         <div
           v-else
@@ -365,20 +365,20 @@ function triggerInvalidate() {
             :column="3"
             size="small"
           >
-            <NDescriptionsItem label="来源">{{ lastInvalidateReport.source }}</NDescriptionsItem>
-            <NDescriptionsItem label="候选页面">{{
+            <NDescriptionsItem :label="$t('admin.observability.source')">{{ lastInvalidateReport.source }}</NDescriptionsItem>
+            <NDescriptionsItem :label="$t('admin.observability.candidate_pages')">{{
               ensureArray(lastInvalidateReport.candidateUrls).length
             }}</NDescriptionsItem>
-            <NDescriptionsItem label="渲染记录">{{
+            <NDescriptionsItem :label="$t('admin.observability.rendered_count')">{{
               ensureArray(lastInvalidateReport.rendered).length
             }}</NDescriptionsItem>
-            <NDescriptionsItem label="命中依赖">{{
+            <NDescriptionsItem :label="$t('admin.observability.matched_urls')">{{
               ensureArray(lastInvalidateReport.matchedUrls).length
             }}</NDescriptionsItem>
-            <NDescriptionsItem label="入队页面">{{
+            <NDescriptionsItem :label="$t('admin.observability.enqueued_urls')">{{
               ensureArray(lastInvalidateReport.enqueuedUrls).length
             }}</NDescriptionsItem>
-            <NDescriptionsItem label="队列深度">{{
+            <NDescriptionsItem :label="$t('admin.observability.queue_depth')">{{
               lastInvalidateReport.queueDepth
             }}</NDescriptionsItem>
           </NDescriptions>
@@ -392,10 +392,10 @@ function triggerInvalidate() {
       </NCard>
 
       <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <NCard title="最近依赖失效活动">
+        <NCard :title="$t('admin.observability.recent_invalidations')">
           <NEmpty
             v-if="!snapshot?.recentInvalidations?.length"
-            description="暂无失效记录"
+            :description="$t('admin.observability.no_invalidations')"
           />
           <NTimeline v-else>
             <NTimelineItem
@@ -416,10 +416,10 @@ function triggerInvalidate() {
           </NTimeline>
         </NCard>
 
-        <NCard title="最近渲染活动">
+        <NCard :title="$t('admin.observability.recent_renders')">
           <NEmpty
             v-if="!snapshot?.recentRenderActivity?.length"
-            description="暂无渲染记录"
+            :description="$t('admin.observability.no_renders')"
           />
           <NTimeline v-else>
             <NTimelineItem

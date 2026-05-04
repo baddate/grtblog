@@ -1,8 +1,11 @@
+import i18n from '@/plugins/i18n'
 import { ref } from 'vue'
 
 import type { RouteLocationNormalizedLoaded } from 'vue-router'
 
-const ADMIN_PANEL_TITLE = '管理后台'
+const __ = i18n.global.t
+
+const ADMIN_PANEL_TITLE = __('admin.common.admin_panel')
 const DEFAULT_SITE_NAME = 'Sanblog Admin'
 const FALLBACK_SITE_NAME =
   (import.meta.env.VITE_APP_NAME || DEFAULT_SITE_NAME).trim() || DEFAULT_SITE_NAME

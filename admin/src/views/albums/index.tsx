@@ -9,6 +9,7 @@ import {
   NDropdown,
   NImage,
 } from 'naive-ui'
+import { useI18n } from 'vue-i18n'
 import { defineComponent, ref, Transition } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -29,6 +30,7 @@ export default defineComponent({
   name: 'AlbumList',
   setup() {
     const router = useRouter()
+    const { t } = useI18n()
     const { message } = useDiscreteApi()
     const { data, loading, pagination, refresh } = useTable<AlbumListItem>(listAlbums)
     const checkedRowKeys = ref<DataTableRowKey[]>([])
@@ -44,10 +46,10 @@ export default defineComponent({
     async function handleDelete(id: number) {
       try {
         await deleteAlbum(id)
-        message.success('删除成功')
+        message.success(t('admin.service.delete_success'))
         refresh()
       } catch (err) {
-        message.error(err instanceof Error ? err.message : '删除失败')
+        message.error(err instanceof Error ? err.message : t('admin.service.delete_failed'))
       }
     }
 
@@ -56,12 +58,16 @@ export default defineComponent({
       if (ids.length === 0) return
       batchSetAlbumPublished({ ids, isPublished: key === 'publish' })
         .then(() => {
-          message.success(key === 'publish' ? '已批量发布' : '已批量取消发布')
+          message.success(
+            key === 'publish'
+              ? t('admin.service.batch_publish_success')
+              : t('admin.service.batch_unpublish_success'),
+          )
           checkedRowKeys.value = []
           refresh()
         })
         .catch((err) => {
-          message.error(err instanceof Error ? err.message : '操作失败')
+          message.error(err instanceof Error ? err.message : t('admin.service.operation_failed'))
         })
     }
 
@@ -70,23 +76,23 @@ export default defineComponent({
       if (ids.length === 0) return
       try {
         await batchDeleteAlbums({ ids })
-        message.success('批量删除成功')
+        message.success(t('admin.service.batch_delete_success'))
         checkedRowKeys.value = []
         refresh()
       } catch (err) {
-        message.error(err instanceof Error ? err.message : '批量删除失败')
+        message.error(err instanceof Error ? err.message : t('admin.service.operation_failed'))
       }
     }
 
     const batchPublishOptions = [
-      { label: '批量发布', key: 'publish' },
-      { label: '批量取消发布', key: 'unpublish' },
+      { label: t('admin.action.batch_publish'), key: 'publish' },
+      { label: t('admin.action.batch_unpublish'), key: 'unpublish' },
     ]
 
     const columns: DataTableColumns<AlbumListItem> = [
       { type: 'selection' },
       {
-        title: '封面',
+        title: t('admin.table.cover'),
         key: 'cover',
         width: 72,
         render(row) {
@@ -107,7 +113,7 @@ export default defineComponent({
         },
       },
       {
-        title: '标题',
+        title: t('admin.table.title'),
         key: 'title',
         minWidth: 180,
         ellipsis: { tooltip: true },
@@ -124,7 +130,7 @@ export default defineComponent({
         },
       },
       {
-        title: '照片数',
+        title: t('admin.table.photo_count'),
         key: 'photoCount',
         width: 80,
         align: 'center',
@@ -141,7 +147,7 @@ export default defineComponent({
         },
       },
       {
-        title: '状态',
+        title: t('admin.table.publish_status'),
         key: 'isPublished',
         width: 80,
         align: 'center',
@@ -152,34 +158,34 @@ export default defineComponent({
               size='small'
               bordered={false}
             >
-              {row.isPublished ? '已发布' : '草稿'}
+              {row.isPublished ? t('admin.status.published') : t('admin.status.draft')}
             </NTag>
           )
         },
       },
       {
-        title: '浏览',
+        title: t('admin.table.views'),
         key: 'views',
         width: 70,
         align: 'center',
       },
       {
-        title: '点赞',
+        title: t('admin.table.likes'),
         key: 'likes',
         width: 70,
         align: 'center',
       },
       {
-        title: '创建时间',
+        title: t('admin.table.created_at'),
         key: 'createdAt',
         width: 160,
         render(row) {
-          return new Date(row.createdAt).toLocaleString('zh-CN')
+          return new Date(row.createdAt).toLocaleString()
         },
         sorter: 'default',
       },
       {
-        title: '操作',
+        title: t('admin.table.actions'),
         key: 'actions',
         width: 120,
         align: 'center',
@@ -195,7 +201,7 @@ export default defineComponent({
                 size='small'
                 onClick={() => handleEdit(row.id)}
               >
-                编辑
+                {t('admin.common.edit')}
               </NButton>
               <NPopconfirm onPositiveClick={() => handleDelete(row.id)}>
                 {{
@@ -205,10 +211,10 @@ export default defineComponent({
                       type='error'
                       size='small'
                     >
-                      删除
+                      {t('admin.common.delete')}
                     </NButton>
                   ),
-                  default: () => '确定要删除这个相册吗？',
+                  default: () => t('admin.confirm.delete_album'),
                 }}
               </NPopconfirm>
             </NSpace>
@@ -222,7 +228,7 @@ export default defineComponent({
         {/* 顶部操作栏 */}
         <NCard bordered={false}>
           <div class='flex items-center justify-between'>
-            <div class='text-lg font-medium'>相册列表</div>
+            <div class='text-lg font-medium'>{t('admin.card.album_list')}</div>
             <NSpace
               align='center'
               size={12}
@@ -237,7 +243,7 @@ export default defineComponent({
                       type='info'
                       size='small'
                     >
-                      已选 {checkedRowKeys.value.length} 项
+                      {t('admin.badge.selected_count', { n: checkedRowKeys.value.length })}
                     </NTag>
                     <NDropdown
                       options={batchPublishOptions}
@@ -247,7 +253,7 @@ export default defineComponent({
                         size='small'
                         secondary
                       >
-                        批量发布
+                        {t('admin.action.batch_publish')}
                       </NButton>
                     </NDropdown>
                     <NPopconfirm onPositiveClick={handleBatchDelete}>
@@ -258,10 +264,13 @@ export default defineComponent({
                             type='error'
                             secondary
                           >
-                            批量删除
+                            {t('admin.action.batch_delete')}
                           </NButton>
                         ),
-                        default: () => `确定删除选中的 ${checkedRowKeys.value.length} 个相册吗？`,
+                        default: () =>
+                          t('admin.confirm.batch_delete_albums', {
+                            n: checkedRowKeys.value.length,
+                          }),
                       }}
                     </NPopconfirm>
                   </NSpace>
@@ -273,7 +282,7 @@ export default defineComponent({
               >
                 {{
                   icon: () => <div class='iconify ph--plus' />,
-                  default: () => '新建相册',
+                  default: () => t('admin.action.create_album'),
                 }}
               </NButton>
             </NSpace>

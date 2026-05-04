@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 import { NCard, NAlert, NButton } from 'naive-ui'
 import { RouterLink, useRouter } from 'vue-router'
 
@@ -20,7 +22,7 @@ const router = useRouter()
       type="info"
       closable
     >
-      在路由配置的 meta 中添加 enableMultiTab 属性，访问不同的动态路径时都会创建新的 tab
+      {{ t('admin.dynamic_route.alert') }}
     </NAlert>
     <NCard :size="isMaxMd ? 'small' : undefined">
       <div class="grid grid-cols-5 gap-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1">

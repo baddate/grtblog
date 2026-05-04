@@ -57,7 +57,7 @@ const emit = defineEmits<{
 
 function renderHistoryStatus(row: WebhookHistoryItem) {
   const success = row.responseStatus >= 200 && row.responseStatus < 300
-  const label = success ? '成功' : '失败'
+  const label = success ? t('admin.webhooks.history.success') : t('admin.webhooks.history.failure')
   return h(
     NTag,
     { size: 'small', type: success ? 'success' : 'error', bordered: false },
@@ -66,9 +66,9 @@ function renderHistoryStatus(row: WebhookHistoryItem) {
 }
 
 const historyColumns = computed<DataTableColumns<WebhookHistoryItem>>(() => [
-  { title: '事件', key: 'eventName', width: 220 },
+  { title: t('admin.webhooks.event'), key: 'eventName', width: 220 },
   {
-    title: 'Webhook',
+    title: t('admin.webhooks.history.webhook'),
     key: 'webhookId',
     width: 180,
     render: (row) => props.webhookMap.get(row.webhookId) || `#${row.webhookId}`,
@@ -80,18 +80,18 @@ const historyColumns = computed<DataTableColumns<WebhookHistoryItem>>(() => [
     render: (row) => renderHistoryStatus(row),
   },
   {
-    title: '测试',
+    title: t('admin.webhooks.history.is_test'),
     key: 'isTest',
     width: 90,
     render: (row) =>
       h(
         NTag,
         { size: 'small', type: row.isTest ? 'success' : 'default', bordered: false },
-        { default: () => (row.isTest ? '是' : '否') },
+        { default: () => (row.isTest ? t('admin.common.yes') : t('admin.common.no')) },
       ),
   },
   {
-    title: '时间',
+    title: t('admin.webhooks.history.time'),
     key: 'createdAt',
     width: 180,
     render: (row) => formatDate(row.createdAt),
@@ -105,12 +105,12 @@ const historyColumns = computed<DataTableColumns<WebhookHistoryItem>>(() => [
         h(
           NButton,
           { size: 'small', secondary: true, onClick: () => emit('viewDetail', row) },
-          { default: () => '详情' },
+          { default: () => t('admin.webhooks.history.detail') },
         ),
         h(
           NButton,
           { size: 'small', type: 'primary', secondary: true, onClick: () => emit('replay', row) },
-          { default: () => '重放' },
+          { default: () => t('admin.webhooks.history.replay') },
         ),
       ]),
   },
@@ -119,7 +119,7 @@ const historyColumns = computed<DataTableColumns<WebhookHistoryItem>>(() => [
 </script>
 
 <template>
-  <NCard title="投递历史">
+  <NCard :title="t('admin.webhooks.history.title')">
     <template #header-extra>
       <NSpace size="small">
         <NTag
@@ -127,14 +127,14 @@ const historyColumns = computed<DataTableColumns<WebhookHistoryItem>>(() => [
           type="warning"
           :bordered="false"
         >
-          本页失败 {{ historyFailureCount }}
+          {{ t('admin.webhooks.history.page_failures', { count: historyFailureCount }) }}
         </NTag>
         <NTag
           size="small"
           type="info"
           :bordered="false"
         >
-          共 {{ historyTotal }} 条
+          {{ t('admin.webhooks.total_count', { count: historyTotal }) }}
         </NTag>
       </NSpace>
     </template>
@@ -149,34 +149,34 @@ const historyColumns = computed<DataTableColumns<WebhookHistoryItem>>(() => [
         y-gap="8"
       >
         <NGi>
-          <NFormItem label="Webhook">
+          <NFormItem :label="t('admin.webhooks.history.webhook')">
             <NSelect
               :value="historyFilters.webhookId"
               :options="webhookOptions"
               clearable
-              placeholder="全部"
+              :placeholder="$t('admin.webhooks.all_placeholder')"
               @update:value="historyFilters.webhookId = $event"
             />
           </NFormItem>
         </NGi>
         <NGi>
-          <NFormItem label="事件">
+          <NFormItem :label="t('admin.webhooks.event')">
             <NSelect
               :value="historyFilters.eventName"
               :options="eventOptions"
               clearable
-              placeholder="全部"
+              :placeholder="$t('admin.webhooks.all_placeholder')"
               @update:value="historyFilters.eventName = $event"
             />
           </NFormItem>
         </NGi>
         <NGi>
-          <NFormItem label="测试">
+          <NFormItem :label="t('admin.webhooks.history.is_test')">
             <NCheckbox
               :checked="isTestOnly"
               @update:checked="isTestOnly = $event"
             >
-              仅测试
+              {{ t('admin.webhooks.history.test_only') }}
             </NCheckbox>
           </NFormItem>
         </NGi>
@@ -187,7 +187,7 @@ const historyColumns = computed<DataTableColumns<WebhookHistoryItem>>(() => [
                 type="primary"
                 secondary
                 @click="emit('applyFilters')"
-                >筛选</NButton
+                >{{ t('admin.webhooks.filter.apply') }}</NButton
               >
               <NButton @click="emit('resetFilters')">{{ $t('admin.common.reset') }}</NButton>
               <NButton
@@ -205,7 +205,7 @@ const historyColumns = computed<DataTableColumns<WebhookHistoryItem>>(() => [
       v-if="history.length === 0 && !historyLoading"
       class="py-10"
     >
-      <NEmpty description="暂无投递记录" />
+      <NEmpty :description="t('admin.webhooks.history.no_data')" />
     </div>
     <NDataTable
       v-else

@@ -22,10 +22,11 @@ const props = withDefaults(
     loading: false,
     width: 540,
     labelWidth: 90,
-    confirmText: '保存',
-    cancelText: '取消',
   },
 )
+
+const computedConfirmText = () => props.confirmText ?? t('admin.common.save')
+const computedCancelText = () => props.cancelText ?? t('admin.common.cancel')
 
 const emit = defineEmits<{
   'update:show': [value: boolean]
@@ -63,12 +64,12 @@ function onConfirm() {
         :close="close"
       >
         <NSpace justify="end">
-          <NButton @click="close">{{ cancelText }}</NButton>
+          <NButton @click="close">{{ computedCancelText() }}</NButton>
           <NButton
             type="primary"
             :loading="props.loading"
             @click="onConfirm"
-            >{{ confirmText }}</NButton
+            >{{ computedConfirmText() }}</NButton
           >
         </NSpace>
       </slot>

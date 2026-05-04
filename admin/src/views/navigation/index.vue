@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import {
   NButton,
   NCard,
@@ -56,12 +59,12 @@ const formState = reactive({
 const formRules = {
   name: {
     required: true,
-    message: '请输入菜单名称',
+    message: t('admin.validation.menu_name_required'),
     trigger: ['blur', 'input'],
   },
   url: {
     required: true,
-    message: '请输入菜单链接',
+    message: t('admin.validation.menu_url_required'),
     trigger: ['blur', 'input'],
   },
 }
@@ -111,7 +114,7 @@ const fetchMenus = async () => {
     menuTree.value = normalizeMenus(data)
     orderDirty.value = false
   } catch (error) {
-    message.error(error instanceof Error ? error.message : '获取菜单失败')
+    message.error(error instanceof Error ? error.message : t('admin.service.load_failed'))
   } finally {
     loading.value = false
   }
@@ -148,7 +151,7 @@ const treeOptions = computed(() => {
   const blocked = new Set<number>()
   collectDescendantIds(editingItem.value, blocked)
   const options = buildTreeOptions(menuTree.value, blocked)
-  return [{ label: '顶级菜单', key: 0, children: options }]
+  return [{ label: t('admin.navigation.top_level'), key: 0, children: options }]
 })
 
 const openCreate = (parent?: NavMenuItem | null) => {
@@ -193,14 +196,14 @@ const patchTreeItem = (items: NavMenuItem[], id: number, patch: Partial<NavMenuI
 }
 
 const handleDelete = async (item: NavMenuItem) => {
-  if (!window.confirm(`确认删除菜单「${item.name}」及其子项吗？`)) return
+  if (!window.confirm(t('admin.navigation.confirm_delete_with_children', { name: item.name }))) return
   try {
     await flushOrderIfDirty()
     await deleteNavMenu(item.id)
-    message.success('已删除')
+    message.success(t('admin.service.delete_success'))
     await fetchMenus()
   } catch (error) {
-    message.error(error instanceof Error ? error.message : '删除失败')
+    message.error(error instanceof Error ? error.message : t('admin.service.delete_failed'))
   }
 }
 
@@ -225,16 +228,16 @@ const buildOrderPayload = (
 const saveOrder = async () => {
   const payload = buildOrderPayload(menuTree.value)
   if (!payload.length) {
-    message.warning('没有可保存的排序')
+    message.warning(t('admin.navigation.no_order_changes'))
     return
   }
   savingOrder.value = true
   try {
     await reorderNavMenus(payload)
-    message.success('排序已保存')
+    message.success(t('admin.navigation.order_saved'))
     orderDirty.value = false
   } catch (error) {
-    message.error(error instanceof Error ? error.message : '保存排序失败')
+    message.error(error instanceof Error ? error.message : t('admin.navigation.save_order_failed'))
   } finally {
     savingOrder.value = false
   }
@@ -272,17 +275,17 @@ const handleSubmit = async () => {
           icon: payload.icon,
         })
       }
-      message.success('菜单已更新')
+      message.success(t('admin.navigation.menu_updated'))
     } else {
       // 新建：结构性变更，先保存未提交的排序再拉取。
       await flushOrderIfDirty()
       await createNavMenu(payload)
-      message.success('菜单已创建')
+      message.success(t('admin.navigation.menu_created'))
       await fetchMenus()
     }
     modalOpen.value = false
   } catch (error) {
-    message.error(error instanceof Error ? error.message : '保存失败')
+    message.error(error instanceof Error ? error.message : t('admin.service.save_failed'))
   } finally {
     formSubmitting.value = false
   }
@@ -295,17 +298,17 @@ onMounted(() => {
 
 <template>
   <ScrollContainer wrapper-class="p-4">
-    <NCard title="导航菜单">
+    <NCard :title="$t('admin.navigation.title')">
       <div class="space-y-6">
         <div class="flex flex-wrap items-start justify-between gap-4">
           <div class="space-y-2">
             <div class="text-sm text-neutral-600 dark:text-neutral-400">
-              导航菜单用于前台侧边栏与移动端导航，支持拖拽调整层级与顺序。
+              {{ $t('admin.navigation.description') }}
             </div>
             <NTag
               size="small"
               type="info"
-              >图标字段使用 lucide-svelte 的图标名称</NTag
+              >{{ $t('admin.navigation.icon_hint') }}</NTag
             >
           </div>
           <NSpace>
@@ -318,7 +321,7 @@ onMounted(() => {
             <NButton
               type="primary"
               @click="openCreate()"
-              >新增菜单</NButton
+              >{{ $t('admin.navigation.add_menu') }}</NButton
             >
             <NButton
               type="success"
@@ -326,7 +329,7 @@ onMounted(() => {
               :loading="savingOrder"
               @click="saveOrder"
             >
-              保存排序
+              {{ $t('admin.action.save_order') }}
             </NButton>
           </NSpace>
         </div>
@@ -343,7 +346,7 @@ onMounted(() => {
           v-if="orderDirty"
           class="text-xs text-orange-600 dark:text-orange-400"
         >
-          当前排序有改动，请点击“保存排序”同步到服务端。
+          {{ $t('admin.navigation.order_dirty_hint') }}
         </div>
       </div>
     </NCard>
@@ -351,7 +354,7 @@ onMounted(() => {
     <NModal
       v-model:show="modalOpen"
       preset="card"
-      title="菜单配置"
+      :title="$t('admin.navigation.menu_config')"
       class="w-full max-w-[440px]"
     >
       <NForm
@@ -367,32 +370,32 @@ onMounted(() => {
         >
           <NInput
             v-model:value="formState.name"
-            placeholder="例如：首页"
+            :placeholder="t('admin.placeholder.menu_name_example')"
           />
         </NFormItem>
         <NFormItem
-          label="链接"
+          :label="$t('admin.navigation.url')"
           path="url"
         >
           <NInput
             v-model:value="formState.url"
-            placeholder="例如：/ 或 https://..."
+            :placeholder="t('admin.placeholder.menu_url_example')"
           />
         </NFormItem>
-        <NFormItem label="父级菜单">
+        <NFormItem :label="$t('admin.navigation.parent')">
           <NTreeSelect
             v-model:value="formState.parentId"
             :options="treeOptions"
             clearable
-            placeholder="顶级菜单"
+            :placeholder="t('admin.navigation.top_level')"
           />
         </NFormItem>
-        <NFormItem label="图标">
+        <NFormItem :label="$t('admin.navigation.icon')">
           <NSelect
             v-model:value="formState.icon"
             :options="iconSelectOptions"
             :render-label="renderIconOptionLabel"
-            placeholder="选择图标（可选）"
+            :placeholder="t('admin.placeholder.select_icon')"
             clearable
             filterable
           />
@@ -414,7 +417,7 @@ onMounted(() => {
             :loading="formSubmitting"
             @click="handleSubmit"
           >
-            保存
+            {{ $t('admin.common.save') }}
           </NButton>
         </div>
       </template>

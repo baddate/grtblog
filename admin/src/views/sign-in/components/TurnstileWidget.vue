@@ -51,7 +51,7 @@ watch(siteKeyRef, (key) => {
     v-else
     class="text-sm text-neutral-400"
   >
-    Turnstile 未配置
+    {{ t('admin.signin.turnstile_not_configured') }}
   </div>
 </template>
 

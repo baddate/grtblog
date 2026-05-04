@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+
 import {
   NCard,
   NDescriptions,
@@ -11,6 +13,8 @@ import {
 } from 'naive-ui'
 
 import { formatDate } from '@/utils/format'
+
+const { t } = useI18n()
 
 import type { VisitorProfile, VisitorRecentComment } from '@/types/visitors'
 
@@ -40,14 +44,14 @@ const statusTagTypeMap: Record<string, 'default' | 'info' | 'warning' | 'success
     @update:show="emit('update:visible', $event)"
   >
     <NDrawerContent
-      title="访客画像详情"
+      :title="t('admin.visitor.profile_management')"
       :native-scrollbar="false"
     >
       <div
         v-if="loading"
         class="py-8 text-center"
       >
-        <NText depth="3">加载中...</NText>
+        <NText depth="3">{{ $t('admin.common.loading') }}</NText>
       </div>
 
       <template v-else-if="profile">
@@ -57,12 +61,12 @@ const statusTagTypeMap: Record<string, 'default' | 'info' | 'warning' | 'success
           :column="2"
           class="mb-4"
         >
-          <NDescriptionsItem label="访客 ID"
+          <NDescriptionsItem :label="t('admin.visitor.visitor_id')"
             ><code>{{ profile.visitorId }}</code></NDescriptionsItem
           >
-          <NDescriptionsItem label="昵称">{{ profile.nickName || '-' }}</NDescriptionsItem>
-          <NDescriptionsItem label="邮箱">{{ profile.email || '-' }}</NDescriptionsItem>
-          <NDescriptionsItem label="网站">
+          <NDescriptionsItem :label="t('admin.visitor.nickname')">{{ profile.nickName || '-' }}</NDescriptionsItem>
+          <NDescriptionsItem :label="t('admin.visitor.email')">{{ profile.email || '-' }}</NDescriptionsItem>
+          <NDescriptionsItem :label="t('admin.visitor.website')">
             <a
               v-if="profile.website"
               :href="profile.website"
@@ -72,42 +76,42 @@ const statusTagTypeMap: Record<string, 'default' | 'info' | 'warning' | 'success
             >
             <span v-else>-</span>
           </NDescriptionsItem>
-          <NDescriptionsItem label="IP">{{ profile.ip || '-' }}</NDescriptionsItem>
-          <NDescriptionsItem label="地区">{{ profile.location || '-' }}</NDescriptionsItem>
-          <NDescriptionsItem label="浏览器 / 平台">{{
+          <NDescriptionsItem :label="t('admin.visitor.ip')">{{ profile.ip || '-' }}</NDescriptionsItem>
+          <NDescriptionsItem :label="t('admin.visitor.location')">{{ profile.location || '-' }}</NDescriptionsItem>
+          <NDescriptionsItem :label="t('admin.visitor.browser_platform')">{{
             [profile.browser, profile.platform].filter(Boolean).join(' / ') || '-'
           }}</NDescriptionsItem>
-          <NDescriptionsItem label="首次出现">{{
+          <NDescriptionsItem :label="t('admin.visitor.first_visit')">{{
             formatDate(profile.firstSeenAt)
           }}</NDescriptionsItem>
-          <NDescriptionsItem label="最近活跃">{{
+          <NDescriptionsItem :label="t('admin.visitor.last_visit')">{{
             formatDate(profile.lastSeenAt)
           }}</NDescriptionsItem>
-          <NDescriptionsItem label="最近浏览">{{
+          <NDescriptionsItem :label="t('admin.visitor.last_viewed')">{{
             formatDate(profile.lastViewedAt)
           }}</NDescriptionsItem>
-          <NDescriptionsItem label="最近点赞">{{
+          <NDescriptionsItem :label="t('admin.visitor.last_liked')">{{
             formatDate(profile.lastLikedAt)
           }}</NDescriptionsItem>
         </NDescriptions>
 
         <NSpace class="mb-4">
-          <NTag type="info">浏览 {{ profile.totalViews }}</NTag>
-          <NTag type="info">浏览内容数 {{ profile.uniqueViewItems }}</NTag>
-          <NTag type="success">点赞 {{ profile.totalLikes }}</NTag>
-          <NTag type="success">点赞内容数 {{ profile.uniqueLikedItems }}</NTag>
-          <NTag type="warning">评论 {{ profile.totalComments }}</NTag>
+          <NTag type="info">{{ t('admin.visitor.view_count', { count: profile.totalViews }) }}</NTag>
+          <NTag type="info">{{ t('admin.visitor.view_items', { count: profile.uniqueViewItems }) }}</NTag>
+          <NTag type="success">{{ t('admin.visitor.like_count', { count: profile.totalLikes }) }}</NTag>
+          <NTag type="success">{{ t('admin.visitor.like_items', { count: profile.uniqueLikedItems }) }}</NTag>
+          <NTag type="warning">{{ t('admin.visitor.comment_count', { count: profile.totalComments }) }}</NTag>
         </NSpace>
 
         <NCard
-          title="最近评论"
+          :title="t('admin.visitor.recent_comments')"
           size="small"
         >
           <div
             v-if="recentComments.length === 0"
             class="py-4 text-center text-[var(--text-color-3)]"
           >
-            暂无评论记录
+            {{ $t('admin.visitor.no_comments') }}
           </div>
           <NSpace
             v-else
@@ -134,7 +138,7 @@ const statusTagTypeMap: Record<string, 'default' | 'info' | 'warning' | 'success
                     v-if="item.isDeleted"
                     size="small"
                     type="error"
-                    >已删除</NTag
+                    >{{ $t('admin.visitor.deleted') }}</NTag
                   >
                 </NSpace>
                 <NText

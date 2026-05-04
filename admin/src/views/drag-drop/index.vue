@@ -124,11 +124,10 @@ watch(
       type="info"
       closable
     >
-      {{ APP_NAME }} 的 Tabs 栏的拖拽模块使用了
-      vue-draggable-plus，在一些拖拽的场景下，它也许可以帮助到你
+      {{ t('admin.drag_drop.alert', { appName: APP_NAME }) }}
     </NAlert>
     <NCard
-      title="基础使用"
+      :title="$t('admin.drag_drop.basic_title')"
       :size="isMaxMd ? 'small' : undefined"
     >
       <NSplit
@@ -173,7 +172,7 @@ watch(
       </NSplit>
     </NCard>
     <NCard
-      title="网格布局"
+      :title="$t('admin.drag_drop.grid_title')"
       :size="isMaxMd ? 'small' : undefined"
     >
       <div class="mb-4">
@@ -223,7 +222,7 @@ watch(
       </NSplit>
     </NCard>
     <NCard
-      title="克隆使用"
+      :title="$t('admin.drag_drop.clone_title')"
       :size="isMaxMd ? 'small' : undefined"
     >
       <NSplit
@@ -260,7 +259,7 @@ watch(
             <NScrollbar>
               <EmptyPlaceholder
                 :show="cloneTaskList.length <= 0"
-                :description="`把${isMaxMd ? '上' : '左'}边的任务拖拽到这里`"
+                :description="t('admin.drag_drop.task_prompt', { side: isMaxMd ? t('admin.drag_drop.direction_above') : t('admin.drag_drop.direction_left') })"
               />
               <VueDraggable
                 ref="cloneTaskListDragRef"

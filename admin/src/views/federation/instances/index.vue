@@ -51,7 +51,7 @@ const { data, isPending } = useQuery({
 const columns: DataTableColumns<FederationInstanceResp> = [
   { title: t('admin.table.id'), key: 'id', width: 80 },
   {
-    title: '域名',
+    title: t('admin.federation.domain'),
     key: 'base_url',
     minWidth: 200,
     ellipsis: { tooltip: true },
@@ -64,7 +64,7 @@ const columns: DataTableColumns<FederationInstanceResp> = [
   },
   { title: t('admin.common.name'), key: 'name', minWidth: 120, render: (row) => row.name || '-' },
   {
-    title: '软件版本',
+    title: t('admin.federation.software_version'),
     key: 'protocol_version',
     width: 120,
     render: (row) => row.protocol_version || '-',
@@ -87,7 +87,7 @@ const columns: DataTableColumns<FederationInstanceResp> = [
     },
   },
   {
-    title: '最后可见',
+    title: t('admin.federation.last_seen'),
     key: 'last_seen_at',
     width: 180,
     render: (row) => (row.last_seen_at ? new Date(row.last_seen_at).toLocaleString() : '-'),
@@ -108,7 +108,7 @@ const columns: DataTableColumns<FederationInstanceResp> = [
                 size: 'small',
                 onClick: () => handleOpenDetail(row),
               },
-              { default: () => '详情' },
+              { default: () => t('admin.action.view_details') },
             ),
             h(
               NPopconfirm,
@@ -124,9 +124,9 @@ const columns: DataTableColumns<FederationInstanceResp> = [
                       type: row.status === 'blocked' ? 'success' : 'error',
                       secondary: true,
                     },
-                    { default: () => (row.status === 'blocked' ? '解封' : '封禁') },
+                    { default: () => row.status === 'blocked' ? t('admin.action.unblock') : t('admin.action.block') },
                   ),
-                default: () => `确认${row.status === 'blocked' ? '解封' : '封禁'}该实例吗？`,
+                default: () => row.status === 'blocked' ? t('admin.federation.confirm_unblock_instance') : t('admin.federation.confirm_block_instance'),
               },
             ),
           ],
@@ -146,11 +146,11 @@ const { mutate: updateStatus } = useMutation({
   mutationFn: ({ id, status }: { id: number; status: string }) =>
     updateFederationInstanceStatus(id, status),
   onSuccess: () => {
-    message.success('状态更新成功')
+    message.success(t('admin.service.status_updated'))
     queryClient.invalidateQueries({ queryKey: ['federation-instances'] })
   },
   onError: (err: any) => {
-    message.error('更新失败: ' + (err.message || 'Unknown error'))
+    message.error(t('admin.service.update_status_failed') + ': ' + (err.message || t('admin.status.unknown')))
   },
 })
 
@@ -165,11 +165,11 @@ function handleToggleStatus(row: FederationInstanceResp) {
   <ScrollContainer wrapper-class="flex flex-col gap-y-4">
     <NCard :bordered="false">
       <div class="flex items-center justify-between">
-        <div class="text-lg font-medium">联合实例</div>
+        <div class="text-lg font-medium">{{ $t('admin.card.federation_instances') }}</div>
         <div class="flex items-center gap-2">
           <NInput
             v-model:value="searchKeyword"
-            placeholder="搜索域名或名称"
+            :placeholder="t('admin.placeholder.search_domain_name')"
             clearable
             class="w-60"
             @keydown.enter="queryClient.invalidateQueries({ queryKey: ['federation-instances'] })"
@@ -178,20 +178,20 @@ function handleToggleStatus(row: FederationInstanceResp) {
             secondary
             @click="queryClient.invalidateQueries({ queryKey: ['federation-instances'] })"
           >
-            搜索
+            {{ $t('admin.common.search') }}
           </NButton>
           <NButton
             secondary
             type="warning"
             @click="router.push({ name: 'federationDebug' })"
           >
-            联合调试
+            {{ $t('admin.action.federation_debug') }}
           </NButton>
           <NButton
             type="primary"
             @click="router.push({ name: 'friendLinkList' })"
           >
-            去友链管理
+            {{ $t('admin.action.go_friend_links') }}
           </NButton>
         </div>
       </div>

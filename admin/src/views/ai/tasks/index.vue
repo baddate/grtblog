@@ -53,15 +53,15 @@ function statusTagType(status: string) {
 function statusLabel(status: string) {
   switch (status) {
     case 'pending':
-      return '等待中'
+      return t('admin.ai_tasks.status_pending')
     case 'running':
-      return '运行中'
+      return t('admin.ai_tasks.status_running')
     case 'completed':
-      return '已完成'
+      return t('admin.ai_tasks.status_completed')
     case 'failed':
-      return '失败'
+      return t('admin.ai_tasks.status_failed')
     case 'interrupted':
-      return '已中断'
+      return t('admin.ai_tasks.status_interrupted')
     default:
       return status
   }
@@ -70,13 +70,13 @@ function statusLabel(status: string) {
 function taskTypeLabel(type_: string) {
   switch (type_) {
     case 'comment_moderation':
-      return '评论审核'
+      return t('admin.ai_tasks.task_type_comment_moderation')
     case 'title_generation':
-      return '标题生成'
+      return t('admin.ai_tasks.task_type_title_generation')
     case 'content_rewrite':
-      return '内容改写'
+      return t('admin.ai_tasks.task_type_content_rewrite')
     case 'summary_generation':
-      return '摘要生成'
+      return t('admin.ai_tasks.task_type_summary_generation')
     default:
       return type_
   }
@@ -85,9 +85,9 @@ function taskTypeLabel(type_: string) {
 function triggerLabel(trigger: string) {
   switch (trigger) {
     case 'manual':
-      return '手动'
+      return t('admin.ai_tasks.trigger_manual')
     case 'auto':
-      return '自动'
+      return t('admin.ai_tasks.trigger_auto')
     default:
       return trigger
   }
@@ -101,7 +101,7 @@ function formatDuration(ms: number) {
 const columns: DataTableColumns<AITaskLog> = [
   { title: t('admin.table.id'), key: 'id', width: 70 },
   {
-    title: '任务类型',
+    title: t('admin.ai_tasks.task_type'),
     key: 'taskType',
     width: 120,
     render(row) {
@@ -113,7 +113,7 @@ const columns: DataTableColumns<AITaskLog> = [
     },
   },
   {
-    title: '模型',
+    title: t('admin.ai.model'),
     key: 'modelName',
     width: 150,
     ellipsis: { tooltip: true },
@@ -131,13 +131,13 @@ const columns: DataTableColumns<AITaskLog> = [
     },
   },
   {
-    title: '耗时',
+    title: t('admin.table.duration'),
     key: 'durationMs',
     width: 90,
     render: (row) => formatDuration(row.durationMs),
   },
   {
-    title: '触发来源',
+    title: t('admin.ai_tasks.trigger_source'),
     key: 'triggerSource',
     width: 90,
     render(row) {
@@ -166,7 +166,7 @@ const columns: DataTableColumns<AITaskLog> = [
       return h(
         NButton,
         { size: 'small', onClick: () => openDetail(row) },
-        { default: () => '详情' },
+        { default: () => t('admin.ai_tasks.detail') },
       )
     },
   },
@@ -181,20 +181,20 @@ function openDetail(row: AITaskLog) {
 }
 
 const taskTypeOptions = [
-  { label: '全部类型', value: null },
-  { label: '评论审核', value: 'comment_moderation' },
-  { label: '标题生成', value: 'title_generation' },
-  { label: '内容改写', value: 'content_rewrite' },
-  { label: '摘要生成', value: 'summary_generation' },
+  { label: t('admin.ai_tasks.all_types'), value: null },
+  { label: t('admin.ai_tasks.task_type_comment_moderation'), value: 'comment_moderation' },
+  { label: t('admin.ai_tasks.task_type_title_generation'), value: 'title_generation' },
+  { label: t('admin.ai_tasks.task_type_content_rewrite'), value: 'content_rewrite' },
+  { label: t('admin.ai_tasks.task_type_summary_generation'), value: 'summary_generation' },
 ] as any
 
 const statusOptions = [
-  { label: '全部状态', value: null },
-  { label: '等待中', value: 'pending' },
-  { label: '运行中', value: 'running' },
-  { label: '已完成', value: 'completed' },
-  { label: '失败', value: 'failed' },
-  { label: '已中断', value: 'interrupted' },
+  { label: t('admin.ai_tasks.all_status'), value: null },
+  { label: t('admin.ai_tasks.status_pending'), value: 'pending' },
+  { label: t('admin.ai_tasks.status_running'), value: 'running' },
+  { label: t('admin.ai_tasks.status_completed'), value: 'completed' },
+  { label: t('admin.ai_tasks.status_failed'), value: 'failed' },
+  { label: t('admin.ai_tasks.status_interrupted'), value: 'interrupted' },
 ] as any
 
 </script>
@@ -203,11 +203,11 @@ const statusOptions = [
   <ScrollContainer wrapper-class="flex flex-col gap-y-4">
     <NCard :bordered="false">
       <div class="flex items-center justify-between">
-        <div class="text-lg font-medium">AI 任务日志</div>
+        <div class="text-lg font-medium">{{ $t('admin.ai_tasks.log_page_title') }}</div>
         <div class="flex items-center gap-2">
           <NInput
             v-model:value="searchKeyword"
-            placeholder="搜索内容 / 模型名"
+            :placeholder="$t('admin.ai_tasks.search_placeholder')"
             clearable
             class="w-52"
           />
@@ -215,14 +215,14 @@ const statusOptions = [
             v-model:value="filterTaskType"
             :options="taskTypeOptions"
             class="w-32"
-            placeholder="类型"
+            :placeholder="$t('admin.ai_tasks.task_type')"
             clearable
           />
           <NSelect
             v-model:value="filterStatus"
             :options="statusOptions"
             class="w-32"
-            placeholder="状态"
+            :placeholder="$t('admin.common.status')"
             clearable
           />
         </div>

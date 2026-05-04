@@ -2,6 +2,7 @@
 import { useQuery } from '@tanstack/vue-query'
 import { NNumberAnimation, NSkeleton } from 'naive-ui'
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import { ChartPanel, ScrollContainer } from '@/components'
 import { getDashboardStats, getHitokoto } from '@/services/stats'
@@ -14,6 +15,7 @@ defineOptions({
 })
 
 const { user } = toRefsUserStore()
+const { t, locale } = useI18n()
 
 const { data: stats, isLoading } = useQuery({
   queryKey: ['dashboard-stats'],
@@ -29,13 +31,13 @@ const { data: hitokoto, isLoading: isHitokotoLoading } = useQuery({
 
 const greeting = computed(() => {
   const hour = new Date().getHours()
-  if (hour < 6) return '夜深了'
-  if (hour < 9) return '早上好'
-  if (hour < 12) return '上午好'
-  if (hour < 14) return '中午好'
-  if (hour < 17) return '下午好'
-  if (hour < 19) return '傍晚好'
-  return '晚上好'
+  if (hour < 6) return t('admin.dashboard.greeting_late_night')
+  if (hour < 9) return t('admin.dashboard.greeting_early_morning')
+  if (hour < 12) return t('admin.dashboard.greeting_morning')
+  if (hour < 14) return t('admin.dashboard.greeting_noon')
+  if (hour < 17) return t('admin.dashboard.greeting_afternoon')
+  if (hour < 19) return t('admin.dashboard.greeting_evening')
+  return t('admin.dashboard.greeting_night')
 })
 
 const cardList = computed(() => {
@@ -43,40 +45,40 @@ const cardList = computed(() => {
   if (!s) return Array.from({ length: 4 }).map(() => ({ loading: true }))
   return [
     {
-      title: '用户总数',
+      title: t('admin.dashboard.total_users'),
       value: s.overview.users,
       precision: 0,
       iconClass: 'iconify ph--users-bold text-indigo-50 dark:text-indigo-150',
       iconBgClass:
         'text-indigo-500/5 bg-indigo-400 ring-4 ring-indigo-200 dark:bg-indigo-650 dark:ring-indigo-500/30 transition-all',
-      description: '注册用户总数',
+      description: t('admin.dashboard.total_users_desc'),
     },
     {
-      title: '总访问量',
+      title: t('admin.dashboard.total_views'),
       value: s.interaction.viewsTotal,
       precision: 0,
       iconClass: 'iconify ph--eye-bold text-blue-50 dark:text-blue-150',
       iconBgClass:
         'text-blue-500/5 bg-blue-400 ring-4 ring-blue-200 dark:bg-blue-650 dark:ring-blue-500/30 transition-all',
-      description: '全站内容总浏览',
+      description: t('admin.dashboard.total_views_desc'),
     },
     {
-      title: '在线峰值',
+      title: t('admin.dashboard.peak_online'),
       value: s.todayPeakOnline,
       precision: 0,
       iconClass: 'iconify ph--lightning-bold text-amber-50 dark:text-amber-150',
       iconBgClass:
         'text-amber-500/5 bg-amber-400 ring-4 ring-amber-200 dark:bg-amber-650 dark:ring-amber-500/30 transition-all',
-      description: '今日最高在线',
+      description: t('admin.dashboard.peak_online_desc'),
     },
     {
-      title: '待办事项',
+      title: t('admin.dashboard.pending_tasks'),
       value: s.pending.unviewedComments + s.pending.friendLinkApplications,
       precision: 0,
       iconClass: 'iconify ph--list-checks-bold text-orange-50 dark:text-orange-150',
       iconBgClass:
         'text-orange-500/5 bg-orange-400 ring-4 ring-orange-200 dark:bg-orange-650 dark:ring-orange-500/30 transition-all',
-      description: '待审核评论与友链',
+      description: t('admin.dashboard.pending_tasks_desc'),
     },
   ]
 })
@@ -92,27 +94,27 @@ const {
   topContentChart,
 } = useDashboardCharts(stats, isLoading)
 
-const mainTrendTabs = [
-  { label: '流量', value: 'traffic' },
-  { label: '在线', value: 'online' },
-  { label: '发布', value: 'publishing' },
-]
-const distributionTabs = [
-  { label: '分类', value: 'category' },
-  { label: '专栏', value: 'column' },
-  { label: '字数', value: 'words' },
-]
-const sourceTabs = [
-  { label: '系统', value: 'platform' },
-  { label: '浏览器', value: 'browser' },
-  { label: '地区', value: 'location' },
-]
-const topContentTabs = [
-  { label: '文章', value: 'articles' },
-  { label: '动态', value: 'moments' },
-  { label: '页面', value: 'pages' },
-  { label: '思考', value: 'thinkings' },
-]
+const mainTrendTabs = computed(() => [
+  { label: t('admin.dashboard.tab_traffic'), value: 'traffic' },
+  { label: t('admin.dashboard.tab_online'), value: 'online' },
+  { label: t('admin.dashboard.tab_publishing'), value: 'publishing' },
+])
+const distributionTabs = computed(() => [
+  { label: t('admin.dashboard.tab_category'), value: 'category' },
+  { label: t('admin.dashboard.tab_column'), value: 'column' },
+  { label: t('admin.dashboard.tab_words'), value: 'words' },
+])
+const sourceTabs = computed(() => [
+  { label: t('admin.dashboard.tab_platform'), value: 'platform' },
+  { label: t('admin.dashboard.tab_browser'), value: 'browser' },
+  { label: t('admin.dashboard.tab_location'), value: 'location' },
+])
+const topContentTabs = computed(() => [
+  { label: t('admin.dashboard.tab_articles'), value: 'articles' },
+  { label: t('admin.dashboard.tab_moments'), value: 'moments' },
+  { label: t('admin.dashboard.tab_pages'), value: 'pages' },
+  { label: t('admin.dashboard.tab_thinkings'), value: 'thinkings' },
+])
 </script>
 
 <template>
@@ -125,8 +127,8 @@ const topContentTabs = [
             class="flex items-center gap-x-2 text-xs font-medium tracking-wider text-neutral-500 uppercase dark:text-neutral-400"
           >
             <span
-              >今天是{{
-                new Date().toLocaleDateString('zh-CN', {
+              >{{ t('admin.dashboard.today_is') }}{{
+                new Date().toLocaleDateString(locale, {
                   month: 'long',
                   day: 'numeric',
                   weekday: 'long',
@@ -231,7 +233,7 @@ const topContentTabs = [
     <div class="grid grid-cols-1 gap-4 overflow-hidden max-sm:gap-2 lg:grid-cols-12">
       <div class="col-span-1 lg:col-span-8">
         <ChartPanel
-          title="趋势分析"
+          :title="t('admin.dashboard.trend_analysis')"
           :tabs="mainTrendTabs"
           v-model:active-tab="mainTrendTab"
           :loading="isLoading && !stats"
@@ -244,7 +246,7 @@ const topContentTabs = [
       </div>
       <div class="col-span-1 lg:col-span-4">
         <ChartPanel
-          title="内容构成"
+          :title="t('admin.dashboard.content_composition')"
           :tabs="distributionTabs"
           v-model:active-tab="distributionTab"
           :loading="isLoading && !stats"
@@ -261,7 +263,7 @@ const topContentTabs = [
     <div class="grid grid-cols-1 gap-4 overflow-hidden max-sm:gap-2 lg:grid-cols-12">
       <div class="col-span-1 lg:col-span-5">
         <ChartPanel
-          title="访问来源"
+          :title="t('admin.dashboard.visit_sources')"
           :tabs="sourceTabs"
           v-model:active-tab="sourceTab"
           :height="380"
@@ -270,7 +272,7 @@ const topContentTabs = [
           <template #header-extra>
             <span
               class="rounded bg-amber-100 px-2 py-0.5 text-[11px] text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
-              >浏览埋点聚合</span
+              >{{ t('admin.dashboard.view_tracking_badge') }}</span
             >
           </template>
           <div
@@ -281,7 +283,7 @@ const topContentTabs = [
       </div>
       <div class="col-span-1 lg:col-span-7">
         <ChartPanel
-          title="热门内容"
+          :title="t('admin.dashboard.hot_content')"
           :tabs="topContentTabs"
           v-model:active-tab="topContentTab"
           :height="380"

@@ -59,11 +59,11 @@ function statusTagType(status: string) {
 function sourceTypeLabel(type: string) {
   switch (type) {
     case 'article':
-      return '文章'
+      return t('admin.federation.content_type_article')
     case 'moment':
-      return '手记'
+      return t('admin.federation.content_type_moment')
     case 'thinking':
-      return '思考'
+      return t('admin.federation.content_type_thinking')
     default:
       return type
   }
@@ -72,7 +72,7 @@ function sourceTypeLabel(type: string) {
 const columns: DataTableColumns<ActivityPubOutboxItemResp> = [
   { title: t('admin.table.id'), key: 'id', width: 70 },
   {
-    title: '摘要',
+    title: t('admin.federation.summary'),
     key: 'summary',
     minWidth: 220,
     ellipsis: { tooltip: true },
@@ -102,7 +102,7 @@ const columns: DataTableColumns<ActivityPubOutboxItemResp> = [
     },
   },
   {
-    title: '投递统计',
+    title: t('admin.federation.delivery_stats'),
     key: 'stats',
     width: 110,
     render(row) {
@@ -110,12 +110,12 @@ const columns: DataTableColumns<ActivityPubOutboxItemResp> = [
     },
   },
   {
-    title: '触发来源',
+    title: t('admin.federation.trigger_source'),
     key: 'trigger_source',
     width: 110,
   },
   {
-    title: '发布时间',
+    title: t('admin.federation.published_at'),
     key: 'published_at',
     width: 180,
     render(row) {
@@ -130,14 +130,14 @@ const columns: DataTableColumns<ActivityPubOutboxItemResp> = [
       return h(
         NButton,
         { size: 'small', onClick: () => openDetail(row) },
-        { default: () => '详情' },
+        { default: () => t('admin.action.view_details') },
       )
     },
   },
 ]
 
 const statusOptions = [
-  { label: '全部状态', value: null },
+  { label: t('admin.filter.all_status'), value: null },
   { label: 'queued', value: 'queued' },
   { label: 'sending', value: 'sending' },
   { label: 'completed', value: 'completed' },
@@ -146,10 +146,10 @@ const statusOptions = [
 ] as any
 
 const sourceTypeOptions = [
-  { label: '全部类型', value: null },
-  { label: '文章', value: 'article' },
-  { label: '手记', value: 'moment' },
-  { label: '思考', value: 'thinking' },
+  { label: t('admin.filter.all'), value: null },
+  { label: t('admin.federation.content_type_article'), value: 'article' },
+  { label: t('admin.federation.content_type_moment'), value: 'moment' },
+  { label: t('admin.federation.content_type_thinking'), value: 'thinking' },
 ] as any
 
 </script>
@@ -158,11 +158,11 @@ const sourceTypeOptions = [
   <ScrollContainer wrapper-class="flex flex-col gap-y-4">
     <NCard :bordered="false">
       <div class="flex items-center justify-between">
-        <div class="text-lg font-medium">ActivityPub 出站</div>
+        <div class="text-lg font-medium">{{ $t('admin.card.activitypub_outbox') }}</div>
         <div class="flex items-center gap-2">
           <NInput
             v-model:value="searchKeyword"
-            placeholder="搜索摘要 / activity_id / object_id"
+            :placeholder="t('admin.placeholder.search_outbox')"
             clearable
             class="w-72"
           />
@@ -170,14 +170,14 @@ const sourceTypeOptions = [
             v-model:value="filterSourceType"
             :options="sourceTypeOptions"
             class="w-32"
-            placeholder="内容类型"
+            :placeholder="$t('admin.placeholder.type')"
             clearable
           />
           <NSelect
             v-model:value="filterStatus"
             :options="statusOptions"
             class="w-32"
-            placeholder="状态"
+            :placeholder="$t('admin.placeholder.filter_status')"
             clearable
           />
         </div>

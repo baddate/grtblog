@@ -36,6 +36,7 @@ import {
   NSwitch,
   NPagination,
 } from 'naive-ui'
+import { useI18n } from 'vue-i18n'
 import { h, ref, computed } from 'vue'
 
 import { ScrollContainer, EmptyPlaceholder, UserAvatar } from '@/components'
@@ -52,6 +53,7 @@ import { CommentStatus, type Comment, type CommentListResponse } from '@/types/c
 
 import CommentSource from './components/CommentSource.vue'
 
+const { t } = useI18n()
 const message = useMessage()
 const dialog = useDialog()
 const queryClient = useQueryClient()
@@ -81,25 +83,25 @@ const updateStatusMutation = useMutation({
   mutationFn: ({ id, status }: { id: string; status: CommentStatus }) =>
     updateCommentStatus(id, { status }),
   onSuccess: () => {
-    message.success('状态更新成功')
+    message.success(t('admin.service.status_updated'))
     queryClient.invalidateQueries({ queryKey: ['comments'] })
   },
-  onError: () => message.error('状态更新失败'),
+  onError: () => message.error(t('admin.service.status_update_failed')),
 })
 
 const deleteMutation = useMutation({
   mutationFn: (id: string) => deleteComment(id),
   onSuccess: () => {
-    message.success('评论已删除')
+    message.success(t('admin.service.comment_deleted'))
     queryClient.invalidateQueries({ queryKey: ['comments'] })
   },
-  onError: () => message.error('删除失败'),
+  onError: () => message.error(t('admin.service.delete_failed')),
 })
 
 const topMutation = useMutation({
   mutationFn: ({ id, isTop }: { id: string; isTop: boolean }) => setCommentTop(id, { isTop }),
   onSuccess: () => {
-    message.success('置顶状态已更新')
+    message.success(t('admin.service.pin_updated'))
     queryClient.invalidateQueries({ queryKey: ['comments'] })
   },
 })
@@ -108,21 +110,21 @@ const authorMutation = useMutation({
   mutationFn: ({ id, isAuthor }: { id: string; isAuthor: boolean }) =>
     setCommentAuthor(id, { isAuthor }),
   onSuccess: () => {
-    message.success('作者标记已更新')
+    message.success(t('admin.service.author_marked'))
     queryClient.invalidateQueries({ queryKey: ['comments'] })
   },
-  onError: () => message.error('作者标记更新失败'),
+  onError: () => message.error(t('admin.service.author_mark_failed')),
 })
 
 const replyMutation = useMutation({
   mutationFn: ({ id, content }: { id: string; content: string }) => replyComment(id, { content }),
   onSuccess: () => {
-    message.success('回复成功')
+    message.success(t('admin.service.reply_success'))
     replyContent.value = ''
     replyTargetId.value = null
     queryClient.invalidateQueries({ queryKey: ['comments'] })
   },
-  onError: () => message.error('回复失败'),
+  onError: () => message.error(t('admin.service.reply_failed')),
 })
 
 const markViewedMutation = useMutation({
@@ -192,15 +194,15 @@ const getStatusType = (status: CommentStatus) => {
 const getStatusLabel = (status: CommentStatus) => {
   switch (status) {
     case CommentStatus.Approved:
-      return '已发布'
+      return t('admin.status.published')
     case CommentStatus.Pending:
-      return '待审核'
+      return t('admin.status.pending')
     case CommentStatus.Rejected:
-      return '已拒绝'
+      return t('admin.status.rejected')
     case CommentStatus.Blocked:
-      return '已封禁'
+      return t('admin.status.banned')
     default:
-      return '未知'
+      return t('admin.status.unknown')
   }
 }
 
@@ -232,7 +234,7 @@ const handleMouseLeave = () => {
     :scrollbar-props="{ trigger: 'none' }"
   >
     <n-card
-      title="评论管理"
+      :title="t('admin.card.comment_list')"
       class="h-full"
       content-style="display: flex; flex-direction: column; height: 100%;"
     >
@@ -252,19 +254,19 @@ const handleMouseLeave = () => {
           >
             <n-tab-pane
               name="all"
-              tab="全部"
+              :tab="t('admin.filter.all')"
             />
             <n-tab-pane
               name="pending"
-              tab="待审核"
+              :tab="t('admin.status.pending')"
             />
             <n-tab-pane
               name="approved"
-              tab="已发布"
+              :tab="t('admin.status.published')"
             />
             <n-tab-pane
               name="rejected"
-              tab="垃圾/拒绝"
+              :tab="t('admin.filter.spam_rejected')"
             />
 
             <template #suffix>
@@ -273,7 +275,7 @@ const handleMouseLeave = () => {
                 size="small"
                 class="pb-1"
               >
-                <span class="text-xs text-gray-500">仅看未读</span>
+                <span class="text-xs text-gray-500">{{ t('admin.filter.unread_only') }}</span>
                 <n-switch
                   v-model:value="onlyUnviewed"
                   size="small"
@@ -290,7 +292,7 @@ const handleMouseLeave = () => {
           >
             <EmptyPlaceholder
               :show="!isLoading && comments.length === 0"
-              description="暂无评论"
+              :description="t('admin.service.no_comments')"
             />
 
             <div
@@ -334,7 +336,7 @@ const handleMouseLeave = () => {
                         type="error"
                         size="small"
                         class="mr-1"
-                        >已删除</n-tag
+                        >{{ t('admin.status.deleted') }}</n-tag
                       >
                       <n-tag
                         v-if="comment.isTop"
@@ -342,27 +344,27 @@ const handleMouseLeave = () => {
                         size="small"
                         class="mr-1"
                       >
-                        置顶
+                        {{ t('admin.status.pinned') }}
                       </n-tag>
                       <n-tag
                         v-if="comment.isOwner"
                         type="primary"
                         size="small"
                         class="mr-1"
-                        >站长</n-tag
+                        >{{ t('admin.badge.owner') }}</n-tag
                       >
                       <n-tag
                         v-if="comment.isAuthor"
                         type="info"
                         size="small"
                         class="mr-1"
-                        >本文作者</n-tag
+                        >{{ t('admin.badge.author') }}</n-tag
                       >
                       <n-tag
                         v-if="comment.isFriend"
                         type="success"
                         size="small"
-                        >友链</n-tag
+                        >{{ t('admin.badge.friend_link') }}</n-tag
                       >
                     </template>
                     <template #header-extra>
@@ -433,7 +435,7 @@ const handleMouseLeave = () => {
                           @click="showReplyInput(comment)"
                         >
                           <template #icon><n-icon :component="ArrowUndoOutline" /></template>
-                          回复
+                          {{ t('admin.action.reply') }}
                         </n-button>
 
                         <n-popconfirm
@@ -449,10 +451,10 @@ const handleMouseLeave = () => {
                               <template #icon
                                 ><n-icon :component="CheckmarkCircleOutline"
                               /></template>
-                              通过
+                              {{ t('admin.action.approve') }}
                             </n-button>
                           </template>
-                          确定通过这条评论吗？
+                          {{ t('admin.confirm.approve_comment') }}
                         </n-popconfirm>
 
                         <n-popconfirm
@@ -466,10 +468,10 @@ const handleMouseLeave = () => {
                               size="tiny"
                             >
                               <template #icon><n-icon :component="BanOutline" /></template>
-                              封禁
+                              {{ t('admin.action.block') }}
                             </n-button>
                           </template>
-                          确定封禁该评论的作者吗？封禁后将不再接受同一用户或邮箱地址的后续评论
+                          {{ t('admin.confirm.block_comment') }}
                         </n-popconfirm>
 
                         <n-popconfirm
@@ -483,10 +485,10 @@ const handleMouseLeave = () => {
                               size="tiny"
                             >
                               <template #icon><n-icon :component="CloseCircleOutline" /></template>
-                              拒绝
+                              {{ t('admin.action.reject') }}
                             </n-button>
                           </template>
-                          确定拒绝这条评论吗？
+                          {{ t('admin.confirm.reject_comment') }}
                         </n-popconfirm>
 
                         <n-button
@@ -496,7 +498,7 @@ const handleMouseLeave = () => {
                           @click="handleTop(comment)"
                         >
                           <template #icon><n-icon :component="PinOutline" /></template>
-                          {{ comment.isTop ? '取消置顶' : '置顶' }}
+                          {{ comment.isTop ? t('admin.action.unpin') : t('admin.action.pin') }}
                         </n-button>
 
                         <n-button
@@ -506,7 +508,7 @@ const handleMouseLeave = () => {
                           @click="handleAuthor(comment)"
                         >
                           <template #icon><n-icon :component="PersonOutline" /></template>
-                          {{ comment.isAuthor ? '取消作者标记' : '标记本文作者' }}
+                          {{ comment.isAuthor ? t('admin.action.unmark_author') : t('admin.action.mark_author') }}
                         </n-button>
 
                         <n-popconfirm @positive-click="handleDelete(comment)">
@@ -517,10 +519,10 @@ const handleMouseLeave = () => {
                               size="tiny"
                             >
                               <template #icon><n-icon :component="TrashOutline" /></template>
-                              删除
+                              {{ t('admin.common.delete') }}
                             </n-button>
                           </template>
-                          确定删除这条评论吗？此操作不可恢复。
+                          {{ t('admin.confirm.delete_comment') }}
                         </n-popconfirm>
                       </n-space>
 
@@ -531,7 +533,7 @@ const handleMouseLeave = () => {
                         <n-input
                           v-model:value="replyContent"
                           type="textarea"
-                          placeholder="输入回复内容..."
+                          :placeholder="t('admin.placeholder.reply_content')"
                           :rows="2"
                           autosize
                         />
@@ -539,7 +541,7 @@ const handleMouseLeave = () => {
                           type="primary"
                           @click="submitReply"
                           :loading="replyMutation.isPending.value"
-                          >发送</n-button
+                          >{{ t('admin.action.send') }}</n-button
                         >
                       </div>
                     </template>

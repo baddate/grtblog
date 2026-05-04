@@ -14,6 +14,9 @@ import {
   NThing,
   useMessage,
 } from 'naive-ui'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { ref } from 'vue'
 
 import { ScrollContainer } from '@/components'
@@ -45,7 +48,7 @@ const markAllReadMutation = useMutation({
   mutationFn: () => adminNotificationService.markAllRead(),
   onSuccess: () => {
     queryClient.invalidateQueries({ queryKey: ['admin-notifications'] })
-    message.success('已全部标记为已读')
+    message.success(t('admin.header.mark_all_read'))
   },
 })
 
@@ -81,14 +84,14 @@ const handleMarkAllRead = () => {
     :scrollbar-props="{ trigger: 'none' }"
   >
     <NCard
-      title="通知中心"
+      :title="$t('admin.card.admin_notification_list')"
       :bordered="false"
     >
       <template #header-extra>
         <NSpace align="center">
-          <span class="text-sm">仅看未读</span>
+          <span class="text-sm">{{ $t('admin.filter.unread_only') }}</span>
           <NSwitch v-model:value="unreadOnly" />
-          <NButton @click="handleMarkAllRead">全部已读</NButton>
+          <NButton @click="handleMarkAllRead">{{ $t('admin.header.mark_all_read') }}</NButton>
         </NSpace>
       </template>
 
@@ -129,7 +132,7 @@ const handleMarkAllRead = () => {
           </NListItem>
         </template>
         <template v-else>
-          <NEmpty description="暂无通知" />
+          <NEmpty :description="$t('admin.header.no_notifications')" />
         </template>
       </NList>
 

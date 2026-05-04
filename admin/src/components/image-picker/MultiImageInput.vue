@@ -65,7 +65,7 @@ function handleRemove(index: number) {
       >
         <NImage
           :src="url"
-          :alt="`图片 ${index + 1}`"
+          :alt="t('admin.image_picker.image_label', { index: index + 1 })"
           object-fit="cover"
           preview-disabled
           :img-props="{ class: 'aspect-square w-full object-cover' }"
@@ -85,7 +85,7 @@ function handleRemove(index: number) {
     <NInputGroup>
       <NInput
         v-model:value="inputUrl"
-        placeholder="输入图片 URL 并添加"
+        :placeholder="t('admin.image_picker.url_add_placeholder')"
         @keydown.enter="handleAdd"
       >
         <template #prefix><div class="iconify ph--image" /></template>
@@ -94,7 +94,7 @@ function handleRemove(index: number) {
         @click="handleAdd"
         :disabled="!inputUrl.trim()"
       >
-        添加
+        {{ $t('admin.common.add') }}
       </NButton>
       <NButton
         @click="showPicker = true"

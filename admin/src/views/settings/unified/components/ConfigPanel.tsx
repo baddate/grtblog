@@ -1,5 +1,6 @@
 import { NButton, NCard, NCollapse, NCollapseItem, NEmpty, NForm, NSpin, NTag } from 'naive-ui'
 import { computed, defineComponent, watch, type PropType, type Ref, type VNodeChild } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import ConfigItem from '@/components/config/ConfigItem'
 import { useInjection } from '@/composables'
@@ -144,6 +145,7 @@ export default defineComponent({
     onDirtyChange: { type: Function as PropType<(dirty: boolean) => void>, default: undefined },
   },
   setup(props, { expose }) {
+    const { t } = useI18n()
     const { isMaxSm } = useInjection(mediaQueryInjectionKey)
 
     const hasFilter = computed(
@@ -286,14 +288,18 @@ export default defineComponent({
                 )}
               </div>
               <div class='flex items-center gap-2'>
-                {pendingCount.value > 0 && <NTag type='warning'>待保存 {pendingCount.value}</NTag>}
+                {pendingCount.value > 0 && (
+                  <NTag type='warning'>
+                    {t('admin.settings.pending_save', { count: pendingCount.value })}
+                  </NTag>
+                )}
                 <NButton
                   size='small'
                   secondary
                   loading={loading.value}
                   onClick={fetch}
                 >
-                  刷新
+                  {t('admin.common.refresh')}
                 </NButton>
                 <NButton
                   size='small'
@@ -301,7 +307,7 @@ export default defineComponent({
                   loading={saving.value}
                   onClick={save}
                 >
-                  保存
+                  {t('admin.common.save')}
                 </NButton>
               </div>
             </div>
@@ -310,12 +316,12 @@ export default defineComponent({
             <NSpin show={loading.value}>
               {!tree.value || (!tree.value.items?.length && !tree.value.groups?.length) ? (
                 <div class='py-8'>
-                  <NEmpty description='暂无配置项' />
+                  <NEmpty description={t('admin.settings.no_config_items')} />
                 </div>
               ) : (
                 <div class='space-y-6'>
                   {tree.value.items && tree.value.items.length > 0 && (
-                                       <NForm
+                    <NForm
                       labelPlacement={isMaxSm.value ? 'top' : 'left'}
                       labelWidth={isMaxSm.value ? undefined : 160}
                     >

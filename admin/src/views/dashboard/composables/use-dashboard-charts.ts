@@ -3,11 +3,14 @@ import chroma from 'chroma-js'
 import * as echarts from 'echarts'
 import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 
+import i18n from '@/plugins/i18n'
 import { toRefsPreferencesStore } from '@/stores'
 import twc from '@/utils/tailwindColor'
 
 import type { ECharts } from 'echarts'
 import type { Ref } from 'vue'
+
+const __ = i18n.global.t
 
 export function useDashboardCharts(stats: Ref<any>, isLoading: Ref<boolean>) {
   const { sidebarMenu, navigationMode, themeColor, isDark } = toRefsPreferencesStore()
@@ -80,7 +83,7 @@ export function useDashboardCharts(stats: Ref<any>, isLoading: Ref<boolean>) {
         },
         series: [
           {
-            name: '访问量',
+            name: __('admin.dashboard.series_views'),
             type: 'line',
             smooth: true,
             symbol: 'none',
@@ -104,7 +107,7 @@ export function useDashboardCharts(stats: Ref<any>, isLoading: Ref<boolean>) {
       option = {
         tooltip: createTooltipConfig(),
         legend: {
-          data: ['峰值', '平均'],
+          data: [__('admin.dashboard.series_peak'), __('admin.dashboard.series_average')],
           right: 0,
           top: 0,
           textStyle: { color: isDark.value ? twc.neutral[400] : twc.neutral[600] },
@@ -131,7 +134,7 @@ export function useDashboardCharts(stats: Ref<any>, isLoading: Ref<boolean>) {
         },
         series: [
           {
-            name: '峰值',
+            name: __('admin.dashboard.series_peak'),
             type: 'line',
             smooth: true,
             showSymbol: false,
@@ -140,7 +143,7 @@ export function useDashboardCharts(stats: Ref<any>, isLoading: Ref<boolean>) {
             itemStyle: { color: twc.amber[500] },
           },
           {
-            name: '平均',
+            name: __('admin.dashboard.series_average'),
             type: 'line',
             smooth: true,
             showSymbol: false,
@@ -162,7 +165,11 @@ export function useDashboardCharts(stats: Ref<any>, isLoading: Ref<boolean>) {
       option = {
         tooltip: createTooltipConfig(),
         legend: {
-          data: ['文章', '动态', '思考'],
+          data: [
+            __('admin.dashboard.tab_articles'),
+            __('admin.dashboard.tab_moments'),
+            __('admin.dashboard.tab_thinkings'),
+          ],
           right: 0,
           top: 0,
           textStyle: { color: isDark.value ? twc.neutral[400] : twc.neutral[600] },
@@ -188,21 +195,21 @@ export function useDashboardCharts(stats: Ref<any>, isLoading: Ref<boolean>) {
         },
         series: [
           {
-            name: '文章',
+            name: __('admin.dashboard.tab_articles'),
             type: 'bar',
             stack: 'total',
             data: data.map((d: any) => d.articles),
             itemStyle: { color: twc.emerald[500] },
           },
           {
-            name: '动态',
+            name: __('admin.dashboard.tab_moments'),
             type: 'bar',
             stack: 'total',
             data: data.map((d: any) => d.moments),
             itemStyle: { color: twc.sky[500] },
           },
           {
-            name: '思考',
+            name: __('admin.dashboard.tab_thinkings'),
             type: 'bar',
             stack: 'total',
             data: data.map((d: any) => d.thinkings),
@@ -226,18 +233,37 @@ export function useDashboardCharts(stats: Ref<any>, isLoading: Ref<boolean>) {
     let name = ''
     if (distributionTab.value === 'words') {
       const s = stats.value.words
-      name = '字数统计'
+      name = __('admin.dashboard.chart_word_count')
       data = [
-        { value: s.articles, name: '文章', itemStyle: { color: twc.emerald[500] } },
-        { value: s.moments, name: '动态', itemStyle: { color: twc.sky[500] } },
-        { value: s.pages, name: '页面', itemStyle: { color: twc.amber[500] } },
-        { value: s.thinkings, name: '思考', itemStyle: { color: twc.purple[500] } },
+        {
+          value: s.articles,
+          name: __('admin.dashboard.tab_articles'),
+          itemStyle: { color: twc.emerald[500] },
+        },
+        {
+          value: s.moments,
+          name: __('admin.dashboard.tab_moments'),
+          itemStyle: { color: twc.sky[500] },
+        },
+        {
+          value: s.pages,
+          name: __('admin.dashboard.tab_pages'),
+          itemStyle: { color: twc.amber[500] },
+        },
+        {
+          value: s.thinkings,
+          name: __('admin.dashboard.tab_thinkings'),
+          itemStyle: { color: twc.purple[500] },
+        },
       ]
     } else {
       const sourceData =
         distributionTab.value === 'category' ? stats.value.categories : stats.value.columns
       const topData = sourceData.slice(0, 8)
-      name = distributionTab.value === 'category' ? '分类分布' : '专栏分布'
+      name =
+        distributionTab.value === 'category'
+          ? __('admin.dashboard.chart_category_dist')
+          : __('admin.dashboard.chart_column_dist')
       const colors = [
         twc.cyan[500],
         twc.blue[500],
@@ -295,7 +321,7 @@ export function useDashboardCharts(stats: Ref<any>, isLoading: Ref<boolean>) {
         name: d.name,
         itemStyle: { color: [twc.indigo[500], twc.blue[500], twc.sky[500], twc.cyan[500]][i % 4] },
       }))
-      name = '系统分布'
+      name = __('admin.dashboard.chart_platform_dist')
     } else if (sourceTab.value === 'browser') {
       data = stats.value.browserTop.map((d: any, i: number) => ({
         value: d.count,
@@ -304,7 +330,7 @@ export function useDashboardCharts(stats: Ref<any>, isLoading: Ref<boolean>) {
           color: [twc.teal[500], twc.emerald[500], twc.green[500], twc.lime[500]][i % 4],
         },
       }))
-      name = '浏览器分布'
+      name = __('admin.dashboard.chart_browser_dist')
     } else if (sourceTab.value === 'location') {
       data = stats.value.locationTop.map((d: any, i: number) => ({
         value: d.count,
@@ -313,7 +339,7 @@ export function useDashboardCharts(stats: Ref<any>, isLoading: Ref<boolean>) {
           color: [twc.rose[500], twc.pink[500], twc.fuchsia[500], twc.purple[500]][i % 4],
         },
       }))
-      name = '地区分布'
+      name = __('admin.dashboard.chart_location_dist')
     }
     const topData = data.slice(0, 8)
     chart.setOption({
@@ -383,7 +409,7 @@ export function useDashboardCharts(stats: Ref<any>, isLoading: Ref<boolean>) {
       },
       series: [
         {
-          name: '浏览',
+          name: __('admin.dashboard.series_views'),
           type: 'bar',
           data: topData.map((d: any) => d.views),
           barWidth: 16,

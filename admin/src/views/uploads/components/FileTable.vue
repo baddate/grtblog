@@ -70,7 +70,7 @@ const columns = computed<DataTableColumns<UploadFileResponse>>(() => [
     },
   },
   {
-    title: '文件名',
+    title: t('admin.upload.file_name'),
     key: 'name',
     minWidth: 180,
     ellipsis: { tooltip: true },
@@ -83,17 +83,17 @@ const columns = computed<DataTableColumns<UploadFileResponse>>(() => [
       h(
         NTag,
         { type: row.type === 'picture' ? 'success' : 'info', size: 'small' },
-        { default: () => (row.type === 'picture' ? '图片' : '文件') },
+        { default: () => t(row.type === 'picture' ? 'admin.upload.tab_image' : 'admin.upload.tab_file') },
       ),
   },
   {
-    title: '大小',
+    title: t('admin.upload.size'),
     key: 'size',
     width: 96,
     render: (row) => formatFileSize(row.size),
   },
   {
-    title: '上传时间',
+    title: t('admin.upload.upload_time'),
     key: 'createdAt',
     width: 168,
     render: (row) => formatDate(row.createdAt),
@@ -113,7 +113,7 @@ const columns = computed<DataTableColumns<UploadFileResponse>>(() => [
               { size: 'small', quaternary: true, onClick: () => emit('copyUrl', row) },
               {
                 icon: () => h(NIcon, null, { default: () => h(Copy24Regular) }),
-                default: () => '复制链接',
+                default: () => t('admin.upload.copy_url'),
               },
             ),
             h(
@@ -121,13 +121,13 @@ const columns = computed<DataTableColumns<UploadFileResponse>>(() => [
               { size: 'small', quaternary: true, onClick: () => emit('rename', row) },
               {
                 icon: () => h(NIcon, null, { default: () => h(Edit24Regular) }),
-                default: () => '重命名',
+                default: () => t('admin.upload.rename'),
               },
             ),
             h(
               NButton,
               { size: 'small', quaternary: true, onClick: () => emit('download', row) },
-              { default: () => '下载' },
+              { default: () => t('admin.common.download') },
             ),
             h(
               NButton,
@@ -139,7 +139,7 @@ const columns = computed<DataTableColumns<UploadFileResponse>>(() => [
               },
               {
                 icon: () => h(NIcon, null, { default: () => h(Delete24Regular) }),
-                default: () => '删除',
+                default: () => t('admin.common.delete'),
               },
             ),
           ],

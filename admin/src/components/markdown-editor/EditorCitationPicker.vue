@@ -152,7 +152,7 @@ function extractHost(url: string): string {
                   step === 'posts' ? textColor3 : textColor1
               "
             >
-              输入远端地址
+              {{ $t('admin.editor.citation_address') }}
             </span>
             <template v-if="step === 'posts'">
               <span :style="{ color: textColor3 }">›</span>
@@ -174,7 +174,7 @@ function extractHost(url: string): string {
           <div class="flex gap-2">
             <NInput
               :value="urlInput"
-              placeholder="输入远端博客地址，如 blog.example.com"
+              :placeholder="$t('admin.editor.citation_url_placeholder')"
               clearable
               :status="urlError ? 'error' : undefined"
               class="flex-1"
@@ -196,7 +196,7 @@ function extractHost(url: string): string {
               <template #icon>
                 <span class="iconify ph--arrow-right" />
               </template>
-              拉取
+              {{ $t('admin.editor.citation_fetch') }}
             </NButton>
           </div>
           <div
@@ -217,7 +217,7 @@ function extractHost(url: string): string {
               :style="{ color: textColor3 }"
             >
               <span class="iconify inline-block align-text-bottom text-sm ph--lightning" />
-              快捷选择已联合实例
+              {{ $t('admin.editor.citation_quick') }}
             </div>
             <NSpin :show="instancesLoading">
               <NScrollbar style="max-height: 240px">
@@ -268,7 +268,7 @@ function extractHost(url: string): string {
             class="mt-1"
           >
             <NCollapseItem
-              title="手动输入引用标记"
+              :title="$t('admin.editor.citation_manual')"
               name="manual"
             >
               <template #header-extra>
@@ -280,7 +280,7 @@ function extractHost(url: string): string {
               <div class="flex flex-col gap-3 pt-1">
                 <NInput
                   v-model:value="manualInstance"
-                  placeholder="实例域名，如 blog.example.com"
+                  :placeholder="$t('admin.editor.citation_instance_placeholder')"
                   size="small"
                 >
                   <template #prefix>
@@ -292,7 +292,7 @@ function extractHost(url: string): string {
                 </NInput>
                 <NInput
                   v-model:value="manualPostId"
-                  placeholder="文章 ID，如 my-post-slug"
+                  :placeholder="$t('admin.editor.citation_post_id_placeholder')"
                   size="small"
                 >
                   <template #prefix>
@@ -322,7 +322,7 @@ function extractHost(url: string): string {
                     <template #icon>
                       <span class="iconify ph--arrow-right" />
                     </template>
-                    插入
+                    {{ $t('admin.editor.citation_insert') }}
                   </NButton>
                 </div>
               </div>
@@ -373,14 +373,14 @@ function extractHost(url: string): string {
               <template #icon>
                 <span class="iconify ph--arrow-left" />
               </template>
-              切换
+              {{ $t('admin.editor.citation_switch') }}
             </NButton>
           </div>
 
           <!-- Search -->
           <NInput
             :value="searchQuery"
-            placeholder="搜索文章标题..."
+            :placeholder="$t('admin.editor.citation_search_placeholder')"
             clearable
             @update:value="emit('searchPosts', $event)"
           >
@@ -408,7 +408,7 @@ function extractHost(url: string): string {
                   class="text-sm"
                   :style="{ color: textColor3 }"
                 >
-                  未找到匹配的文章
+                  {{ $t('admin.editor.citation_no_match') }}
                 </span>
               </div>
 
@@ -425,7 +425,7 @@ function extractHost(url: string): string {
                   class="text-sm"
                   :style="{ color: textColor3 }"
                 >
-                  该远端暂无可用文章，可能不支持联合协议
+                  {{ $t('admin.editor.citation_no_posts') }}
                 </span>
               </div>
 
@@ -487,10 +487,10 @@ function extractHost(url: string): string {
                             <template #icon>
                               <span class="iconify text-xs ph--warning" />
                             </template>
-                            不可引用
+                            {{ $t('admin.editor.citation_not_allowed_label') }}
                           </NTag>
                         </template>
-                        该文章作者未允许被引用
+                        {{ $t('admin.editor.citation_not_allowed_tip') }}
                       </NTooltip>
                     </div>
                     <div
@@ -531,7 +531,7 @@ function extractHost(url: string): string {
               class="text-xs"
               :style="{ color: textColor3 }"
             >
-              共 {{ total }} 篇，第 {{ page }}/{{ totalPages }} 页
+              {{ $t('admin.editor.citation_page_info', { total, page, totalPages }) }}
             </span>
             <div class="flex gap-1.5">
               <NButton

@@ -1,5 +1,8 @@
 import { useMessage } from 'naive-ui'
 import { reactive, ref, computed, onMounted, toRef } from 'vue'
+
+import i18n from '@/plugins/i18n'
+const { t } = i18n.global
 import { useRoute, useRouter } from 'vue-router'
 
 import { useLeaveConfirm } from '@/composables'
@@ -103,7 +106,7 @@ export function useArticleForm() {
       return data // 返回完整数据供外部使用（如初始化标签名）
     } catch (e) {
       console.error(e)
-      message.error('无法加载文章数据')
+      message.error(t('admin.article.load_data_failed'))
       router.replace({ name: 'articleList' })
       return null
     } finally {
@@ -113,9 +116,9 @@ export function useArticleForm() {
 
   // 保存数据
   async function save() {
-    if (!form.title.trim()) return message.error('请输入标题')
-    if (!form.content.trim()) return message.error('请输入正文内容')
-    if (!isCreating.value && !form.shortUrl.trim()) return message.error('短链接不能为空')
+    if (!form.title.trim()) return message.error(t('admin.article.validation_title_required'))
+    if (!form.content.trim()) return message.error(t('admin.article.validation_content_required'))
+    if (!isCreating.value && !form.shortUrl.trim()) return message.error(t('admin.article.validation_short_url_required'))
 
     saving.value = true
     try {
@@ -131,10 +134,10 @@ export function useArticleForm() {
 
       if (isCreating.value) {
         await createArticle(payload)
-        message.success('创建成功')
+        message.success(t('admin.common.create_success'))
       } else {
         await updateArticle(articleId.value!, payload)
-        message.success('更新成功')
+        message.success(t('admin.common.update_success'))
       }
 
       // 保存成功后更新快照，避免触发离开提示
@@ -143,7 +146,7 @@ export function useArticleForm() {
       // 保存后跳转回列表 (保持原逻辑)
       router.push({ name: 'articleList' })
     } catch (e: any) {
-      message.error(e.message || '保存失败')
+      message.error(e.message || t('admin.service.save_failed'))
     } finally {
       saving.value = false
     }
@@ -152,10 +155,10 @@ export function useArticleForm() {
   // 注册离开确认
   useLeaveConfirm({
     when: isDirty,
-    title: '未保存的更改',
-    content: '当前内容未保存，确定要离开吗？',
-    positiveText: '离开',
-    negativeText: '继续编辑',
+    title: t('admin.article.unsaved_changes'),
+    content: t('admin.confirm.leave_page'),
+    positiveText: t('admin.common.leave'),
+    negativeText: t('admin.common.continue_edit'),
   })
 
   // 挂载时自动获取

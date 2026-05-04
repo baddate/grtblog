@@ -6,10 +6,13 @@ import {
   Image24Regular,
 } from '@vicons/fluent'
 import { NButton, NDropdown, NIcon, NSpace, NUpload } from 'naive-ui'
-import { h } from 'vue'
+import { computed, h } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import type { FileType } from '@/services/uploads'
 import type { DropdownOption, UploadCustomRequestOptions } from 'naive-ui'
+
+const { t } = useI18n()
 
 defineProps<{
   uploadType: FileType
@@ -21,17 +24,17 @@ const emit = defineEmits<{
   upload: [payload: UploadCustomRequestOptions]
 }>()
 
-const typeOptions: DropdownOption[] = [
-  { label: '图片', key: 'picture', icon: renderIcon(Image24Regular) },
-  { label: '文件', key: 'file', icon: renderIcon(Document24Regular) },
-]
+const typeOptions = computed<DropdownOption[]>(() => [
+  { label: t('admin.upload.tab_image'), key: 'picture', icon: renderIcon(Image24Regular) },
+  { label: t('admin.upload.tab_file'), key: 'file', icon: renderIcon(Document24Regular) },
+])
 
 function renderIcon(icon: typeof Image24Regular | typeof Document24Regular) {
   return () => h(NIcon, null, { default: () => h(icon) })
 }
 
 function getTypeLabel(value: FileType) {
-  return value === 'picture' ? '图片' : '文件'
+  return value === 'picture' ? t('admin.upload.tab_image') : t('admin.upload.tab_file')
 }
 </script>
 
@@ -65,7 +68,7 @@ function getTypeLabel(value: FileType) {
         <template #icon
           ><NIcon><CloudArrowUp24Regular /></NIcon
         ></template>
-        上传{{ getTypeLabel(uploadType) }}
+        {{ $t('admin.common.upload') }}{{ getTypeLabel(uploadType) }}
       </NButton>
     </NUpload>
   </NSpace>

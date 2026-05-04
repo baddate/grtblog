@@ -2,19 +2,22 @@ import { CompletionContext, type Completion, type CompletionResult } from '@code
 import { syntaxTree } from '@codemirror/language'
 
 import { markdownComponents } from '@/composables/markdown/shared/components'
+import i18n from '@/plugins/i18n'
 
 import type { EditorView } from '@codemirror/view'
 
+const __ = i18n.global.t
+
 // ... options 定义保持不变 ...
 const baseOptions: Completion[] = [
-  { label: 'Heading 1', type: 'keyword', apply: '# ', detail: '一级标题' },
-  { label: 'Heading 2', type: 'keyword', apply: '## ', detail: '二级标题' },
-  { label: 'Code Block', type: 'keyword', apply: '```\n\n```', detail: '代码块' },
-  { label: 'Quote', type: 'keyword', apply: '> ', detail: '引用' },
+  { label: 'Heading 1', type: 'keyword', apply: '# ', detail: __('admin.markdown_editor.heading_1_detail') },
+  { label: 'Heading 2', type: 'keyword', apply: '## ', detail: __('admin.markdown_editor.heading_2_detail') },
+  { label: 'Code Block', type: 'keyword', apply: '```\n\n```', detail: __('admin.markdown_editor.code_block_detail') },
+  { label: 'Quote', type: 'keyword', apply: '> ', detail: __('admin.markdown_editor.quote_detail') },
   {
-    label: 'AI 改写',
+    label: __('admin.markdown_editor.ai_rewrite'),
     type: 'function',
-    detail: 'AI 改写/扩写内容',
+    detail: __('admin.markdown_editor.ai_rewrite_detail'),
     apply: (view: EditorView, _completion: Completion, from: number, to: number) => {
       view.dispatch({ changes: { from, to, insert: '' } })
       view.dom.dispatchEvent(new CustomEvent('ai-rewrite-trigger', { bubbles: true }))
@@ -23,7 +26,7 @@ const baseOptions: Completion[] = [
   {
     label: '@mention',
     type: 'function',
-    detail: '联合提及',
+    detail: __('admin.markdown_editor.mention_detail'),
     apply: (view: EditorView, _completion: Completion, from: number, to: number) => {
       view.dispatch({ changes: { from, to, insert: '' } })
       view.dom.dispatchEvent(new CustomEvent('federation-mention-trigger', { bubbles: true }))
@@ -32,7 +35,7 @@ const baseOptions: Completion[] = [
   {
     label: 'Citation',
     type: 'function',
-    detail: '联合引用',
+    detail: __('admin.markdown_editor.citation_detail'),
     apply: (view: EditorView, _completion: Completion, from: number, to: number) => {
       view.dispatch({ changes: { from, to, insert: '' } })
       view.dom.dispatchEvent(new CustomEvent('federation-citation-trigger', { bubbles: true }))

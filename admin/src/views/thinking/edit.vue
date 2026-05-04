@@ -48,8 +48,8 @@ function formatDateTime(value?: string | null) {
 }
 
 const apStatusText = computed(() => {
-  if (isCreating.value) return '未创建'
-  return activityPubObjectId.value ? '已发布' : '未发布'
+  if (isCreating.value) return t('admin.federation.status_not_created')
+  return activityPubObjectId.value ? t('admin.federation.status_published') : t('admin.federation.status_not_published')
 })
 
 const apLastPublishedAtText = computed(() => formatDateTime(activityPubLastPublishedAt.value))
@@ -104,9 +104,9 @@ async function handleRepublishActivityPub() {
     })
     activityPubObjectId.value = resp.object_id || activityPubObjectId.value
     activityPubLastPublishedAt.value = resp.published_at
-    message.success(`补发完成：成功 ${resp.success_count}，失败 ${resp.failure_count}`)
+    message.success(t('admin.service.republish_result', { success: resp.success_count, failure: resp.failure_count }))
   } catch (error) {
-    message.error(error instanceof Error ? error.message : '补发失败')
+    message.error(error instanceof Error ? error.message : t('admin.service.republish_failed'))
   } finally {
     apPublishing.value = false
   }
@@ -123,25 +123,25 @@ async function handleRepublishActivityPub() {
         label-placement="top"
       >
         <NFormItem
-          label="内容"
+          :label="$t('admin.form.content')"
           path="content"
         >
           <NInput
             v-model:value="formValue.content"
             type="textarea"
-            placeholder="分享一些思考..."
+            :placeholder="$t('admin.placeholder.thinking_content')"
             :autosize="{ minRows: 5, maxRows: 15 }"
           />
         </NFormItem>
-        <NFormItem label="附加选项">
+        <NFormItem :label="$t('admin.form.extra_options')">
           <div class="flex w-full flex-col gap-3">
             <div class="flex items-center gap-2">
-              <span class="text-sm">允许评论</span>
+              <span class="text-sm">{{ $t('admin.form.allow_comment') }}</span>
               <NSwitch v-model:value="formValue.allowComment" />
             </div>
             <div class="rounded-lg px-3 py-2">
-              <div class="text-sm">ActivityPub：{{ apStatusText }}</div>
-              <div class="text-xs opacity-70">最近发布：{{ apLastPublishedAtText }}</div>
+              <div class="text-sm">{{ $t('admin.federation.activitypub_status', { status: apStatusText }) }}</div>
+              <div class="text-xs opacity-70">{{ $t('admin.federation.last_published', { time: apLastPublishedAtText }) }}</div>
               <div
                 v-if="activityPubObjectId"
                 class="mt-1 text-xs break-all opacity-70"
@@ -156,21 +156,21 @@ async function handleRepublishActivityPub() {
                 :disabled="isCreating || apPublishing"
                 @click="handleRepublishActivityPub"
               >
-                手动补发
+                {{ t('admin.action.republish') }}
               </NButton>
             </div>
           </div>
         </NFormItem>
         <NFormItem
           v-if="isCreating"
-          label="发布时间"
+          :label="$t('admin.form.publish_time')"
         >
           <NDatePicker
             v-model:value="formValue.createdAt"
             type="datetime"
             clearable
             style="width: 100%"
-            placeholder="默认当前时间"
+            :placeholder="$t('admin.placeholder.default_time')"
           />
         </NFormItem>
       </NForm>
@@ -181,7 +181,7 @@ async function handleRepublishActivityPub() {
             :loading="saving"
             @click="handleSave"
           >
-            {{ isCreating ? '创建' : '更新' }}
+            {{ isCreating ? t('admin.common.create') : t('admin.common.update') }}
           </NButton>
         </div>
       </template>

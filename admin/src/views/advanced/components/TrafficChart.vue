@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import chroma from 'chroma-js'
 import * as echarts from 'echarts'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 
 import { toRefsPreferencesStore } from '@/stores'
@@ -41,7 +44,7 @@ function render() {
   chart.setOption({
     tooltip: createTooltipConfig(),
     legend: {
-      data: ['PV', '在线峰值', '联合出站'],
+      data: ['PV', t('admin.advanced.series_online_peak'), t('admin.advanced.series_federation_outbound')],
       right: 0,
       top: 0,
       textStyle: { color: isDark.value ? twc.neutral[400] : twc.neutral[600] },
@@ -77,7 +80,7 @@ function render() {
         itemStyle: { color },
       },
       {
-        name: '在线峰值',
+        name: t('admin.advanced.series_online_peak'),
         type: 'line',
         smooth: true,
         data: data.online,
@@ -85,7 +88,7 @@ function render() {
         itemStyle: { color: twc.amber[500] },
       },
       {
-        name: '联邦出站',
+        name: t('admin.advanced.series_federation_outbound'),
         type: 'bar',
         data: data.outbound,
         itemStyle: { color: twc.emerald[500] },
@@ -118,7 +121,7 @@ onUnmounted(() => {
     style="height: 420px"
   >
     <div class="flex items-center justify-between px-5 pt-4">
-      <span class="text-base font-medium text-neutral-600 dark:text-neutral-300">全链路趋势</span>
+      <span class="text-base font-medium text-neutral-600 dark:text-neutral-300">{{ $t('admin.advanced.traffic_trend') }}</span>
     </div>
     <div class="flex-1 px-4 pt-2 pb-4">
       <div

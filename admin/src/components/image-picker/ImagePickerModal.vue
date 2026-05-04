@@ -46,7 +46,7 @@ async function fetchList() {
     items.value = res.items
     total.value = res.total
   } catch (e: unknown) {
-    message.error(e instanceof Error ? e.message : '加载图片列表失败')
+    message.error(e instanceof Error ? e.message : t('admin.image_picker.load_failed'))
   } finally {
     loading.value = false
   }
@@ -63,11 +63,11 @@ async function handleUpload({ file }: { file: UploadFileInfo }) {
   uploading.value = true
   try {
     const res = await uploadFile(file.file, 'picture')
-    message.success('上传成功')
+    message.success(t('admin.upload.success'))
     await fetchList()
     selectedUrl.value = res.publicUrl
   } catch (e: unknown) {
-    message.error(e instanceof Error ? e.message : '上传失败')
+    message.error(e instanceof Error ? e.message : t('admin.upload.failed'))
   } finally {
     uploading.value = false
   }
@@ -104,7 +104,7 @@ watch(
     style="width: 720px; max-width: 90vw"
   >
     <NCard
-      title="选择图片"
+      :title="$t('admin.image_picker.select_image')"
       closable
       @close="handleClose"
     >
@@ -122,7 +122,7 @@ watch(
               ghost
             >
               <template #icon><div class="iconify ph--upload-simple" /></template>
-              上传新图片
+              {{ $t('admin.image_picker.upload_new') }}
             </NButton>
           </NUpload>
         </div>
@@ -166,7 +166,7 @@ watch(
           </div>
           <NEmpty
             v-else-if="!loading"
-            description="暂无图片"
+            :description="$t('admin.image_picker.no_images')"
             class="py-8"
           />
         </NSpin>
@@ -187,7 +187,7 @@ watch(
               :disabled="!selectedUrl"
               @click="handleConfirm"
             >
-              确认
+              {{ $t('admin.common.confirm') }}
             </NButton>
           </div>
         </div>

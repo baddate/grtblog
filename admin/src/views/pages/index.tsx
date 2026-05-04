@@ -9,6 +9,7 @@ import {
   NDropdown,
   useDialog,
 } from 'naive-ui'
+import { useI18n } from 'vue-i18n'
 import { defineComponent, onMounted, ref, Transition } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -24,6 +25,7 @@ export default defineComponent({
   name: 'PageList',
   setup() {
     const router = useRouter()
+    const { t } = useI18n()
     const dialog = useDialog()
     const { message } = useDiscreteApi()
     const { data, loading, pagination, refresh } = useTable<PageListItem>(listPages)
@@ -39,10 +41,10 @@ export default defineComponent({
 
     const handleDelete = (id: number) => {
       dialog.warning({
-        title: '确认删除',
-        content: '删除后无法恢复，是否继续？',
-        positiveText: '确认',
-        negativeText: '取消',
+        title: t('admin.common.delete_confirm'),
+        content: t('admin.common.delete_confirm_content'),
+        positiveText: t('admin.common.confirm'),
+        negativeText: t('admin.common.cancel'),
         onPositiveClick: async () => {
           await deletePage(id)
           await refresh()
@@ -62,9 +64,9 @@ export default defineComponent({
       try {
         await batchSetPageEnabled({ ids: [row.id], isEnabled: !row.isEnabled })
         row.isEnabled = !row.isEnabled
-        message.success(row.isEnabled ? '已启用' : '已禁用')
+        message.success(row.isEnabled ? t('admin.service.enabled') : t('admin.service.disabled'))
       } catch (err) {
-        message.error(err instanceof Error ? err.message : '操作失败')
+        message.error(err instanceof Error ? err.message : t('admin.service.operation_failed'))
       }
     }
 
@@ -77,9 +79,13 @@ export default defineComponent({
           if (ids.includes(item.id)) item.isEnabled = isEnabled
         })
         checkedRowKeys.value = []
-        message.success(isEnabled ? '批量启用成功' : '批量禁用成功')
+        message.success(
+          isEnabled
+            ? t('admin.service.batch_enable_success')
+            : t('admin.service.batch_disable_success'),
+        )
       } catch (err) {
-        message.error(err instanceof Error ? err.message : '操作失败')
+        message.error(err instanceof Error ? err.message : t('admin.service.operation_failed'))
       }
     }
 
@@ -89,16 +95,16 @@ export default defineComponent({
       try {
         await batchDeletePages({ ids })
         checkedRowKeys.value = []
-        message.success('批量删除成功')
+        message.success(t('admin.service.batch_delete_success'))
         refresh()
       } catch (err) {
-        message.error(err instanceof Error ? err.message : '操作失败')
+        message.error(err instanceof Error ? err.message : t('admin.service.operation_failed'))
       }
     }
 
     const batchEnabledOptions = [
-      { label: '设为启用', key: 'enable' },
-      { label: '设为禁用', key: 'disable' },
+      { label: t('admin.action.enable'), key: 'enable' },
+      { label: t('admin.action.disable'), key: 'disable' },
     ]
 
     const handleBatchEnabledSelect = (key: string) => {
@@ -110,7 +116,7 @@ export default defineComponent({
         type: 'selection',
       },
       {
-        title: '标题',
+        title: t('admin.table.title'),
         key: 'title',
         width: 260,
         render: (row) => (
@@ -122,20 +128,22 @@ export default defineComponent({
                 type='info'
                 bordered={false}
               >
-                内置
+                {{
+                  default: () => t('admin.badge.builtin'),
+                }}
               </NTag>
             )}
           </div>
         ),
       },
       {
-        title: '短链接',
+        title: t('admin.table.short_url'),
         key: 'shortUrl',
         width: 140,
         render: (row) => row.shortUrl || <span class='text-gray-400'>-</span>,
       },
       {
-        title: '是否启用',
+        title: t('admin.table.is_enabled'),
         key: 'isEnabled',
         width: 100,
         render: (row) => (
@@ -149,7 +157,8 @@ export default defineComponent({
               bordered={false}
             >
               {{
-                default: () => (row.isEnabled ? '已启用' : '已禁用'),
+                default: () =>
+                  row.isEnabled ? t('admin.status.enabled') : t('admin.status.disabled'),
                 icon: () => (
                   <span
                     class={`iconify ${row.isEnabled ? 'ph--check-circle' : 'ph--circle-dashed'} size-3.5`}
@@ -161,7 +170,7 @@ export default defineComponent({
         ),
       },
       {
-        title: '数据 (阅/赞/评)',
+        title: t('admin.table.metrics'),
         key: 'metrics',
         width: 180,
         render: (row) => (
@@ -171,13 +180,13 @@ export default defineComponent({
         ),
       },
       {
-        title: '更新时间',
+        title: t('admin.table.updated_at'),
         key: 'updatedAt',
         width: 180,
         render: (row) => new Date(row.updatedAt).toLocaleString(),
       },
       {
-        title: '操作',
+        title: t('admin.table.actions'),
         key: 'actions',
         width: 180,
         fixed: 'right',
@@ -189,7 +198,7 @@ export default defineComponent({
               secondary
               onClick={() => handleEdit(row.id)}
             >
-              编辑
+              {t('admin.common.edit')}
             </NButton>
             {!row.isBuiltin && (
               <NButton
@@ -198,7 +207,7 @@ export default defineComponent({
                 secondary
                 onClick={() => handleDelete(row.id)}
               >
-                删除
+                {t('admin.common.delete')}
               </NButton>
             )}
           </NSpace>
@@ -214,7 +223,7 @@ export default defineComponent({
       <ScrollContainer wrapperClass='flex flex-col gap-y-4'>
         <NCard bordered={false}>
           <div class='flex items-center justify-between'>
-            <div class='text-lg font-medium'>页面列表</div>
+            <div class='text-lg font-medium'>{t('admin.card.page_list')}</div>
             <NSpace
               align='center'
               size={12}
@@ -229,7 +238,7 @@ export default defineComponent({
                       type='info'
                       size='small'
                     >
-                      已选 {checkedRowKeys.value.length} 项
+                      {t('admin.badge.selected_count', { n: checkedRowKeys.value.length })}
                     </NTag>
                     <NDropdown
                       options={batchEnabledOptions}
@@ -239,7 +248,7 @@ export default defineComponent({
                         size='small'
                         secondary
                       >
-                        批量启用
+                        {t('admin.action.batch_enable')}
                       </NButton>
                     </NDropdown>
                     <NPopconfirm onPositiveClick={handleBatchDelete}>
@@ -250,10 +259,11 @@ export default defineComponent({
                             type='error'
                             secondary
                           >
-                            批量删除
+                            {t('admin.action.batch_delete')}
                           </NButton>
                         ),
-                        default: () => `确定删除选中的 ${checkedRowKeys.value.length} 个页面吗？`,
+                        default: () =>
+                          t('admin.confirm.batch_delete_pages', { n: checkedRowKeys.value.length }),
                       }}
                     </NPopconfirm>
                   </NSpace>
@@ -263,7 +273,7 @@ export default defineComponent({
                 type='primary'
                 onClick={handleCreate}
               >
-                新建页面
+                {t('admin.action.create_page')}
               </NButton>
             </NSpace>
           </div>

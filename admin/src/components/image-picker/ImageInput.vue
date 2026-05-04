@@ -32,7 +32,7 @@ function handleSelect(url: string) {
     <NInputGroup>
       <NInput
         :value="value"
-        placeholder="图片 URL"
+        :placeholder="t('admin.image_picker.url_placeholder')"
         @update:value="handleInput"
       >
         <template #prefix><div class="iconify ph--image" /></template>

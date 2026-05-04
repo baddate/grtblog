@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { useMutation } from '@tanstack/vue-query'
 import {
   NCard,
@@ -85,7 +88,7 @@ const { mutate: sendMention, isPending: isSendingMention } = useMutation({
       title="Test Page"
       show-icon
     >
-      本页面仅供测试，请在开发者指导下使用
+      {{ t('admin.federation.outbound_test_warning') }}
     </NAlert>
 
     <NCard title="Remote Check">

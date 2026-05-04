@@ -1,4 +1,8 @@
+import i18n from '@/plugins/i18n'
+
 import { request, getAuthToken, API_BASE_URL } from './http'
+
+const __ = i18n.global.t
 
 // ── Types ──
 
@@ -193,11 +197,11 @@ export async function generateSummaryStream(
   })
 
   if (!resp.ok) {
-    throw new Error(`请求失败（${resp.status}）`)
+    throw new Error(__('admin.service.request_failed_status', { status: resp.status }))
   }
 
   const reader = resp.body?.getReader()
-  if (!reader) throw new Error('无法读取响应流')
+  if (!reader) throw new Error(__('admin.service.stream_read_failed'))
 
   const decoder = new TextDecoder()
   let buffer = ''
@@ -243,11 +247,11 @@ export async function rewriteContentStream(
   })
 
   if (!resp.ok) {
-    throw new Error(`请求失败（${resp.status}）`)
+    throw new Error(__('admin.service.request_failed_status', { status: resp.status }))
   }
 
   const reader = resp.body?.getReader()
-  if (!reader) throw new Error('无法读取响应流')
+  if (!reader) throw new Error(__('admin.service.stream_read_failed'))
 
   const decoder = new TextDecoder()
   let buffer = ''

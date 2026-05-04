@@ -41,12 +41,12 @@ const drawerWidth = computed(() => {
 const { mutate: retry, isPending: isRetrying } = useMutation({
   mutationFn: retryFederationOutboundLog,
   onSuccess: () => {
-    message.success('已加入重试队列')
+    message.success(t('admin.service.retry_queued'))
     queryClient.invalidateQueries({ queryKey: ['federation-outbound-logs'] })
     emit('update:show', false)
   },
   onError: (err: any) => {
-    message.error('重试失败: ' + (err.message || 'Unknown error'))
+    message.error(t('admin.service.operation_failed') + ': ' + (err.message || 'Unknown error'))
   },
 })
 
@@ -69,7 +69,7 @@ function handleClose() {
     :width="drawerWidth"
   >
     <NDrawerContent
-      title="出站投递详情"
+      :title="$t('admin.federation.outbound_detail')"
       closable
     >
       <div
@@ -86,7 +86,7 @@ function handleClose() {
             :loading="isRetrying"
             @click="handleRetry"
           >
-            立即重试
+            {{ $t('admin.action.retry') }}
           </NButton>
         </div>
 
@@ -94,10 +94,10 @@ function handleClose() {
           bordered
           :column="1"
           label-placement="left"
-          title="基本信息"
+          :title="$t('admin.federation.basic_info')"
         >
-          <NDescriptionsItem label="ID">{{ delivery.id }}</NDescriptionsItem>
-          <NDescriptionsItem label="Request ID">{{ delivery.request_id }}</NDescriptionsItem>
+          <NDescriptionsItem :label="$t('admin.table.id')">{{ delivery.id }}</NDescriptionsItem>
+          <NDescriptionsItem :label="$t('admin.federation.request_id')">{{ delivery.request_id }}</NDescriptionsItem>
           <NDescriptionsItem :label="$t('admin.common.type')">
             <NTag>{{ delivery.type }}</NTag>
           </NDescriptionsItem>
@@ -106,7 +106,7 @@ function handleClose() {
               delivery.status
             }}</NTag>
           </NDescriptionsItem>
-          <NDescriptionsItem label="目标">{{ delivery.target_instance_url }}</NDescriptionsItem>
+          <NDescriptionsItem :label="$t('admin.federation.target')">{{ delivery.target_instance_url }}</NDescriptionsItem>
           <NDescriptionsItem :label="$t('admin.common.created_at')">{{
             new Date(delivery.created_at).toLocaleString()
           }}</NDescriptionsItem>
@@ -116,21 +116,21 @@ function handleClose() {
           bordered
           :column="1"
           label-placement="left"
-          title="投递状态"
+          :title="$t('admin.federation.delivery_status')"
         >
-          <NDescriptionsItem label="尝试次数"
+          <NDescriptionsItem :label="$t('admin.federation.attempt_count')"
             >{{ delivery.attempt_count }} / {{ delivery.max_attempts }}</NDescriptionsItem
           >
-          <NDescriptionsItem label="下次重试">{{
+          <NDescriptionsItem :label="$t('admin.federation.next_retry')">{{
             delivery.next_retry_at ? new Date(delivery.next_retry_at).toLocaleString() : '-'
           }}</NDescriptionsItem>
-          <NDescriptionsItem label="HTTP 状态码">{{
+          <NDescriptionsItem :label="$t('admin.federation.http_status')">{{
             delivery.http_status || '-'
           }}</NDescriptionsItem>
         </NDescriptions>
 
         <div v-if="delivery.error_message">
-          <h3 class="mb-2 font-bold">错误信息</h3>
+          <h3 class="mb-2 font-bold">{{ $t('admin.table.error_message') }}</h3>
           <NCode
             :code="delivery.error_message"
             language="text"
@@ -140,7 +140,7 @@ function handleClose() {
         </div>
 
         <div v-if="delivery.response_body">
-          <h3 class="mb-2 font-bold">响应体</h3>
+          <h3 class="mb-2 font-bold">{{ $t('admin.federation.response_body') }}</h3>
           <NCode
             :code="delivery.response_body"
             language="json"

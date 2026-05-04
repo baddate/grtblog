@@ -71,15 +71,15 @@ function statusTagType(status?: string) {
 function statusLabel(status?: string) {
   switch (status) {
     case 'pending':
-      return '等待中'
+      return t('admin.ai_tasks.status_pending')
     case 'running':
-      return '运行中'
+      return t('admin.ai_tasks.status_running')
     case 'completed':
-      return '已完成'
+      return t('admin.ai_tasks.status_completed')
     case 'failed':
-      return '失败'
+      return t('admin.ai_tasks.status_failed')
     case 'interrupted':
-      return '已中断'
+      return t('admin.ai_tasks.status_interrupted')
     default:
       return status ?? '-'
   }
@@ -88,13 +88,13 @@ function statusLabel(status?: string) {
 function taskTypeLabel(type_?: string) {
   switch (type_) {
     case 'comment_moderation':
-      return '评论审核'
+      return t('admin.ai_tasks.task_type_comment_moderation')
     case 'title_generation':
-      return '标题生成'
+      return t('admin.ai_tasks.task_type_title_generation')
     case 'content_rewrite':
-      return '内容改写'
+      return t('admin.ai_tasks.task_type_content_rewrite')
     case 'summary_generation':
-      return '摘要生成'
+      return t('admin.ai_tasks.task_type_summary_generation')
     default:
       return type_ ?? '-'
   }
@@ -103,9 +103,9 @@ function taskTypeLabel(type_?: string) {
 function triggerLabel(trigger?: string) {
   switch (trigger) {
     case 'manual':
-      return '手动'
+      return t('admin.ai_tasks.trigger_manual')
     case 'auto':
-      return '自动'
+      return t('admin.ai_tasks.trigger_auto')
     default:
       return trigger ?? '-'
   }
@@ -130,7 +130,7 @@ function handleClose() {
     @update:show="(val) => emit('update:show', val)"
   >
     <NDrawerContent
-      title="AI 任务详情"
+      :title="$t('admin.ai_tasks.task_detail')"
       closable
     >
       <div
@@ -141,18 +141,18 @@ function handleClose() {
           bordered
           :column="1"
           label-placement="left"
-          title="基本信息"
+          :title="$t('admin.ai_tasks.basic_info')"
         >
-          <NDescriptionsItem label="ID">{{ displayItem.id }}</NDescriptionsItem>
-          <NDescriptionsItem label="任务类型">
+          <NDescriptionsItem :label="$t('admin.table.id')">{{ displayItem.id }}</NDescriptionsItem>
+          <NDescriptionsItem :label="$t('admin.ai_tasks.task_type')">
             <NTag
               type="info"
               size="small"
               >{{ taskTypeLabel(displayItem.taskType) }}</NTag
             >
           </NDescriptionsItem>
-          <NDescriptionsItem label="模型">{{ displayItem.modelName || '-' }}</NDescriptionsItem>
-          <NDescriptionsItem label="提供商">{{
+          <NDescriptionsItem :label="$t('admin.ai.model')">{{ displayItem.modelName || '-' }}</NDescriptionsItem>
+          <NDescriptionsItem :label="$t('admin.ai.provider')">{{
             displayItem.providerName || '-'
           }}</NDescriptionsItem>
           <NDescriptionsItem :label="$t('admin.common.status')">
@@ -162,14 +162,14 @@ function handleClose() {
               >{{ statusLabel(displayItem.status) }}</NTag
             >
           </NDescriptionsItem>
-          <NDescriptionsItem label="触发来源">
+          <NDescriptionsItem :label="$t('admin.ai_tasks.trigger_source')">
             <NTag
               :type="displayItem.triggerSource === 'auto' ? 'warning' : 'default'"
               size="small"
               >{{ triggerLabel(displayItem.triggerSource) }}</NTag
             >
           </NDescriptionsItem>
-          <NDescriptionsItem label="耗时">{{
+          <NDescriptionsItem :label="$t('admin.table.duration')">{{
             formatDuration(displayItem.durationMs)
           }}</NDescriptionsItem>
           <NDescriptionsItem :label="$t('admin.common.created_at')">{{
@@ -178,7 +178,7 @@ function handleClose() {
         </NDescriptions>
 
         <div v-if="displayItem.inputText">
-          <h3 class="mb-2 font-bold">输入文本</h3>
+          <h3 class="mb-2 font-bold">{{ $t('admin.ai_tasks.input_text') }}</h3>
           <NCode
             :code="displayItem.inputText"
             language="text"
@@ -187,7 +187,7 @@ function handleClose() {
         </div>
 
         <div v-if="displayItem.outputText">
-          <h3 class="mb-2 font-bold">输出文本</h3>
+          <h3 class="mb-2 font-bold">{{ $t('admin.ai_tasks.output_text') }}</h3>
           <NCode
             :code="displayItem.outputText"
             language="text"
@@ -196,7 +196,7 @@ function handleClose() {
         </div>
 
         <div v-if="displayItem.errorMessage">
-          <h3 class="mb-2 font-bold text-red-500">错误信息</h3>
+          <h3 class="mb-2 font-bold text-red-500">{{ $t('admin.ai_tasks.error_message') }}</h3>
           <NCode
             :code="displayItem.errorMessage"
             language="text"

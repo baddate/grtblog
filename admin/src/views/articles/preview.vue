@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { computed, onMounted, ref } from 'vue'
 
 import MarkdownPreview from '@/components/markdown-editor/MarkdownPreview.vue'
@@ -16,7 +19,7 @@ const error = ref<string | null>(null)
 
 onMounted(async () => {
   if (props.articleId === null) {
-    error.value = '无效的文章 ID'
+    error.value = t('admin.article.invalid_id')
     isLoading.value = false
     return
   }
@@ -25,7 +28,7 @@ onMounted(async () => {
     const article = await getArticle(props.articleId)
     content.value = article.content
   } catch (err) {
-    error.value = '获取文章失败'
+    error.value = t('admin.article.load_failed')
   } finally {
     isLoading.value = false
   }
@@ -42,7 +45,7 @@ onMounted(async () => {
     v-else-if="isLoading"
     class="p-4 text-center text-gray-500 sm:p-8"
   >
-    加载中...
+    {{ $t('admin.common.loading') }}
   </div>
   <div
     v-else

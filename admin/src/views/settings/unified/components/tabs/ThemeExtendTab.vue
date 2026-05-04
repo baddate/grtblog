@@ -35,7 +35,7 @@ watch(
       JSON.parse(source)
       jsonError.value = null
     } catch (err) {
-      jsonError.value = err instanceof Error ? err.message : 'JSON 格式不正确'
+      jsonError.value = err instanceof Error ? err.message : t('admin.validation.invalid_json')
     }
   },
   { immediate: true },
@@ -50,7 +50,7 @@ async function fetchData() {
     jsonText.value = source
     originalJson.value = source
   } catch (err) {
-    message.error(err instanceof Error ? err.message : '加载失败')
+    message.error(err instanceof Error ? err.message : t('admin.service.load_failed'))
   } finally {
     loading.value = false
   }
@@ -62,21 +62,21 @@ function formatJson() {
     const parsed = JSON.parse(source)
     jsonText.value = JSON.stringify(parsed, null, 2)
     jsonError.value = null
-    message.success('已格式化')
+    message.success(t('admin.service.formatted'))
   } catch (err) {
-    jsonError.value = err instanceof Error ? err.message : 'JSON 格式不正确'
-    message.error('JSON 格式不正确')
+    jsonError.value = err instanceof Error ? err.message : t('admin.validation.invalid_json')
+    message.error(t('admin.validation.invalid_json'))
   }
 }
 
 async function handleSave() {
   if (saving.value) return
   if (!isDirty.value) {
-    message.warning('没有检测到更改')
+    message.warning(t('admin.service.no_changes'))
     return
   }
   if (!jsonValid.value) {
-    message.error(jsonError.value || 'JSON 格式不正确')
+    message.error(jsonError.value || t('admin.validation.invalid_json'))
     return
   }
 
@@ -84,10 +84,10 @@ async function handleSave() {
   try {
     const parsed = JSON.parse(jsonText.value.trim() || '{}')
     await updateWebsiteInfo('theme_extend_info', { infoJson: parsed })
-    message.success('保存成功')
+    message.success(t('admin.service.save_success'))
     originalJson.value = jsonText.value.trim()
   } catch (err) {
-    message.error(err instanceof Error ? err.message : '保存失败')
+    message.error(err instanceof Error ? err.message : t('admin.service.save_failed'))
   } finally {
     saving.value = false
   }
@@ -104,9 +104,9 @@ onMounted(fetchData)
       class="flex shrink-0 flex-wrap items-center justify-between gap-3 rounded-lg border border-neutral-200 bg-white px-4 py-2.5 dark:border-neutral-700 dark:bg-neutral-900"
     >
       <div>
-        <div class="text-sm font-semibold">主题扩展信息</div>
+        <div class="text-sm font-semibold">{{ $t('admin.theme.extend_info') }}</div>
         <div class="text-xs text-neutral-500">
-          对应 theme_extend_info，主题可读取此 JSON 进行自定义扩展
+          {{ $t('admin.theme.extend_info_desc') }}
         </div>
       </div>
       <div class="flex items-center gap-2">
@@ -115,21 +115,21 @@ onMounted(fetchData)
           type="warning"
           size="small"
         >
-          未保存
+          {{ $t('admin.theme.unsaved') }}
         </NTag>
         <NTag
           size="small"
           :type="jsonValid ? 'success' : 'error'"
           :bordered="false"
         >
-          {{ jsonValid ? 'JSON 有效' : 'JSON 无效' }}
+          {{ jsonValid ? $t('admin.theme.json_valid') : $t('admin.theme.json_invalid') }}
         </NTag>
         <NButton
           size="small"
           tertiary
           @click="formatJson"
         >
-          格式化
+          {{ $t('admin.theme.format') }}
         </NButton>
         <NButton
           size="small"
@@ -137,7 +137,7 @@ onMounted(fetchData)
           :loading="loading"
           @click="fetchData"
         >
-          刷新
+          {{ $t('admin.common.refresh') }}
         </NButton>
         <NButton
           size="small"
@@ -146,7 +146,7 @@ onMounted(fetchData)
           :disabled="!jsonValid || !isDirty"
           @click="handleSave"
         >
-          保存
+          {{ $t('admin.common.save') }}
         </NButton>
       </div>
     </div>

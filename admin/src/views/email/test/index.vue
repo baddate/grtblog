@@ -68,7 +68,7 @@ async function handleSend() {
         variables = JSON.parse(form.variables)
       }
     } catch (e) {
-      message.error('JSON 格式错误')
+      message.error(t('admin.email.invalid_json_variables'))
       loading.value = false
       return
     }
@@ -77,7 +77,7 @@ async function handleSend() {
       toEmails: [form.toEmail],
       variables: variables,
     })
-    message.success('邮件发送任务已提交')
+    message.success(t('admin.email.send_test_submitted'))
   } catch (err) {
     //
   } finally {
@@ -94,33 +94,33 @@ onMounted(() => {
 <template>
   <ScrollContainer wrapper-class="p-4">
     <NCard
-      title="邮件发送测试"
+      :title="$t('admin.email.test_title')"
       class="mx-auto max-w-2xl"
     >
       <div class="mb-4 text-sm text-[var(--text-color-3)]">
-        此处可测试 SMTP 配置连通性及模版渲染效果。
+        {{ $t('admin.email.test_description') }}
       </div>
 
       <NForm
         label-placement="top"
         :disabled="loading"
       >
-        <NFormItem label="选择模版">
+        <NFormItem :label="$t('admin.email.select_template')">
           <NSelect
             v-model:value="form.code"
             :options="templateOptions"
             filterable
-            placeholder="请选择"
+            :placeholder="$t('admin.placeholder.select')"
             @update:value="handleTemplateChange"
           />
         </NFormItem>
-        <NFormItem label="收件人">
+        <NFormItem :label="$t('admin.form.recipient')">
           <NInput
             v-model:value="form.toEmail"
             placeholder="target@example.com"
           />
         </NFormItem>
-        <NFormItem label="模版变量 (JSON)">
+        <NFormItem :label="$t('admin.email.template_variables_json')">
           <TemplateEditor v-model="form.variables" />
         </NFormItem>
         <NButton
@@ -129,7 +129,7 @@ onMounted(() => {
           :loading="loading"
           @click="handleSend"
         >
-          发送测试邮件
+          {{ $t('admin.action.send_test') }}
         </NButton>
       </NForm>
     </NCard>

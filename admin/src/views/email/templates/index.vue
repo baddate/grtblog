@@ -30,20 +30,20 @@ const columns: DataTableColumns<EmailTemplate> = [
           ? h(
               NTag,
               { size: 'tiny', type: 'default', bordered: false, round: true },
-              { default: () => '内置' },
+              { default: () => t('admin.badge.builtin') },
             )
           : null,
       ]),
   },
   {
-    title: '编码',
+    title: t('admin.email.template_code'),
     key: 'code',
     width: 150,
     render: (row) =>
       h(NTag, { type: 'info', size: 'small', bordered: false }, { default: () => row.code }),
   },
   {
-    title: '事件',
+    title: t('admin.email.template_event'),
     key: 'eventName',
     width: 150,
   },
@@ -55,7 +55,7 @@ const columns: DataTableColumns<EmailTemplate> = [
       h(
         NTag,
         { type: row.isEnabled ? 'success' : 'warning', size: 'small', bordered: false },
-        { default: () => (row.isEnabled ? '启用' : '禁用') },
+        { default: () => (row.isEnabled ? t('admin.status.enabled') : t('admin.status.disabled')) },
       ),
   },
   {
@@ -78,7 +78,7 @@ const columns: DataTableColumns<EmailTemplate> = [
             secondary: true,
             onClick: () => router.push(`/email/templates/${row.code}`),
           },
-          { default: () => '编辑' },
+          { default: () => t('admin.common.edit') },
         ),
         row.isInternal
           ? null
@@ -96,9 +96,9 @@ const columns: DataTableColumns<EmailTemplate> = [
                       type: 'error',
                       secondary: true,
                     },
-                    { default: () => '删除' },
+                    { default: () => t('admin.common.delete') },
                   ),
-                default: () => '确认删除该模版？',
+                default: () => t('admin.confirm.delete_confirm'),
               },
             ),
       ]),
@@ -136,13 +136,13 @@ onMounted(() => {
 
 <template>
   <ScrollContainer>
-    <NCard title="邮件模版">
+    <NCard :title="$t('admin.card.email_template_list')">
       <template #header-extra>
         <NButton
           type="primary"
           @click="handleCreate"
         >
-          新建模版
+          {{ $t('admin.email.new_template') }}
         </NButton>
       </template>
 

@@ -56,9 +56,9 @@ async function handleExport() {
     a.download = `federation-config-${date}.json`
     a.click()
     URL.revokeObjectURL(url)
-    message.success('导出成功')
+    message.success(t('admin.federation.export_success'))
   } catch (e: any) {
-    message.error(e?.message || '导出失败')
+    message.error(e?.message || t('admin.federation.export_failed'))
   } finally {
     exporting.value = false
   }
@@ -79,13 +79,13 @@ function handleFileChange(event: Event) {
     try {
       const data = JSON.parse(reader.result as string) as ConfigExportData
       if (!data.version || !Array.isArray(data.configs) || data.configs.length === 0) {
-        message.error('无效的配置文件格式')
+        message.error(t('admin.federation.invalid_config_file'))
         return
       }
       pendingImportData.value = data
       showImportConfirm.value = true
     } catch {
-      message.error('JSON 解析失败，请检查文件格式')
+      message.error(t('admin.federation.json_parse_failed'))
     }
   }
   reader.readAsText(file)
@@ -96,13 +96,13 @@ async function confirmImport() {
   importing.value = true
   try {
     await importFederationConfigs(pendingImportData.value)
-    message.success('导入成功')
+    message.success(t('admin.federation.import_success'))
     showImportConfirm.value = false
     pendingImportData.value = null
     federationPanelRef.value?.fetch()
     activityPubPanelRef.value?.fetch()
   } catch (e: any) {
-    message.error(e?.message || '导入失败')
+    message.error(e?.message || t('admin.federation.import_failed'))
   } finally {
     importing.value = false
   }
@@ -119,14 +119,14 @@ async function confirmImport() {
         :loading="exporting"
         @click="handleExport"
       >
-        导出配置
+{{ t('admin.federation.export_config') }}
       </NButton>
       <NButton
         size="small"
         secondary
         @click="triggerImport"
       >
-        导入配置
+{{ t('admin.federation.import_config') }}
       </NButton>
       <input
         ref="fileInputRef"
@@ -141,8 +141,8 @@ async function confirmImport() {
       ref="federationPanelRef"
       :list-fn="listFederationConfigs"
       :update-fn="updateFederationConfigs"
-      title="Federation 联合"
-      description="启用后系统会自动生成密钥，仅需填写基础信息即可"
+      :title="t('admin.settings.federation')"
+      :description="t('admin.settings.federation_desc')"
       :on-dirty-change="(dirty: boolean) => updateDirty('federation', dirty)"
     />
 
@@ -150,26 +150,25 @@ async function confirmImport() {
       ref="activityPubPanelRef"
       :list-fn="listActivityPubConfigs"
       :update-fn="updateActivityPubConfigs"
-      title="ActivityPub"
-      description="兼容功能独立配置，启用后将使用 ActivityPub 专用密钥"
+      :title="t('admin.settings.activitypub')"
+      :description="t('admin.settings.activitypub_desc')"
       :on-dirty-change="(dirty: boolean) => updateDirty('activitypub', dirty)"
     />
 
     <NModal
       v-model:show="showImportConfirm"
       preset="dialog"
-      title="确认导入"
-      positive-text="确认导入"
-      negative-text="取消"
+      :title="t('admin.settings.import_confirm')"
+      :positive-text="t('admin.common.confirm')"
+      :negative-text="t('admin.common.cancel')"
       :positive-button-props="{ loading: importing }"
       @positive-click="confirmImport"
     >
       <template v-if="pendingImportData">
         <p>
-          即将导入
-          <strong>{{ pendingImportData.configs.length }}</strong> 项配置，现有的同名配置将被覆盖。
+          <span v-html="t('admin.federation.import_confirm_message', { count: pendingImportData.configs.length })"></span>
         </p>
-        <p class="mt-1 text-xs text-neutral-500">导出时间：{{ pendingImportData.exportedAt }}</p>
+        <p class="mt-1 text-xs text-neutral-500">{{ t('admin.federation.export_date', { time: pendingImportData.exportedAt }) }}</p>
       </template>
     </NModal>
   </div>

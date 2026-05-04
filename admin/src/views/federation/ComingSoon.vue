@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { ComingSoon, ScrollContainer } from '@/components'
 
 defineOptions({ name: 'FederationComingSoon' })
@@ -7,8 +10,8 @@ defineOptions({ name: 'FederationComingSoon' })
 <template>
   <ScrollContainer wrapper-class="p-4">
     <ComingSoon
-      title="Federation 联合"
-      description="Blog Federation 与 ActivityPub 兼容功能尚未开放，敬请期待后续版本。"
+      :title="t('admin.federation.coming_soon_title')"
+      :description="t('admin.federation.coming_soon_desc')"
       icon="ph--circles-three"
     />
   </ScrollContainer>

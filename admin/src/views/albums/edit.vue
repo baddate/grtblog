@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 import {
   NButton,
   NButtonGroup,
@@ -148,7 +152,7 @@ function thumbUrl(photo: PhotoItem): string {
         <NInput
           v-model:value="form.title"
           :bordered="false"
-          placeholder="输入相册标题..."
+          :placeholder="$t('admin.placeholder.album_title')"
           class="flex-1 text-xl font-bold sm:text-2xl"
           :style="{ '--n-caret-color': 'var(--primary-color)', backgroundColor: 'transparent' }"
         />
@@ -171,14 +175,14 @@ function thumbUrl(photo: PhotoItem): string {
             :ghost="form.isPublished"
             @click="form.isPublished = false"
           >
-            草稿
+            {{ $t('admin.status.draft') }}
           </NButton>
           <NButton
             :type="form.isPublished ? 'primary' : 'default'"
             :ghost="!form.isPublished"
             @click="form.isPublished = true"
           >
-            发布
+            {{ $t('admin.status.published') }}
           </NButton>
         </NButtonGroup>
 
@@ -193,7 +197,7 @@ function thumbUrl(photo: PhotoItem): string {
               <template #icon><div class="iconify ph--sliders-horizontal" /></template>
             </NButton>
           </template>
-          元数据
+          {{ $t('admin.album.metadata') }}
         </NTooltip>
 
         <NButton
@@ -202,7 +206,7 @@ function thumbUrl(photo: PhotoItem): string {
           @click="save"
         >
           <template #icon><div class="iconify ph--floppy-disk" /></template>
-          {{ isEdit ? '保存' : '创建' }}
+          {{ isEdit ? $t('admin.common.save') : $t('admin.common.create') }}
         </NButton>
       </div>
     </header>
@@ -214,7 +218,7 @@ function thumbUrl(photo: PhotoItem): string {
             v-model:value="form.description"
             type="textarea"
             :bordered="false"
-            placeholder="添加相册描述..."
+            :placeholder="$t('admin.placeholder.album_description')"
             :autosize="{ minRows: 2, maxRows: 5 }"
             :style="{ backgroundColor: 'transparent' }"
           />
@@ -223,7 +227,7 @@ function thumbUrl(photo: PhotoItem): string {
         <div class="mb-4 flex shrink-0 items-center justify-between">
           <div class="flex items-center gap-2">
             <div class="iconify text-lg opacity-50 ph--images" />
-            <span class="text-sm font-medium">照片</span>
+            <span class="text-sm font-medium">{{ $t('admin.album.photos') }}</span>
             <NTag
               v-if="photos.length > 0"
               size="small"
@@ -243,7 +247,7 @@ function thumbUrl(photo: PhotoItem): string {
               @click="showPhotoPicker = true"
             >
               <template #icon><div class="iconify ph--folder-open" /></template>
-              图库
+              {{ $t('admin.album.gallery') }}
             </NButton>
             <NButton
               size="small"
@@ -252,7 +256,7 @@ function thumbUrl(photo: PhotoItem): string {
               style="cursor: pointer"
             >
               <template #icon><div class="iconify ph--upload-simple" /></template>
-              上传
+              {{ $t('admin.common.upload') }}
               <input
                 type="file"
                 accept="image/*"
@@ -266,12 +270,12 @@ function thumbUrl(photo: PhotoItem): string {
 
         <NEmpty
           v-if="!isEdit"
-          description="请先创建相册，再添加照片"
+          :description="$t('admin.album.create_first_hint')"
           class="py-16"
         />
         <NEmpty
           v-else-if="photos.length === 0"
-          description="点击上方按钮添加照片"
+          :description="$t('admin.album.add_photos_hint')"
           class="py-16"
         >
           <template #icon>
@@ -317,7 +321,7 @@ function thumbUrl(photo: PhotoItem): string {
                     <template v-else-if="exifDevice(photo.exif)">{{
                       exifDevice(photo.exif)
                     }}</template>
-                    <template v-else><span class="italic opacity-40">点击编辑信息</span></template>
+                    <template v-else><span class="italic opacity-40">{{ $t('admin.album.click_to_edit') }}</span></template>
                   </div>
 
                   <div class="mt-1.5 flex items-center justify-between">
@@ -334,7 +338,7 @@ function thumbUrl(photo: PhotoItem): string {
                             <template #icon><div class="iconify ph--caret-left" /></template>
                           </NButton>
                         </template>
-                        前移
+                        {{ $t('admin.action.move_forward') }}
                       </NTooltip>
                       <NTooltip>
                         <template #trigger>
@@ -348,7 +352,7 @@ function thumbUrl(photo: PhotoItem): string {
                             <template #icon><div class="iconify ph--caret-right" /></template>
                           </NButton>
                         </template>
-                        后移
+                        {{ $t('admin.action.move_backward') }}
                       </NTooltip>
                       <NTooltip>
                         <template #trigger>
@@ -361,7 +365,7 @@ function thumbUrl(photo: PhotoItem): string {
                             <template #icon><div class="iconify ph--pencil-simple" /></template>
                           </NButton>
                         </template>
-                        编辑
+                        {{ $t('admin.common.edit') }}
                       </NTooltip>
                     </NSpace>
                     <NPopconfirm @positive-click="deletePhoto(photo.id)">
@@ -375,7 +379,7 @@ function thumbUrl(photo: PhotoItem): string {
                           <template #icon><div class="iconify ph--trash" /></template>
                         </NButton>
                       </template>
-                      确定删除这张照片？
+                      {{ $t('admin.album.confirm_delete_photo') }}
                     </NPopconfirm>
                   </div>
                 </div>
@@ -392,7 +396,7 @@ function thumbUrl(photo: PhotoItem): string {
       :width="380"
     >
       <NDrawerContent
-        title="相册设置"
+        :title="$t('admin.album.settings')"
         :native-scrollbar="false"
         closable
       >
@@ -400,7 +404,7 @@ function thumbUrl(photo: PhotoItem): string {
           <div class="space-y-4">
             <div class="flex items-center gap-2 text-sm font-medium">
               <div class="iconify ph--image" />
-              <span>封面</span>
+              <span>{{ $t('admin.album.cover') }}</span>
             </div>
             <ImageInput v-model:value="form.cover" />
           </div>
@@ -410,7 +414,7 @@ function thumbUrl(photo: PhotoItem): string {
           <div class="space-y-4">
             <div class="flex items-center gap-2 text-sm font-medium">
               <div class="iconify ph--gear-six" />
-              <span>属性</span>
+              <span>{{ $t('admin.album.properties') }}</span>
             </div>
             <NForm
               label-placement="left"
@@ -418,7 +422,7 @@ function thumbUrl(photo: PhotoItem): string {
               :show-feedback="false"
               class="space-y-3"
             >
-              <NFormItem label="允许评论">
+              <NFormItem :label="$t('admin.form.allow_comment')">
                 <NSwitch v-model:value="form.allowComment" />
               </NFormItem>
             </NForm>
@@ -430,7 +434,7 @@ function thumbUrl(photo: PhotoItem): string {
     <NModal
       v-model:show="showPhotoModal"
       preset="card"
-      title="编辑照片信息"
+      :title="$t('admin.album.edit_photo')"
       style="width: 520px; max-width: 90vw"
     >
       <div class="flex flex-col gap-4">
@@ -440,7 +444,7 @@ function thumbUrl(photo: PhotoItem): string {
         >
           <div class="mb-2 flex items-center gap-1.5 text-sm font-medium opacity-70">
             <div class="iconify ph--info" />
-            EXIF 信息
+            {{ $t('admin.album.exif_info') }}
           </div>
           <div class="grid grid-cols-2 gap-x-4 gap-y-1.5 opacity-60">
             <div v-if="exifDevice(editingPhoto.exif)">
@@ -480,18 +484,18 @@ function thumbUrl(photo: PhotoItem): string {
           :show-feedback="false"
           class="space-y-3"
         >
-          <NFormItem label="说明文字">
+          <NFormItem :label="$t('admin.album.caption')">
             <NInput
               v-model:value="photoForm.caption"
-              placeholder="给照片加一句话..."
+              :placeholder="$t('admin.placeholder.photo_caption')"
             />
           </NFormItem>
-          <NFormItem label="详细描述">
+          <NFormItem :label="$t('admin.album.detailed_description')">
             <NInput
               v-model:value="photoForm.description"
               type="textarea"
               :rows="3"
-              placeholder="更多描述..."
+              :placeholder="$t('admin.placeholder.more_description')"
             />
           </NFormItem>
         </NForm>
@@ -504,7 +508,7 @@ function thumbUrl(photo: PhotoItem): string {
             @click="savePhotoEdit"
           >
             <template #icon><div class="iconify ph--check" /></template>
-            保存
+            {{ $t('admin.common.save') }}
           </NButton>
         </NSpace>
       </template>

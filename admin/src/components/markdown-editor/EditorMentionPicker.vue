@@ -102,7 +102,7 @@ const hasSearched = computed(() => props.query.trim().length > 0)
             class="text-base font-medium"
             :style="{ color: textColor1 }"
           >
-            选择提及对象
+            {{ $t('admin.editor.mention_title') }}
           </span>
         </div>
       </template>
@@ -112,7 +112,7 @@ const hasSearched = computed(() => props.query.trim().length > 0)
         <div>
           <NInput
             :value="query"
-            placeholder="输入作者名称搜索..."
+            :placeholder="$t('admin.editor.mention_search_placeholder')"
             clearable
             @update:value="emit('search', $event)"
           >
@@ -127,7 +127,7 @@ const hasSearched = computed(() => props.query.trim().length > 0)
             class="mt-1.5 text-xs"
             :style="{ color: textColor3 }"
           >
-            搜索已联合实例中的作者，点击即可插入提及语法
+            {{ $t('admin.editor.mention_hint') }}
           </p>
         </div>
 
@@ -147,7 +147,7 @@ const hasSearched = computed(() => props.query.trim().length > 0)
                 class="text-sm"
                 :style="{ color: textColor3 }"
               >
-                输入关键词开始搜索作者
+                {{ $t('admin.editor.mention_search_hint') }}
               </span>
             </div>
 
@@ -164,7 +164,7 @@ const hasSearched = computed(() => props.query.trim().length > 0)
                 class="text-sm"
                 :style="{ color: textColor3 }"
               >
-                未找到匹配的作者，可在下方手动输入
+                {{ $t('admin.editor.mention_no_results') }}
               </span>
             </div>
 
@@ -226,7 +226,7 @@ const hasSearched = computed(() => props.query.trim().length > 0)
           class="mt-1"
         >
           <NCollapseItem
-            title="手动输入"
+            :title="$t('admin.editor.mention_manual_title')"
             name="manual"
           >
             <template #header-extra>
@@ -239,7 +239,7 @@ const hasSearched = computed(() => props.query.trim().length > 0)
               <NInputGroup>
                 <NInput
                   v-model:value="manualUser"
-                  placeholder="用户名，如 baddate"
+                  :placeholder="$t('admin.editor.mention_user_placeholder')"
                   size="small"
                 >
                   <template #prefix>
@@ -251,7 +251,7 @@ const hasSearched = computed(() => props.query.trim().length > 0)
                 </NInput>
                 <NInput
                   v-model:value="manualInstance"
-                  placeholder="实例域名，如 blog.example.com"
+                  :placeholder="$t('admin.editor.mention_instance_placeholder')"
                   size="small"
                 >
                   <template #prefix>
@@ -282,7 +282,7 @@ const hasSearched = computed(() => props.query.trim().length > 0)
                   <template #icon>
                     <span class="iconify ph--arrow-right" />
                   </template>
-                  插入
+                  {{ $t('admin.editor.mention_insert') }}
                 </NButton>
               </div>
             </div>

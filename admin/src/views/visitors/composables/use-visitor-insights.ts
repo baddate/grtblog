@@ -1,6 +1,7 @@
 import * as echarts from 'echarts'
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 
+import i18n from '@/plugins/i18n'
 import { getVisitorInsights } from '@/services/visitors'
 
 import type { VisitorInsights } from '@/types/visitors'
@@ -20,9 +21,9 @@ export function useVisitorInsights(message: { error: (m: string) => void }) {
   let funnelChart: ECharts | null = null
 
   const daysOptions = [
-    { label: '最近 7 天', value: 7 },
-    { label: '最近 30 天', value: 30 },
-    { label: '最近 90 天', value: 90 },
+    { label: i18n.global.t('admin.visitor.last_n_days', { n: 7 }), value: 7 },
+    { label: i18n.global.t('admin.visitor.last_n_days', { n: 30 }), value: 30 },
+    { label: i18n.global.t('admin.visitor.last_n_days', { n: 90 }), value: 90 },
   ]
 
   const sourceSeries = computed(() => {
@@ -34,7 +35,9 @@ export function useVisitorInsights(message: { error: (m: string) => void }) {
 
   const dataSourceLabel = computed(() => {
     if (!insights.value) return '-'
-    return insights.value.dataSource === 'api' ? '用户行为埋点聚合' : '浏览埋点聚合'
+    return insights.value.dataSource === 'api'
+      ? i18n.global.t('admin.visitor.event_aggregation')
+      : i18n.global.t('admin.visitor.browse_aggregation')
   })
 
   function toPercent(value: number) {
@@ -71,25 +74,25 @@ export function useVisitorInsights(message: { error: (m: string) => void }) {
       yAxis: { type: 'value' },
       series: [
         {
-          name: '活跃访客',
+          name: i18n.global.t('admin.visitor.active_visitors'),
           type: 'line',
           smooth: true,
           data: insights.value.trend.map((item) => item.activeVisitors),
         },
         {
-          name: '浏览',
+          name: i18n.global.t('admin.visitor.views_short'),
           type: 'line',
           smooth: true,
           data: insights.value.trend.map((item) => item.views),
         },
         {
-          name: '点赞',
+          name: i18n.global.t('admin.visitor.likes_short'),
           type: 'line',
           smooth: true,
           data: insights.value.trend.map((item) => item.likes),
         },
         {
-          name: '评论',
+          name: i18n.global.t('admin.visitor.comments_short'),
           type: 'line',
           smooth: true,
           data: insights.value.trend.map((item) => item.comments),
@@ -104,7 +107,14 @@ export function useVisitorInsights(message: { error: (m: string) => void }) {
     funnelChart = echarts.init(funnelChartRef.value)
     funnelChart.setOption({
       tooltip: { trigger: 'axis' },
-      xAxis: { type: 'category', data: ['浏览访客', '点赞访客', '评论访客'] },
+      xAxis: {
+        type: 'category',
+        data: [
+          i18n.global.t('admin.visitor.view_visitors'),
+          i18n.global.t('admin.visitor.like_visitors'),
+          i18n.global.t('admin.visitor.comment_visitors'),
+        ],
+      },
       yAxis: { type: 'value' },
       series: [
         {
@@ -132,7 +142,7 @@ export function useVisitorInsights(message: { error: (m: string) => void }) {
       await nextTick()
       renderCharts()
     } catch (error: any) {
-      message.error(error?.message || '获取访客统计失败')
+      message.error(error?.message || i18n.global.t('admin.visitor.load_insights_failed'))
     } finally {
       insightsLoading.value = false
     }

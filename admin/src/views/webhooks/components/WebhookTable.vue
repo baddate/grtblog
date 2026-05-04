@@ -65,14 +65,14 @@ const columns = computed<DataTableColumns<WebhookItem>>(() => [
     render: (row) => h('div', { class: 'font-medium' }, row.name),
   },
   {
-    title: '地址',
+    title: t('admin.webhooks.url'),
     key: 'url',
     minWidth: 200,
     ellipsis: { tooltip: true },
     render: (row) => h('div', { class: 'text-xs text-[var(--text-color-3)]' }, row.url),
   },
   {
-    title: '事件',
+    title: t('admin.webhooks.event'),
     key: 'events',
     minWidth: 200,
     render: (row) => {
@@ -94,7 +94,7 @@ const columns = computed<DataTableColumns<WebhookItem>>(() => [
       h(
         NTag,
         { size: 'small', type: row.isEnabled ? 'success' : 'warning', bordered: false },
-        { default: () => (row.isEnabled ? '启用' : '停用') },
+        { default: () => (row.isEnabled ? t('admin.webhooks.enabled_status') : t('admin.webhooks.disabled_status')) },
       ),
   },
   {
@@ -116,24 +116,24 @@ const columns = computed<DataTableColumns<WebhookItem>>(() => [
             h(
               NButton,
               { type: 'primary', secondary: true, onClick: () => emit('edit', row) },
-              { default: () => '编辑' },
+              { default: () => t('admin.common.edit') },
             ),
             h(
               NButton,
               { tertiary: true, onClick: () => emit('test', row) },
-              { default: () => '测试' },
+              { default: () => t('admin.webhooks.test') },
             ),
             h(
               NPopconfirm,
               {
-                positiveText: '删除',
-                negativeText: '取消',
+                positiveText: t('admin.common.delete'),
+                negativeText: t('admin.common.cancel'),
                 onPositiveClick: () => emit('delete', row),
               },
               {
                 trigger: () =>
-                  h(NButton, { type: 'error', secondary: true }, { default: () => '删除' }),
-                default: () => '确认删除该 Webhook？',
+                  h(NButton, { type: 'error', secondary: true }, { default: () => t('admin.common.delete') }),
+                default: () => t('admin.webhooks.delete_confirm'),
               },
             ),
           ],
@@ -145,14 +145,14 @@ const columns = computed<DataTableColumns<WebhookItem>>(() => [
 </script>
 
 <template>
-  <NCard title="Webhook 列表">
+  <NCard :title="t('admin.webhooks.list')">
     <template #header-extra>
       <NTag
         size="small"
         type="info"
         :bordered="false"
       >
-        共 {{ filteredWebhooks.length }} 条
+        {{ t('admin.webhooks.total_count', { count: filteredWebhooks.length }) }}
       </NTag>
     </template>
     <NForm
@@ -166,11 +166,11 @@ const columns = computed<DataTableColumns<WebhookItem>>(() => [
         y-gap="8"
       >
         <NGi>
-          <NFormItem label="关键词">
+          <NFormItem :label="t('admin.webhooks.keyword')">
             <NInput
               :value="listFilters.keyword"
               clearable
-              placeholder="名称 / URL"
+              :placeholder="t('admin.webhooks.keyword_placeholder')"
               @update:value="listFilters.keyword = $event"
             />
           </NFormItem>
@@ -185,12 +185,12 @@ const columns = computed<DataTableColumns<WebhookItem>>(() => [
           </NFormItem>
         </NGi>
         <NGi>
-          <NFormItem label="事件">
+          <NFormItem :label="t('admin.webhooks.event')">
             <NSelect
               :value="listFilters.event"
               :options="eventOptions"
               clearable
-              placeholder="全部"
+              :placeholder="t('admin.webhooks.all_placeholder')"
               @update:value="listFilters.event = $event"
             />
           </NFormItem>
@@ -213,7 +213,7 @@ const columns = computed<DataTableColumns<WebhookItem>>(() => [
       v-if="filteredWebhooks.length === 0 && !loading"
       class="py-10"
     >
-      <NEmpty description="暂无 Webhook" />
+      <NEmpty :description="t('admin.webhooks.no_data')" />
     </div>
     <NDataTable
       v-else

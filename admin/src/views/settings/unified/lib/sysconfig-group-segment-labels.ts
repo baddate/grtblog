@@ -1,6 +1,7 @@
+import i18n from '@/plugins/i18n'
+
 /**
  * 配置树分组标题：API 只保证稳定的 path/key（与 DB group_path 段一致），展示文案由 UI 层维护。
- * 后台当前为中文界面；若以后做多语言，可改为 vue-i18n 或按 locale 加载的同类表。
  */
 const SEGMENT_LABELS: Readonly<Record<string, string>> = {
   activitypub: 'ActivityPub',
@@ -30,9 +31,14 @@ const SEGMENT_LABELS: Readonly<Record<string, string>> = {
   webhook: 'Webhook',
 }
 
-/** 折叠面板等处的分组标题：有映射用映射，否则回退到接口给的 label，再回退 key。 */
+/** 折叠面板等处的分组标题：优先 i18n，回退到静态映射，再回退到接口 label 或 key。 */
 export function titleForSysconfigGroup(group: { key: string; label?: string }): string {
   const k = group.key.trim().toLowerCase()
-  if (k && SEGMENT_LABELS[k]) return SEGMENT_LABELS[k]
+  if (k) {
+    const i18nKey = 'admin.sysconfig.segment.' + k
+    const translated = i18n.global.t(i18nKey)
+    if (translated !== i18nKey) return translated
+    if (SEGMENT_LABELS[k]) return SEGMENT_LABELS[k]
+  }
   return (group.label?.trim() || group.key).trim() || group.key
 }

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import * as echarts from 'echarts'
 import { NCard, NDataTable, NSelect, NSpace, NStatistic, NTag, useMessage } from 'naive-ui'
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
@@ -24,9 +27,9 @@ const topTab = ref<
 >('clients')
 
 const daysOptions = [
-  { label: '最近 7 天', value: 7 },
-  { label: '最近 30 天', value: 30 },
-  { label: '最近 90 天', value: 90 },
+  { label: t('admin.rss.last_7_days'), value: 7 },
+  { label: t('admin.rss.last_30_days'), value: 30 },
+  { label: t('admin.rss.last_90_days'), value: 90 },
 ]
 
 const topOptions = [
@@ -47,13 +50,13 @@ const topData = computed(() => {
 })
 
 const topLabel = computed(() => {
-  if (topTab.value === 'ips') return 'IP'
-  if (topTab.value === 'platforms') return '操作系统'
-  if (topTab.value === 'browsers') return '浏览器'
-  if (topTab.value === 'locations') return '地区'
-  if (topTab.value === 'hints') return '客户端 Hint'
+  if (topTab.value === 'ips') return t('admin.visitor.ip')
+  if (topTab.value === 'platforms') return t('admin.visitor.os')
+  if (topTab.value === 'browsers') return t('admin.visitor.browser')
+  if (topTab.value === 'locations') return t('admin.visitor.location')
+  if (topTab.value === 'hints') return t('admin.rss.hint')
   if (topTab.value === 'userAgents') return 'User-Agent'
-  return '客户端'
+  return t('admin.rss.client')
 })
 
 const trendChartRef = ref<HTMLDivElement | null>(null)
@@ -69,7 +72,7 @@ const topTableColumns = computed<DataTableColumns<RssAccessBucket>>(() => [
     ellipsis: { tooltip: true },
   },
   {
-    title: '请求数',
+    title: t('admin.rss.request_count'),
     key: 'count',
     width: 120,
   },
@@ -82,7 +85,7 @@ async function loadStats() {
     await nextTick()
     renderCharts()
   } catch (error: any) {
-    message.error(error?.message || '获取 RSS 统计失败')
+    message.error(error?.message || t('admin.rss.load_failed'))
   } finally {
     loading.value = false
   }
@@ -94,7 +97,7 @@ function renderTrendChart() {
   trendChart = echarts.init(trendChartRef.value)
   trendChart.setOption({
     tooltip: { trigger: 'axis' },
-    legend: { top: 4, data: ['请求量', '去重 IP'] },
+    legend: { top: 4, data: [t('admin.rss.request_volume'), t('admin.rss.unique_ip')] },
     grid: { left: 28, right: 20, top: 32, bottom: 20, containLabel: true },
     xAxis: {
       type: 'category',
@@ -103,13 +106,13 @@ function renderTrendChart() {
     yAxis: { type: 'value' },
     series: [
       {
-        name: '请求量',
+        name: t('admin.rss.request_volume'),
         type: 'line',
         smooth: true,
         data: stats.value.trend.map((item) => item.requests),
       },
       {
-        name: '去重 IP',
+        name: t('admin.rss.unique_ip'),
         type: 'line',
         smooth: true,
         data: stats.value.trend.map((item) => item.uniqueIp),
@@ -177,7 +180,7 @@ onUnmounted(() => {
     :scrollbar-props="{ trigger: 'none' }"
   >
     <NCard
-      title="RSS 访问统计"
+      :title="$t('admin.card.rss_stats')"
       class="mb-4"
     >
       <template #header-extra>
@@ -185,7 +188,7 @@ onUnmounted(() => {
           <NTag
             size="small"
             :bordered="false"
-            >用户行为埋点聚合</NTag
+            >{{ $t('admin.visitor.event_aggregation') }}</NTag
           >
           <NSelect
             v-model:value="days"
@@ -206,13 +209,13 @@ onUnmounted(() => {
       >
         <NCard size="small">
           <NStatistic
-            label="总请求数"
+            :label="$t('admin.rss.total_requests')"
             :value="stats.total"
           />
         </NCard>
         <NCard size="small">
           <NStatistic
-            label="去重 IP"
+            :label="$t('admin.rss.unique_ip')"
             :value="stats.uniqueIp"
           />
         </NCard>
@@ -221,7 +224,7 @@ onUnmounted(() => {
       <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <NCard
           size="small"
-          title="请求趋势（按小时）"
+          :title="$t('admin.rss.trend_title')"
           :loading="loading"
         >
           <div
@@ -232,7 +235,7 @@ onUnmounted(() => {
 
         <NCard
           size="small"
-          :title="`${topLabel} Top`"
+          :title="$t('admin.rss.top_chart_title', { label: topLabel })"
           :loading="loading"
         >
           <template #header-extra>
@@ -240,11 +243,11 @@ onUnmounted(() => {
               v-model:value="topTab"
               style="width: 140px"
               :options="[
-                { label: '客户端', value: 'clients' },
-                { label: 'IP', value: 'ips' },
-                { label: '操作系统', value: 'platforms' },
-                { label: '浏览器', value: 'browsers' },
-                { label: '地区', value: 'locations' },
+                { label: $t('admin.rss.client'), value: 'clients' },
+                { label: $t('admin.visitor.ip'), value: 'ips' },
+                { label: $t('admin.visitor.os'), value: 'platforms' },
+                { label: $t('admin.visitor.browser'), value: 'browsers' },
+                { label: $t('admin.visitor.location'), value: 'locations' },
                 { label: 'Hint', value: 'hints' },
                 { label: 'User-Agent', value: 'userAgents' },
               ]"
@@ -260,7 +263,7 @@ onUnmounted(() => {
 
     <NCard
       size="small"
-      :title="`${topLabel} 明细`"
+      :title="$t('admin.rss.top_detail', { label: topLabel })"
       :loading="loading"
     >
       <NDataTable

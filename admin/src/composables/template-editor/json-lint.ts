@@ -1,5 +1,9 @@
 import { type Diagnostic, linter } from '@codemirror/lint'
 
+import i18n from '@/plugins/i18n'
+
+const __ = i18n.global.t
+
 function isEscaped(input: string, index: number) {
   let count = 0
   for (let i = index - 1; i >= 0 && input[i] === '\\'; i -= 1) {
@@ -113,7 +117,7 @@ export const templateJsonLintExtension = linter((view) => {
     JSON.parse(sanitized)
     return []
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'JSON 格式错误'
+    const message = err instanceof Error ? err.message : __('admin.validation.invalid_json')
     const diagnostics: Diagnostic[] = []
     const position = parseErrorPosition(message)
     if (position !== null) {

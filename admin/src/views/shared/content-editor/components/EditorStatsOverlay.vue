@@ -33,19 +33,19 @@ defineProps<{
           content-style="padding: 4px 6px;"
         >
           <template #trigger>
-            <span class="cursor-help">字数 {{ charCount }}</span>
+            <span class="cursor-help">{{ $t('admin.editor.chars', { n: charCount }) }}</span>
           </template>
           <div class="flex flex-col gap-0.5 text-[11px] leading-tight">
-            <span v-if="selectionTotal">选中 {{ selectionChars }}</span>
-            <span>中文 {{ chineseCharCount }}</span>
-            <span>英文词 {{ wordCount }}</span>
-            <span>字符 {{ totalCharCount }}</span>
-            <span>段落 {{ paragraphCount }}</span>
+            <span v-if="selectionTotal">{{ $t('admin.editor.selected', { n: selectionChars }) }}</span>
+            <span>{{ $t('admin.editor.chinese', { n: chineseCharCount }) }}</span>
+            <span>{{ $t('admin.editor.english_words', { n: wordCount }) }}</span>
+            <span>{{ $t('admin.editor.characters', { n: totalCharCount }) }}</span>
+            <span>{{ $t('admin.editor.paragraphs', { n: paragraphCount }) }}</span>
           </div>
         </NPopover>
-        <span v-if="selectionTotal">选中 {{ selectionChars }} 字</span>
+        <span v-if="selectionTotal">{{ $t('admin.editor.selected_chars', { n: selectionChars }) }}</span>
         <span>{{ cursorLine }}:{{ cursorColumn }}</span>
-        <span>预计阅读 {{ readingMinutes }} 分钟</span>
+        <span>{{ $t('admin.editor.minutes_read', { n: readingMinutes }) }}</span>
       </div>
     </NCard>
   </div>

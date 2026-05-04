@@ -94,7 +94,7 @@ const { view, onViewUpdate } = useCodeMirror(editorRef, {
       return result.publicUrl
     } catch (error) {
       console.error(error)
-      message.error('图片上传失败')
+      message.error(t('admin.editor.upload_failed'))
       throw error
     }
   },
@@ -132,7 +132,7 @@ async function handleAIExecute() {
   try {
     await aiToolbar.execute()
   } catch (e: unknown) {
-    message.error(e instanceof Error ? e.message : 'AI 改写失败')
+    message.error(e instanceof Error ? e.message : t('admin.editor.ai_failed'))
   }
 }
 
@@ -197,7 +197,7 @@ watch(
       style="width: 520px; max-width: 90vw"
     >
       <NCard
-        :title="inserter.componentMeta.value?.label ?? '组件参数'"
+        :title="inserter.componentMeta.value?.label ?? $t('admin.editor.component_params')"
         size="small"
       >
         <NForm
@@ -223,7 +223,7 @@ watch(
           </NFormItem>
           <NFormItem
             v-if="inserter.componentMeta.value?.body"
-            :label="inserter.componentMeta.value?.body?.label || '内容'"
+            :label="inserter.componentMeta.value?.body?.label || $t('admin.editor.body_content')"
           >
             <NInput
               type="textarea"

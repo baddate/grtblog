@@ -111,31 +111,31 @@ const tabDropdownOptions = computed<DropdownOption[]>(() => {
     {
       key: 'close',
       icon: () => <span class='iconify ph--x' />,
-      label: '关闭',
+      label: t('admin.tabs.close'),
       disabled: locked,
     },
     {
       key: 'closeOther',
       icon: () => <span class='iconify ph--arrows-out-line-horizontal' />,
-      label: '关闭其他',
+      label: t('admin.tabs.close_other'),
       disabled: isEmpty(getRemovableIdsOther(id)),
     },
     {
       key: 'closeLeft',
       icon: () => <span class='iconify ph--arrow-line-left' />,
-      label: '关闭左侧',
+      label: t('admin.tabs.close_left'),
       disabled: isEmpty(getRemovableIdsBefore(id)),
     },
     {
       key: 'closeRight',
       icon: () => <span class='iconify ph--arrow-line-right' />,
-      label: '关闭右侧',
+      label: t('admin.tabs.close_right'),
       disabled: isEmpty(getRemovableIdsAfter(id)),
     },
     {
       key: 'closeAll',
       icon: () => <span class='iconify ph--arrows-horizontal' />,
-      label: '关闭所有',
+      label: t('admin.tabs.close_all'),
       disabled: isEmpty(getRemovableIds()),
     },
     {
@@ -145,7 +145,7 @@ const tabDropdownOptions = computed<DropdownOption[]>(() => {
           class={pinned ? 'iconify ph--push-pin-simple-slash' : 'iconify ph--push-pin-simple'}
         />
       ),
-      label: pinned ? '取消固定' : '固定标签页',
+      label: pinned ? t('admin.tabs.unpin') : t('admin.tabs.pin'),
     },
     {
       key: 'keepalive',
@@ -154,7 +154,7 @@ const tabDropdownOptions = computed<DropdownOption[]>(() => {
           class={keepAlive ? 'icon-[hugeicons--database-02]' : 'icon-[hugeicons--database-locked]'}
         />
       ),
-      label: keepAlive ? '取消缓存' : '缓存标签页',
+      label: keepAlive ? t('admin.tabs.uncache') : t('admin.tabs.cache'),
       disabled: isEmpty(componentName),
     },
     {
@@ -162,7 +162,7 @@ const tabDropdownOptions = computed<DropdownOption[]>(() => {
       icon: () => (
         <span class={locked ? 'iconify ph--lock-simple-open' : 'iconify ph--lock-simple'} />
       ),
-      label: locked ? '取消锁定' : '锁定标签页',
+      label: locked ? t('admin.tabs.unlock') : t('admin.tabs.lock'),
       disabled: pinned,
     },
   ]

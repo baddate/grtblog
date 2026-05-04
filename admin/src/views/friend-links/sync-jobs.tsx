@@ -1,5 +1,6 @@
 import { NButton, NCard, NDataTable, NInput, NPagination, NSelect, NTag, NTooltip } from 'naive-ui'
 import { defineComponent, reactive } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import { ScrollContainer } from '@/components'
 import { useTable } from '@/composables/table/use-table'
@@ -11,6 +12,7 @@ import type { DataTableColumns } from 'naive-ui'
 export default defineComponent({
   name: 'FriendLinkSyncJobs',
   setup() {
+    const { t } = useI18n()
     const syncJobsFilter = reactive({
       status: undefined as string | undefined,
       targetType: undefined as string | undefined,
@@ -27,7 +29,7 @@ export default defineComponent({
 
     const syncJobColumns: DataTableColumns<FriendLinkSyncJob> = [
       {
-        title: '目标',
+        title: t('admin.table.target'),
         key: 'target',
         minWidth: 280,
         render: (row) => (
@@ -38,7 +40,7 @@ export default defineComponent({
                 bordered={false}
                 type='success'
               >
-                {{ default: () => '友链' }}
+                {{ default: () => t('admin.badge.friend_link') }}
               </NTag>
               <span class='text-xs text-neutral-400'>
                 #{row.friendLinkId || row.instanceId || '-'}
@@ -54,13 +56,13 @@ export default defineComponent({
         ),
       },
       {
-        title: '同步方式',
+        title: t('admin.table.sync_method'),
         key: 'syncMethod',
         width: 100,
         render: (row) => <NTag size='small'>{row.syncMethod}</NTag>,
       },
       {
-        title: '状态',
+        title: t('admin.table.status'),
         key: 'status',
         width: 100,
         render: (row) => {
@@ -81,19 +83,19 @@ export default defineComponent({
         },
       },
       {
-        title: '拉取',
+        title: t('admin.table.pulled'),
         key: 'pulledCount',
         width: 80,
         render: (row) => row.pulledCount ?? 0,
       },
       {
-        title: '耗时',
+        title: t('admin.table.duration'),
         key: 'durationMs',
         width: 90,
         render: (row) => (row.durationMs != null ? `${row.durationMs}ms` : '-'),
       },
       {
-        title: '错误信息',
+        title: t('admin.table.error_message'),
         key: 'errorMessage',
         minWidth: 220,
         render: (row) => {
@@ -113,7 +115,7 @@ export default defineComponent({
         },
       },
       {
-        title: '创建时间',
+        title: t('admin.table.created_at'),
         key: 'createdAt',
         width: 170,
       },
@@ -122,19 +124,19 @@ export default defineComponent({
     return () => (
       <ScrollContainer wrapper-class='p-4'>
         <NCard
-          title='友链同步任务'
+          title={t('admin.card.friend_sync_jobs')}
           class='h-full'
         >
           <div class='mb-4 flex gap-2'>
             <NSelect
               value={syncJobsFilter.status}
-              placeholder='状态'
+              placeholder={t('admin.placeholder.filter_status')}
               clearable
               options={[
-                { label: '排队中 (Queued)', value: 'queued' },
-                { label: '运行中 (Running)', value: 'running' },
-                { label: '成功 (Success)', value: 'success' },
-                { label: '失败 (Failed)', value: 'failed' },
+                { label: `${t('admin.status.queued')} (Queued)`, value: 'queued' },
+                { label: `${t('admin.status.running')} (Running)`, value: 'running' },
+                { label: `${t('admin.status.success')} (Success)`, value: 'success' },
+                { label: `${t('admin.status.failed')} (Failed)`, value: 'failed' },
               ]}
               class='w-44'
               onUpdateValue={(v) => {
@@ -144,9 +146,9 @@ export default defineComponent({
             />
             <NSelect
               value={syncJobsFilter.targetType}
-              placeholder='目标类型'
+              placeholder={t('admin.placeholder.filter_target_type')}
               clearable
-              options={[{ label: '友链', value: 'friend_link' }]}
+              options={[{ label: t('admin.badge.friend_link'), value: 'friend_link' }]}
               class='w-44'
               onUpdateValue={(v) => {
                 syncJobsFilter.targetType = v
@@ -155,7 +157,7 @@ export default defineComponent({
             />
             <NSelect
               value={syncJobsFilter.syncMethod}
-              placeholder='同步方式'
+              placeholder={t('admin.placeholder.filter_sync_method')}
               clearable
               options={[
                 { label: 'Timeline', value: 'timeline' },
@@ -170,7 +172,7 @@ export default defineComponent({
             />
             <NInput
               value={syncJobsFilter.keyword}
-              placeholder='搜索目标/错误信息'
+              placeholder={t('admin.placeholder.search_target_error')}
               class='max-w-xs'
               clearable
               onUpdateValue={(v) => (syncJobsFilter.keyword = v)}
@@ -182,7 +184,7 @@ export default defineComponent({
               secondary
               onClick={refreshSyncJobs}
             >
-              刷新
+              {t('admin.common.refresh')}
             </NButton>
           </div>
           <NDataTable

@@ -1,4 +1,8 @@
+import i18n from '@/plugins/i18n'
+
 import type { MarkdownExtension } from '../types'
+
+const __ = i18n.global.t
 
 /**
  * Inline rule: matches <cite:instance|post-id> and renders as a preview placeholder card.
@@ -22,6 +26,6 @@ export const federationCitationExtension: MarkdownExtension = (md) => {
   md.renderer.rules.federation_citation = (tokens, idx) => {
     const { instance, postId } = tokens[idx]!.meta!
     const esc = md.utils.escapeHtml
-    return `<div class="fed-citation-preview">\uD83D\uDD17 引用: ${esc(instance)} / ${esc(postId)}</div>`
+    return `<div class="fed-citation-preview">${__('admin.editor.citation')}: ${esc(instance)} / ${esc(postId)}</div>`
   }
 }

@@ -1,5 +1,6 @@
 import { computed, reactive, ref, watch } from 'vue'
 
+import i18n from '@/plugins/i18n'
 import { formatTemplateJson } from '@/composables/template-editor/json-lint'
 import { listEvents, getEventCatalogItem } from '@/services/events'
 import {
@@ -120,16 +121,18 @@ export function useWebhookForm(message: {
     })),
   )
 
+  const __ = i18n.global.t
+
   const statusOptions: SelectOption[] = [
-    { label: '全部状态', value: 'all' },
-    { label: '启用中', value: 'enabled' },
-    { label: '已停用', value: 'disabled' },
+    { label: __('admin.webhooks.status.all'), value: 'all' },
+    { label: __('admin.webhooks.status.enabled'), value: 'enabled' },
+    { label: __('admin.webhooks.status.disabled'), value: 'disabled' },
   ]
 
   const webhookMap = computed(() => new Map(webhooks.value.map((item) => [item.id, item.name])))
 
-  const formTitle = computed(() => (editingWebhook.value ? '编辑 Webhook' : '新建 Webhook'))
-  const formActionLabel = computed(() => (editingWebhook.value ? '保存' : '创建'))
+  const formTitle = computed(() => (editingWebhook.value ? __('admin.webhooks.form.title_edit') : __('admin.webhooks.form.title_create')))
+  const formActionLabel = computed(() => (editingWebhook.value ? __('admin.webhooks.form.save') : __('admin.webhooks.form.create')))
 
   const totalWebhooks = computed(() => webhooks.value.length)
   const enabledCount = computed(() => webhooks.value.filter((item) => item.isEnabled).length)
@@ -143,14 +146,14 @@ export function useWebhookForm(message: {
   const latestHistory = computed(() => history.value[0] ?? null)
   const latestHistoryStatus = computed<{ label: string; type: StatusTagType }>(() => {
     const entry = latestHistory.value
-    if (!entry) return { label: '暂无', type: 'default' as const }
+    if (!entry) return { label: __('admin.webhooks.history.none'), type: 'default' as const }
     const success = entry.responseStatus >= 200 && entry.responseStatus < 300
-    return { label: success ? '成功' : '失败', type: success ? 'success' : 'error' }
+    return { label: success ? __('admin.webhooks.history.success') : __('admin.webhooks.history.failure'), type: success ? 'success' : 'error' }
   })
 
   const latestHistoryMeta = computed(() => {
     const entry = latestHistory.value
-    if (!entry) return '暂无投递记录'
+    if (!entry) return __('admin.webhooks.history.no_data')
     const hookName = webhookMap.value.get(entry.webhookId) || `#${entry.webhookId}`
     return `${hookName} · ${formatDate(entry.createdAt)}`
   })
@@ -166,10 +169,10 @@ export function useWebhookForm(message: {
     const entry = activeHistory.value
     if (!entry) return { label: '-', type: 'default' as const }
     const status = entry.responseStatus
-    if (!status) return { label: '未知', type: 'default' as const }
+    if (!status) return { label: __('admin.webhooks.status_unknown'), type: 'default' as const }
     const success = status >= 200 && status < 300
     return {
-      label: success ? `成功 ${status}` : `失败 ${status}`,
+      label: success ? `${__('admin.webhooks.history.success')} ${status}` : `${__('admin.webhooks.history.failure')} ${status}`,
       type: success ? 'success' : 'error',
     }
   })
@@ -309,15 +312,15 @@ export function useWebhookForm(message: {
 
   async function handleSave() {
     if (!form.name.trim()) {
-      message.error('请填写名称')
+      message.error(__('admin.webhooks.validation.name_required'))
       return
     }
     if (!form.url.trim()) {
-      message.error('请填写 URL')
+      message.error(__('admin.webhooks.validation.url_required'))
       return
     }
     if (form.events.length === 0) {
-      message.error('请选择订阅事件')
+      message.error(__('admin.webhooks.validation.event_required'))
       return
     }
 
@@ -346,10 +349,10 @@ export function useWebhookForm(message: {
   function handleFormatPayload() {
     try {
       form.payloadTemplate = formatTemplateJson(form.payloadTemplate)
-      message.success('已格式化')
+      message.success(__('admin.webhooks.validation.format_success'))
     } catch (err) {
-      const reason = err instanceof Error ? err.message : 'JSON 格式不正确'
-      message.error(`格式化失败：${reason}`)
+      const reason = err instanceof Error ? err.message : __('admin.webhooks.validation.format_error')
+      message.error(__('admin.webhooks.validation.format_failed', { reason }))
     }
   }
 

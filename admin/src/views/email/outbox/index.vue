@@ -51,13 +51,13 @@ function statusTagType(status: string) {
 function statusLabel(status: string) {
   switch (status) {
     case 'pending':
-      return '等待中'
+      return t('admin.email.status_pending')
     case 'sending':
-      return '发送中'
+      return t('admin.email.status_sending')
     case 'sent':
-      return '已发送'
+      return t('admin.status.sent')
     case 'failed':
-      return '失败'
+      return t('admin.status.failed')
     default:
       return status
   }
@@ -66,19 +66,19 @@ function statusLabel(status: string) {
 const columns: DataTableColumns<EmailOutbox> = [
   { title: t('admin.table.id'), key: 'id', width: 70 },
   {
-    title: '主题',
+    title: t('admin.table.subject'),
     key: 'subject',
     minWidth: 180,
     ellipsis: { tooltip: true },
   },
   {
-    title: '模板',
+    title: t('admin.table.template_code'),
     key: 'templateCode',
     width: 160,
     ellipsis: { tooltip: true },
   },
   {
-    title: '事件',
+    title: t('admin.email.template_event'),
     key: 'eventName',
     width: 160,
     render(row) {
@@ -90,7 +90,7 @@ const columns: DataTableColumns<EmailOutbox> = [
     },
   },
   {
-    title: '收件人',
+    title: t('admin.table.recipient'),
     key: 'toEmails',
     width: 180,
     ellipsis: { tooltip: true },
@@ -111,7 +111,7 @@ const columns: DataTableColumns<EmailOutbox> = [
     },
   },
   {
-    title: '重试',
+    title: t('admin.table.retry_count'),
     key: 'retryCount',
     width: 60,
     render: (row) => `${row.retryCount}`,
@@ -130,7 +130,7 @@ const columns: DataTableColumns<EmailOutbox> = [
       return h(
         NButton,
         { size: 'small', onClick: () => openDetail(row) },
-        { default: () => '详情' },
+        { default: () => t('admin.action.view_details') },
       )
     },
   },
@@ -145,11 +145,11 @@ function openDetail(row: EmailOutbox) {
 }
 
 const statusOptions = [
-  { label: '全部状态', value: null },
-  { label: '等待中', value: 'pending' },
-  { label: '发送中', value: 'sending' },
-  { label: '已发送', value: 'sent' },
-  { label: '失败', value: 'failed' },
+  { label: t('admin.filter.all_status'), value: null },
+  { label: t('admin.email.status_pending'), value: 'pending' },
+  { label: t('admin.email.status_sending'), value: 'sending' },
+  { label: t('admin.status.sent'), value: 'sent' },
+  { label: t('admin.status.failed'), value: 'failed' },
 ] as any
 
 </script>
@@ -158,17 +158,17 @@ const statusOptions = [
   <ScrollContainer wrapper-class="flex flex-col gap-y-4">
     <NCard :bordered="false">
       <div class="flex items-center justify-between">
-        <div class="text-lg font-medium">出站队列</div>
+        <div class="text-lg font-medium">{{ $t('admin.card.email_outbox') }}</div>
         <div class="flex items-center gap-2">
           <NInput
             v-model:value="searchKeyword"
-            placeholder="搜索主题 / 模板编码"
+            :placeholder="$t('admin.email.placeholder_search_subject')"
             clearable
             class="w-60"
           />
           <NInput
             v-model:value="filterEventName"
-            placeholder="事件名"
+            :placeholder="$t('admin.email.placeholder_event_name')"
             clearable
             class="w-40"
           />
@@ -176,7 +176,7 @@ const statusOptions = [
             v-model:value="filterStatus"
             :options="statusOptions"
             class="w-32"
-            placeholder="状态"
+            :placeholder="$t('admin.placeholder.select')"
             clearable
           />
         </div>

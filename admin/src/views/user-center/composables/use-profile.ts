@@ -1,5 +1,6 @@
 import { computed, onMounted, reactive, ref } from 'vue'
 
+import i18n from '@/plugins/i18n'
 import { changePassword, getAccessInfo, getOAuthBindings, updateProfile } from '@/services/auth'
 import { listOAuthProviders } from '@/services/oauth-providers'
 import { uploadFile } from '@/services/uploads'
@@ -40,19 +41,27 @@ export function useProfile(message: {
   const isUploading = ref(false)
 
   const profileRules: Record<string, FormItemRule[]> = {
-    nickname: [{ required: true, message: '请输入昵称', trigger: ['blur', 'input'] }],
-    email: [{ type: 'email', message: '请输入有效邮箱', trigger: ['blur', 'input'] }],
+    nickname: [
+      { required: true, message: i18n.global.t('admin.user.enter_nickname'), trigger: ['blur', 'input'] },
+    ],
+    email: [
+      { type: 'email', message: i18n.global.t('admin.user.valid_email'), trigger: ['blur', 'input'] },
+    ],
   }
 
   const passwordRules: Record<string, FormItemRule[]> = {
-    oldPassword: [{ required: true, message: '请输入旧密码', trigger: ['blur', 'input'] }],
-    newPassword: [{ required: true, message: '请输入新密码', trigger: ['blur', 'input'] }],
+    oldPassword: [
+      { required: true, message: i18n.global.t('admin.user.enter_old_password'), trigger: ['blur', 'input'] },
+    ],
+    newPassword: [
+      { required: true, message: i18n.global.t('admin.user.enter_new_password'), trigger: ['blur', 'input'] },
+    ],
     confirmPassword: [
       {
         required: true,
         trigger: ['blur', 'input'],
         validator: (_rule, value) => value === passwordForm.newPassword,
-        message: '两次输入的密码不一致',
+        message: i18n.global.t('admin.user.password_mismatch'),
       },
     ],
   }
@@ -104,7 +113,7 @@ export function useProfile(message: {
           updatedAt: updated.updatedAt,
         } as any,
       })
-      message.success('个人信息更新成功')
+      message.success(i18n.global.t('admin.user.profile_update_success'))
     })
   }
 
@@ -118,7 +127,7 @@ export function useProfile(message: {
       passwordForm.oldPassword = ''
       passwordForm.newPassword = ''
       passwordForm.confirmPassword = ''
-      message.success('密码修改成功')
+      message.success(i18n.global.t('admin.user.password_change_success'))
     })
   }
 
@@ -135,14 +144,14 @@ export function useProfile(message: {
 
   function handleCopy(text: string) {
     navigator.clipboard.writeText(text)
-    message.success('已复制到剪贴板')
+    message.success(i18n.global.t('admin.user.copy_success'))
   }
 
   const onBeforeUpload = async (options: { file: { file: File | null } }) => {
     const file = options.file.file
     if (!file) return false
     if (file.size > 2 * 1024 * 1024) {
-      message.error('图片大小不能超过 2MB')
+      message.error(i18n.global.t('admin.user.avatar_too_large'))
       return false
     }
     const reader = new FileReader()
@@ -160,9 +169,9 @@ export function useProfile(message: {
       const res = await uploadFile(file, 'picture')
       profileForm.avatar = res.publicUrl
       showCropper.value = false
-      message.success('头像处理成功，请保存设置以生效')
+      message.success(i18n.global.t('admin.user.avatar_process_success'))
     } catch (err: any) {
-      message.error('上传失败: ' + err.message)
+      message.error(i18n.global.t('admin.user.upload_failed', { message: err.message }))
     } finally {
       isUploading.value = false
     }

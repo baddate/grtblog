@@ -1,4 +1,8 @@
+import i18n from '@/plugins/i18n'
+
 import { API_BASE_URL, ApiError, getAuthToken, request } from './http'
+
+const __ = i18n.global.t
 
 export type FileType = 'picture' | 'file'
 
@@ -92,7 +96,7 @@ export async function uploadFile(
     }
 
     xhr.onerror = () => {
-      reject(new ApiError('网络异常，请稍后重试'))
+      reject(new ApiError(__('admin.service.network_error')))
     }
 
     xhr.onload = () => {
@@ -104,14 +108,14 @@ export async function uploadFile(
         try {
           payload = JSON.parse(xhr.responseText)
         } catch {
-          reject(new ApiError('无法解析服务端响应', { status }))
+          reject(new ApiError(__('admin.service.parse_error'), { status }))
           return
         }
       }
 
       if (status < 200 || status >= 300) {
         reject(
-          new ApiError(payload?.msg || `请求失败（${status}）`, {
+          new ApiError(payload?.msg || __('admin.service.request_failed_status', { status }), {
             code: payload?.code,
             bizErr: payload?.bizErr,
             status,
@@ -127,7 +131,7 @@ export async function uploadFile(
 
       if (payload.code !== 0) {
         reject(
-          new ApiError(payload.msg || payload.bizErr || '请求失败', {
+          new ApiError(payload.msg || payload.bizErr || __('admin.service.request_failed'), {
             code: payload.code,
             bizErr: payload.bizErr,
             status,
@@ -204,7 +208,7 @@ export async function downloadFile(id: number, fileName: string): Promise<void> 
   })
 
   if (!response.ok) {
-    throw new Error('Download failed')
+    throw new Error(__('admin.service.download_failed'))
   }
 
   const blob = await response.blob()

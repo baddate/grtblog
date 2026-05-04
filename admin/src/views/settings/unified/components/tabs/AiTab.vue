@@ -56,9 +56,9 @@ const providerForm = ref({
 })
 
 const providerTypeOptions: SelectOption[] = [
-  { label: 'OpenAI 兼容', value: 'openai' },
+  { label: t('admin.ai.provider_type_openai'), value: 'openai' },
   { label: 'OpenRouter', value: 'openrouter' },
-  { label: 'Google Gemini', value: 'gemini' },
+  { label: t('admin.ai.provider_type_gemini'), value: 'gemini' },
 ]
 
 const providerColumns = computed<DataTableColumns<AIProvider>>(() => [
@@ -70,14 +70,14 @@ const providerColumns = computed<DataTableColumns<AIProvider>>(() => [
     width: 130,
     render: (row) => {
       const map: Record<string, string> = {
-        openai: 'OpenAI 兼容',
+        openai: t('admin.ai.provider_type_openai'),
         openrouter: 'OpenRouter',
-        gemini: 'Gemini',
+        gemini: t('admin.ai.provider_type_gemini'),
       }
       return map[row.type] || row.type
     },
   },
-  { title: 'API 地址', key: 'apiUrl', ellipsis: { tooltip: true } },
+  { title: t('admin.ai.api_url'), key: 'apiUrl', ellipsis: { tooltip: true } },
   {
     title: t('admin.common.status'),
     key: 'isActive',
@@ -86,7 +86,7 @@ const providerColumns = computed<DataTableColumns<AIProvider>>(() => [
       h(
         NTag,
         { type: row.isActive ? 'success' : 'default', size: 'small', bordered: false },
-        { default: () => (row.isActive ? '启用' : '禁用') },
+        { default: () => (row.isActive ? t('admin.status.enabled') : t('admin.status.disabled')) },
       ),
   },
   {
@@ -98,7 +98,7 @@ const providerColumns = computed<DataTableColumns<AIProvider>>(() => [
         h(
           NButton,
           { size: 'small', tertiary: true, onClick: () => openEditProvider(row) },
-          { default: () => '编辑' },
+          { default: () => t('admin.common.edit') },
         ),
         h(
           NPopconfirm,
@@ -108,9 +108,9 @@ const providerColumns = computed<DataTableColumns<AIProvider>>(() => [
               h(
                 NButton,
                 { size: 'small', type: 'error', tertiary: true },
-                { default: () => '删除' },
+                { default: () => t('admin.common.delete') },
               ),
-            default: () => '确认删除该提供商？关联的模型也会被删除。',
+            default: () => t('admin.ai.confirm_delete_provider'),
           },
         ),
       ]),
@@ -146,7 +146,7 @@ function openEditProvider(row: AIProvider) {
 
 async function handleSaveProvider() {
   if (!providerForm.value.name.trim()) {
-    message.error('名称不能为空')
+    message.error(t('admin.validation.required'))
     return
   }
   providerSaving.value = true
@@ -162,10 +162,10 @@ async function handleSaveProvider() {
         data.apiKey = providerForm.value.apiKey
       }
       await updateAIProvider(editingProvider.value.id, data)
-      message.success('提供商更新成功')
+      message.success(t('admin.service.update_success'))
     } else {
       await createAIProvider(providerForm.value)
-      message.success('提供商创建成功')
+      message.success(t('admin.service.create_success'))
     }
     providerModalVisible.value = false
     await fetchProviders()
@@ -177,7 +177,7 @@ async function handleSaveProvider() {
 
 async function handleDeleteProvider(row: AIProvider) {
   await deleteAIProvider(row.id)
-  message.success('提供商删除成功')
+  message.success(t('admin.service.delete_success'))
   await fetchProviders()
   await fetchModels()
 }
@@ -202,10 +202,10 @@ const providerSelectOptions = computed<SelectOption[]>(() =>
 
 const modelColumns = computed<DataTableColumns<AIModel>>(() => [
   { title: t('admin.table.id'), key: 'id', width: 60 },
-  { title: '模型名称', key: 'name', minWidth: 120 },
-  { title: '模型 ID', key: 'modelId', minWidth: 140, ellipsis: { tooltip: true } },
+  { title: t('admin.ai.model_name'), key: 'name', minWidth: 120 },
+  { title: t('admin.ai.model_id_field'), key: 'modelId', minWidth: 140, ellipsis: { tooltip: true } },
   {
-    title: '提供商',
+    title: t('admin.ai.provider'),
     key: 'providerName',
     width: 150,
     render: (row) => row.providerName || `#${row.providerId}`,
@@ -218,7 +218,7 @@ const modelColumns = computed<DataTableColumns<AIModel>>(() => [
       h(
         NTag,
         { type: row.isActive ? 'success' : 'default', size: 'small', bordered: false },
-        { default: () => (row.isActive ? '启用' : '禁用') },
+        { default: () => (row.isActive ? t('admin.status.enabled') : t('admin.status.disabled')) },
       ),
   },
   {
@@ -230,7 +230,7 @@ const modelColumns = computed<DataTableColumns<AIModel>>(() => [
         h(
           NButton,
           { size: 'small', tertiary: true, onClick: () => openEditModel(row) },
-          { default: () => '编辑' },
+          { default: () => t('admin.common.edit') },
         ),
         h(
           NPopconfirm,
@@ -240,9 +240,9 @@ const modelColumns = computed<DataTableColumns<AIModel>>(() => [
               h(
                 NButton,
                 { size: 'small', type: 'error', tertiary: true },
-                { default: () => '删除' },
+                { default: () => t('admin.common.delete') },
               ),
-            default: () => '确认删除该模型？',
+            default: () => t('admin.ai.confirm_delete_model'),
           },
         ),
       ]),
@@ -277,15 +277,15 @@ function openEditModel(row: AIModel) {
 
 async function handleSaveModel() {
   if (!modelForm.value.name.trim()) {
-    message.error('模型名称不能为空')
+    message.error(t('admin.validation.required'))
     return
   }
   if (!modelForm.value.modelId.trim()) {
-    message.error('模型 ID 不能为空')
+    message.error(t('admin.validation.required'))
     return
   }
   if (!modelForm.value.providerId) {
-    message.error('请选择提供商')
+    message.error(t('admin.ai.select_provider'))
     return
   }
   modelSaving.value = true
@@ -297,7 +297,7 @@ async function handleSaveModel() {
         modelId: modelForm.value.modelId,
         isActive: modelForm.value.isActive,
       })
-      message.success('模型更新成功')
+      message.success(t('admin.service.update_success'))
     } else {
       await createAIModel({
         providerId: modelForm.value.providerId!,
@@ -305,7 +305,7 @@ async function handleSaveModel() {
         modelId: modelForm.value.modelId,
         isActive: modelForm.value.isActive,
       })
-      message.success('模型创建成功')
+      message.success(t('admin.service.create_success'))
     }
     modelModalVisible.value = false
     await fetchModels()
@@ -316,7 +316,7 @@ async function handleSaveModel() {
 
 async function handleDeleteModel(row: AIModel) {
   await deleteAIModel(row.id)
-  message.success('模型删除成功')
+  message.success(t('admin.service.delete_success'))
   await fetchModels()
 }
 
@@ -329,9 +329,9 @@ onMounted(async () => {
 </script>
 
 <template>
-  <!-- 提供商管理 -->
+  <!-- Providers -->
   <NCard
-    title="AI 提供商"
+    :title="$t('admin.ai.provider_management')"
     class="mb-4"
   >
     <template #header-extra>
@@ -339,7 +339,7 @@ onMounted(async () => {
         type="primary"
         size="small"
         @click="openCreateProvider"
-        >新增提供商</NButton
+        >{{ $t('admin.action.create') }}</NButton
       >
     </template>
     <NDataTable
@@ -351,9 +351,9 @@ onMounted(async () => {
     />
   </NCard>
 
-  <!-- 模型管理 -->
+  <!-- Models -->
   <NCard
-    title="AI 模型"
+    :title="$t('admin.ai.model_management')"
     class="mb-4"
   >
     <template #header-extra>
@@ -361,7 +361,7 @@ onMounted(async () => {
         type="primary"
         size="small"
         @click="openCreateModel"
-        >新增模型</NButton
+        >{{ $t('admin.action.create') }}</NButton
       >
     </template>
     <NDataTable
@@ -373,22 +373,22 @@ onMounted(async () => {
     />
   </NCard>
 
-  <!-- 任务配置（提示词和模型分配） -->
+  <!-- Task Configuration -->
   <NDivider />
   <ConfigPanel
     :list-fn="listSysConfigs"
     :update-fn="updateSysConfigs"
-    title="AI 任务配置"
-    description="启用开关、任务模型分配和提示词配置"
+    :title="$t('admin.ai.task_config')"
+    :description="$t('admin.ai.task_config_desc')"
     :filter-groups="['ai', 'ai/task', 'ai/prompt']"
     :on-dirty-change="(dirty: boolean) => emit('dirty-change', dirty)"
   />
 
-  <!-- 提供商编辑弹窗 -->
+  <!-- Provider Edit Modal -->
   <NModal
     v-model:show="providerModalVisible"
     preset="card"
-    :title="editingProvider ? '编辑提供商' : '新增提供商'"
+    :title="editingProvider ? $t('admin.ai.edit_provider') : $t('admin.ai.add_provider')"
     style="width: 560px"
   >
     <NForm
@@ -401,7 +401,7 @@ onMounted(async () => {
       >
         <NInput
           v-model:value="providerForm.name"
-          placeholder="如：OpenAI 官方"
+          :placeholder="$t('admin.ai.placeholder_provider_name')"
         />
       </NFormItem>
       <NFormItem
@@ -413,18 +413,18 @@ onMounted(async () => {
           :options="providerTypeOptions"
         />
       </NFormItem>
-      <NFormItem label="API 地址">
+      <NFormItem :label="$t('admin.ai.api_url')">
         <NInput
           v-model:value="providerForm.apiUrl"
-          placeholder="留空使用默认地址"
+          :placeholder="$t('admin.ai.placeholder_api_url')"
         />
       </NFormItem>
-      <NFormItem :label="editingProvider ? 'API Key（留空不修改）' : 'API Key'">
+      <NFormItem :label="editingProvider ? $t('admin.ai.api_key_unchanged') : $t('admin.ai.api_key_label')">
         <NInput
           v-model:value="providerForm.apiKey"
           type="password"
           show-password-on="click"
-          placeholder="sk-..."
+          :placeholder="$t('admin.ai.placeholder_api_key')"
         />
       </NFormItem>
       <NFormItem :label="$t('admin.common.enabled')">
@@ -444,11 +444,11 @@ onMounted(async () => {
     </template>
   </NModal>
 
-  <!-- 模型编辑弹窗 -->
+  <!-- Model Edit Modal -->
   <NModal
     v-model:show="modelModalVisible"
     preset="card"
-    :title="editingModel ? '编辑模型' : '新增模型'"
+    :title="editingModel ? $t('admin.ai.edit_model') : $t('admin.ai.add_model')"
     style="width: 560px"
   >
     <NForm
@@ -456,31 +456,31 @@ onMounted(async () => {
       label-width="96"
     >
       <NFormItem
-        label="提供商"
+        :label="$t('admin.ai.provider')"
         required
       >
         <NSelect
           v-model:value="modelForm.providerId"
           :options="providerSelectOptions"
-          placeholder="请选择提供商"
+          :placeholder="$t('admin.ai.select_provider')"
         />
       </NFormItem>
       <NFormItem
-        label="显示名称"
+        :label="$t('admin.ai.display_name')"
         required
       >
         <NInput
           v-model:value="modelForm.name"
-          placeholder="如：GPT-4o"
+          :placeholder="$t('admin.ai.placeholder_model_name')"
         />
       </NFormItem>
       <NFormItem
-        label="模型 ID"
+        :label="$t('admin.ai.model_id_field')"
         required
       >
         <NInput
           v-model:value="modelForm.modelId"
-          placeholder="如：gpt-4o、gemini-2.0-flash"
+          :placeholder="$t('admin.ai.placeholder_model_id')"
         />
       </NFormItem>
       <NFormItem :label="$t('admin.common.enabled')">

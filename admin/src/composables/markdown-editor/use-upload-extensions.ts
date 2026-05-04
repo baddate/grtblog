@@ -1,6 +1,10 @@
 import { StateEffect, StateField } from '@codemirror/state'
 import { Decoration, EditorView, WidgetType, type DecorationSet } from '@codemirror/view'
 
+import i18n from '@/plugins/i18n'
+
+const __ = i18n.global.t
+
 export const addUpload = StateEffect.define<{ id: string; pos: number }>()
 export const removeUpload = StateEffect.define<{ id: string }>()
 
@@ -11,7 +15,7 @@ class UploadWidget extends WidgetType {
 
     const text = document.createElement('span')
     text.className = 'cm-upload-shimmer'
-    text.textContent = '图片上传中...'
+    text.textContent = __('admin.markdown_editor.uploading_image')
 
     container.appendChild(text)
     return container

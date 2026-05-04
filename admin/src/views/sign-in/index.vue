@@ -79,8 +79,8 @@ const signInForm = reactive({
 })
 
 const signInFormRules: Record<string, FormItemRule[]> = {
-  account: [{ required: true, message: '请输入账号', trigger: ['input'] }],
-  password: [{ required: true, message: '请输入密码', trigger: ['input'] }],
+  account: [{ required: true, message: t('admin.sign_in.account_required'), trigger: ['input'] }],
+  password: [{ required: true, message: t('admin.sign_in.password_required'), trigger: ['input'] }],
 }
 
 function toLayout() {
@@ -122,11 +122,11 @@ const handleSubmitClick = () => {
             updatedAt: result.user.updatedAt,
           },
         })
-        message.success('登录成功')
+        message.success(t('admin.sign_in.login_success'))
         toLayout()
       } catch (error) {
         if (!(error instanceof ApiError)) {
-          message.error('登录失败，请稍后重试')
+          message.error(t('admin.sign_in.login_failed'))
         }
         turnstileToken.value = ''
       } finally {
@@ -223,7 +223,7 @@ onUnmounted(() => {
         </div>
         <div>
           <div>
-            <h2 class="text-2xl">登&nbsp;录</h2>
+            <h2 class="text-2xl">{{ $t('admin.sign_in.title') }}</h2>
             <p class="text-neutral-400 transition-[color] dark:text-neutral-500">SIGN IN</p>
           </div>
           <div class="mt-12">
@@ -235,11 +235,11 @@ onUnmounted(() => {
             >
               <NFormItem
                 path="account"
-                label="账号"
+                :label="$t('admin.sign_in.account_label')"
               >
                 <NInput
                   v-model:value="signInForm.account"
-                  placeholder="请输入账号或邮箱"
+                  :placeholder="$t('admin.sign_in.account_placeholder')"
                   clearable
                   :theme-overrides="
                     isDark
@@ -260,11 +260,11 @@ onUnmounted(() => {
               </NFormItem>
               <NFormItem
                 path="password"
-                label="密码"
+                :label="$t('admin.sign_in.password_label')"
               >
                 <NInput
                   v-model:value="signInForm.password"
-                  placeholder="请输入密码"
+                  :placeholder="$t('admin.sign_in.password_placeholder')"
                   type="password"
                   clearable
                   :theme-overrides="
@@ -291,11 +291,11 @@ onUnmounted(() => {
                 @update:token="turnstileToken = $event"
               />
               <div class="flex justify-between">
-                <NCheckbox v-model:checked="isRememberMed">记住我</NCheckbox>
+                <NCheckbox v-model:checked="isRememberMed">{{ $t('admin.sign_in.remember_me') }}</NCheckbox>
                 <NButton
                   text
                   size="small"
-                  >忘记密码</NButton
+                  >{{ $t('admin.sign_in.forgot_password') }}</NButton
                 >
               </div>
               <div class="mt-4">
@@ -309,7 +309,7 @@ onUnmounted(() => {
                   class="bg-red-400"
                   @click="handleSubmitClick"
                 >
-                  登&nbsp;录
+                  {{ $t('admin.sign_in.title') }}
                 </NButton>
               </div>
             </NForm>

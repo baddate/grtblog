@@ -1,6 +1,10 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
+import i18n from '@/plugins/i18n'
+
+const __ = i18n.global.t
+
 import { useDiscreteApi } from '@/composables/useDiscreteApi'
 import {
   deriveMode,
@@ -84,7 +88,7 @@ export const useHealthStore = defineStore('healthStore', () => {
       // Show a one-time toast so the user knows their network may be unstable.
       if (!networkToastShown.value) {
         const { message } = useDiscreteApi()
-        message.warning('当前网络连接不太稳定，部分页面加载可能较慢', {
+        message.warning(__('admin.service.network_unstable'), {
           duration: 5000,
           closable: true,
         })

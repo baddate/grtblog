@@ -38,8 +38,8 @@ const formModel = reactive({
 
 const columns: DataTableColumns<ColumnItem> = [
   { title: t('admin.table.id'), key: 'id', width: 80 },
-  { title: '专栏名称', key: 'name', minWidth: 200 },
-  { title: '短链接', key: 'shortUrl', minWidth: 180 },
+  { title: t('admin.column.name'), key: 'name', minWidth: 200 },
+  { title: t('admin.table.short_url'), key: 'shortUrl', minWidth: 180 },
   {
     title: t('admin.common.updated_at'),
     key: 'updatedAt',
@@ -55,7 +55,7 @@ const columns: DataTableColumns<ColumnItem> = [
         h(
           NButton,
           { size: 'small', tertiary: true, onClick: () => openEdit(row) },
-          { default: () => '编辑' },
+          { default: () => t('admin.common.edit') },
         ),
         h(
           NPopconfirm,
@@ -65,30 +65,30 @@ const columns: DataTableColumns<ColumnItem> = [
               h(
                 NButton,
                 { size: 'small', type: 'error', secondary: true },
-                { default: () => '删除' },
+                { default: () => t('admin.common.delete') },
               ),
-            default: () => '确认删除该专栏？',
+            default: () => t('admin.confirm.delete_column'),
           },
         ),
       ]),
   },
 ]
 
-const modalTitle = ref('新建专栏')
+const modalTitle = ref(t('admin.action.create_column'))
 
 async function fetchData() {
   loading.value = true
   try {
     items.value = await listColumns()
   } catch (error: any) {
-    message.error(error?.message || '获取专栏列表失败')
+    message.error(error?.message || t('admin.service.column_list_failed'))
   } finally {
     loading.value = false
   }
 }
 
 function openCreate() {
-  modalTitle.value = '新建专栏'
+  modalTitle.value = t('admin.action.create_column')
   editingId.value = null
   formModel.name = ''
   formModel.shortUrl = ''
@@ -96,7 +96,7 @@ function openCreate() {
 }
 
 function openEdit(row: ColumnItem) {
-  modalTitle.value = '编辑专栏'
+  modalTitle.value = t('admin.action.edit_column')
   editingId.value = row.id
   formModel.name = row.name
   formModel.shortUrl = row.shortUrl
@@ -107,11 +107,11 @@ async function handleSubmit() {
   const name = formModel.name.trim()
   const shortUrl = formModel.shortUrl.trim()
   if (!name) {
-    message.warning('请输入专栏名称')
+    message.warning(t('admin.validation.column_name_required'))
     return
   }
   if (!shortUrl) {
-    message.warning('请输入专栏短链接')
+    message.warning(t('admin.validation.column_short_url_required'))
     return
   }
 
@@ -119,15 +119,15 @@ async function handleSubmit() {
   try {
     if (editingId.value) {
       await updateColumn(editingId.value, { name, shortUrl })
-      message.success('专栏已更新')
+      message.success(t('admin.service.column_updated'))
     } else {
       await createColumn({ name, shortUrl })
-      message.success('专栏已创建')
+      message.success(t('admin.service.column_created'))
     }
     editVisible.value = false
     await fetchData()
   } catch (error: any) {
-    message.error(error?.message || '保存失败')
+    message.error(error?.message || t('admin.service.save_failed'))
   } finally {
     saving.value = false
   }
@@ -139,7 +139,7 @@ async function handleDelete(row: ColumnItem) {
     message.success(t('admin.common.delete_success'))
     await fetchData()
   } catch (error: any) {
-    message.error(error?.message || '删除失败')
+    message.error(error?.message || t('admin.service.delete_failed'))
   }
 }
 
@@ -154,12 +154,12 @@ onMounted(() => {
     wrapper-class="p-4"
     :scrollbar-props="{ trigger: 'none' }"
   >
-    <NCard title="手记专栏管理">
+    <NCard :title="$t('admin.card.column_list')">
       <template #header-extra>
         <NButton
           type="primary"
           @click="openCreate"
-          >新建专栏</NButton
+          >{{ $t('admin.action.create_column') }}</NButton
         >
       </template>
 
@@ -177,16 +177,16 @@ onMounted(() => {
       :loading="saving"
       @confirm="handleSubmit"
     >
-      <NFormItem label="专栏名称">
+      <NFormItem :label="$t('admin.column.name')">
         <NInput
           v-model:value="formModel.name"
-          placeholder="请输入专栏名称"
+          :placeholder="$t('admin.placeholder.name')"
         />
       </NFormItem>
-      <NFormItem label="专栏短链">
+      <NFormItem :label="$t('admin.column.short_url')">
         <NInput
           v-model:value="formModel.shortUrl"
-          placeholder="例如 life-notes"
+          :placeholder="$t('admin.placeholder.short_url_example')"
         />
       </NFormItem>
     </FormModal>

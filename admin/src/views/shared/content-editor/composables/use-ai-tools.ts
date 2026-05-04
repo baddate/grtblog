@@ -1,5 +1,7 @@
 import { ref } from 'vue'
 
+import i18n from '@/plugins/i18n'
+const { t } = i18n.global
 import { generateSummaryStream, generateTitle } from '@/services/ai'
 
 import type { MessageApi } from 'naive-ui'
@@ -16,7 +18,7 @@ export function useAiTitleGeneration(options: UseAiTitleGenerationOptions) {
   async function generate() {
     const content = options.getContent().trim()
     if (!content) {
-      options.message.warning('请先输入内容')
+      options.message.warning(t('admin.ai.content_required'))
       return
     }
 
@@ -24,9 +26,9 @@ export function useAiTitleGeneration(options: UseAiTitleGenerationOptions) {
     try {
       const result = await generateTitle(content)
       options.applyResult(result)
-      options.message.success('AI 生成成功')
+      options.message.success(t('admin.ai.generate_success'))
     } catch (error) {
-      options.message.error(error instanceof Error ? error.message : 'AI 生成失败')
+      options.message.error(error instanceof Error ? error.message : t('admin.ai.generate_failed'))
     } finally {
       loading.value = false
     }
@@ -52,7 +54,7 @@ export function useAiSummaryGeneration(options: UseAiSummaryGenerationOptions) {
   async function generate() {
     const content = options.getContent().trim()
     if (!content) {
-      options.message.warning('请先输入内容')
+      options.message.warning(t('admin.ai.content_required'))
       return
     }
 
@@ -66,7 +68,7 @@ export function useAiSummaryGeneration(options: UseAiSummaryGenerationOptions) {
       })
       done.value = true
     } catch (error) {
-      options.message.error(error instanceof Error ? error.message : 'AI 摘要生成失败')
+      options.message.error(error instanceof Error ? error.message : t('admin.ai.summary_generate_failed'))
       result.value = ''
     } finally {
       loading.value = false
@@ -77,7 +79,7 @@ export function useAiSummaryGeneration(options: UseAiSummaryGenerationOptions) {
     options.adoptSummary(result.value)
     result.value = ''
     done.value = false
-    options.message.success('已采纳 AI 摘要')
+    options.message.success(t('admin.ai.summary_adopted'))
   }
 
   function dismiss() {

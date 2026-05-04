@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 import { TextBold20Regular as IconBold, TextItalic20Regular as IconItalic } from '@vicons/fluent'
 import { CodeSlash as IconCode, RemoveCircleOutline as IconStrike } from '@vicons/ionicons5'
 import { NButton, NIcon, useThemeVars } from 'naive-ui'
@@ -28,10 +31,10 @@ const style = computed(() => ({
 }))
 
 const buttons = [
-  { type: 'bold', icon: IconBold, tip: '加粗' },
-  { type: 'italic', icon: IconItalic, tip: '斜体' },
-  { type: 'strike', icon: IconStrike, tip: '删除线' },
-  { type: 'code', icon: IconCode, tip: '行内代码' },
+  { type: 'bold', icon: IconBold, tip: t('admin.editor.bold') },
+  { type: 'italic', icon: IconItalic, tip: t('admin.editor.italic') },
+  { type: 'strike', icon: IconStrike, tip: t('admin.editor.strikethrough') },
+  { type: 'code', icon: IconCode, tip: t('admin.editor.inline_code') },
 ] as const
 
 const handleMousedown = () => {

@@ -58,7 +58,7 @@ const columns = computed<DataTableColumns<AdminTokenItem>>(() => [
       h(
         NTag,
         { type: row.isExpired ? 'warning' : 'success', size: 'small', bordered: false },
-        { default: () => (row.isExpired ? '已过期' : '有效') },
+        { default: () => (row.isExpired ? t('admin.status.expired') : t('admin.status.valid')) },
       ),
   },
   {
@@ -71,8 +71,8 @@ const columns = computed<DataTableColumns<AdminTokenItem>>(() => [
         { onPositiveClick: () => handleDelete(row) },
         {
           trigger: () =>
-            h(NButton, { size: 'small', type: 'error', tertiary: true }, { default: () => '删除' }),
-          default: () => '确认删除该 token？',
+            h(NButton, { size: 'small', type: 'error', tertiary: true }, { default: () => t('admin.common.delete') }),
+          default: () => t('admin.confirm.delete_token'),
         },
       ),
   },
@@ -97,7 +97,7 @@ function openCreate() {
 
 async function handleCreate() {
   if (!formParams.value.expireAt) {
-    message.error('请选择过期时间')
+    message.error(t('admin.validation.expire_time_required'))
     return
   }
   saving.value = true
@@ -126,12 +126,12 @@ async function handleDelete(row: AdminTokenItem) {
 </script>
 
 <template>
-  <NCard title="管理员 API Token">
+  <NCard :title="$t('admin.settings.api_tokens')">
     <template #header-extra>
       <NButton
         type="primary"
         @click="openCreate"
-        >新建 Token</NButton
+        >{{ $t('admin.action.create') }}</NButton
       >
     </template>
 
@@ -147,21 +147,21 @@ async function handleDelete(row: AdminTokenItem) {
 
   <FormModal
     v-model:show="createVisible"
-    title="新建管理员 Token"
+    :title="$t('admin.table.new_token')"
     :loading="saving"
     :label-width="96"
-    confirm-text="创建"
+    :confirm-text="$t('admin.common.create')"
     @confirm="handleCreate"
   >
     <NFormItem :label="$t('admin.common.description')">
       <NInput
         v-model:value="formParams.description"
         maxlength="200"
-        placeholder="可选，用于区分用途（例如：CI 调用）"
+        :placeholder="$t('admin.table.description_optional')"
       />
     </NFormItem>
     <NFormItem
-      label="过期时间"
+      :label="$t('admin.table.expires_at')"
       required
     >
       <NDatePicker
@@ -175,10 +175,10 @@ async function handleDelete(row: AdminTokenItem) {
   <NModal
     v-model:show="revealVisible"
     preset="card"
-    title="Token 已生成"
+    :title="$t('admin.table.token_generated')"
     style="width: 560px"
   >
-    <div class="mb-3 text-sm text-[var(--text-color-2)]">仅展示一次，请立即复制保存。</div>
+    <div class="mb-3 text-sm text-[var(--text-color-2)]">{{ $t('admin.table.token_generated_hint') }}</div>
     <NInput
       :value="createdToken"
       type="textarea"
@@ -187,7 +187,7 @@ async function handleDelete(row: AdminTokenItem) {
     />
     <template #footer>
       <NSpace justify="end">
-        <NButton @click="revealVisible = false">我已保存</NButton>
+        <NButton @click="revealVisible = false">{{ $t('admin.common.confirm') }}</NButton>
       </NSpace>
     </template>
   </NModal>

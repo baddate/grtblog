@@ -37,10 +37,10 @@ const params = reactive({
 })
 
 const statusOptions = [
-  { label: '全部状态', value: undefined },
-  { label: '已订阅', value: 'active' },
-  { label: '已退订', value: 'unsubscribed' },
-  { label: '已拉黑', value: 'blocked' },
+  { label: t('admin.filter.all_status'), value: undefined },
+  { label: t('admin.email.status_subscribed'), value: 'active' },
+  { label: t('admin.email.status_unsubscribed'), value: 'unsubscribed' },
+  { label: t('admin.email.status_blocked'), value: 'blocked' },
 ]
 
 const { data, isLoading, refetch } = useQuery({
@@ -52,22 +52,22 @@ const updateStatusMutation = useMutation({
   mutationFn: ({ id, status }: { id: number; status: string }) =>
     batchUpdateEmailSubscriptionStatus({ ids: [id], status }),
   onSuccess: async (_, vars) => {
-    message.success(vars.status === 'blocked' ? '已拉黑订阅用户' : '已解除拉黑')
+    message.success(vars.status === 'blocked' ? t('admin.email.blocked_message') : t('admin.email.unblocked_message'))
     await queryClient.invalidateQueries({ queryKey: ['emailSubscriptions'] })
   },
   onError: (err: unknown) => {
-    message.error(err instanceof Error ? err.message : '状态更新失败')
+    message.error(err instanceof Error ? err.message : t('admin.service.update_status_failed'))
   },
 })
 
 function toStatusLabel(status: string) {
   switch (status) {
     case 'active':
-      return '已订阅'
+      return t('admin.email.status_subscribed')
     case 'blocked':
-      return '已拉黑'
+      return t('admin.email.status_blocked')
     case 'unsubscribed':
-      return '已退订'
+      return t('admin.email.status_unsubscribed')
     default:
       return status
   }
@@ -98,12 +98,12 @@ const columns: DataTableColumns<EmailSubscription> = [
     width: 80,
   },
   {
-    title: '邮箱',
+    title: t('admin.form.email'),
     key: 'email',
     width: 250,
   },
   {
-    title: '订阅事件',
+    title: t('admin.email.subscription_event'),
     key: 'eventName',
     width: 200,
     render: (row) =>
@@ -122,13 +122,13 @@ const columns: DataTableColumns<EmailSubscription> = [
     },
   },
   {
-    title: '来源 IP',
+    title: t('admin.table.source_ip'),
     key: 'sourceIp',
     width: 150,
     render: (row) => h('div', { class: 'text-xs text-[var(--text-color-3)]' }, row.sourceIp),
   },
   {
-    title: '订阅时间',
+    title: t('admin.common.created_at'),
     key: 'createdAt',
     width: 180,
     render: (row) => new Date(row.createdAt).toLocaleString(),
@@ -153,10 +153,10 @@ const columns: DataTableColumns<EmailSubscription> = [
                 ghost: true,
                 loading: updateStatusMutation.isPending.value,
               },
-              { default: () => (row.status === 'blocked' ? '解除拉黑' : '拉黑') },
+              { default: () => (row.status === 'blocked' ? t('admin.email.action_unblock') : t('admin.email.action_block')) },
             ),
           default: () =>
-            row.status === 'blocked' ? '确认解除拉黑该订阅用户？' : '确认拉黑该订阅用户？',
+            row.status === 'blocked' ? t('admin.email.confirm_unblock') : t('admin.email.confirm_block'),
         },
       ),
   },
@@ -190,7 +190,7 @@ function handleReset() {
 
 <template>
   <ScrollContainer>
-    <NCard title="订阅管理">
+    <NCard :title="$t('admin.card.email_subscriptions')">
       <template #header-extra>
         <NButton
           secondary
@@ -214,7 +214,7 @@ function handleReset() {
             <NFormItem :label="$t('admin.common.search')">
               <NInput
                 v-model:value="params.search"
-                placeholder="邮箱地址"
+                :placeholder="$t('admin.placeholder.search')"
                 clearable
               />
             </NFormItem>
@@ -224,16 +224,16 @@ function handleReset() {
               <NSelect
                 v-model:value="params.status"
                 :options="statusOptions"
-                placeholder="全部"
+                :placeholder="$t('admin.filter.all')"
                 clearable
               />
             </NFormItem>
           </NGi>
           <NGi>
-            <NFormItem label="事件">
+            <NFormItem :label="$t('admin.email.template_event')">
               <NInput
                 v-model:value="params.eventName"
-                placeholder="事件名称"
+                :placeholder="$t('admin.email.placeholder_event_name')"
                 clearable
               />
             </NFormItem>
