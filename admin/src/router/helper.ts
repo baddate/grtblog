@@ -40,10 +40,14 @@ export function resolveMenu(options: MenuMixedOptions[], parentDisabled = false)
       if (Array.isArray(children) && !isEmpty(children)) {
         menu.children = resolveMenu(children, mergedDisabled)
       } else {
-        menu.label =
-          mergedDisabled || isFunction(label)
-            ? label
-            : () => h(RouterLink, { to: { name } }, { default: () => label })
+        menu.label = mergedDisabled
+          ? label
+          : () =>
+              h(
+                RouterLink,
+                { to: { name } },
+                { default: () => (isFunction(label) ? label() : label) },
+              )
       }
 
       menuOptions.push(menu)

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { DEFAULT_LANG, isSupportedLang } from '@/shared/languages'
+import i18n from '@/plugins/i18n'
 
 const LOCALE_KEY = 'admin-locale'
 
@@ -20,19 +20,15 @@ function detectLocale(): string {
 }
 
 export const useLocaleStore = defineStore('locale', () => {
-  const current = ref<string>(detectLocale())
+  const detected = detectLocale()
+  const current = ref<string>(detected)
+  i18n.global.locale.value = detected
 
   function setLocale(lang: string) {
     if (!isSupportedLang(lang)) return
     current.value = lang
+    i18n.global.locale.value = lang
     localStorage.setItem(LOCALE_KEY, lang)
-
-    try {
-      const { locale } = useI18n()
-      locale.value = lang
-    } catch {
-      // i18n not initialized yet
-    }
   }
 
   return { current, setLocale }

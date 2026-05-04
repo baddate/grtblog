@@ -4,9 +4,12 @@ import { storeToRefs } from 'pinia'
 import { ref, useTemplateRef, watch } from 'vue'
 
 import router from '@/router'
+import { useLocaleStore } from '@/stores/locale'
 import { toRefsPreferencesStore, useUserStore } from '@/stores'
 
 import type { MenuInst } from 'naive-ui'
+
+const localeStore = useLocaleStore()
 
 const { sidebarMenu } = toRefsPreferencesStore()
 
@@ -31,6 +34,7 @@ watch(
   <NScrollbar>
     <NMenu
       ref="menuRef"
+      :key="localeStore.current"
       :collapsed-width="sidebarMenu.minWidth"
       :collapsed="sidebarMenu.collapsed"
       :collapsed-icon-size="20"
