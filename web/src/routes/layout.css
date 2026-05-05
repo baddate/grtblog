@@ -8,38 +8,18 @@
 @theme {
 	/* Fonts */
 	--font-sans:
-		'Google Sans', system-ui, -apple-system, PingFang SC, 'Microsoft YaHei', Segoe UI, Roboto,
+		'Jost', system-ui, -apple-system, PingFang SC, 'Microsoft YaHei', Segoe UI, Roboto,
 		Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 	--font-serif: 'Noto Serif SC', 'Georgia', serif;
 	--font-mono: 'Victor Mono Variable', 'JetBrains Mono', monospace;
 
-	/* Colors: Neutral (Yohaku warm parchment) */
-	--color-ink-0: #ffffff;
-	--color-ink-50: #f9f8f5;
-	--color-ink-100: #f0efeb;
-	--color-ink-200: #e3e1db;
-	--color-ink-300: #d0cec6;
-	--color-ink-400: #a8a69f;
-	--color-ink-500: #787670;
-	--color-ink-600: #5c5a55;
-	--color-ink-700: #403f3a;
-	--color-ink-750: #33312e;
-	--color-ink-800: #24231f;
-	--color-ink-900: #141312;
-	--color-ink-950: #0a0a0a;
-
-	/* Colors: Accent (Ume 梅) */
-	--color-accent-50: #fdf2f4;
-	--color-accent-100: #fce4e8;
-	--color-accent-200: #f9c9d1;
-	--color-accent-300: #f4a4b0;
-	--color-accent-400: #e07a8a;
-	--color-accent-500: #c56473;
-	--color-accent-600: #a64d5a;
-	--color-accent-700: #883d48;
-	--color-accent-800: #6b2e37;
-	--color-accent-900: #4d1f26;
-	--color-accent-950: #2e1116;
+	/* Colors: xypnox Theme Engine */
+	--color-primary: var(--primary-color);
+	--color-secondary: var(--secondary-color);
+	--color-surface: var(--surface);
+	--color-fade: var(--fadeText);
+	--color-heading: var(--heading);
+	--color-border: var(--border-color);
 
 	/* Colors: Functional */
 	--color-error-50: #fef2f2;
@@ -95,27 +75,74 @@
 	--radius-5xl: 2.5rem;
 }
 
+/* xypnox Theme Engine animations */
+@keyframes backgroundMove {
+	0%,
+	100% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+}
+
+.theme-card {
+	transition: all 0.3s ease;
+	background: var(--card-background);
+	border: var(--card-border);
+	background-size: var(--card-backgroundSize);
+	background-position: var(--card-backgroundPosition);
+}
+
+.theme-card:hover {
+	background-position: var(--card-backgroundPositionHover);
+	border: var(--card-borderHover);
+}
+
+.text-gradient-fx {
+	transition: all 0.3s ease;
+}
+
+.text-gradient-fx:hover {
+	background: var(--animated-gradient);
+	background-size: 200% 200%;
+	animation: backgroundMove 3s ease infinite;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.text-gradient-fx-constant {
+	background: var(--animated-gradient);
+	background-size: 200% 200%;
+	animation: backgroundMove 3s ease infinite;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
 /* Base Styles */
 body {
-	background-color: var(--color-ink-50);
-	color: var(--color-ink-900);
+	background-color: var(--background);
+	color: var(--text);
 	-webkit-font-smoothing: antialiased;
+	font-family: var(--font-family);
 }
 
 :root[class~='dark'] body {
-	background-color: var(--color-ink-900);
-	color: var(--color-ink-200);
+	background-color: var(--background);
+	color: var(--text);
 }
 
 /* Selection */
 ::selection {
-	background: rgba(197, 100, 115, 0.15);
-	color: var(--color-accent-800);
+	background: rgba(97, 61, 227, 0.15);
+	color: var(--primary-color);
 }
 
 :root[class~='dark'] ::selection {
-	background: rgba(197, 100, 115, 0.25);
-	color: var(--color-accent-100);
+	background: rgba(255, 83, 112, 0.25);
+	color: var(--primary-color);
 }
 
 /* View Transitions API styles for theme switching */
@@ -393,4 +420,114 @@ button {
 		opacity: 0;
 		transform: translateY(-15px);
 	}
+}
+
+/* Content typography (ported from newtheme content.css) */
+.content > h1,
+.content > h2,
+.content > h3,
+.content > h4,
+.content > h5,
+.content > h6 {
+	margin-top: 2em;
+	color: var(--heading);
+	font-family: var(--font-family);
+}
+
+.content p {
+	text-wrap: stable;
+}
+
+.content > p {
+	margin-block-end: 1em;
+}
+
+.content > * + * {
+	margin-block-start: 1em;
+}
+
+.content em {
+	color: var(--italic);
+}
+
+.content blockquote {
+	margin-inline: 0;
+	padding: 1em;
+	background-color: var(--surface);
+	border-left: 2px var(--border-style) var(--primary-color);
+	border-radius: var(--border-radius);
+}
+
+.content blockquote > p:first-child {
+	margin-block-start: 0;
+}
+
+.content table {
+	border-collapse: collapse;
+	width: 100%;
+	margin: 2rem 0;
+}
+
+.content table th {
+	border: 1px solid var(--border-color);
+	border-bottom: 2px solid var(--heading);
+	background-color: var(--surface);
+	padding: 0.5rem;
+	color: var(--heading);
+}
+
+.content table td {
+	border: 1px solid var(--border-color);
+	padding: 0.5rem;
+}
+
+.content a {
+	color: inherit;
+	text-decoration: none;
+	border-bottom: 1px var(--border-style) var(--colors-purple);
+	transition: border 1s ease;
+	word-break: break-word;
+}
+
+.content a:hover {
+	color: var(--primary-color);
+	border-bottom: 1px solid var(--primary-color);
+}
+
+.content img {
+	max-width: 100%;
+	height: auto;
+	margin-inline: auto;
+	display: block;
+}
+
+.content pre {
+	max-width: 100%;
+	overflow-x: auto;
+	padding: 1rem;
+	font-size: var(--font-size-sm);
+	border-radius: var(--border-radius);
+	background: var(--surface);
+}
+
+.content figure {
+	padding: 1rem;
+	border-radius: calc(3 * var(--border-radius));
+	border: 1px solid var(--border-color);
+	background: var(--background);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 1rem;
+}
+
+.content figure figcaption {
+	font-size: 0.95rem;
+	color: var(--fadeText);
+	text-align: center;
+}
+
+.content li::marker {
+	color: var(--primary-color);
 }
