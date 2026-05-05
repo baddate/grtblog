@@ -215,12 +215,12 @@
 					<span class="absolute bottom-0 right-0 flex h-2.5 w-2.5">
 						<span
 							class="absolute inline-flex h-full w-full rounded-full opacity-75 {ownerOnline
-								? 'bg-jade-400'
+								? 'bg-accent-400'
 								: 'bg-ink-300 dark:bg-ink-600'}"
 						></span>
 						<span
 							class="relative inline-flex h-2.5 w-2.5 rounded-full border border-white dark:border-ink-900 {ownerOnline
-								? 'bg-jade-500'
+								? 'bg-accent-500'
 								: 'bg-ink-400 dark:bg-ink-500'}"
 						></span>
 					</span>
@@ -233,14 +233,14 @@
 					{#if showPageTitle}
 						<span
 							transition:fly={{ y: 10, duration: 300 }}
-							class="truncate font-serif text-sm font-bold leading-tight text-ink-900 dark:text-jade-100"
+							class="truncate font-serif text-sm font-bold leading-tight text-ink-900 dark:text-accent-100"
 						>
 							{currentTitle}
 						</span>
 					{:else}
 						<span
 							transition:fly={{ y: -10, duration: 300 }}
-							class="truncate font-serif text-sm font-bold leading-tight text-ink-900 dark:text-jade-100"
+							class="truncate font-serif text-sm font-bold leading-tight text-ink-900 dark:text-accent-100"
 						>
 							{$websiteNameStore}
 						</span>
@@ -280,7 +280,7 @@
 						</div>
 						<span
 							class="rounded-full px-2 py-0.5 text-[10px] {adminPanelOnline
-								? 'bg-jade-100 text-jade-700 dark:bg-jade-900/40 dark:text-jade-300'
+								? 'bg-accent-100 text-accent-700 dark:bg-accent-900/40 dark:text-accent-300'
 								: 'bg-ink-100 text-ink-500 dark:bg-ink-800 dark:text-ink-300'}"
 						>
 							Admin {adminPanelOnline ? t('web.admin.online') : t('web.admin.offline')}
@@ -306,7 +306,7 @@
 						<a
 							href={resolvePath('/', currentLang)}
 							onclick={handleNavigate}
-							class="mb-2 flex items-center gap-3 rounded-default border border-ink-200 bg-ink-50/50 px-3 py-2 text-ink-700 transition-colors hover:border-jade-200 hover:bg-jade-50/50 dark:border-ink-700 dark:bg-ink-800/40 dark:text-ink-200 dark:hover:border-jade-800"
+							class="mb-2 flex items-center gap-3 rounded-default border border-ink-200 bg-ink-50/50 px-3 py-2 text-ink-700 transition-colors hover:border-accent-200 hover:bg-accent-50/50 dark:border-ink-700 dark:bg-ink-800/40 dark:text-ink-200 dark:hover:border-accent-800"
 						>
 							<Home size={16} />
 							<span class="text-sm font-medium">{t('web.nav.back_home')}</span>
@@ -319,7 +319,7 @@
 								handleNavigate();
 								windowStore.open('用户中心', null, 'user-center');
 							}}
-							class="mb-2 flex w-full items-center gap-3 rounded-default border border-jade-200 bg-jade-50/70 px-3 py-2 text-jade-700 dark:border-jade-800 dark:bg-jade-900/30 dark:text-jade-200"
+							class="mb-2 flex w-full items-center gap-3 rounded-default border border-accent-200 bg-accent-50/70 px-3 py-2 text-accent-700 dark:border-accent-800 dark:bg-accent-900/30 dark:text-accent-200"
 						>
 							<User size={16} />
 							<span class="text-sm font-medium">{t('web.nav.user_center')}</span>
@@ -353,7 +353,7 @@
 							>
 								{#if active}
 									<div
-										class="pointer-events-none absolute inset-0 rounded-xl border border-jade-200 dark:border-jade-800"
+										class="pointer-events-none absolute inset-0 rounded-xl border border-accent-200 dark:border-accent-800"
 									></div>
 								{/if}
 
@@ -368,7 +368,7 @@
 									<div
 										class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors duration-300
                                         {active
-											? 'bg-jade-100 text-jade-700 dark:bg-jade-900 dark:text-jade-300'
+											? 'bg-accent-100 text-accent-700 dark:bg-accent-900 dark:text-accent-300'
 											: 'bg-ink-100 text-ink-500 dark:bg-ink-950 dark:text-ink-400'}"
 									>
 										{#if item.icon}
@@ -380,7 +380,7 @@
 									<div class="min-w-0 flex-1">
 										<div
 											class="truncate font-serif text-[15px] font-medium {active
-												? 'text-jade-800 dark:text-jade-100'
+												? 'text-accent-800 dark:text-accent-100'
 												: 'text-ink-700 dark:text-ink-300'}"
 										>
 											{item.name}
@@ -402,7 +402,7 @@
 										<ChevronDown
 											size={16}
 											class="transition-transform duration-300 {isExpanded
-												? 'rotate-180 text-jade-600'
+												? 'rotate-180 text-accent-600'
 												: ''}"
 										/>
 									</button>
@@ -429,7 +429,7 @@
 											onclick={handleNavigate}
 											class="group/sub relative flex items-center gap-3 rounded-lg ml-2 mr-2 py-2.5 pl-13.5 pr-4 text-left transition-colors
                                             {subActive
-												? 'bg-jade-50/50 dark:bg-jade-900/20'
+												? 'bg-accent-50/50 dark:bg-accent-900/20'
 												: 'hover:bg-white/60 dark:hover:bg-white/5'}"
 										>
 											<!-- Horizontal Line -->
@@ -440,7 +440,7 @@
 											{#if sub.icon}
 												<div
 													class="{subActive
-														? 'text-jade-600 dark:text-jade-400'
+														? 'text-accent-600 dark:text-accent-400'
 														: 'text-ink-400'} transition-colors"
 												>
 													<DynamicLucideIcon name={sub.icon} className="w-3.5 h-3.5" />
@@ -448,7 +448,7 @@
 											{/if}
 											<span
 												class="text-sm font-medium {subActive
-													? 'text-jade-700 dark:text-jade-300'
+													? 'text-accent-700 dark:text-accent-300'
 													: 'text-ink-600 dark:text-ink-400'}"
 											>
 												{sub.name}
@@ -520,7 +520,7 @@
 				{/if}
 				{#if $detailKindStore === 'post' && $relatedMomentsStore.length > 0}
 					<section class="space-y-3 border-t border-ink-100/80 pt-4 dark:border-ink-800/70">
-						<div class="flex items-center gap-2 text-cinnabar-600 dark:text-cinnabar-400">
+						<div class="flex items-center gap-2 text-error-600 dark:text-error-400">
 							<NotebookPen size={14} />
 							<span class="font-mono text-[10px] font-bold tracking-[0.14em] uppercase">
 								{t('web.nav.related_moments')}
@@ -534,7 +534,7 @@
 										currentLang
 									)}
 									onclick={handleRelatedNavigate}
-									class="block rounded-default border border-ink-100/80 bg-ink-50/40 p-3 transition-colors hover:border-cinnabar-200 hover:bg-white dark:border-ink-700/70 dark:bg-ink-900/40 dark:hover:border-cinnabar-800"
+									class="block rounded-default border border-ink-100/80 bg-ink-50/40 p-3 transition-colors hover:border-error-200 hover:bg-white dark:border-ink-700/70 dark:bg-ink-900/40 dark:hover:border-error-800"
 								>
 									<div class="mb-1 flex items-center gap-1 text-[11px] text-ink-400">
 										<Calendar size={11} />
@@ -554,7 +554,7 @@
 					</section>
 				{:else if $detailKindStore === 'moment' && $relatedPostsStore.length > 0}
 					<section class="space-y-3 border-t border-ink-100/80 pt-4 dark:border-ink-800/70">
-						<div class="flex items-center gap-2 text-jade-600 dark:text-jade-400">
+						<div class="flex items-center gap-2 text-accent-600 dark:text-accent-400">
 							<FileText size={14} />
 							<span class="font-mono text-[10px] font-bold tracking-[0.14em] uppercase">
 								{t('web.nav.related_articles')}
@@ -565,7 +565,7 @@
 								<a
 									href={resolvePath(buildPostPath(post.shortUrl), currentLang)}
 									onclick={handleRelatedNavigate}
-									class="block rounded-default border border-ink-100/80 bg-ink-50/40 p-3 transition-colors hover:border-jade-200 hover:bg-white dark:border-ink-700/70 dark:bg-ink-900/40 dark:hover:border-jade-800"
+									class="block rounded-default border border-ink-100/80 bg-ink-50/40 p-3 transition-colors hover:border-accent-200 hover:bg-white dark:border-ink-700/70 dark:bg-ink-900/40 dark:hover:border-accent-800"
 								>
 									<div class="mb-1 flex items-center gap-1 text-[11px] text-ink-400">
 										<Calendar size={11} />

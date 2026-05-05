@@ -35,12 +35,12 @@
 >
 	<!-- Title -->
 	<h2
-		class="font-serif text-xl sm:text-2xl font-medium text-ink-900 dark:text-ink-100 group-hover:text-jade-600 dark:group-hover:text-jade-400 transition-colors duration-200"
+		class="font-serif text-xl sm:text-2xl font-medium text-ink-900 dark:text-ink-100 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors duration-200"
 	>
 		<span>{post.title}</span>
 		{#if post.isTop}
 			<span
-				class="inline-flex shrink-0 items-center gap-0.5 ml-1.5 align-middle px-1 py-px text-[9px] font-mono font-normal tracking-wider text-jade-600 dark:text-jade-400"
+				class="inline-flex shrink-0 items-center gap-0.5 ml-1.5 align-middle px-1 py-px text-[9px] font-mono font-normal tracking-wider text-accent-600 dark:text-accent-400"
 			>
 				<Pin size={9} strokeWidth={2} class="rotate-45" />
 			</span>
@@ -69,7 +69,7 @@
 		{#if post.categoryShortUrl}
 			<button
 				type="button"
-				class="flex items-center gap-1.5 bg-transparent border-0 p-0 text-left cursor-pointer hover:text-jade-600 dark:hover:text-jade-400 transition-colors"
+				class="flex items-center gap-1.5 bg-transparent border-0 p-0 text-left cursor-pointer hover:text-accent-600 dark:hover:text-accent-400 transition-colors"
 				onclick={handleCategoryClick}
 			>
 				<Sparkles size={14} strokeWidth={1.5} />
@@ -97,7 +97,7 @@
 		<!-- Right-aligned Link -->
 		<div class="w-full sm:w-auto sm:ml-auto">
 			<div
-				class="flex items-center gap-1.5 text-ink-300 hover:text-jade-600 dark:text-ink-600 dark:hover:text-jade-400 transition-colors group/link"
+				class="flex items-center gap-1.5 text-ink-300 hover:text-accent-600 dark:text-ink-600 dark:hover:text-accent-400 transition-colors group/link"
 			>
 				<ExternalLink
 					size={12}

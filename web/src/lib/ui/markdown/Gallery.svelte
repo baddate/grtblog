@@ -135,7 +135,7 @@
 		{#if urlList.length > 1}
 			<button
 				onclick={() => scroll('left')}
-				class="absolute left-4 top-1/2 -translate-y-1/2 rounded-full border border-ink-200/50 bg-white/80 p-2.5 text-ink-900 opacity-0 shadow-xl backdrop-blur-sm transition-all group-hover:opacity-100 hover:scale-110 hover:bg-white hover:text-jade-600 dark:border-ink-700/50 dark:bg-ink-800/80 dark:text-ink-100 dark:hover:bg-ink-800 dark:hover:text-jade-400"
+				class="absolute left-4 top-1/2 -translate-y-1/2 rounded-full border border-ink-200/50 bg-white/80 p-2.5 text-ink-900 opacity-0 shadow-xl backdrop-blur-sm transition-all group-hover:opacity-100 hover:scale-110 hover:bg-white hover:text-accent-600 dark:border-ink-700/50 dark:bg-ink-800/80 dark:text-ink-100 dark:hover:bg-ink-800 dark:hover:text-accent-400"
 				aria-label="Previous"
 			>
 				<svg
@@ -150,7 +150,7 @@
 			</button>
 			<button
 				onclick={() => scroll('right')}
-				class="absolute right-4 top-1/2 -translate-y-1/2 rounded-full border border-ink-200/50 bg-white/80 p-2.5 text-ink-900 opacity-0 shadow-xl backdrop-blur-sm transition-all group-hover:opacity-100 hover:scale-110 hover:bg-white hover:text-jade-600 dark:border-ink-700/50 dark:bg-ink-800/80 dark:text-ink-100 dark:hover:bg-ink-800 dark:hover:text-jade-400"
+				class="absolute right-4 top-1/2 -translate-y-1/2 rounded-full border border-ink-200/50 bg-white/80 p-2.5 text-ink-900 opacity-0 shadow-xl backdrop-blur-sm transition-all group-hover:opacity-100 hover:scale-110 hover:bg-white hover:text-accent-600 dark:border-ink-700/50 dark:bg-ink-800/80 dark:text-ink-100 dark:hover:bg-ink-800 dark:hover:text-accent-400"
 				aria-label="Next"
 			>
 				<svg
@@ -170,7 +170,7 @@
 	<div class="mt-4 flex items-end justify-between gap-4 px-1">
 		<div class="flex flex-col gap-0.5">
 			<span
-				class="text-[10px] font-bold uppercase tracking-[0.2em] text-jade-600 dark:text-jade-400"
+				class="text-[10px] font-bold uppercase tracking-[0.2em] text-accent-600 dark:text-accent-400"
 			>
 				{caption || 'Gallery'}
 			</span>
@@ -192,7 +192,7 @@
 							syncToDisplayIndex(i + 1);
 						}}
 						class="h-1 rounded-full transition-all duration-300 {i === currentIndex
-							? 'bg-jade-500 w-4'
+							? 'bg-accent-500 w-4'
 							: 'bg-ink-200 dark:bg-ink-800 w-1 hover:bg-ink-300 dark:hover:bg-ink-700'}"
 						aria-label="Go to image {i + 1}"
 					></button>

@@ -20,7 +20,7 @@
 
 {#if isApproved}
 	<a
-		class="not-prose inline-flex items-baseline gap-0.5 rounded-full bg-jade-50/60 px-1.5 py-px text-[0.85em] font-medium leading-normal text-jade-700 no-underline transition-colors duration-200 hover:bg-jade-100 dark:bg-jade-950/30 dark:text-jade-400 dark:hover:bg-jade-900/40"
+		class="not-prose inline-flex items-baseline gap-0.5 rounded-full bg-accent-50/60 px-1.5 py-px text-[0.85em] font-medium leading-normal text-accent-700 no-underline transition-colors duration-200 hover:bg-accent-100 dark:bg-accent-950/30 dark:text-accent-400 dark:hover:bg-accent-900/40"
 		href={profileUrl}
 		target="_blank"
 		rel="noreferrer"

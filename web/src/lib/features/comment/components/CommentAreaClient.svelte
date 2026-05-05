@@ -169,12 +169,12 @@
 			{#if !$userStore.isLogin}
 				<button
 					onclick={() => authModalStore.open('comment-area')}
-					class="text-[10px] text-ink-800/40 dark:text-ink-200/40 hover:text-jade-600 dark:hover:text-jade-400 underline decoration-dotted underline-offset-4 font-serif transition-colors outline-none"
+					class="text-[10px] text-ink-800/40 dark:text-ink-200/40 hover:text-accent-600 dark:hover:text-accent-400 underline decoration-dotted underline-offset-4 font-serif transition-colors outline-none"
 				>
 					[ 登录后评论 ]
 				</button>
 			{:else}
-				<div class="text-[10px] text-jade-700 dark:text-jade-400 font-serif tracking-wide">
+				<div class="text-[10px] text-accent-700 dark:text-accent-400 font-serif tracking-wide">
 					已登录，评论将自动使用账号身份
 				</div>
 			{/if}
@@ -200,7 +200,7 @@
 		<div class="mb-14 -mt-6">
 			<details class="group">
 				<summary
-					class="flex items-center gap-2 text-xs text-ink-800/50 dark:text-ink-200/50 hover:text-jade-600 dark:hover:text-jade-400 transition-colors font-serif tracking-wider cursor-pointer list-none outline-none"
+					class="flex items-center gap-2 text-xs text-ink-800/50 dark:text-ink-200/50 hover:text-accent-600 dark:hover:text-accent-400 transition-colors font-serif tracking-wider cursor-pointer list-none outline-none"
 				>
 					<Globe size={12} />
 					<span>在联邦宇宙 (Fediverse) 上互动</span>
@@ -259,7 +259,7 @@
 									type="button"
 									onclick={openOnInstance}
 									disabled={!instanceDomain.trim()}
-									class="px-3 py-2 bg-ink-900 dark:bg-ink-100 text-ink-50 dark:text-ink-900 text-xs rounded-default hover:bg-jade-600 dark:hover:bg-jade-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
+									class="px-3 py-2 bg-ink-900 dark:bg-ink-100 text-ink-50 dark:text-ink-900 text-xs rounded-default hover:bg-accent-600 dark:hover:bg-accent-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
 								>
 									在我的实例上互动
 								</button>

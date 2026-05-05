@@ -33,7 +33,7 @@
 	>
 		<p class="text-[11px] font-mono text-ink-500 dark:text-ink-400">
 			{#if connected}
-				当前在线连接：<span class="font-bold text-jade-600 dark:text-jade-400">{online}</span>
+				当前在线连接：<span class="font-bold text-accent-600 dark:text-accent-400">{online}</span>
 			{:else}
 				正在重连在线服务...
 			{/if}
@@ -50,17 +50,17 @@
 				<a
 					href={hrefFor(item.url)}
 					onclick={closeWindow}
-					class="group rounded-default border border-ink-100/70 dark:border-ink-800/60 bg-white/55 dark:bg-ink-900/45 px-3 py-2 hover:border-jade-300/70 dark:hover:border-jade-500/40 transition-colors"
+					class="group rounded-default border border-ink-100/70 dark:border-ink-800/60 bg-white/55 dark:bg-ink-900/45 px-3 py-2 hover:border-accent-300/70 dark:hover:border-accent-500/40 transition-colors"
 				>
 					<div class="flex items-center justify-between gap-3">
 						<div class="min-w-0 flex items-center gap-2">
 							<span
-								class="shrink-0 text-[10px] font-mono text-jade-700/80 dark:text-jade-400/80 uppercase tracking-[0.12em]"
+								class="shrink-0 text-[10px] font-mono text-accent-700/80 dark:text-accent-400/80 uppercase tracking-[0.12em]"
 							>
 								{labelFor(item.contentType)}
 							</span>
 							<span
-								class="truncate text-sm font-serif text-ink-700 dark:text-ink-200 group-hover:text-jade-700 dark:group-hover:text-jade-300"
+								class="truncate text-sm font-serif text-ink-700 dark:text-ink-200 group-hover:text-accent-700 dark:group-hover:text-accent-300"
 							>
 								{item.title || item.url}
 							</span>

@@ -776,7 +776,7 @@
 		{#if photoIndex > 0}
 			<button
 				aria-label={t('web.ui.prev_aria')}
-				class="absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/12 bg-ink-950/78 p-2 text-white/72 shadow-[0_10px_30px_rgba(0,0,0,0.22)] backdrop-blur-md transition-all hover:border-jade-400/35 hover:bg-jade-500/14 hover:text-jade-200 sm:left-3 sm:p-2.5"
+				class="absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/12 bg-ink-950/78 p-2 text-white/72 shadow-[0_10px_30px_rgba(0,0,0,0.22)] backdrop-blur-md transition-all hover:border-accent-400/35 hover:bg-accent-500/14 hover:text-accent-200 sm:left-3 sm:p-2.5"
 				onclick={goPrev}
 			>
 				<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -793,7 +793,7 @@
 		{#if photoIndex < total - 1}
 			<button
 				aria-label={t('web.ui.next_aria')}
-				class="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/12 bg-ink-950/78 p-2 text-white/72 shadow-[0_10px_30px_rgba(0,0,0,0.22)] backdrop-blur-md transition-all hover:border-jade-400/35 hover:bg-jade-500/14 hover:text-jade-200 sm:right-3 sm:p-2.5"
+				class="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/12 bg-ink-950/78 p-2 text-white/72 shadow-[0_10px_30px_rgba(0,0,0,0.22)] backdrop-blur-md transition-all hover:border-accent-400/35 hover:bg-accent-500/14 hover:text-accent-200 sm:right-3 sm:p-2.5"
 				onclick={goNext}
 			>
 				<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -882,7 +882,7 @@
 				<div class="relative h-5 w-5 shrink-0">
 					<div class="absolute inset-0 rounded-full border-2 border-white/15"></div>
 					<div
-						class="absolute inset-0 animate-spin rounded-full border-2 border-jade-400 border-t-transparent"
+						class="absolute inset-0 animate-spin rounded-full border-2 border-accent-400 border-t-transparent"
 					></div>
 				</div>
 				<div class="flex min-w-[120px] flex-col">
@@ -890,7 +890,7 @@
 						<span class="text-[11px] font-medium tracking-wide text-white/80"
 							>{hasDedicatedThumbnail ? t('web.ui.load_original') : t('web.ui.load_photo')}</span
 						>
-						<span class="font-mono text-[10px] text-jade-400"
+						<span class="font-mono text-[10px] text-accent-400"
 							>{totalBytes > 0 ? `${loadProgress}%` : '···'}</span
 						>
 					</div>
@@ -905,7 +905,7 @@
 					{/if}
 					<div class="h-[3px] w-full overflow-hidden rounded-full bg-white/10">
 						<div
-							class="h-full rounded-full bg-gradient-to-r from-jade-500 to-jade-400 transition-[width] duration-200 ease-out"
+							class="h-full rounded-full bg-gradient-to-r from-accent-500 to-accent-400 transition-[width] duration-200 ease-out"
 							class:animate-pulse={totalBytes <= 0}
 							style="width: {totalBytes > 0 ? Math.max(loadProgress, 6) : 38}%"
 						></div>
@@ -919,7 +919,7 @@
 			class="absolute bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] left-1/2 z-10 flex w-[calc(100vw-1.25rem)] max-w-max -translate-x-1/2 items-center justify-center gap-0.5 rounded-full border border-white/8 bg-ink-900/78 px-2 py-1.5 backdrop-blur-2xl sm:bottom-4 sm:w-auto sm:rounded-[3px] sm:px-2.5 sm:py-1"
 		>
 			<button
-				class="rounded-[3px] p-1.5 text-white/40 transition-colors hover:bg-jade-500/12 hover:text-jade-300"
+				class="rounded-[3px] p-1.5 text-white/40 transition-colors hover:bg-accent-500/12 hover:text-accent-300"
 				onclick={zoomOut}
 				title={t('web.ui.zoom_out_title')}
 			>
@@ -938,7 +938,7 @@
 				title={t('web.ui.zoom_reset_title')}>{zoomPercent}%</button
 			>
 			<button
-				class="rounded-[3px] p-1.5 text-white/40 transition-colors hover:bg-jade-500/12 hover:text-jade-300"
+				class="rounded-[3px] p-1.5 text-white/40 transition-colors hover:bg-accent-500/12 hover:text-accent-300"
 				onclick={zoomIn}
 				title={t('web.ui.zoom_in_title')}
 			>
@@ -953,7 +953,7 @@
 			</button>
 			<div class="mx-1 h-4 w-px bg-white/10"></div>
 			<button
-				class="rounded-[3px] p-1.5 text-white/40 transition-colors hover:bg-jade-500/12 hover:text-jade-300"
+				class="rounded-[3px] p-1.5 text-white/40 transition-colors hover:bg-accent-500/12 hover:text-accent-300"
 				onclick={rotateCW}
 				title={t('web.ui.rotate_title')}
 			>
@@ -967,7 +967,7 @@
 				>
 			</button>
 			<button
-				class="rounded-[3px] p-1.5 text-white/40 transition-colors hover:bg-jade-500/12 hover:text-jade-300"
+				class="rounded-[3px] p-1.5 text-white/40 transition-colors hover:bg-accent-500/12 hover:text-accent-300"
 				onclick={resetView}
 				title={t('web.ui.fit_size_title')}
 			>
@@ -1042,7 +1042,7 @@
 				class="mt-4 flex items-center justify-between border-t border-white/6 pt-3 text-[10px] tracking-[0.18em] text-white/32"
 			>
 				<span>{t('web.ui.detail_panel')}</span>
-				<a href={resolvePath(`/albums/${album.shortUrl}`, page.data.lang)} class="transition-colors hover:text-jade-300">{t('web.ui.back_album')}</a
+				<a href={resolvePath(`/albums/${album.shortUrl}`, page.data.lang)} class="transition-colors hover:text-accent-300">{t('web.ui.back_album')}</a
 				>
 			</div>
 		</div>
@@ -1086,7 +1086,7 @@
 		<div class="mt-6 border-t border-white/5 pt-4">
 			<a
 				href={resolvePath(`/albums/${album.shortUrl}`, page.data.lang)}
-				class="text-xs text-white/30 transition-colors hover:text-jade-400">← {album.title}</a
+				class="text-xs text-white/30 transition-colors hover:text-accent-400">← {album.title}</a
 			>
 		</div>
 		<div class="mt-4 grid grid-cols-2 gap-1.5 text-[10px] text-white/20">

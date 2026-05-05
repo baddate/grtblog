@@ -223,7 +223,7 @@
 			<header class="mb-7 sm:mb-16">
 				<a
 					href={resolvePath('/albums', page.data.lang)}
-					class="mb-5 inline-flex items-center gap-1.5 rounded-full border border-ink-200/70 bg-white/85 px-3 py-1.5 text-[11px] tracking-wider text-ink-500 shadow-sm backdrop-blur-sm transition-colors hover:text-jade-600 dark:border-ink-800/70 dark:bg-ink-900/70 dark:text-ink-400 dark:hover:text-jade-400"
+					class="mb-5 inline-flex items-center gap-1.5 rounded-full border border-ink-200/70 bg-white/85 px-3 py-1.5 text-[11px] tracking-wider text-ink-500 shadow-sm backdrop-blur-sm transition-colors hover:text-accent-600 dark:border-ink-800/70 dark:bg-ink-900/70 dark:text-ink-400 dark:hover:text-accent-400"
 				>
 					<span class="text-[10px]">&larr;</span>
 					<span>{t('web.ui.back_album')}</span>

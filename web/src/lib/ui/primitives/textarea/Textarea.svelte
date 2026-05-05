@@ -24,11 +24,11 @@
 	}: Props = $props();
 
 	const baseTextareaClasses =
-		'w-full rounded-default border border-ink-100/50 bg-ink-50/50 px-3.5 py-2 text-[13px] font-normal text-ink-900 placeholder:text-ink-300 transition-all duration-300 outline-none hover:border-ink-200 hover:bg-white focus:border-jade-500/40 focus:bg-white focus:ring-4 focus:ring-jade-500/5 dark:border-ink-800/30 dark:bg-ink-700/40 dark:text-ink-100 dark:placeholder:text-ink-600 dark:hover:border-ink-700 dark:hover:bg-ink-950/60 dark:focus:border-jade-500/40 dark:focus:bg-ink-950';
+		'w-full rounded-default border border-ink-100/50 bg-ink-50/50 px-3.5 py-2 text-[13px] font-normal text-ink-900 placeholder:text-ink-300 transition-all duration-300 outline-none hover:border-ink-200 hover:bg-white focus:border-accent-500/40 focus:bg-white focus:ring-4 focus:ring-accent-500/5 dark:border-ink-800/30 dark:bg-ink-700/40 dark:text-ink-100 dark:placeholder:text-ink-600 dark:hover:border-ink-700 dark:hover:bg-ink-950/60 dark:focus:border-accent-500/40 dark:focus:bg-ink-950';
 	const underlineTextareaClasses =
 		'w-full bg-transparent px-0 pb-1 text-[13px] font-normal text-ink-900 placeholder:text-ink-300 transition-colors duration-300 appearance-none rounded-none outline-none border-0 border-b border-ink-200/80 ring-0 shadow-none focus:ring-0 focus:ring-transparent focus:shadow-none focus:border-ink-400 dark:border-ink-700 dark:text-ink-100 dark:placeholder:text-ink-600 dark:focus:border-ink-200';
 	const underlineWrapperClasses =
-		'after:pointer-events-none after:absolute after:left-0 after:right-0 after:bottom-0 after:h-[2px] after:origin-left after:scale-x-0 after:bg-jade-600/70 after:transition-transform after:duration-300 group-focus-within:after:scale-x-100 dark:after:bg-jade-500/70';
+		'after:pointer-events-none after:absolute after:left-0 after:right-0 after:bottom-0 after:h-[2px] after:origin-left after:scale-x-0 after:bg-accent-600/70 after:transition-transform after:duration-300 group-focus-within:after:scale-x-100 dark:after:bg-accent-500/70';
 	const resizeClasses = {
 		none: 'resize-none',
 		vertical: 'resize-y',

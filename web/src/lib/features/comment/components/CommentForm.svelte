@@ -396,7 +396,7 @@
 					{t('web.comment.md_hint')}
 					<span class="ml-2 font-mono">{contentCount}/{commentContentMaxLength}</span>
 					{#if $requireModerationStore}
-						<span class="ml-2 text-amber-600 dark:text-amber-300">
+						<span class="ml-2 text-warning-600 dark:text-warning-300">
 							{t('web.comment.moderation_hint')}
 						</span>
 					{/if}
@@ -406,7 +406,7 @@
 			<button
 				onclick={handleSubmit}
 				disabled={isSubmitting}
-				class="flex items-center gap-2 text-xs font-serif tracking-widest text-ink-50 bg-ink-900 dark:bg-ink-200 dark:text-ink-900 hover:bg-jade-600 dark:hover:bg-jade-600 dark:hover:text-white px-8 py-2.5 rounded-default transition-all shadow-sm hover:shadow-md outline-none disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-ink-900 dark:disabled:hover:bg-ink-200 dark:disabled:hover:text-ink-900"
+				class="flex items-center gap-2 text-xs font-serif tracking-widest text-ink-50 bg-ink-900 dark:bg-ink-200 dark:text-ink-900 hover:bg-accent-600 dark:hover:bg-accent-600 dark:hover:text-white px-8 py-2.5 rounded-default transition-all shadow-sm hover:shadow-md outline-none disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-ink-900 dark:disabled:hover:bg-ink-200 dark:disabled:hover:text-ink-900"
 			>
 				<span>{isSubmitting ? t('web.comment.submitting') : t('web.comment.submit')}</span>
 				<Send size={12} strokeWidth={2} class={isSubmitting ? 'animate-pulse' : ''} />

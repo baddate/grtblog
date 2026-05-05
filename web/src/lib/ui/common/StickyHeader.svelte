@@ -85,7 +85,7 @@
 	>
 		<!-- Progress Bar -->
 		<div
-			class="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-jade-400 to-jade-600 transition-all duration-150 ease-out dark:from-jade-500 dark:to-jade-700"
+			class="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-accent-400 to-accent-600 transition-all duration-150 ease-out dark:from-accent-500 dark:to-accent-700"
 			style="width: {progress}%"
 		></div>
 
@@ -126,7 +126,7 @@
 					</span>
 					<ArrowUp
 						size={12}
-						class="shrink-0 text-jade-500 opacity-0 transition-all group-hover:translate-y-[-2px] group-hover:opacity-100"
+						class="shrink-0 text-accent-500 opacity-0 transition-all group-hover:translate-y-[-2px] group-hover:opacity-100"
 					/>
 				</button>
 			</div>
@@ -154,7 +154,7 @@
 				<Button
 					variant="ghost"
 					size="sm"
-					class="!h-9 !w-9 !p-0 text-ink-500 hover:bg-ink-100/50 hover:text-jade-600 dark:text-ink-400 dark:hover:bg-ink-800/50 dark:hover:text-jade-400"
+					class="!h-9 !w-9 !p-0 text-ink-500 hover:bg-ink-100/50 hover:text-accent-600 dark:text-ink-400 dark:hover:bg-ink-800/50 dark:hover:text-accent-400"
 					onclick={handleShare}
 					title="分享文章"
 				>
@@ -166,7 +166,7 @@
 				<Button
 					variant="ghost"
 					size="sm"
-					class="!h-9 !w-9 !p-0 bg-jade-500/10 text-jade-600 hover:bg-jade-500/20 dark:bg-jade-500/20 dark:text-jade-400 dark:hover:bg-jade-500/30"
+					class="!h-9 !w-9 !p-0 bg-accent-500/10 text-accent-600 hover:bg-accent-500/20 dark:bg-accent-500/20 dark:text-accent-400 dark:hover:bg-accent-500/30"
 					onclick={scrollToTop}
 					title="回到顶部"
 				>

@@ -34,7 +34,7 @@
 	const baseScrollbarClasses =
 		'touch-none select-none rounded-full p-0.5 transition-all duration-300 data-[state=hidden]:opacity-0 data-[state=visible]:opacity-100';
 	const baseThumbClasses =
-		'flex-1 rounded-full bg-ink-400/60 transition-colors duration-300 hover:bg-jade-500/60 dark:bg-ink-600/60 dark:hover:bg-jade-500/60';
+		'flex-1 rounded-full bg-ink-400/60 transition-colors duration-300 hover:bg-accent-500/60 dark:bg-ink-600/60 dark:hover:bg-accent-500/60';
 	const baseCornerClasses = 'bg-ink-100/60 dark:bg-ink-800/40';
 
 	let rootClasses = $derived(cx(baseRootClasses, className));

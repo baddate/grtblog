@@ -183,7 +183,7 @@
 					</button>
 					<button
 						onclick={() => windowStore.close()}
-						class="p-1 rounded-full hover:bg-cinnabar-500 hover:text-white text-ink-400 transition-all"
+						class="p-1 rounded-full hover:bg-error-500 hover:text-white text-ink-400 transition-all"
 					>
 						<X size={12} />
 					</button>
@@ -204,10 +204,10 @@
 			{:else}
 				<div class="flex flex-col gap-3">
 					<p>终端初始化成功...</p>
-					<p class="text-jade-600 dark:text-jade-400 font-mono text-xs font-bold">
+					<p class="text-accent-600 dark:text-accent-400 font-mono text-xs font-bold">
 						✓ 核心拖拽 Action 已加载
 					</p>
-					<p class="text-jade-600 dark:text-jade-400 font-mono text-xs font-bold">
+					<p class="text-accent-600 dark:text-accent-400 font-mono text-xs font-bold">
 						✓ 全局状态通过 Runes 同步
 					</p>
 					<p class="mt-4 opacity-50 text-[11px]">你可以点击标题栏在页面范围内自由移动此窗口。</p>

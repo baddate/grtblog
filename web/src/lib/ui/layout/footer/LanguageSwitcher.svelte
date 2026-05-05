@@ -26,7 +26,7 @@
 <div class="relative inline-flex">
   <button
     onclick={() => open = !open}
-    class="text-[10px] md:text-[11px] font-mono text-ink-400 hover:text-jade-600 dark:hover:text-jade-400 transition-colors flex items-center gap-0.5"
+    class="text-[10px] md:text-[11px] font-mono text-ink-400 hover:text-accent-600 dark:hover:text-accent-400 transition-colors flex items-center gap-0.5"
     aria-label="Switch language"
     aria-expanded={open}
   >
@@ -46,8 +46,8 @@
           <button
             onclick={(e) => handleSwitch(e, lang.code)}
             class="w-full text-left px-3 py-1.5 text-[11px] font-mono transition-colors {lang.code === currentLang
-              ? 'text-jade-600 dark:text-jade-400 font-bold'
-              : 'text-ink-500 hover:text-jade-600 dark:hover:text-jade-400'}"
+              ? 'text-accent-600 dark:text-accent-400 font-bold'
+              : 'text-ink-500 hover:text-accent-600 dark:hover:text-accent-400'}"
             role="menuitem"
           >
             {lang.nativeName}

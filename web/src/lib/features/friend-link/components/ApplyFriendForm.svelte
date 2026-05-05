@@ -41,7 +41,7 @@
 {#if success}
 	<div class="flex flex-col items-center justify-center py-8 text-center animate-settle">
 		<div
-			class="w-12 h-12 rounded-full bg-jade-100 dark:bg-jade-900/30 text-jade-600 dark:text-jade-400 flex items-center justify-center mb-4"
+			class="w-12 h-12 rounded-full bg-accent-100 dark:bg-accent-900/30 text-accent-600 dark:text-accent-400 flex items-center justify-center mb-4"
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +60,7 @@
 	<form onsubmit={handleSubmit} class="space-y-4">
 		{#if error}
 			<div
-				class="p-3 text-[11px] bg-cinnabar-50 dark:bg-cinnabar-950/30 text-cinnabar-600 dark:text-cinnabar-400 border border-cinnabar-200 dark:border-cinnabar-800 rounded-sm"
+				class="p-3 text-[11px] bg-error-50 dark:bg-error-950/30 text-error-600 dark:text-error-400 border border-error-200 dark:border-error-800 rounded-sm"
 			>
 				{error}
 			</div>
@@ -77,7 +77,7 @@
 					bind:value={form.name}
 					required
 					placeholder="My Awesome Blog"
-					class="w-full px-3 py-2 text-sm rounded-default border border-ink-200 dark:border-ink-800 bg-ink-50/50 dark:bg-ink-950/50 focus:border-jade-500/50 transition-colors"
+					class="w-full px-3 py-2 text-sm rounded-default border border-ink-200 dark:border-ink-800 bg-ink-50/50 dark:bg-ink-950/50 focus:border-accent-500/50 transition-colors"
 				/>
 			</div>
 			<div class="space-y-1.5">
@@ -90,7 +90,7 @@
 					bind:value={form.url}
 					required
 					placeholder="https://example.com"
-					class="w-full px-3 py-2 text-sm rounded-default border border-ink-200 dark:border-ink-800 bg-ink-50/50 dark:bg-ink-950/50 focus:border-jade-500/50 transition-colors"
+					class="w-full px-3 py-2 text-sm rounded-default border border-ink-200 dark:border-ink-800 bg-ink-50/50 dark:bg-ink-950/50 focus:border-accent-500/50 transition-colors"
 				/>
 			</div>
 		</div>
@@ -106,7 +106,7 @@
 					bind:value={form.logo}
 					required
 					placeholder="https://example.com/logo.png"
-					class="w-full px-3 py-2 text-sm rounded-default border border-ink-200 dark:border-ink-800 bg-ink-50/50 dark:bg-ink-950/50 focus:border-jade-500/50 transition-colors"
+					class="w-full px-3 py-2 text-sm rounded-default border border-ink-200 dark:border-ink-800 bg-ink-50/50 dark:bg-ink-950/50 focus:border-accent-500/50 transition-colors"
 				/>
 			</div>
 			<div class="space-y-1.5">
@@ -118,7 +118,7 @@
 					id="rssUrl"
 					bind:value={form.rssUrl}
 					placeholder="https://example.com/feed"
-					class="w-full px-3 py-2 text-sm rounded-default border border-ink-200 dark:border-ink-800 bg-ink-50/50 dark:bg-ink-950/50 focus:border-jade-500/50 transition-colors"
+					class="w-full px-3 py-2 text-sm rounded-default border border-ink-200 dark:border-ink-800 bg-ink-50/50 dark:bg-ink-950/50 focus:border-accent-500/50 transition-colors"
 				/>
 			</div>
 		</div>
@@ -133,7 +133,7 @@
 				bind:value={form.description}
 				required
 				placeholder="介绍一下你的站点吧..."
-				class="w-full px-3 py-2 text-sm rounded-default border border-ink-200 dark:border-ink-800 bg-ink-50/50 dark:bg-ink-950/50 focus:border-jade-500/50 transition-colors"
+				class="w-full px-3 py-2 text-sm rounded-default border border-ink-200 dark:border-ink-800 bg-ink-50/50 dark:bg-ink-950/50 focus:border-accent-500/50 transition-colors"
 			/>
 		</div>
 
@@ -146,14 +146,14 @@
 				bind:value={form.message}
 				rows="2"
 				placeholder="有什么想对我说的话..."
-				class="w-full px-3 py-2 text-sm rounded-default border border-ink-200 dark:border-ink-800 bg-ink-50/50 dark:bg-ink-950/50 focus:border-jade-500/50 transition-colors resize-none"
+				class="w-full px-3 py-2 text-sm rounded-default border border-ink-200 dark:border-ink-800 bg-ink-50/50 dark:bg-ink-950/50 focus:border-accent-500/50 transition-colors resize-none"
 			></textarea>
 		</div>
 
 		<button
 			type="submit"
 			disabled={submitting}
-			class="w-full py-2.5 bg-jade-600 hover:bg-jade-500 disabled:bg-jade-800 text-white font-bold text-xs rounded-default transition-all shadow-glow hover:shadow-jade-500/40 mt-2"
+			class="w-full py-2.5 bg-accent-600 hover:bg-accent-500 disabled:bg-accent-800 text-white font-bold text-xs rounded-default transition-all shadow-glow hover:shadow-accent-500/40 mt-2"
 		>
 			{#if submitting}
 				<span class="inline-block animate-pulse">提交中...</span>

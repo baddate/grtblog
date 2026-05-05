@@ -20,7 +20,7 @@
 	} as const;
 	const hoverClasses = {
 		glass:
-			'hover:-translate-y-0.5 hover:border-jade-200/50 hover:shadow-md dark:hover:border-jade-800/20',
+			'hover:-translate-y-0.5 hover:border-accent-200/50 hover:shadow-md dark:hover:border-accent-800/20',
 		solid: 'hover:-translate-y-0.5 hover:border-ink-100 hover:shadow-md dark:hover:border-ink-700',
 		seamless: 'hover:bg-ink-50/50 dark:hover:bg-white/5'
 	} as const;

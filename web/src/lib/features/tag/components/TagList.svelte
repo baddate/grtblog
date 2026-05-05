@@ -21,10 +21,10 @@
 		{#each tags as tag (tag.id)}
 			<button
 				onclick={() => handleTagClick(tag)}
-				class="group flex items-center gap-1.5 px-2 py-0.5 rounded-sm bg-ink-50 dark:bg-ink-800/40 border border-ink-200/50 dark:border-ink-700/50 hover:border-jade-500/50 hover:bg-jade-500/5 dark:hover:bg-jade-500/10 transition-all duration-300"
+				class="group flex items-center gap-1.5 px-2 py-0.5 rounded-sm bg-ink-50 dark:bg-ink-800/40 border border-ink-200/50 dark:border-ink-700/50 hover:border-accent-500/50 hover:bg-accent-500/5 dark:hover:bg-accent-500/10 transition-all duration-300"
 			>
 				<span
-					class="font-serif text-[11px] text-ink-600 dark:text-ink-300 group-hover:text-jade-600 dark:group-hover:text-jade-400"
+					class="font-serif text-[11px] text-ink-600 dark:text-ink-300 group-hover:text-accent-600 dark:group-hover:text-accent-400"
 				>
 					{tag.name}
 				</span>

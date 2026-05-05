@@ -6,7 +6,7 @@
 	let {
 		visible = true, // 控制显示/隐藏
 		size = 'w-12 h-12', // 尺寸 (Tailwind 类)
-		color = 'bg-ink-50 dark:bg-ink-900 border border-jade-900 dark:border-jade-100', // 颜色 (Tailwind 类)
+		color = 'bg-ink-50 dark:bg-ink-900 border border-accent-900 dark:border-accent-100', // 颜色 (Tailwind 类)
 		duration = 1200, // 翻转动画一次循环的时间 (ms)
 		class: customClass = '', // 允许传入额外的 class
 		text = '' // 可选的加载文本

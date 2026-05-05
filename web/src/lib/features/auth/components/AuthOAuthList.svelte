@@ -36,7 +36,7 @@
 			{/each}
 		</div>
 		{#if $errorStore}
-			<p class="text-sm text-cinnabar-600 dark:text-cinnabar-400">{$errorStore}</p>
+			<p class="text-sm text-error-600 dark:text-error-400">{$errorStore}</p>
 		{/if}
 	</div>
 

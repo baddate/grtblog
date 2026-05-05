@@ -20,14 +20,14 @@
 <div class="space-y-6">
 	<div class="flex items-center justify-between border-b border-ink-50 pb-2 dark:border-ink-800/30">
 		<div class="flex items-center gap-2">
-			<NotebookPen size={12} class="text-jade-500" />
+			<NotebookPen size={12} class="text-accent-500" />
 			<span class="font-mono text-[8px] font-bold tracking-[0.4em] text-ink-300 uppercase">
 				同期手记
 			</span>
 		</div>
 		<a
 			href={resolvePath('/moments', page.data.lang)}
-			class="group text-[10px] text-ink-300 transition-colors hover:text-jade-500"
+			class="group text-[10px] text-ink-300 transition-colors hover:text-accent-500"
 		>
 			<ArrowRight size={10} class="transition-transform group-hover:translate-x-0.5" />
 		</a>
@@ -44,7 +44,7 @@
 			{#each $relatedMomentsStore as moment, i (moment.id)}
 				<a
 					href={resolvePath(buildMomentPath(moment.shortUrl, moment.createdAt), page.data.lang)}
-					class="group block space-y-1.5 rounded-default border border-transparent bg-ink-50/40 p-3 transition-all hover:border-jade-500/10 hover:bg-white hover:shadow-sm dark:bg-ink-900/20 dark:hover:bg-ink-900/40"
+					class="group block space-y-1.5 rounded-default border border-transparent bg-ink-50/40 p-3 transition-all hover:border-accent-500/10 hover:bg-white hover:shadow-sm dark:bg-ink-900/20 dark:hover:bg-ink-900/40"
 					in:fly={{ x: 10, delay: i * 100 }}
 				>
 					<div class="flex items-center justify-between">
@@ -54,7 +54,7 @@
 						</div>
 					</div>
 					<h4
-						class="text-[11px] font-bold leading-snug text-ink-800 transition-colors group-hover:text-jade-600 dark:text-ink-200"
+						class="text-[11px] font-bold leading-snug text-ink-800 transition-colors group-hover:text-accent-600 dark:text-ink-200"
 					>
 						{moment.title}
 					</h4>

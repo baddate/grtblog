@@ -9,18 +9,18 @@
 			case 'maintenance':
 				return {
 					text: '站点正在维护中，部分功能可能暂时不可用',
-					bg: 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800/60',
-					textColor: 'text-amber-800 dark:text-amber-200',
+					bg: 'bg-warning-50 dark:bg-warning-950/40 border-warning-200 dark:border-warning-800/60',
+					textColor: 'text-warning-800 dark:text-warning-200',
 					icon: 'i-ph-wrench-bold',
-					iconColor: 'text-amber-500'
+					iconColor: 'text-warning-500'
 				};
 			case 'degraded':
 				return {
 					text: '站点部分服务运行缓慢，我们正在优化中',
-					bg: 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800/60',
-					textColor: 'text-amber-800 dark:text-amber-200',
+					bg: 'bg-warning-50 dark:bg-warning-950/40 border-warning-200 dark:border-warning-800/60',
+					textColor: 'text-warning-800 dark:text-warning-200',
 					icon: 'i-ph-warning-bold',
-					iconColor: 'text-amber-500'
+					iconColor: 'text-warning-500'
 				};
 			case 'critical':
 			case 'outage':

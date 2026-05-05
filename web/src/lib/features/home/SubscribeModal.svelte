@@ -36,14 +36,14 @@
 			name: '文章',
 			desc: '深度思考与技术分享',
 			icon: Newspaper,
-			color: 'text-jade-500'
+			color: 'text-accent-500'
 		},
 		{
 			id: 'moments',
 			name: '手记',
 			desc: '生活碎片与即时感悟',
 			icon: Coffee,
-			color: 'text-amber-500'
+			color: 'text-warning-500'
 		},
 		{
 			id: 'thinkings',
@@ -129,7 +129,7 @@
 					<X size={20} />
 				</button>
 
-				<div class="flex items-center gap-3 mb-2 text-jade-600 dark:text-jade-400">
+				<div class="flex items-center gap-3 mb-2 text-accent-600 dark:text-accent-400">
 					<BellRing size={24} />
 					<h3 class="text-xl font-serif font-medium">订阅更新</h3>
 				</div>
@@ -147,7 +147,7 @@
 								onclick={() => toggleOption(opt.id)}
 								class="flex items-start gap-3 p-3 rounded-default border transition-all text-left group
 									{preferences[opt.id as keyof typeof preferences]
-									? 'border-jade-500/30 bg-jade-500/[0.03] dark:bg-jade-500/[0.05]'
+									? 'border-accent-500/30 bg-accent-500/[0.03] dark:bg-accent-500/[0.05]'
 									: 'border-ink-100 bg-ink-50/50 dark:border-ink-800 dark:bg-ink-950/30 opacity-60'}"
 							>
 								<div class="mt-0.5 {opt.color}">
@@ -164,7 +164,7 @@
 									<div class="text-[10px] text-ink-400 leading-tight mt-0.5">{opt.desc}</div>
 								</div>
 								{#if preferences[opt.id as keyof typeof preferences]}
-									<div class="ml-auto text-jade-500" transition:scale>
+									<div class="ml-auto text-accent-500" transition:scale>
 										<Check size={14} />
 									</div>
 								{/if}
@@ -175,20 +175,20 @@
 					<div class="relative group">
 						<Mail
 							size={18}
-							class="absolute left-4 top-1/2 -translate-y-1/2 text-ink-400 group-focus-within:text-jade-500 transition-colors"
+							class="absolute left-4 top-1/2 -translate-y-1/2 text-ink-400 group-focus-within:text-accent-500 transition-colors"
 						/>
 						<input
 							type="email"
 							bind:value={email}
 							required
 							placeholder="your-email@example.com"
-							class="w-full bg-ink-50 dark:bg-ink-950 border border-ink-100 dark:border-ink-800 rounded-default py-3.5 pl-12 pr-4 text-sm focus:border-jade-500/50 transition-all outline-none"
+							class="w-full bg-ink-50 dark:bg-ink-950 border border-ink-100 dark:border-ink-800 rounded-default py-3.5 pl-12 pr-4 text-sm focus:border-accent-500/50 transition-all outline-none"
 						/>
 					</div>
 
 					{#if submitError}
 						<p
-							class="mt-3 rounded-default border border-cinnabar-200 bg-cinnabar-50 px-3 py-2 text-xs text-cinnabar-600 dark:border-cinnabar-900/50 dark:bg-cinnabar-900/20 dark:text-cinnabar-300"
+							class="mt-3 rounded-default border border-error-200 bg-error-50 px-3 py-2 text-xs text-error-600 dark:border-error-900/50 dark:bg-error-900/20 dark:text-error-300"
 						>
 							{submitError}
 						</p>
@@ -197,7 +197,7 @@
 					<button
 						type="submit"
 						disabled={isSubmitting || !email.trim() || selectedEventNames.length === 0}
-						class="mt-6 w-full bg-ink-900 dark:bg-jade-600 text-white py-3.5 rounded-default font-medium text-sm hover:bg-jade-600 dark:hover:bg-jade-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+						class="mt-6 w-full bg-ink-900 dark:bg-accent-600 text-white py-3.5 rounded-default font-medium text-sm hover:bg-accent-600 dark:hover:bg-accent-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
 					>
 						{#if isSubmitting}
 							<div
@@ -212,7 +212,7 @@
 			{:else}
 				<div class="p-12 text-center" in:fly={{ y: 10 }}>
 					<div
-						class="w-16 h-16 bg-jade-100 dark:bg-jade-900/30 text-jade-600 rounded-full flex items-center justify-center mx-auto mb-6"
+						class="w-16 h-16 bg-accent-100 dark:bg-accent-900/30 text-accent-600 rounded-full flex items-center justify-center mx-auto mb-6"
 					>
 						<Check size={32} />
 					</div>

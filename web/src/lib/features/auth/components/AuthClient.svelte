@@ -317,13 +317,13 @@
 				<input type="hidden" name="turnstileToken" value={turnstileToken} />
 
 				{#if $authModel?.login.error}
-					<p class="text-sm text-cinnabar-600 dark:text-cinnabar-400">
+					<p class="text-sm text-error-600 dark:text-error-400">
 						{$authModel.login.error}
 					</p>
 				{/if}
 
 				<Button
-					class="w-full rounded-default bg-jade-600 text-white hover:bg-jade-700"
+					class="w-full rounded-default bg-accent-600 text-white hover:bg-accent-700"
 					type="submit"
 					loading={$authModel?.login.loading ?? false}
 					disabled={!canSubmit}

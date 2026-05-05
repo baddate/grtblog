@@ -84,7 +84,7 @@
 		padding: 2px;
 		border-radius: 4px;
 		opacity: 0;
-		color: var(--color-jade-500);
+		color: var(--color-accent-500);
 		cursor: pointer;
 		transition:
 			opacity 200ms,
@@ -93,7 +93,7 @@
 	}
 
 	:global(.dark) .heading-anchor-btn {
-		color: var(--color-jade-400);
+		color: var(--color-accent-400);
 	}
 
 	/* show on heading hover */
@@ -103,22 +103,22 @@
 
 	.heading-anchor-btn:hover {
 		opacity: 1;
-		color: var(--color-jade-600);
-		background-color: color-mix(in srgb, var(--color-jade-500) 10%, transparent);
+		color: var(--color-accent-600);
+		background-color: color-mix(in srgb, var(--color-accent-500) 10%, transparent);
 	}
 
 	:global(.dark) .heading-anchor-btn:hover {
-		color: var(--color-jade-300);
-		background-color: color-mix(in srgb, var(--color-jade-400) 15%, transparent);
+		color: var(--color-accent-300);
+		background-color: color-mix(in srgb, var(--color-accent-400) 15%, transparent);
 	}
 
 	/* copied state */
 	.heading-anchor-btn.copied {
 		opacity: 1;
-		color: var(--color-jade-600);
+		color: var(--color-accent-600);
 	}
 
 	:global(.dark) .heading-anchor-btn.copied {
-		color: var(--color-jade-300);
+		color: var(--color-accent-300);
 	}
 </style>

@@ -149,13 +149,13 @@
 
 				<!-- Decorative Orbs (HQ: parallax drift with progress) -->
 				<div
-					class="absolute -left-1/4 -top-1/4 h-[800px] w-[800px] rounded-full bg-jade-500/10 blur-[120px] will-change-transform dark:bg-jade-500/15"
+					class="absolute -left-1/4 -top-1/4 h-[800px] w-[800px] rounded-full bg-accent-500/10 blur-[120px] will-change-transform dark:bg-accent-500/15"
 					style={highQuality
 						? `transform: translate(${progress * 200 - 100}px, ${progress * 80 - 40}px);`
 						: ''}
 				></div>
 				<div
-					class="absolute -right-1/4 -bottom-1/4 h-[900px] w-[900px] rounded-full bg-amber-500/5 blur-[120px] will-change-transform dark:bg-amber-500/10"
+					class="absolute -right-1/4 -bottom-1/4 h-[900px] w-[900px] rounded-full bg-warning-500/5 blur-[120px] will-change-transform dark:bg-warning-500/10"
 					style={highQuality
 						? `transform: translate(${-progress * 160 + 80}px, ${-progress * 60 + 30}px);`
 						: ''}
@@ -174,7 +174,7 @@
 				type="button"
 				class="fixed right-6 bottom-8 z-50 flex items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-[10px] font-medium uppercase tracking-wider backdrop-blur-sm transition-all duration-300 md:right-8
 				{highQuality
-					? 'border-jade-500/50 bg-jade-500/15 text-jade-500 shadow-jade-glow dark:border-jade-400/40 dark:bg-jade-400/10 dark:text-jade-400'
+					? 'border-accent-500/50 bg-accent-500/15 text-accent-500 shadow-accent-glow dark:border-accent-400/40 dark:bg-accent-400/10 dark:text-accent-400'
 					: 'border-ink-300/40 bg-ink-100/10 text-ink-400 hover:border-ink-400/50 hover:text-ink-500 dark:border-ink-700/50 dark:bg-ink-900/30 dark:text-ink-500 dark:hover:text-ink-400'}"
 				onclick={() => (highQuality = !highQuality)}
 			>
@@ -229,7 +229,7 @@
 								</span>
 								{#if month.month === 1}
 									<span
-										class="font-serif text-[10px] font-bold italic text-jade-500/60 dark:text-jade-400/40"
+										class="font-serif text-[10px] font-bold italic text-accent-500/60 dark:text-accent-400/40"
 									>
 										{month.year}
 									</span>
@@ -273,7 +273,7 @@
 								<!-- Micro-node on Axis — centered at origin via explicit offset -->
 								<div
 									class="absolute h-1 w-1 rounded-full {isHqNear
-										? 'bg-jade-400 dark:bg-jade-500'
+										? 'bg-accent-400 dark:bg-accent-500'
 										: 'bg-ink-400/60 dark:bg-ink-500/60'}"
 									style="left: -2px; top: -2px; transform: scale({flyProgress});{isHqNear
 										? ` box-shadow: 0 0 ${focusWeight * 8}px ${focusWeight * 3}px rgba(16,185,129,${focusWeight * 0.5});`
@@ -283,7 +283,7 @@
 								<!-- Vertical Connector Line — centered at origin -->
 								<div
 									class="absolute {isHqNear
-										? 'bg-jade-400/40 dark:bg-jade-500/30'
+										? 'bg-accent-400/40 dark:bg-accent-500/30'
 										: 'bg-ink-300/40 dark:bg-ink-700/40'}"
 									style="
 									width: {isHqNear ? 1 : 0.5}px;

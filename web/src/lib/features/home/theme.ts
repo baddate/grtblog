@@ -96,7 +96,7 @@ const defaultThemeConfig: HomeThemeConfig = {
 				id: 'words',
 				label: 'Words',
 				icon: 'library',
-				colorClass: 'text-jade-500',
+				colorClass: 'text-accent-500',
 				source: { type: 'words_total' }
 			},
 			{
@@ -111,7 +111,7 @@ const defaultThemeConfig: HomeThemeConfig = {
 				label: 'Coffee',
 				value: '∞',
 				icon: 'coffee',
-				colorClass: 'text-amber-500',
+				colorClass: 'text-warning-500',
 				source: { type: 'static' }
 			}
 		],

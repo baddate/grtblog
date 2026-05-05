@@ -90,7 +90,7 @@
 
 				<button
 					onclick={handleClose}
-					class="flex w-full items-center justify-center gap-2 rounded-default bg-ink-900 px-6 py-3.5 text-sm font-medium text-white transition-all hover:bg-jade-600 dark:bg-jade-600 dark:hover:bg-jade-500 shadow-jade-glow"
+					class="flex w-full items-center justify-center gap-2 rounded-default bg-ink-900 px-6 py-3.5 text-sm font-medium text-white transition-all hover:bg-accent-600 dark:bg-accent-600 dark:hover:bg-accent-500 shadow-accent-glow"
 				>
 					<span>开启时空回溯</span>
 					<ArrowRight size={16} />

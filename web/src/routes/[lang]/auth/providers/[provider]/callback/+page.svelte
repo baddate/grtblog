@@ -97,7 +97,7 @@
 	>
 		<h1 class="text-lg font-serif text-ink-900 dark:text-ink-100">{status}</h1>
 		{#if errorText}
-			<p class="mt-3 text-sm text-cinnabar-600 dark:text-cinnabar-400">{errorText}</p>
+			<p class="mt-3 text-sm text-error-600 dark:text-error-400">{errorText}</p>
 		{/if}
 		<p class="mt-3 text-xs text-ink-500 dark:text-ink-400">
 			{t('web.auth.manual_close_hint')}

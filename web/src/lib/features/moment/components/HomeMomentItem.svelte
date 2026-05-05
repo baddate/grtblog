@@ -31,7 +31,7 @@
 
 <a
 	href={resolvePath(buildMomentPath(moment.shortUrl, moment.createdAt), page.data.lang)}
-	class="home-item-card moment-item group w-full px-4 py-4 outline-none focus-visible:ring-2 focus-visible:ring-cinnabar-500/30"
+	class="home-item-card moment-item group w-full px-4 py-4 outline-none focus-visible:ring-2 focus-visible:ring-error-500/30"
 	onmousemove={handleMouseMove}
 	onmouseleave={handleMouseLeave}
 	data-hovered={isHovered}
@@ -43,7 +43,7 @@
 		>
 			{#if moment.isTop}
 				<span
-					class="inline-flex shrink-0 items-center gap-0.5 align-middle px-1 py-px text-[9px] font-mono font-normal tracking-wider text-jade-600 dark:text-jade-400"
+					class="inline-flex shrink-0 items-center gap-0.5 align-middle px-1 py-px text-[9px] font-mono font-normal tracking-wider text-accent-600 dark:text-accent-400"
 				>
 					<Pin size={9} strokeWidth={2} class="rotate-45" />
 				</span>

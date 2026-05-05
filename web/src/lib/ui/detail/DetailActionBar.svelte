@@ -17,8 +17,8 @@
 
 	const toneClass = $derived(
 		tone === 'cinnabar'
-			? 'hover:text-cinnabar-500 dark:hover:text-cinnabar-400'
-			: 'hover:text-jade-600 dark:hover:text-jade-400'
+			? 'hover:text-error-500 dark:hover:text-error-400'
+			: 'hover:text-accent-600 dark:hover:text-accent-400'
 	);
 
 	function scrollToComments() {

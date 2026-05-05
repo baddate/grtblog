@@ -32,10 +32,10 @@
 	} as const;
 	const variantClasses = {
 		primary:
-			'bg-jade-800 text-white shadow-sm hover:bg-jade-700 dark:bg-jade-600 dark:hover:bg-jade-500',
+			'bg-accent-800 text-white shadow-sm hover:bg-accent-700 dark:bg-accent-600 dark:hover:bg-accent-500',
 		secondary:
 			'border border-ink-100 bg-white text-ink-900 shadow-sm hover:bg-ink-50 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-100 dark:hover:bg-ink-750',
-		ghost: 'text-ink-600 hover:bg-jade-50 dark:text-ink-400 dark:hover:bg-white/5',
+		ghost: 'text-ink-600 hover:bg-accent-50 dark:text-ink-400 dark:hover:bg-white/5',
 		icon: 'h-8 w-8 rounded-default p-1.5 text-ink-400 hover:bg-ink-50 dark:text-ink-500 dark:hover:bg-white/5'
 	} as const;
 

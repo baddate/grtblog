@@ -16,7 +16,7 @@
 	};
 </script>
 
-<div class="social-item-container hover:text-jade-600 cursor-pointer">
+<div class="social-item-container hover:text-accent-600 cursor-pointer">
 	<a
 		href={href.startsWith('/') ? resolveHref(href, page.data.lang) : href}
 		data-sveltekit-preload-data={shouldDisablePreloadData(href) ? 'off' : undefined}

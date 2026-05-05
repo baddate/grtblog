@@ -11,7 +11,7 @@
 
 	const colors = {
 		owner: 'text-blue-500 dark:text-blue-400',
-		friend: 'text-jade-500 dark:text-jade-400',
+		friend: 'text-accent-500 dark:text-accent-400',
 		author: 'text-purple-500 dark:text-purple-400'
 	} satisfies Record<VerifiedType, string>;
 </script>

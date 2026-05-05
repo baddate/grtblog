@@ -19,7 +19,7 @@
 			<div class="relative flex flex-col items-center group">
 				{#if tag}
 					<span
-						class="absolute -top-4 -right-8 [writing-mode:vertical-rl] text-[9px] font-serif font-bold text-jade-600/60 dark:text-jade-400/50 tracking-[0.3em] uppercase border-r border-jade-500/20 pr-1 h-10"
+						class="absolute -top-4 -right-8 [writing-mode:vertical-rl] text-[9px] font-serif font-bold text-accent-600/60 dark:text-accent-400/50 tracking-[0.3em] uppercase border-r border-accent-500/20 pr-1 h-10"
 					>
 						{tag}
 					</span>
@@ -33,9 +33,9 @@
 
 				<!-- Subtle Underline Decor -->
 				<div class="flex items-center gap-2 mt-3">
-					<div class="w-1 h-1 rounded-full bg-jade-500/40"></div>
-					<div class="w-12 h-px bg-jade-500/20"></div>
-					<div class="w-1 h-1 rounded-full bg-jade-500/40"></div>
+					<div class="w-1 h-1 rounded-full bg-accent-500/40"></div>
+					<div class="w-12 h-px bg-accent-500/20"></div>
+					<div class="w-1 h-1 rounded-full bg-accent-500/40"></div>
 				</div>
 			</div>
 
@@ -49,13 +49,13 @@
 
 			{#if description}
 				<div class="mt-4 flex items-start gap-3 max-w-lg">
-					<span class="text-jade-500/40 font-serif text-lg leading-none">“</span>
+					<span class="text-accent-500/40 font-serif text-lg leading-none">“</span>
 					<p
 						class="text-[13px] leading-relaxed text-ink-500 dark:text-ink-400 font-serif text-center italic"
 					>
 						{description}
 					</p>
-					<span class="text-jade-500/40 font-serif text-lg leading-none self-end">”</span>
+					<span class="text-accent-500/40 font-serif text-lg leading-none self-end">”</span>
 				</div>
 			{/if}
 		</div>

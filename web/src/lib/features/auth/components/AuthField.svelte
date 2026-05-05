@@ -25,7 +25,7 @@
 		{autocomplete}
 		{required}
 		variant="underline"
-		inputClass="rounded-default border-ink-200 bg-white/70 text-ink-900 placeholder:text-ink-400 focus:border-jade-500 focus:ring-2 dark:border-ink-700 dark:bg-ink-900/40 dark:text-ink-100 dark:placeholder:text-ink-500"
+		inputClass="rounded-default border-ink-200 bg-white/70 text-ink-900 placeholder:text-ink-400 focus:border-accent-500 focus:ring-2 dark:border-ink-700 dark:bg-ink-900/40 dark:text-ink-100 dark:placeholder:text-ink-500"
 	/>
 </div>
 

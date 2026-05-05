@@ -67,7 +67,7 @@
 			{#if $categoryShortUrlStore}
 				<a
 					href={resolvePath(buildCategoryPath($categoryShortUrlStore), page.data.lang)}
-					class="font-mono text-[9px] tracking-[0.3em] text-ink-400 uppercase hover:text-jade-600 dark:hover:text-jade-400 transition-colors"
+					class="font-mono text-[9px] tracking-[0.3em] text-ink-400 uppercase hover:text-accent-600 dark:hover:text-accent-400 transition-colors"
 				>
 					{categoryLabelStore}
 				</a>

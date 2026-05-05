@@ -30,13 +30,13 @@
 	class="flex gap-6 py-10 border-b border-ink-100 dark:border-ink-800/40 last:border-0 hover:bg-white/50 dark:hover:bg-white/5 transition-colors group px-6 -mx-6 rounded-sm"
 >
 	<!-- Date Column -->
-	<div class="flex-shrink-0 w-20 pt-1 border-r border-jade-500/20 pr-4 text-right">
+	<div class="flex-shrink-0 w-20 pt-1 border-r border-accent-500/20 pr-4 text-right">
 		<div
 			class="text-[10px] font-mono text-ink-400 dark:text-ink-500 uppercase tracking-widest leading-none mb-1"
 		>
 			{new Date(item.createdAt).getMonth() + 1}.{new Date(item.createdAt).getDate()}
 		</div>
-		<div class="text-[9px] font-serif text-jade-600/70 dark:text-jade-400/70 italic">
+		<div class="text-[9px] font-serif text-accent-600/70 dark:text-accent-400/70 italic">
 			{new Date(item.createdAt).getFullYear()}
 		</div>
 	</div>
@@ -54,7 +54,7 @@
 		<div class="flex items-center gap-8 mt-4">
 			<button
 				onclick={openCommentsWindow}
-				class="flex items-center gap-1.5 text-[11px] text-ink-400 hover:text-jade-600 dark:hover:text-jade-400 transition-colors group/btn"
+				class="flex items-center gap-1.5 text-[11px] text-ink-400 hover:text-accent-600 dark:hover:text-accent-400 transition-colors group/btn"
 			>
 				<MessageCircle
 					size={14}
@@ -67,7 +67,7 @@
 				contentType="thinking"
 				contentId={item.id}
 				likes={item.likes}
-				className="text-[11px] text-ink-400 hover:text-cinnabar-500 transition-colors"
+				className="text-[11px] text-ink-400 hover:text-error-500 transition-colors"
 			/>
 			<div
 				class="flex items-center gap-1.5 text-[11px] text-ink-300 dark:text-ink-600 ml-auto cursor-default font-mono"

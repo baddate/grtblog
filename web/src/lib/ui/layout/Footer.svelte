@@ -20,7 +20,6 @@
 	let nowMs = $state(0);
 	const currentLang = $derived(page.data.lang ?? DEFAULT_LANG);
 
-
 	const formatPresenceText = (template: string, count: number): string =>
 		template.replaceAll('{count}', String(count));
 
@@ -69,9 +68,9 @@
 </script>
 
 <footer
-	class="mt-32 border-t border-jade-100/80 dark:border-ink-800 bg-jade-50/30 dark:bg-ink-950/30 backdrop-blur-sm"
+	class="mt-32 border-t border-accent-100/80 dark:border-ink-800 bg-accent-50/30 dark:bg-ink-950/30 backdrop-blur-sm"
 >
-	<div class="max-w-[1200px] mx-auto px-6 py-12 md:py-16">
+	<div class="max-w-300 mx-auto px-6 py-12 md:py-16">
 		<!-- Mobile Compact Layout (Hidden on Desktop) -->
 		<div class="flex flex-col gap-4 mb-12 md:hidden">
 			{#each $footerThemeStore.sections as section (section.title)}
@@ -85,9 +84,11 @@
 					<div class="flex flex-wrap gap-x-4 gap-y-2">
 						{#each section.links as link (link.name)}
 							<a
-								href={/^(https?:|mailto:)/i.test(link.href) ? link.href : resolvePath(link.href, currentLang)}
+								href={/^(https?:|mailto:)/i.test(link.href)
+									? link.href
+									: resolvePath(link.href, currentLang)}
 								data-sveltekit-preload-data={preloadDataAttr(link.href)}
-								class="text-sm text-ink-500 hover:text-jade-600 dark:hover:text-jade-400 transition-colors"
+								class="text-sm text-ink-500 hover:text-accent-600 dark:hover:text-accent-400 transition-colors"
 							>
 								{link.name}
 							</a>
@@ -109,18 +110,18 @@
 				<button
 					onclick={onOpenPresence}
 					class="flex items-center gap-2 w-fit transition-colors underline-offset-2 hover:underline focus-visible:underline focus-visible:outline-none {presenceConnected
-						? 'text-jade-700/80 dark:text-jade-400/80'
+						? 'text-accent-700/80 dark:text-accent-400/80'
 						: 'text-red-600 dark:text-red-400'}"
 				>
 					<span class="relative flex h-1.5 w-1.5">
 						<span
 							class="absolute inline-flex h-full w-full rounded-full opacity-75 {presenceConnected
-								? 'bg-jade-400'
+								? 'bg-accent-400'
 								: 'bg-red-400'}"
 						></span>
 						<span
 							class="relative inline-flex rounded-full h-1.5 w-1.5 {presenceConnected
-								? 'bg-jade-500'
+								? 'bg-accent-500'
 								: 'bg-red-500'}"
 						></span>
 					</span>
@@ -133,7 +134,7 @@
 					</span>
 				</button>
 				<div class="flex items-center gap-2 pt-2">
-					<LanguageSwitcher currentLang={currentLang} />
+					<LanguageSwitcher {currentLang} />
 				</div>
 			</div>
 		</div>
@@ -145,16 +146,18 @@
 					<h3
 						class="text-sm font-serif font-bold text-ink-900 dark:text-ink-100 flex items-center gap-2"
 					>
-						<span class="w-1 h-3 bg-jade-500 rounded-full"></span>
+						<span class="w-1 h-3 bg-accent-500 rounded-full"></span>
 						{section.title}
 					</h3>
 					<ul class="flex flex-col gap-3">
 						{#each section.links as link (link.name)}
 							<li>
 								<a
-									href={/^(https?:|mailto:)/i.test(link.href) ? link.href : resolvePath(link.href, currentLang)}
+									href={/^(https?:|mailto:)/i.test(link.href)
+										? link.href
+										: resolvePath(link.href, currentLang)}
 									data-sveltekit-preload-data={preloadDataAttr(link.href)}
-									class="text-sm text-ink-500 hover:text-jade-600 dark:hover:text-jade-400 transition-colors"
+									class="text-sm text-ink-500 hover:text-accent-600 dark:hover:text-accent-400 transition-colors"
 								>
 									{link.name}
 								</a>
@@ -177,18 +180,18 @@
 				<button
 					onclick={onOpenPresence}
 					class="flex items-center gap-2 w-fit transition-colors underline-offset-2 hover:underline focus-visible:underline focus-visible:outline-none {presenceConnected
-						? 'text-jade-700/80 dark:text-jade-400/80'
+						? 'text-accent-700/80 dark:text-accent-400/80'
 						: 'text-red-600 dark:text-red-400'}"
 				>
 					<span class="relative flex h-1.5 w-1.5">
 						<span
 							class="absolute inline-flex h-full w-full rounded-full opacity-75 {presenceConnected
-								? 'bg-jade-400'
+								? 'bg-accent-400'
 								: 'bg-red-400'}"
 						></span>
 						<span
 							class="relative inline-flex rounded-full h-1.5 w-1.5 {presenceConnected
-								? 'bg-jade-500'
+								? 'bg-accent-500'
 								: 'bg-red-500'}"
 						></span>
 					</span>
@@ -216,7 +219,7 @@
 					<span class="hidden md:inline"
 						>Powered by <a
 							href="https://sanblog.js.org/"
-							class="text-jade-500 hover:text-jade-600 transition-colors">Sanblog</a
+							class="text-accent-500 hover:text-accent-600 transition-colors">Sanblog</a
 						></span
 					>
 					{#if uptimeText}
@@ -230,7 +233,7 @@
 							href={$footerThemeStore.beianUrl}
 							target="_blank"
 							rel="noreferrer"
-							class="hover:text-jade-600 transition-colors">{$footerThemeStore.beianText}</a
+							class="hover:text-accent-600 transition-colors">{$footerThemeStore.beianText}</a
 						>
 					{/if}
 					{#if $footerThemeStore.beianGongAnText}
@@ -243,7 +246,7 @@
 			<div class="hidden md:flex items-center gap-4 text-[11px] font-mono text-ink-300">
 				<span>{$footerThemeStore.designedWithText}</span>
 				<span class="text-ink-200 dark:text-ink-800">|</span>
-				<LanguageSwitcher currentLang={currentLang} />
+				<LanguageSwitcher {currentLang} />
 			</div>
 		</div>
 	</div>

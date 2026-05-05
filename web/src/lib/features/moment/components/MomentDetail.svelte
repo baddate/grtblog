@@ -62,18 +62,18 @@
 				{#if columnSlug}
 					<a
 						href={resolvePath(buildColumnPath(columnSlug), page.data.lang)}
-						class="[writing-mode:vertical-rl] text-[11px] font-serif font-bold text-cinnabar-500 tracking-[0.3em] opacity-80 hover:opacity-100 transition-opacity"
+						class="[writing-mode:vertical-rl] text-[11px] font-serif font-bold text-error-500 tracking-[0.3em] opacity-80 hover:opacity-100 transition-opacity"
 					>
 						{columnLabel}
 					</a>
 				{:else}
 					<span
-						class="[writing-mode:vertical-rl] text-[11px] font-serif font-bold text-cinnabar-500 tracking-[0.3em] opacity-80"
+						class="[writing-mode:vertical-rl] text-[11px] font-serif font-bold text-error-500 tracking-[0.3em] opacity-80"
 					>
 						{columnLabel}
 					</span>
 				{/if}
-				<div class="w-full h-0.5 bg-cinnabar-500/20"></div>
+				<div class="w-full h-0.5 bg-error-500/20"></div>
 			</div>
 		</div>
 
@@ -82,7 +82,7 @@
 		>
 			<button
 				onclick={goBack}
-				class="group flex items-center gap-2 text-xs font-serif text-ink-800 dark:text-ink-200 hover:text-cinnabar-500 transition-colors"
+				class="group flex items-center gap-2 text-xs font-serif text-ink-800 dark:text-ink-200 hover:text-error-500 transition-colors"
 			>
 				<ArrowLeft size={14} class="transition-transform group-hover:-translate-x-1" />
 				<span class="tracking-widest">{t('web.ui.collapse_page')}</span>

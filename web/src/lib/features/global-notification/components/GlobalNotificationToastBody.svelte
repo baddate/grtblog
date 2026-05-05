@@ -24,7 +24,7 @@
 				type="checkbox"
 				{checked}
 				onchange={handleChange}
-				class="h-3.5 w-3.5 rounded border-ink-300 text-jade-600 focus:ring-jade-500 dark:border-ink-600 dark:bg-ink-900"
+				class="h-3.5 w-3.5 rounded border-ink-300 text-accent-600 focus:ring-accent-500 dark:border-ink-600 dark:bg-ink-900"
 			/>
 			<span>不再提示</span>
 		</label>

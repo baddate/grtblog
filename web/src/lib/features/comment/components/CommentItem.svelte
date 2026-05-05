@@ -165,7 +165,7 @@
 			alt={comment.nickName || 'Avatar'}
 			class={cx(
 				'w-9 h-9 rounded-full object-cover shadow-sm border border-ink-200 dark:border-ink-700',
-				comment.isOwner && 'ring-2 ring-jade-500/20'
+				comment.isOwner && 'ring-2 ring-accent-500/20'
 			)}
 		/>
 	</div>
@@ -179,7 +179,7 @@
 					href={websiteHref}
 					target="_blank"
 					rel="noopener noreferrer nofollow ugc"
-					class="font-bold text-sm text-ink-900 dark:text-ink-100 hover:text-jade-600 dark:hover:text-jade-400 underline-offset-2 hover:underline transition-colors"
+					class="font-bold text-sm text-ink-900 dark:text-ink-100 hover:text-accent-600 dark:hover:text-accent-400 underline-offset-2 hover:underline transition-colors"
 				>
 					{comment.nickName || 'Guest'}
 				</a>
@@ -204,7 +204,7 @@
 			</div>
 			{#if comment.isMy && comment.status !== 'approved'}
 				<span
-					class="text-[10px] rounded-sm px-1.5 py-0.5 bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
+					class="text-[10px] rounded-sm px-1.5 py-0.5 bg-warning-100 text-warning-700 dark:bg-warning-900/30 dark:text-warning-300"
 				>
 					{comment.status === 'pending' ? t('web.comment.pending_review') : t('web.comment.rejected')}
 				</span>
@@ -240,7 +240,7 @@
 					<Tooltip content={t("web.comment.pinned_tooltip")}>
 						<Pin
 							size={16}
-							class="text-amber-500 opacity-60 hover:opacity-100 transition-opacity rotate-45"
+							class="text-warning-500 opacity-60 hover:opacity-100 transition-opacity rotate-45"
 							strokeWidth={2}
 						/>
 					</Tooltip>
@@ -250,7 +250,7 @@
 			<div
 				class={cx(
 					'rounded-default bg-ink-100/50 dark:bg-ink-800/30 p-3.5 text-sm text-ink-800 dark:text-ink-200 leading-relaxed group-hover:bg-ink-200/50 dark:group-hover:bg-ink-800/50 transition-colors border border-transparent group-hover:border-ink-200/50 dark:group-hover:border-ink-700/50',
-					comment.isTop && 'ring-1 ring-amber-500/20',
+					comment.isTop && 'ring-1 ring-warning-500/20',
 					comment.isDeleted && 'opacity-60 italic'
 				)}
 			>
@@ -261,7 +261,7 @@
 						<textarea
 							bind:value={editContent}
 							rows={4}
-							class="w-full bg-white dark:bg-ink-900 border border-ink-200 dark:border-ink-700 rounded-sm p-2 text-sm text-ink-800 dark:text-ink-200 leading-relaxed resize-none outline-none focus:border-jade-500 dark:focus:border-jade-500 transition-colors"
+							class="w-full bg-white dark:bg-ink-900 border border-ink-200 dark:border-ink-700 rounded-sm p-2 text-sm text-ink-800 dark:text-ink-200 leading-relaxed resize-none outline-none focus:border-accent-500 dark:focus:border-accent-500 transition-colors"
 						></textarea>
 						<div class="flex items-center gap-2 justify-end">
 							<button
@@ -274,7 +274,7 @@
 							<button
 								onclick={handleSaveEdit}
 								disabled={editMutation.isPending}
-								class="flex items-center gap-1 text-xs text-ink-50 bg-ink-900 dark:bg-ink-200 dark:text-ink-900 hover:bg-jade-600 dark:hover:bg-jade-600 dark:hover:text-white px-3 py-1 rounded-sm transition-colors disabled:opacity-50"
+								class="flex items-center gap-1 text-xs text-ink-50 bg-ink-900 dark:bg-ink-200 dark:text-ink-900 hover:bg-accent-600 dark:hover:bg-accent-600 dark:hover:text-white px-3 py-1 rounded-sm transition-colors disabled:opacity-50"
 							>
 								<Check size={12} />
 								<span>{editMutation.isPending ? t('web.comment.saving') : t('web.comment.save')}</span>
@@ -291,7 +291,7 @@
 			{#if !$isClosedStore && !comment.isDeleted && comment.canReply}
 				<button
 					onclick={handleReply}
-					class="flex items-center gap-1.5 text-xs text-ink-400 hover:text-jade-600 transition-colors font-medium"
+					class="flex items-center gap-1.5 text-xs text-ink-400 hover:text-accent-600 transition-colors font-medium"
 				>
 					<MessageSquare size={14} />
 					<span>{t("web.comment.reply")}</span>

@@ -18,7 +18,7 @@
 		<span class="font-mono text-[9px] tracking-widest text-ink-400 uppercase">分享此文</span>
 		<Button
 			variant="ghost"
-			class="h-auto p-1.5 text-ink-400 hover:text-jade-600"
+			class="h-auto p-1.5 text-ink-400 hover:text-accent-600"
 			title="分享"
 			content={shareContent}
 		/>

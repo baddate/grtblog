@@ -22,7 +22,7 @@
 
 	<!-- Timeline Dot -->
 	<div
-		class="absolute left-[7px] sm:left-[19px] top-[32px] w-2.5 h-2.5 rounded-full bg-ink-300 dark:bg-ink-600 ring-[6px] ring-white dark:ring-ink-950 group-hover:bg-jade-500 group-hover:ring-jade-50 dark:group-hover:ring-jade-900/30 transition-all duration-500 z-10"
+		class="absolute left-[7px] sm:left-[19px] top-[32px] w-2.5 h-2.5 rounded-full bg-ink-300 dark:bg-ink-600 ring-[6px] ring-white dark:ring-ink-950 group-hover:bg-accent-500 group-hover:ring-accent-50 dark:group-hover:ring-accent-900/30 transition-all duration-500 z-10"
 	></div>
 
 	<!-- Content Card -->
@@ -31,7 +31,7 @@
 		href={item.url}
 		target="_blank"
 		rel="noopener noreferrer"
-		class="block relative bg-ink-50/50 dark:bg-ink-900/20 rounded-default border border-ink-100 dark:border-ink-800/50 hover:border-jade-500/30 dark:hover:border-jade-400/30 hover:bg-white dark:hover:bg-ink-900 transition-all duration-500 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] overflow-hidden flex flex-col sm:flex-row max-w-2xl"
+		class="block relative bg-ink-50/50 dark:bg-ink-900/20 rounded-default border border-ink-100 dark:border-ink-800/50 hover:border-accent-500/30 dark:hover:border-accent-400/30 hover:bg-white dark:hover:bg-ink-900 transition-all duration-500 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] overflow-hidden flex flex-col sm:flex-row max-w-2xl"
 	>
 		<!-- Background Decoration (Only visible if no cover image) -->
 		{#if !item.cover_image}
@@ -62,7 +62,7 @@
 			<!-- Header -->
 			<div class="flex items-center gap-2.5 mb-3">
 				<div
-					class="flex items-center justify-center bg-gradient-to-br from-jade-100 to-ink-200 dark:from-jade-900 dark:to-ink-800 text-ink-700 dark:text-ink-300 w-7 h-7 rounded-full font-bold text-xs shadow-inner shrink-0"
+					class="flex items-center justify-center bg-gradient-to-br from-accent-100 to-ink-200 dark:from-accent-900 dark:to-ink-800 text-ink-700 dark:text-ink-300 w-7 h-7 rounded-full font-bold text-xs shadow-inner shrink-0"
 				>
 					{item.author.name[0]?.toUpperCase() || '?'}
 				</div>
@@ -76,7 +76,7 @@
 				</div>
 
 				<div
-					class="ml-auto flex items-center justify-center w-5 h-5 rounded-full bg-ink-100/50 dark:bg-ink-800/50 text-ink-400 hover:text-jade-600 dark:hover:text-jade-400 transition-colors shrink-0"
+					class="ml-auto flex items-center justify-center w-5 h-5 rounded-full bg-ink-100/50 dark:bg-ink-800/50 text-ink-400 hover:text-accent-600 dark:hover:text-accent-400 transition-colors shrink-0"
 				>
 					<ExternalLink
 						size={10}
@@ -88,7 +88,7 @@
 
 			<!-- Title -->
 			<h2
-				class="font-serif text-base sm:text-lg font-medium text-ink-900 dark:text-ink-100 group-hover:text-jade-600 dark:group-hover:text-jade-400 transition-colors duration-300 mb-2 leading-snug line-clamp-2"
+				class="font-serif text-base sm:text-lg font-medium text-ink-900 dark:text-ink-100 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors duration-300 mb-2 leading-snug line-clamp-2"
 			>
 				{item.title}
 			</h2>

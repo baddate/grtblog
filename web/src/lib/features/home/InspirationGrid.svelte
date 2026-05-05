@@ -39,7 +39,7 @@
 			id: 'words',
 			label: 'Words',
 			icon: 'library',
-			colorClass: 'text-jade-500',
+			colorClass: 'text-accent-500',
 			source: { type: 'words_total' }
 		},
 		{
@@ -54,7 +54,7 @@
 			label: 'Coffee',
 			value: '∞',
 			icon: 'coffee',
-			colorClass: 'text-amber-500',
+			colorClass: 'text-warning-500',
 			source: { type: 'static' }
 		}
 	];
@@ -157,7 +157,7 @@
 <section class="mt-20 md:mt-32">
 	<SlideIn direction="up">
 		<div class="flex items-center gap-3 mb-10 border-b border-ink-100 dark:border-ink-800 pb-4">
-			<span class="h-px w-8 bg-jade-500/40"></span>
+			<span class="h-px w-8 bg-accent-500/40"></span>
 			<h2 class="text-xl font-serif font-medium text-ink-900 dark:text-ink-100">{sectionTitle}</h2>
 		</div>
 	</SlideIn>
@@ -181,20 +181,20 @@
 				</p>
 				<p class="mt-4 font-mono text-sm text-ink-400">— {quoteAuthor}</p>
 			</div>
-			<div class="absolute bottom-0 right-0 w-32 h-32 bg-jade-500/5 blur-[80px] rounded-full"></div>
+			<div class="absolute bottom-0 right-0 w-32 h-32 bg-accent-500/5 blur-[80px] rounded-full"></div>
 		</div>
 
 		<div
 			class="col-span-1 md:col-span-1 lg:col-span-2 row-span-2 bento-card p-6 flex flex-col gap-6"
 		>
 			<div
-				class="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-jade-600 dark:text-jade-400"
+				class="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-accent-600 dark:text-accent-400"
 			>
 				<span class="relative flex h-2 w-2">
 					<span
-						class="animate-ping absolute inline-flex h-full w-full rounded-full bg-jade-400 opacity-75"
+						class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-400 opacity-75"
 					></span>
-					<span class="relative inline-flex rounded-full h-2 w-2 bg-jade-500"></span>
+					<span class="relative inline-flex rounded-full h-2 w-2 bg-accent-500"></span>
 				</span>
 				{nowTitle}
 			</div>
@@ -221,7 +221,7 @@
 				<div class="text-center">
 					<EnergyIcon
 						size={24}
-						class="mx-auto mb-2 text-amber-400 transition-transform group-hover:scale-125 duration-500"
+						class="mx-auto mb-2 text-warning-400 transition-transform group-hover:scale-125 duration-500"
 					/>
 					<div class="text-xs font-mono">{energyLabel}</div>
 				</div>
@@ -231,14 +231,14 @@
 		{#each statItems as stat (stat.id)}
 			{@const StatIcon = resolveIcon(stat.icon, Library)}
 			<div
-				class="col-span-1 md:col-span-1 lg:col-span-1 row-span-1 bento-card p-4 flex flex-col justify-between hover:border-jade-200 dark:hover:border-jade-900/50 transition-colors"
+				class="col-span-1 md:col-span-1 lg:col-span-1 row-span-1 bento-card p-4 flex flex-col justify-between hover:border-accent-200 dark:hover:border-accent-900/50 transition-colors"
 			>
 				<StatIcon size={18} class="text-ink-400" />
 				<div>
 					<div
 						class="text-2xl font-serif {isStatMissing(stat, wordStats, githubStats)
-							? 'text-cinnabar-500 dark:text-cinnabar-400'
-							: stat.colorClass || 'text-jade-500'}"
+							? 'text-error-500 dark:text-error-400'
+							: stat.colorClass || 'text-accent-500'}"
 					>
 						{resolveDynamicStatValue(stat, wordStats, githubStats)}
 					</div>
@@ -256,7 +256,7 @@
 				<div class="text-[10px] font-mono text-ink-400 uppercase mb-1">{techTitle}</div>
 				<div class="flex gap-4">
 					{#each techItems as item (`stack-${item}`)}
-						<span class="text-sm font-medium hover:text-jade-500 cursor-default transition-colors">
+						<span class="text-sm font-medium hover:text-accent-500 cursor-default transition-colors">
 							{item}
 						</span>
 					{/each}
@@ -265,7 +265,7 @@
 			<div class="flex gap-2">
 				{#each techIcons as Icon, idx (`icon-${idx}`)}
 					<div
-						class="w-8 h-8 rounded-full bg-ink-100 dark:bg-ink-800 flex items-center justify-center transition-colors hover:bg-jade-100 dark:hover:bg-jade-900/30"
+						class="w-8 h-8 rounded-full bg-ink-100 dark:bg-ink-800 flex items-center justify-center transition-colors hover:bg-accent-100 dark:hover:bg-accent-900/30"
 					>
 						<Icon size={14} />
 					</div>

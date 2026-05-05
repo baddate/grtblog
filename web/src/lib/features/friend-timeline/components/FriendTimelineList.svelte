@@ -86,7 +86,7 @@
 			class="flex flex-col items-center justify-center py-16 sm:py-32 text-center space-y-4 border-2 border-dashed border-ink-100 dark:border-ink-800/50 rounded-2xl bg-ink-50/50 dark:bg-ink-900/20 max-w-2xl mx-auto"
 		>
 			<div class="relative">
-				<div class="absolute -inset-4 bg-jade-500/10 rounded-full blur-xl animate-pulse"></div>
+				<div class="absolute -inset-4 bg-accent-500/10 rounded-full blur-xl animate-pulse"></div>
 				<Link2 size={48} class="relative text-ink-300 dark:text-ink-700" />
 			</div>
 			<div class="space-y-1">

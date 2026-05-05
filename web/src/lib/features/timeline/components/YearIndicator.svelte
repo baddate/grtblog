@@ -34,7 +34,7 @@
 	<div class="mt-4 flex flex-col items-end gap-6 text-right">
 		<!-- Month Stats -->
 		<div class="flex flex-col items-end">
-			<div class="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-jade-500">
+			<div class="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-accent-500">
 				{monthName}
 			</div>
 			<div class="mt-2 flex gap-4 text-[11px] font-medium text-ink-100">

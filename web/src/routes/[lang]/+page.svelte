@@ -26,14 +26,14 @@
 						class="flex items-center justify-between mb-6 border-b border-ink-100 dark:border-ink-800 pb-4"
 					>
 						<div class="flex items-center gap-3">
-							<span class="h-px w-8 bg-jade-500/40"></span>
+							<span class="h-px w-8 bg-accent-500/40"></span>
 							<h2 class="text-xl font-serif font-medium text-ink-900 dark:text-ink-100">
 								{t('web.ui.recent_posts')}
 							</h2>
 						</div>
 						<a
 							href={resolve('/posts', {})}
-							class="flex items-center gap-1 text-xs font-mono text-ink-400 hover:text-jade-600 dark:hover:text-jade-400 transition-colors group"
+							class="flex items-center gap-1 text-xs font-mono text-ink-400 hover:text-accent-600 dark:hover:text-accent-400 transition-colors group"
 						>
 							<span>{t('web.ui.view_all')}</span>
 							<ArrowRight size={12} class="group-hover:translate-x-1 transition-transform" />
@@ -55,14 +55,14 @@
 						class="flex items-center justify-between mb-6 border-b border-ink-100 dark:border-ink-800 pb-4"
 					>
 						<div class="flex items-center gap-3">
-							<span class="h-px w-8 bg-jade-500/40"></span>
+							<span class="h-px w-8 bg-accent-500/40"></span>
 							<h2 class="text-xl font-serif font-medium text-ink-900 dark:text-ink-100">
 								{t('web.ui.recent_moments')}
 							</h2>
 						</div>
 						<a
 							href={resolve('/moments', {})}
-							class="flex items-center gap-1 text-xs font-mono text-ink-400 hover:text-jade-600 dark:hover:text-jade-400 transition-colors group"
+							class="flex items-center gap-1 text-xs font-mono text-ink-400 hover:text-accent-600 dark:hover:text-accent-400 transition-colors group"
 						>
 							<span>{t('web.ui.view_all')}</span>
 							<ArrowRight size={12} class="group-hover:translate-x-1 transition-transform" />

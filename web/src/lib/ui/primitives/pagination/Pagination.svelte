@@ -29,7 +29,7 @@
 		variant="ghost"
 		disabled={current <= 1}
 		onclick={() => onPageChange(current - 1)}
-		class="h-8 !bg-transparent px-2 font-mono text-[10px] tracking-widest uppercase hover:!text-jade-600"
+		class="h-8 !bg-transparent px-2 font-mono text-[10px] tracking-widest uppercase hover:!text-accent-600"
 		content={prevContent}
 	/>
 
@@ -37,7 +37,7 @@
 		{#each pages as page (page)}
 			{#if page === current}
 				<span
-					class="flex h-7 w-7 items-center justify-center rounded-default bg-jade-800 font-mono text-[11px] font-bold text-ink-200 dark:text-ink-800 shadow-sm"
+					class="flex h-7 w-7 items-center justify-center rounded-default bg-accent-800 font-mono text-[11px] font-bold text-ink-200 dark:text-ink-800 shadow-sm"
 				>
 					{page}
 				</span>
@@ -58,7 +58,7 @@
 		variant="ghost"
 		disabled={current >= total}
 		onclick={() => onPageChange(current + 1)}
-		class="h-8 !bg-transparent px-2 font-mono text-[10px] tracking-widest uppercase hover:!text-jade-600"
+		class="h-8 !bg-transparent px-2 font-mono text-[10px] tracking-widest uppercase hover:!text-accent-600"
 		content={nextContent}
 	/>
 </nav>

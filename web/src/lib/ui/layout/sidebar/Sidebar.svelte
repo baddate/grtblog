@@ -138,7 +138,7 @@
 			<Button
 				variant="icon"
 				onclick={() => windowStore.restore()}
-				class="h-10 w-10 rounded-default bg-jade-500 text-white shadow-lg animate-bounce duration-[2000ms] transition-all"
+				class="h-10 w-10 rounded-default bg-accent-500 text-white shadow-lg animate-bounce duration-[2000ms] transition-all"
 				title="恢复窗口"
 			>
 				<LayoutIcon class="h-5 w-5" />

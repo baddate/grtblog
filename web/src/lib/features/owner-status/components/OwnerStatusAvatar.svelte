@@ -43,12 +43,12 @@
 			<span class="absolute -bottom-0.5 -right-0.5 flex h-2.5 w-2.5">
 				<span
 					class="absolute inline-flex h-full w-full rounded-full opacity-75 {isOnline
-						? 'bg-jade-400'
+						? 'bg-accent-400'
 						: 'bg-ink-300 dark:bg-ink-600'}"
 				></span>
 				<span
 					class="relative inline-flex h-2.5 w-2.5 rounded-full border border-white dark:border-ink-900 {isOnline
-						? 'bg-jade-500'
+						? 'bg-accent-500'
 						: 'bg-ink-400 dark:bg-ink-500'}"
 				></span>
 			</span>
@@ -70,7 +70,7 @@
 				</div>
 				<span
 					class="rounded-full px-2 py-0.5 text-[10px] font-medium {adminPanelOnline
-						? 'bg-jade-100 text-jade-700 dark:bg-jade-900/40 dark:text-jade-300'
+						? 'bg-accent-100 text-accent-700 dark:bg-accent-900/40 dark:text-accent-300'
 						: 'bg-ink-100 text-ink-500 dark:bg-ink-800 dark:text-ink-300'}"
 				>
 					Admin 面板{adminPanelOnline ? '在线' : '离线'}
@@ -82,7 +82,7 @@
 			>
 				<p class="text-xs leading-5 text-ink-700 dark:text-ink-300">
 					{#if isOnline}
-						正在使用 <span class="font-medium text-jade-700 dark:text-jade-300"
+						正在使用 <span class="font-medium text-accent-700 dark:text-accent-300"
 							>{status.process || '未知应用'}</span
 						>
 					{:else}

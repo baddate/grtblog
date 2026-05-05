@@ -68,7 +68,7 @@
 					<div class="mt-10 flex justify-center">
 						<button
 							onclick={handleApplyClick}
-							class="flex items-center gap-2 px-4 py-2 bg-ink-900 dark:bg-ink-100 text-ink-0 dark:text-ink-950 rounded-default hover:bg-jade-600 dark:hover:bg-jade-400 transition-all duration-300 font-bold text-[11px] shadow-sm group"
+							class="flex items-center gap-2 px-4 py-2 bg-ink-900 dark:bg-ink-100 text-ink-0 dark:text-ink-950 rounded-default hover:bg-accent-600 dark:hover:bg-accent-400 transition-all duration-300 font-bold text-[11px] shadow-sm group"
 						>
 							<Plus size={14} class="group-hover:rotate-90 transition-transform duration-300" />
 							{t('web.friends.apply_button')}

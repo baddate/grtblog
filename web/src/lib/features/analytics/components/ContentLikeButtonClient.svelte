@@ -60,8 +60,8 @@
 		[
 			'inline-flex items-center gap-1.5 text-[inherit] transition-colors outline-none',
 			liked
-				? 'text-cinnabar-500 dark:text-cinnabar-400'
-				: 'text-ink-400 hover:text-cinnabar-500 dark:text-ink-400 dark:hover:text-cinnabar-400',
+				? 'text-error-500 dark:text-error-400'
+				: 'text-ink-400 hover:text-error-500 dark:text-ink-400 dark:hover:text-error-400',
 			className
 		]
 			.filter(Boolean)

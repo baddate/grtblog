@@ -92,7 +92,7 @@
 				<div
 					class="flex items-center gap-3 mb-4 border-b border-ink-100 dark:border-ink-800 pb-4 w-fit"
 				>
-					<span class="h-px w-8 bg-jade-500/40"></span>
+					<span class="h-px w-8 bg-accent-500/40"></span>
 					<h2 class="text-xl font-serif font-medium text-ink-900 dark:text-ink-100">{title}</h2>
 				</div>
 				<p class="text-sm font-mono text-ink-400">
@@ -103,7 +103,7 @@
 			<div class="flex gap-8 font-mono">
 				<div class="flex flex-col">
 					<span class="text-[10px] uppercase text-ink-400">Articles</span>
-					<span class="text-2xl text-jade-600 dark:text-jade-400">{totalPosts}</span>
+					<span class="text-2xl text-accent-600 dark:text-accent-400">{totalPosts}</span>
 				</div>
 				<div class="flex flex-col">
 					<span class="text-[10px] uppercase text-ink-400">Moments</span>
@@ -111,7 +111,7 @@
 				</div>
 				<div class="flex flex-col">
 					<span class="text-[10px] uppercase text-ink-400">Status</span>
-					<span class="text-2xl text-amber-500 italic">{statusLabel}</span>
+					<span class="text-2xl text-warning-500 italic">{statusLabel}</span>
 				</div>
 			</div>
 		</div>
@@ -131,14 +131,14 @@
 				>
 					<!-- Article Bar (Up) -->
 					<div
-						class="w-full max-w-[4px] rounded-full bg-jade-500/60 transition-all duration-500"
+						class="w-full max-w-[4px] rounded-full bg-accent-500/60 transition-all duration-500"
 						style:height={calcBarHeight(data.posts, maxPostsInView)}
 						style:opacity={hoveredIndex === null || hoveredIndex === i ? 1 : 0.3}
 						style:transform="translateY(-50%)"
 					>
 						{#if data.posts > 2}
 							<div
-								class="absolute -top-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-jade-400 rounded-full blur-[2px] animate-pulse"
+								class="absolute -top-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-accent-400 rounded-full blur-[2px] animate-pulse"
 							></div>
 						{/if}
 					</div>
@@ -158,7 +158,7 @@
 						>
 							<div class="text-[10px] font-mono text-ink-400">{data.date}</div>
 							<div class="text-xs font-medium">
-								<span class="text-jade-600">{data.posts} Posts</span>
+								<span class="text-accent-600">{data.posts} Posts</span>
 								<span class="mx-1 opacity-20">/</span>
 								<span>{data.moments} Moments</span>
 							</div>
@@ -170,10 +170,10 @@
 
 		<!-- Subtle Glow Decor -->
 		<div
-			class="absolute left-1/4 top-1/2 -translate-y-1/2 w-32 h-32 bg-jade-500/10 blur-[100px] pointer-events-none"
+			class="absolute left-1/4 top-1/2 -translate-y-1/2 w-32 h-32 bg-accent-500/10 blur-[100px] pointer-events-none"
 		></div>
 		<div
-			class="absolute right-1/4 top-1/2 -translate-y-1/2 w-32 h-32 bg-jade-500/5 blur-[80px] pointer-events-none"
+			class="absolute right-1/4 top-1/2 -translate-y-1/2 w-32 h-32 bg-accent-500/5 blur-[80px] pointer-events-none"
 		></div>
 	</div>
 
@@ -183,7 +183,7 @@
 		<span>{rangeStartLabel}</span>
 		<div class="flex gap-4">
 			<div class="flex items-center gap-1.5">
-				<span class="w-2 h-2 rounded-full bg-jade-500/60"></span>
+				<span class="w-2 h-2 rounded-full bg-accent-500/60"></span>
 				<span>{postsLegend}</span>
 			</div>
 			<div class="flex items-center gap-1.5">

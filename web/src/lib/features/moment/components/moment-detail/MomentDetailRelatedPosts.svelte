@@ -46,14 +46,14 @@
 <div class="space-y-6">
 	<div class="flex items-center justify-between border-b border-ink-800/10 pb-2">
 		<div class="flex items-center gap-2">
-			<FileText size={12} class="text-cinnabar-500" />
+			<FileText size={12} class="text-error-500" />
 			<span class="font-mono text-[8px] font-bold tracking-[0.4em] text-ink-400 uppercase">
 				同期文章
 			</span>
 		</div>
 		<a
 			href={resolvePath('/posts', page.data.lang)}
-			class="group text-[10px] text-ink-300 transition-colors hover:text-cinnabar-500"
+			class="group text-[10px] text-ink-300 transition-colors hover:text-error-500"
 		>
 			<ArrowRight size={10} class="transition-transform group-hover:translate-x-0.5" />
 		</a>
@@ -70,7 +70,7 @@
 			{#each $relatedPostsStore as post, i (post.id)}
 				<a
 					href={resolvePath(buildPostPath(post.shortUrl), page.data.lang)}
-					class="group block space-y-1.5 rounded-default border border-transparent bg-ink-50/40 p-3 transition-all hover:border-cinnabar-500/10 hover:bg-white hover:shadow-sm dark:bg-ink-900/20 dark:hover:bg-ink-900/40"
+					class="group block space-y-1.5 rounded-default border border-transparent bg-ink-50/40 p-3 transition-all hover:border-error-500/10 hover:bg-white hover:shadow-sm dark:bg-ink-900/20 dark:hover:bg-ink-900/40"
 					in:fly={{ x: 10, delay: i * 100 }}
 				>
 					<div class="flex items-center justify-between">
@@ -80,7 +80,7 @@
 						</div>
 					</div>
 					<h4
-						class="text-[11px] font-bold leading-snug text-ink-800 transition-colors group-hover:text-cinnabar-500 dark:text-ink-200"
+						class="text-[11px] font-bold leading-snug text-ink-800 transition-colors group-hover:text-error-500 dark:text-ink-200"
 					>
 						{post.title}
 					</h4>

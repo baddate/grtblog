@@ -32,7 +32,7 @@
 			<p class="text-xs text-ink-500">Turnstile 未配置，请联系管理员。</p>
 		{/if}
 		{#if $turnstileStore.error}
-			<p class="text-xs text-cinnabar-600 dark:text-cinnabar-400">{$turnstileStore.error}</p>
+			<p class="text-xs text-error-600 dark:text-error-400">{$turnstileStore.error}</p>
 		{/if}
 	</div>
 {/if}

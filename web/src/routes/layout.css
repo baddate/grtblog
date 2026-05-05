@@ -13,70 +13,70 @@
 	--font-serif: 'Noto Serif SC', 'Georgia', serif;
 	--font-mono: 'Victor Mono Variable', 'JetBrains Mono', monospace;
 
-	/* Colors: Ink (Warm Grayscale) */
+	/* Colors: Neutral (Yohaku warm parchment) */
 	--color-ink-0: #ffffff;
-	--color-ink-50: #fafaf9;
-	--color-ink-100: #f5f5f4;
-	--color-ink-200: #e7e5e4;
-	--color-ink-300: #d6d3d1;
-	--color-ink-400: #a8a29e;
-	--color-ink-500: #78716c;
-	--color-ink-600: #57534e;
-	--color-ink-700: #44403c;
-	--color-ink-750: #373330;
-	--color-ink-800: #292524;
-	--color-ink-900: #1c1917;
-	--color-ink-950: #0c0a09;
+	--color-ink-50: #f9f8f5;
+	--color-ink-100: #f0efeb;
+	--color-ink-200: #e3e1db;
+	--color-ink-300: #d0cec6;
+	--color-ink-400: #a8a69f;
+	--color-ink-500: #787670;
+	--color-ink-600: #5c5a55;
+	--color-ink-700: #403f3a;
+	--color-ink-750: #33312e;
+	--color-ink-800: #24231f;
+	--color-ink-900: #141312;
+	--color-ink-950: #0a0a0a;
 
-	/* Colors: Jade (Primary Brand) */
-	--color-jade-50: #f0fdfa;
-	--color-jade-100: #ccfbf1;
-	--color-jade-200: #99f6e4;
-	--color-jade-300: #5eead4;
-	--color-jade-400: #2dd4bf;
-	--color-jade-500: #14b8a6;
-	--color-jade-600: #0d9488;
-	--color-jade-700: #0f766e;
-	--color-jade-800: #115e59;
-	--color-jade-900: #134e4a;
-	--color-jade-950: #042f2e;
+	/* Colors: Accent (Ume 梅) */
+	--color-accent-50: #fdf2f4;
+	--color-accent-100: #fce4e8;
+	--color-accent-200: #f9c9d1;
+	--color-accent-300: #f4a4b0;
+	--color-accent-400: #e07a8a;
+	--color-accent-500: #c56473;
+	--color-accent-600: #a64d5a;
+	--color-accent-700: #883d48;
+	--color-accent-800: #6b2e37;
+	--color-accent-900: #4d1f26;
+	--color-accent-950: #2e1116;
 
 	/* Colors: Functional */
-	--color-cinnabar-50: #fef2f2;
-	--color-cinnabar-100: #fee2e2;
-	--color-cinnabar-200: #fecaca;
-	--color-cinnabar-300: #fca5a5;
-	--color-cinnabar-400: #f87171;
-	--color-cinnabar-500: #ef4444;
-	--color-cinnabar-600: #dc2626;
-	--color-cinnabar-700: #b91c1c;
-	--color-cinnabar-800: #991b1b;
-	--color-cinnabar-900: #7f1d1d;
-	--color-cinnabar-950: #450a0a;
+	--color-error-50: #fef2f2;
+	--color-error-100: #fce8e8;
+	--color-error-200: #f5c4c7;
+	--color-error-300: #ea9a9f;
+	--color-error-400: #d6737b;
+	--color-error-500: #a64953;
+	--color-error-600: #8f3d47;
+	--color-error-700: #75323b;
+	--color-error-800: #5c272e;
+	--color-error-900: #431c22;
+	--color-error-950: #2a1115;
 
-	--color-amber-50: #fffbeb;
-	--color-amber-100: #fef3c7;
-	--color-amber-200: #fde68a;
-	--color-amber-300: #fcd34d;
-	--color-amber-400: #fbbf24;
-	--color-amber-500: #f59e0b;
-	--color-amber-600: #d97706;
-	--color-amber-700: #b45309;
-	--color-amber-800: #92400e;
-	--color-amber-900: #78350f;
-	--color-amber-950: #451a03;
+	--color-warning-50: #fdf8ef;
+	--color-warning-100: #f7edd9;
+	--color-warning-200: #ebd9b0;
+	--color-warning-300: #d9bf87;
+	--color-warning-400: #c49e5e;
+	--color-warning-500: #a87a3d;
+	--color-warning-600: #8f6633;
+	--color-warning-700: #75532a;
+	--color-warning-800: #5c4021;
+	--color-warning-900: #432e18;
+	--color-warning-950: #2a1c0e;
 
-	--color-bamboo-50: #f0fdf4;
-	--color-bamboo-100: #dcfce7;
-	--color-bamboo-200: #bbf7d0;
-	--color-bamboo-300: #86efac;
-	--color-bamboo-400: #4ade80;
-	--color-bamboo-500: #22c55e;
-	--color-bamboo-600: #16a34a;
-	--color-bamboo-700: #15803d;
-	--color-bamboo-800: #166534;
-	--color-bamboo-900: #14532d;
-	--color-bamboo-950: #052e16;
+	--color-success-50: #f2f8f4;
+	--color-success-100: #dceee3;
+	--color-success-200: #b8dcc3;
+	--color-success-300: #8dc49d;
+	--color-success-400: #6daa7e;
+	--color-success-500: #5e9f7e;
+	--color-success-600: #4f876b;
+	--color-success-700: #416f58;
+	--color-success-800: #335744;
+	--color-success-900: #254031;
+	--color-success-950: #17281e;
 
 	/* Textures */
 	--texture-noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
@@ -87,7 +87,7 @@
 	--shadow-subtle: 0 2px 20px -4px rgba(28, 25, 23, 0.04);
 	--shadow-float: 0 20px 50px -10px rgba(28, 25, 23, 0.1);
 	--shadow-deep: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
-	--shadow-glow: 0 0 30px -5px rgba(45, 212, 191, 0.2);
+	--shadow-glow: 0 0 30px -5px rgba(197, 100, 115, 0.2);
 
 	/* Border Radius */
 	--radius-default: 3px;
@@ -109,13 +109,13 @@ body {
 
 /* Selection */
 ::selection {
-	background: rgba(45, 212, 191, 0.15);
-	color: var(--color-jade-800);
+	background: rgba(197, 100, 115, 0.15);
+	color: var(--color-accent-800);
 }
 
 :root[class~='dark'] ::selection {
-	background: rgba(45, 212, 191, 0.25);
-	color: var(--color-jade-100);
+	background: rgba(197, 100, 115, 0.25);
+	color: var(--color-accent-100);
 }
 
 /* View Transitions API styles for theme switching */
@@ -162,16 +162,16 @@ body {
 	scrollbar-width: none;
 }
 
-@utility shadow-jade-glow {
+@utility shadow-accent-glow {
 	box-shadow:
-		0 10px 30px -10px rgba(20, 184, 166, 0.25),
-		inset 0 0 12px rgba(20, 184, 166, 0.05);
+		0 10px 30px -10px rgba(197, 100, 115, 0.25),
+		inset 0 0 12px rgba(197, 100, 115, 0.05);
 }
 
-@utility shadow-jade-glow-dark {
+@utility shadow-accent-glow-dark {
 	box-shadow:
 		0 10px 40px -12px rgba(0, 0, 0, 0.5),
-		inset 0 0 15px rgba(45, 212, 191, 0.08);
+		inset 0 0 15px rgba(224, 122, 138, 0.08);
 }
 
 @utility article-enter {

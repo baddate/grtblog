@@ -107,7 +107,7 @@
 
 {#if inline}
 	<code
-		class={`max-w-full break-words [overflow-wrap:anywhere] whitespace-pre-wrap rounded-sm bg-jade-500/5 px-1.5 py-0.5 font-mono text-[0.9em] text-jade-800 dark:bg-jade-500/5 dark:text-jade-100 ${className}`.trim()}
+		class={`max-w-full break-words [overflow-wrap:anywhere] whitespace-pre-wrap rounded-sm bg-accent-500/5 px-1.5 py-0.5 font-mono text-[0.9em] text-accent-800 dark:bg-accent-500/5 dark:text-accent-100 ${className}`.trim()}
 		{...attrs}
 	>
 		{text}

@@ -178,13 +178,13 @@
 				<label class="block flex-1 space-y-1.5">
 					<span class="text-xs text-ink-500 font-medium"> 昵称 </span>
 					<input
-						class="w-full rounded-default border border-ink-200 bg-white px-3 py-1.5 text-sm dark:border-ink-700 dark:bg-ink-800 transition-colors focus:border-jade-500 focus:ring-1 focus:ring-jade-500 outline-none"
+						class="w-full rounded-default border border-ink-200 bg-white px-3 py-1.5 text-sm dark:border-ink-700 dark:bg-ink-800 transition-colors focus:border-accent-500 focus:ring-1 focus:ring-accent-500 outline-none"
 						bind:value={profileForm.nickname}
 						placeholder="请输入昵称"
 					/>
 				</label>
 				<button
-					class="h-[34px] px-3 rounded-default bg-jade-600 text-white text-xs font-medium hover:bg-jade-700 transition-colors disabled:opacity-50 flex items-center gap-1.5"
+					class="h-[34px] px-3 rounded-default bg-accent-600 text-white text-xs font-medium hover:bg-accent-700 transition-colors disabled:opacity-50 flex items-center gap-1.5"
 					onclick={saveProfile}
 					disabled={updateProfileMutation.isPending || profileForm.nickname === meStore?.nickname}
 				>
@@ -201,7 +201,7 @@
 					<a
 						href={resolvePath('/admin', page.data.lang)}
 						target="_blank"
-						class="inline-flex items-center gap-1.5 text-xs text-jade-600 hover:text-jade-700 dark:text-jade-400 dark:hover:text-jade-300 transition-colors"
+						class="inline-flex items-center gap-1.5 text-xs text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300 transition-colors"
 					>
 						<ExternalLink size={12} />
 						前往后台管理系统修改更多信息
@@ -228,7 +228,7 @@
 						<div
 							class="flex items-center justify-between rounded-default border p-2.5 transition-colors
 							{isBound
-								? 'border-jade-200 bg-jade-50/30 dark:border-jade-800/50 dark:bg-jade-900/10'
+								? 'border-accent-200 bg-accent-50/30 dark:border-accent-800/50 dark:bg-accent-900/10'
 								: 'border-ink-200 bg-white dark:border-ink-700 dark:bg-ink-800/40'}"
 						>
 							<div class="flex items-center gap-2">
@@ -241,12 +241,12 @@
 							{#if isBound}
 								<div class="flex items-center gap-2">
 									<span
-										class="text-[10px] bg-jade-100 text-jade-700 dark:bg-jade-900/50 dark:text-jade-400 px-1.5 py-0.5 rounded-default font-medium"
+										class="text-[10px] bg-accent-100 text-accent-700 dark:bg-accent-900/50 dark:text-accent-400 px-1.5 py-0.5 rounded-default font-medium"
 									>
 										已绑定
 									</span>
 									<button
-										class="flex items-center gap-1 text-xs text-ink-400 hover:text-cinnabar-600 transition-colors px-2 py-1 rounded-default hover:bg-cinnabar-50 dark:hover:bg-cinnabar-900/20"
+										class="flex items-center gap-1 text-xs text-ink-400 hover:text-error-600 transition-colors px-2 py-1 rounded-default hover:bg-error-50 dark:hover:bg-error-900/20"
 										disabled={unbindMutation.isPending}
 										onclick={() => handleUnbind(provider.key)}
 										title="解除绑定"
@@ -257,7 +257,7 @@
 								</div>
 							{:else}
 								<button
-									class="flex items-center gap-1 text-xs text-jade-600 hover:text-jade-700 transition-colors px-2 py-1 rounded-default hover:bg-jade-50 dark:hover:bg-jade-900/20 font-medium"
+									class="flex items-center gap-1 text-xs text-accent-600 hover:text-accent-700 transition-colors px-2 py-1 rounded-default hover:bg-accent-50 dark:hover:bg-accent-900/20 font-medium"
 									onclick={() => startBindOAuth(provider)}
 									disabled={bindingLoadingProvider === provider.key}
 								>
@@ -278,7 +278,7 @@
 		<!-- Footer Actions -->
 		<div class="pt-4 border-t border-ink-100 dark:border-ink-800 flex justify-end">
 			<button
-				class="flex items-center gap-1.5 text-xs text-ink-500 hover:text-cinnabar-600 transition-colors px-2 py-1.5 rounded-default hover:bg-ink-100 dark:hover:bg-ink-800"
+				class="flex items-center gap-1.5 text-xs text-ink-500 hover:text-error-600 transition-colors px-2 py-1.5 rounded-default hover:bg-ink-100 dark:hover:bg-ink-800"
 				onclick={signOut}
 			>
 				<LogOut size={14} />

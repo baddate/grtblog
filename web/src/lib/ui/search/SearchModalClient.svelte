@@ -283,7 +283,7 @@
 
 		highlighted = highlighted.replace(
 			regex,
-			'<span class="text-jade-600 dark:text-jade-400 font-medium">$1</span>'
+			'<span class="text-accent-600 dark:text-accent-400 font-medium">$1</span>'
 		);
 		return highlighted;
 	}
@@ -322,7 +322,7 @@
 					bind:value={searchTerm}
 					onkeydown={handleInputKeydown}
 					placeholder="探索知识与灵感..."
-					class="w-full bg-transparent text-lg font-serif text-ink-900 dark:text-ink-100 placeholder:text-ink-400 dark:placeholder:text-ink-500 outline-none caret-jade-600 tracking-wide"
+					class="w-full bg-transparent text-lg font-serif text-ink-900 dark:text-ink-100 placeholder:text-ink-400 dark:placeholder:text-ink-500 outline-none caret-accent-600 tracking-wide"
 				/>
 				{#if searchTerm}
 					<button
@@ -357,7 +357,7 @@
 								</h3>
 								<button
 									onclick={clearHistory}
-									class="text-[10px] text-ink-400 hover:text-jade-600 dark:text-ink-500 transition-colors"
+									class="text-[10px] text-ink-400 hover:text-accent-600 dark:text-ink-500 transition-colors"
 									>清除</button
 								>
 							</div>
@@ -375,7 +375,7 @@
 											: ''}"
 									>
 										<span
-											class="font-serif text-sm tracking-wide text-ink-700 dark:text-ink-300 group-hover:text-jade-600 transition-colors"
+											class="font-serif text-sm tracking-wide text-ink-700 dark:text-ink-300 group-hover:text-accent-600 transition-colors"
 											>{item}</span
 										>
 										<ArrowRight
@@ -413,7 +413,7 @@
 											: ''}"
 									>
 										<div
-											class="font-serif text-ink-900 dark:text-ink-200 group-hover:text-jade-600 transition-colors"
+											class="font-serif text-ink-900 dark:text-ink-200 group-hover:text-accent-600 transition-colors"
 										>
 											<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 											{@html highlightKeywords(article.title, query.data.keywords)}
@@ -447,7 +447,7 @@
 											: ''}"
 									>
 										<div
-											class="font-serif text-ink-900 dark:text-ink-200 group-hover:text-jade-600 transition-colors"
+											class="font-serif text-ink-900 dark:text-ink-200 group-hover:text-accent-600 transition-colors"
 										>
 											<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 											{@html highlightKeywords(moment.title || moment.snippet, query.data.keywords)}
@@ -481,7 +481,7 @@
 											: ''}"
 									>
 										<div
-											class="font-serif text-ink-900 dark:text-ink-200 group-hover:text-jade-600 transition-colors"
+											class="font-serif text-ink-900 dark:text-ink-200 group-hover:text-accent-600 transition-colors"
 										>
 											<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 											{@html highlightKeywords(
@@ -518,7 +518,7 @@
 											: ''}"
 									>
 										<div
-											class="font-serif text-ink-900 dark:text-ink-200 group-hover:text-jade-600 transition-colors"
+											class="font-serif text-ink-900 dark:text-ink-200 group-hover:text-accent-600 transition-colors"
 										>
 											<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 											{@html highlightKeywords(page.title, query.data.keywords)}
@@ -539,7 +539,7 @@
 					{/if}
 				{:else if query.isError}
 					<div
-						class="py-12 flex flex-col items-center justify-center text-cinnabar-600 dark:text-cinnabar-400"
+						class="py-12 flex flex-col items-center justify-center text-error-600 dark:text-error-400"
 					>
 						<span class="font-serif text-sm">搜索出错，请稍后重试</span>
 					</div>

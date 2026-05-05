@@ -57,7 +57,7 @@
 		relative w-full aspect-3/4
 		bg-ink-50 dark:bg-ink-950/40
 		border border-ink-200 dark:border-ink-200/10
-		hover:border-jade-500/30 dark:hover:border-jade-500/40
+		hover:border-accent-500/30 dark:hover:border-accent-500/40
 		shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05)]
 		hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)]
 		hover:-translate-y-1.5
@@ -96,10 +96,10 @@
 
 		<!-- Vertical Column Label — always visible, floats over images -->
 		<div
-			class="absolute top-0 right-6 h-16 w-8 bg-jade-500/5 dark:bg-jade-500/10 border-x border-jade-500/10 flex items-center justify-center pt-2 z-10"
+			class="absolute top-0 right-6 h-16 w-8 bg-accent-500/5 dark:bg-accent-500/10 border-x border-accent-500/10 flex items-center justify-center pt-2 z-10"
 		>
 			<span
-				class="[writing-mode:vertical-rl] text-[9px] font-serif font-bold text-jade-700 dark:text-jade-400 tracking-[0.2em] opacity-80 uppercase"
+				class="[writing-mode:vertical-rl] text-[9px] font-serif font-bold text-accent-700 dark:text-accent-400 tracking-[0.2em] opacity-80 uppercase"
 			>
 				{columnLabel}
 			</span>
@@ -117,20 +117,20 @@
 						</span>
 						{#if moment.isTop}
 							<span
-								class="inline-flex shrink-0 items-center gap-0.5 align-middle px-1 py-px text-[9px] font-mono font-normal tracking-wider text-jade-600 dark:text-jade-400"
+								class="inline-flex shrink-0 items-center gap-0.5 align-middle px-1 py-px text-[9px] font-mono font-normal tracking-wider text-accent-600 dark:text-accent-400"
 							>
 								<Pin size={9} strokeWidth={2} class="rotate-45" />
 							</span>
 						{/if}
 					</div>
-					<div class="h-px w-8 bg-jade-500/30"></div>
+					<div class="h-px w-8 bg-accent-500/30"></div>
 				</div>
 			</div>
 
 			<!-- Title & Content Preview -->
 			<div class="flex-1 min-h-0 overflow-hidden flex flex-col gap-4 mt-2">
 				<h3
-					class="font-serif font-bold text-lg text-ink-900 dark:text-ink-100 leading-relaxed group-hover:text-jade-600 dark:group-hover:text-jade-400 transition-colors duration-300 line-clamp-2"
+					class="font-serif font-bold text-lg text-ink-900 dark:text-ink-100 leading-relaxed group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors duration-300 line-clamp-2"
 				>
 					{moment.title}
 				</h3>
@@ -165,7 +165,7 @@
 				<div
 					class="opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-2 group-hover:translate-x-0"
 				>
-					<ArrowRight size={14} class="text-jade-600" />
+					<ArrowRight size={14} class="text-accent-600" />
 				</div>
 			</div>
 		</div>

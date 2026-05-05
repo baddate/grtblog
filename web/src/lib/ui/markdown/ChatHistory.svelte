@@ -57,7 +57,7 @@
 				<div
 					class="max-w-[90%] rounded-[18px] px-4 py-2 text-[13.5px] leading-relaxed
 					{isMe(msg!.role)
-						? 'rounded-tr-[4px] bg-jade-500 text-white shadow-sm'
+						? 'rounded-tr-[4px] bg-accent-500 text-white shadow-sm'
 						: 'rounded-tl-[4px] bg-ink-100 text-ink-800 dark:bg-ink-800 dark:text-ink-100'}"
 				>
 					{msg!.content}

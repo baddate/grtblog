@@ -29,7 +29,7 @@
 <div class="timeline-wrapper not-prose my-10 pl-6">
 	<!-- 顶部标题：简洁排版 -->
 	<div class="mb-10">
-		<span class="text-[10px] font-bold tracking-[0.3em] text-jade-600 uppercase dark:text-jade-400"
+		<span class="text-[10px] font-bold tracking-[0.3em] text-accent-600 uppercase dark:text-accent-400"
 			>{sub}</span
 		>
 		{#if title}
@@ -52,7 +52,7 @@
 			<div class="relative">
 				<!-- 极简圆点：仅在 hover 时略微变色 -->
 				<div
-					class="absolute -left-[27.5px] top-[7px] h-2 w-2 rounded-full border border-jade-500 bg-white ring-4 ring-transparent transition-all duration-300 dark:bg-ink-950"
+					class="absolute -left-[27.5px] top-[7px] h-2 w-2 rounded-full border border-accent-500 bg-white ring-4 ring-transparent transition-all duration-300 dark:bg-ink-950"
 				></div>
 
 				<div class="flex flex-col">
@@ -78,7 +78,7 @@
 <style>
 	/* 仅保留一个极简的交互：选中时圆点实心 */
 	.relative:hover div:first-child {
-		background-color: var(--color-jade-500, #10b981);
+		background-color: var(--color-accent-500, #10b981);
 		transform: scale(1.1);
 	}
 </style>

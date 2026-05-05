@@ -54,14 +54,14 @@
 </script>
 
 <a
-	class="group not-prose relative my-5 flex min-h-[88px] items-stretch overflow-hidden rounded-default border border-ink-200/60 bg-white/40 transition-all duration-300 hover:border-jade-400/50 hover:bg-white hover:shadow-subtle dark:border-ink-800/60 dark:bg-ink-900/30 dark:hover:border-jade-800/80 dark:hover:bg-ink-900/10"
+	class="group not-prose relative my-5 flex min-h-[88px] items-stretch overflow-hidden rounded-default border border-ink-200/60 bg-white/40 transition-all duration-300 hover:border-accent-400/50 hover:bg-white hover:shadow-subtle dark:border-ink-800/60 dark:bg-ink-900/30 dark:hover:border-accent-800/80 dark:hover:bg-ink-900/10"
 	href={resolvedHref}
 	{target}
 	{rel}
 >
 	<!-- 左侧极细装饰 -->
 	<div
-		class="w-[2px] bg-ink-200 transition-colors duration-300 group-hover:bg-jade-500 dark:bg-ink-800"
+		class="w-[2px] bg-ink-200 transition-colors duration-300 group-hover:bg-accent-500 dark:bg-ink-800"
 	></div>
 
 	<!-- 内容区 -->
@@ -76,7 +76,7 @@
 		</div>
 
 		<h4
-			class="line-clamp-2 break-words text-[13px] font-bold text-ink-900 transition-colors group-hover:text-jade-700 dark:text-ink-100 dark:group-hover:text-jade-400"
+			class="line-clamp-2 break-words text-[13px] font-bold text-ink-900 transition-colors group-hover:text-accent-700 dark:text-ink-100 dark:group-hover:text-accent-400"
 		>
 			{title || href}
 		</h4>
@@ -112,7 +112,7 @@
 			class="flex w-12 items-center justify-center opacity-0 transition-all duration-300 -translate-x-2 group-hover:translate-x-0 group-hover:opacity-100"
 		>
 			<svg
-				class="h-4 w-4 text-jade-500"
+				class="h-4 w-4 text-accent-500"
 				viewBox="0 0 24 24"
 				fill="none"
 				stroke="currentColor"

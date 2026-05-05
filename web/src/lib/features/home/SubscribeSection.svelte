@@ -24,7 +24,7 @@
 			<div class="flex items-center gap-3">
 				<button
 					onclick={() => (isModalOpen = true)}
-					class="px-5 py-2.5 text-xs font-medium bg-jade-600 dark:bg-jade-500 text-white rounded-default hover:bg-jade-700 dark:hover:bg-jade-400 transition-all shadow-sm shadow-jade-500/10 flex items-center gap-2 group"
+					class="px-5 py-2.5 text-xs font-medium bg-accent-600 dark:bg-accent-500 text-white rounded-default hover:bg-accent-700 dark:hover:bg-accent-400 transition-all shadow-sm shadow-accent-500/10 flex items-center gap-2 group"
 				>
 					<Mail size={13} class="group-hover:rotate-12 transition-transform" />
 					<span>邮件订阅</span>
@@ -33,9 +33,9 @@
 				<a
 					href={resolve('/feed', {})}
 					data-sveltekit-preload-data="off"
-					class="px-5 py-2.5 text-xs font-medium bg-jade-50/50 dark:bg-jade-500/5 border border-jade-200/60 dark:border-jade-800/60 text-jade-700 dark:text-jade-300 rounded-default hover:border-jade-500/50 hover:text-jade-600 transition-all flex items-center gap-2 group"
+					class="px-5 py-2.5 text-xs font-medium bg-accent-50/50 dark:bg-accent-500/5 border border-accent-200/60 dark:border-accent-800/60 text-accent-700 dark:text-accent-300 rounded-default hover:border-accent-500/50 hover:text-accent-600 transition-all flex items-center gap-2 group"
 				>
-					<Rss size={13} class="group-hover:text-amber-500 transition-colors" />
+					<Rss size={13} class="group-hover:text-warning-500 transition-colors" />
 					<span>RSS 订阅</span>
 				</a>
 			</div>

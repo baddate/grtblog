@@ -86,17 +86,17 @@
 		<span
 			class="pointer-events-none absolute inset-0 z-0 transition-opacity duration-300"
 			style:opacity={spotlightOpacity}
-			style:background={`radial-gradient(600px circle at ${mouseX}px ${mouseY}px, color-mix(in srgb, var(--color-jade-500), transparent 70%) 0%, transparent 40%)`}
+			style:background={`radial-gradient(600px circle at ${mouseX}px ${mouseY}px, color-mix(in srgb, var(--color-accent-500), transparent 70%) 0%, transparent 40%)`}
 			style:mix-blend-mode="soft-light"
 		></span>
 
 		<span
-			class="absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-10 dark:group-hover:opacity-20 bg-jade-500/10"
+			class="absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-10 dark:group-hover:opacity-20 bg-accent-500/10"
 		></span>
 
 		<span class="relative z-10 min-w-0 flex-1 overflow-hidden">
 			<span
-				class="block truncate text-[13px] font-semibold text-ink-900 transition-colors group-hover:text-jade-700 dark:text-ink-100 dark:group-hover:text-jade-300"
+				class="block truncate text-[13px] font-semibold text-ink-900 transition-colors group-hover:text-accent-700 dark:text-ink-100 dark:group-hover:text-accent-300"
 			>
 				{@render children?.()}
 			</span>
@@ -167,22 +167,22 @@
 		bottom: 0;
 		top: 70%;
 		z-index: 0;
-		background: color-mix(in srgb, var(--color-jade-300) 45%, transparent);
+		background: color-mix(in srgb, var(--color-accent-300) 45%, transparent);
 		border-radius: 2px;
 		transition: top 200ms cubic-bezier(0, 0.8, 0.13, 1);
 	}
 
 	:global(.dark) .md-link::after {
-		background: color-mix(in srgb, var(--color-jade-700) 40%, transparent);
+		background: color-mix(in srgb, var(--color-accent-700) 40%, transparent);
 	}
 
 	.md-link:hover {
-		color: var(--color-jade-900);
+		color: var(--color-accent-900);
 		transform: translateY(-0.5px);
 	}
 
 	:global(.dark) .md-link:hover {
-		color: var(--color-jade-100);
+		color: var(--color-accent-100);
 	}
 
 	.md-link:hover::after {

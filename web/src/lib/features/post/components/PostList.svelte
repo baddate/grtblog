@@ -102,7 +102,7 @@
 		>
 			<!-- Fluid Background -->
 			<div
-				class="absolute left-0 w-full bg-[#E9EEE8] dark:bg-jade-800/20 rounded-default pointer-events-none -z-10"
+				class="absolute left-0 w-full bg-[#E9EEE8] dark:bg-accent-800/20 rounded-default pointer-events-none -z-10"
 				style:top="{$hoverCoords.top}px"
 				style:height="{$hoverCoords.height}px"
 				style:opacity={$hoverOpacity}
@@ -132,7 +132,7 @@
 			class="flex flex-col items-center justify-center py-16 sm:py-32 text-center space-y-4 border-2 border-dashed border-ink-100 dark:border-ink-800/50 rounded-2xl bg-ink-50/50 dark:bg-ink-900/20"
 		>
 			<div class="relative">
-				<div class="absolute -inset-4 bg-jade-500/10 rounded-full blur-xl animate-pulse"></div>
+				<div class="absolute -inset-4 bg-accent-500/10 rounded-full blur-xl animate-pulse"></div>
 				<FileText size={48} class="relative text-ink-300 dark:text-ink-700" />
 			</div>
 			<div class="space-y-1">

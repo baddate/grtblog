@@ -44,7 +44,7 @@
 				>
 					<span>NO. {dateNo}</span>
 					<span>—</span>
-					<span class="font-serif text-cinnabar-500">{t('web.ui.moment')}</span>
+					<span class="font-serif text-error-500">{t('web.ui.moment')}</span>
 					<span>—</span>
 					<span>{dateStr}</span>
 					{#if showUpdated}<span class="text-ink-400/70"

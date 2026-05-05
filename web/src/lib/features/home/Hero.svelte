@@ -25,7 +25,7 @@
 	];
 
 	const variantClassMap: Record<string, string> = {
-		hero_h1_highlight: 'italic text-jade-600 dark:text-jade-400 font-light text-4xl',
+		hero_h1_highlight: 'italic text-accent-600 dark:text-accent-400 font-light text-4xl',
 		hero_h1_primary: 'text-ink-900 dark:text-ink-100 font-medium text-4xl',
 		hero_h1_light: 'font-light text-4xl text-ink-900 dark:text-ink-100',
 		hero_h1_medium_gap: 'font-medium mx-2 text-4xl text-ink-900 dark:text-ink-100',

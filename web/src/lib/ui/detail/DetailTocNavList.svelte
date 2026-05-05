@@ -25,17 +25,17 @@
 
 	const toneClassMap: Record<TocTone, ToneConfig> = {
 		jade: {
-			parentHover: 'hover:translate-x-0.5 hover:text-jade-600 dark:hover:text-jade-400',
-			parentActive: 'font-bold text-jade-700 dark:text-jade-400',
-			childHover: 'hover:translate-x-0.5 hover:text-jade-500',
-			childActive: 'font-bold text-jade-600 dark:text-jade-300',
+			parentHover: 'hover:translate-x-0.5 hover:text-accent-600 dark:hover:text-accent-400',
+			parentActive: 'font-bold text-accent-700 dark:text-accent-400',
+			childHover: 'hover:translate-x-0.5 hover:text-accent-500',
+			childActive: 'font-bold text-accent-600 dark:text-accent-300',
 			sublistBorder: 'border-ink-50 dark:border-ink-800/30'
 		},
 		cinnabar: {
-			parentHover: 'hover:translate-x-0.5 hover:text-cinnabar-600 dark:hover:text-cinnabar-400',
-			parentActive: 'font-bold text-cinnabar-700 dark:text-cinnabar-400',
-			childHover: 'hover:translate-x-0.5 hover:text-cinnabar-500',
-			childActive: 'font-bold text-cinnabar-600 dark:text-cinnabar-300',
+			parentHover: 'hover:translate-x-0.5 hover:text-error-600 dark:hover:text-error-400',
+			parentActive: 'font-bold text-error-700 dark:text-error-400',
+			childHover: 'hover:translate-x-0.5 hover:text-error-500',
+			childActive: 'font-bold text-error-600 dark:text-error-300',
 			sublistBorder: 'border-ink-200 dark:border-ink-800/30'
 		},
 		ink: {

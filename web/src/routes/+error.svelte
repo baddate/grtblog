@@ -41,10 +41,10 @@
 
 <section class="mx-auto max-w-3xl px-6 py-16 md:py-24">
 	<div
-		class="relative overflow-hidden rounded-default border border-ink-200/70 bg-gradient-to-br from-ink-50 to-jade-50/40 p-8 shadow-subtle dark:border-ink-700/60 dark:from-ink-900 dark:to-ink-800/60 md:p-10"
+		class="relative overflow-hidden rounded-default border border-ink-200/70 bg-gradient-to-br from-ink-50 to-accent-50/40 p-8 shadow-subtle dark:border-ink-700/60 dark:from-ink-900 dark:to-ink-800/60 md:p-10"
 	>
 		<div
-			class="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-jade-400/15 blur-2xl"
+			class="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-accent-400/15 blur-2xl"
 			aria-hidden="true"
 		></div>
 
@@ -64,7 +64,7 @@
 		<div class="mt-8 flex flex-wrap items-center gap-3">
 			<a
 				href={resolvePath('/')}
-				class="inline-flex items-center gap-2 rounded-default border border-jade-500/30 bg-jade-500/10 px-4 py-2 text-sm text-jade-700 transition-colors hover:bg-jade-500/20 dark:text-jade-300"
+				class="inline-flex items-center gap-2 rounded-default border border-accent-500/30 bg-accent-500/10 px-4 py-2 text-sm text-accent-700 transition-colors hover:bg-accent-500/20 dark:text-accent-300"
 			>
 				<Compass size={14} />
 				{t('web.error.go_home')}

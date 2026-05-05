@@ -28,10 +28,10 @@
 	class="relative isolate overflow-hidden rounded-default border border-ink-200/70 bg-ink-0/80 p-5 sm:p-8 shadow-subtle dark:border-ink-800/70 dark:bg-ink-900/70"
 >
 	<div
-		class="pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full bg-jade-500/8 blur-3xl"
+		class="pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full bg-accent-500/8 blur-3xl"
 	></div>
 	<div
-		class="pointer-events-none absolute -left-28 bottom-0 h-44 w-44 rounded-full bg-amber-500/8 blur-3xl"
+		class="pointer-events-none absolute -left-28 bottom-0 h-44 w-44 rounded-full bg-warning-500/8 blur-3xl"
 	></div>
 
 	<div class="relative space-y-6">
@@ -44,11 +44,11 @@
 		/>
 
 		<div
-			class="flex items-center gap-2 rounded-default border border-jade-500/20 bg-jade-500/6 px-3 py-2 dark:border-jade-500/25 dark:bg-jade-500/10 mb-8 w-fit mx-auto"
+			class="flex items-center gap-2 rounded-default border border-accent-500/20 bg-accent-500/6 px-3 py-2 dark:border-accent-500/25 dark:bg-accent-500/10 mb-8 w-fit mx-auto"
 		>
-			<BookText size={14} class="text-jade-600 dark:text-jade-400" />
+			<BookText size={14} class="text-accent-600 dark:text-accent-400" />
 			<span
-				class="font-mono text-[10px] tracking-[0.14em] text-jade-700 uppercase dark:text-jade-300"
+				class="font-mono text-[10px] tracking-[0.14em] text-accent-700 uppercase dark:text-accent-300"
 			>
 				{tags.length} Tags · {totalArticles} Articles
 			</span>
@@ -65,16 +65,16 @@
 				{#each tags as tag, index (tag.id)}
 					<button
 						onclick={() => openTagContents(tag)}
-						class="group relative overflow-hidden rounded-default border border-ink-200/80 bg-ink-50/85 px-3 py-2.5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-jade-500/55 hover:bg-jade-50/70 dark:border-ink-800/80 dark:bg-ink-900/40 dark:hover:border-jade-500/45 dark:hover:bg-jade-900/20"
+						class="group relative overflow-hidden rounded-default border border-ink-200/80 bg-ink-50/85 px-3 py-2.5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-accent-500/55 hover:bg-accent-50/70 dark:border-ink-800/80 dark:bg-ink-900/40 dark:hover:border-accent-500/45 dark:hover:bg-accent-900/20"
 					>
 						<div
-							class="absolute left-0 top-0 h-full bg-jade-500/9 transition-all duration-500 group-hover:bg-jade-500/16 dark:bg-jade-400/8 dark:group-hover:bg-jade-400/14"
+							class="absolute left-0 top-0 h-full bg-accent-500/9 transition-all duration-500 group-hover:bg-accent-500/16 dark:bg-accent-400/8 dark:group-hover:bg-accent-400/14"
 							style:width={`${toPercent(tag.articleCount)}%`}
 						></div>
 						<div class="relative flex items-start justify-between gap-3">
 							<div class="min-w-0 space-y-0.5">
 								<p
-									class="truncate font-serif text-[14px] text-ink-800 transition-colors group-hover:text-jade-700 dark:text-ink-200 dark:group-hover:text-jade-300"
+									class="truncate font-serif text-[14px] text-ink-800 transition-colors group-hover:text-accent-700 dark:text-ink-200 dark:group-hover:text-accent-300"
 								>
 									#{tag.name}
 								</p>
@@ -83,7 +83,7 @@
 								</p>
 							</div>
 							<div
-								class="flex items-center gap-0.5 text-ink-300 transition-colors group-hover:text-jade-500 dark:text-ink-600 dark:group-hover:text-jade-400"
+								class="flex items-center gap-0.5 text-ink-300 transition-colors group-hover:text-accent-500 dark:text-ink-600 dark:group-hover:text-accent-400"
 							>
 								<span class="font-mono text-[9px]">#{index + 1}</span>
 								<ArrowUpRight size={11} />
