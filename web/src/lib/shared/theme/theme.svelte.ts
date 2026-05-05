@@ -1,5 +1,5 @@
 import { browser } from '$app/environment';
-import { defaultThemePalette } from './palette';
+import { paletteStore } from './paletteStore.svelte';
 import { generateThemeFromPalette, cssConverter } from './theme';
 
 export type Theme = 'light' | 'dark' | 'system';
@@ -49,7 +49,7 @@ function ensureStyleElement(): HTMLStyleElement {
 }
 
 function injectThemeCss() {
-	const uiTheme = generateThemeFromPalette(defaultThemePalette);
+	const uiTheme = generateThemeFromPalette(paletteStore.current);
 	const fullCss = cssConverter(uiTheme);
 	const el = ensureStyleElement();
 	el.textContent = fullCss;
