@@ -39,6 +39,8 @@ let styleEl: HTMLStyleElement | null = null;
 
 function ensureStyleElement(): HTMLStyleElement {
 	if (!styleEl) {
+		const ssrStyle = document.querySelector('style[data-theme-ssr]');
+		if (ssrStyle) ssrStyle.remove();
 		styleEl = document.createElement('style');
 		styleEl.id = 'theme-css-vars';
 		document.head.appendChild(styleEl);
