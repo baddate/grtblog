@@ -430,6 +430,8 @@
 					theme === 'dark' ||
 					(theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 				document.documentElement.classList.toggle('dark', isDark);
+					document.documentElement.classList.toggle('dark-mode', isDark);
+					document.documentElement.classList.toggle('light-mode', !isDark);
 			} catch (e) {}
 		})();
 	</script>

@@ -68,28 +68,20 @@ const joinVariables = (vars: Record<string, any>) =>
 
 export const cssConverter = (theme: UITheme) => {
 	const baseCssVars = flattenObject(theme.base, newKey);
-	const modeVars = {
-		dark: flattenObject(theme.vars.dark, newKey),
-		light: flattenObject(theme.vars.light, newKey)
-	};
+	const lightVars = flattenObject(theme.vars.light, newKey);
+	const darkVars = flattenObject(theme.vars.dark, newKey);
 
-	const baseStyles = `:root { ${joinVariables(baseCssVars)} }`;
+	// :root includes base vars + light mode colors as the default.
+	// Dark mode overrides via @media query (system preference)
+	// and .dark-mode class (explicit user choice).
+	const baseStyles = `:root { ${joinVariables(baseCssVars)} ${joinVariables(lightVars)} }`;
 
-	const modeVarsStyles = (['dark', 'light'] as const)
-		.map((key) => {
-			const value = modeVars[key];
-			return ` .${key}-mode { ${joinVariables(value)} } `;
-		})
-		.join('\n');
+	const darkMedia = `@media (prefers-color-scheme: dark) { :root { ${joinVariables(darkVars)} } }`;
 
-	const mediaVarsStyles = (['dark', 'light'] as const)
-		.map((key) => {
-			const value = modeVars[key];
-			return `@media (prefers-color-scheme: ${key}) { :root { ${joinVariables(value)} } }`;
-		})
-		.join('\n');
+	const darkModeClass = `.dark-mode { ${joinVariables(darkVars)} }`;
+	const lightModeClass = `.light-mode { ${joinVariables(lightVars)} }`;
 
-	return `${baseStyles} ${mediaVarsStyles} ${modeVarsStyles}`;
+	return `${baseStyles} ${darkMedia} ${darkModeClass} ${lightModeClass}`;
 };
 
 const fontSizes = {
@@ -114,8 +106,7 @@ const getCard = (cardType: CardType) => {
 		return {
 			card: {
 				border: '2px dashed var(--border-color)',
-				background:
-					'linear-gradient(-45deg, var(--background), var(--background), var(--surface))',
+				background: 'linear-gradient(-45deg, var(--background), var(--background), var(--surface))',
 				backgroundHover:
 					'linear-gradient(-45deg, var(--background), var(--background), var(--surface))',
 				backgroundPosition: '90% 0',
@@ -270,10 +261,7 @@ export const generateThemeFromPalette = (palette: ThemePalette): UITheme => {
 
 export const generateUITheme = (theme: UITheme, mode: 'light' | 'dark' | 'auto', prefix = '') => {
 	const themeVars = deepMerge(theme.base, theme.vars['light']);
-	const generatedTheme = forObjectReplace(
-		themeVars,
-		(keys) => `var(--${prefix}${keys.join('-')})`
-	);
+	const generatedTheme = forObjectReplace(themeVars, (keys) => `var(--${prefix}${keys.join('-')})`);
 	return {
 		themeCss: cssConverter(theme),
 		theme: generatedTheme
