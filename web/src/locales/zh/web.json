@@ -104,6 +104,7 @@
 	"web.owner.unknown_app": "未知应用",
 	"web.owner.using": "正在使用 {app}",
 	"web.posts.subtitle": "文字是思考的锚点",
+	"web.presence.loading": "正在同步在线状态...",
 	"web.presence.online_pages": "在线页面",
 	"web.presence.text": "正在有 {count} 位小伙伴看着我的网站呐",
 	"web.search.clear_input": "清空搜索关键词",
@@ -190,5 +191,6 @@
 	"web.ui.zoom": "缩放",
 	"web.ui.zoom_in_title": "放大 (+)",
 	"web.ui.zoom_out_title": "缩小 (-)",
-	"web.ui.zoom_reset_title": "重置 (0)"
+	"web.ui.zoom_reset_title": "重置 (0)",
+	"web.uptime.text": "已运行 {days} 天 {hours} 小时 {minutes} 分 {seconds} 秒"
 }

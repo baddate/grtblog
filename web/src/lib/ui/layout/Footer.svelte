@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 	import LanguageSwitcher from './footer/LanguageSwitcher.svelte';
 	import { page } from '$app/state';
-	import { DEFAULT_LANG } from '$lib/i18n/server';
+	import { DEFAULT_LANG, createTranslateFn } from '$lib/i18n/server';
 
 	type Props = {
 		onlineCount?: number;
@@ -19,6 +19,7 @@
 	const footerThemeStore = websiteInfoCtx.selectModelData((data) => resolveFooterThemeConfig(data));
 	let nowMs = $state(0);
 	const currentLang = $derived(page.data.lang ?? DEFAULT_LANG);
+	const t = $derived(createTranslateFn(page.data.translations ?? {}));
 
 	const formatPresenceText = (template: string, count: number): string =>
 		template.replaceAll('{count}', String(count));
@@ -49,7 +50,7 @@
 		const hours = Math.floor((totalSeconds % 86400) / 3600);
 		const minutes = Math.floor((totalSeconds % 3600) / 60);
 		const seconds = totalSeconds % 60;
-		return formatUptimeText($footerThemeStore.uptimeTextTemplate, {
+		return formatUptimeText(t('web.uptime.text'), {
 			days,
 			hours,
 			minutes,
@@ -127,9 +128,9 @@
 					</span>
 					<span class="text-[10px] font-mono">
 						{#if presenceConnected}
-							{formatPresenceText($footerThemeStore.presenceConnectedText, onlineCount)}
+							{formatPresenceText(t('web.presence.text'), onlineCount)}
 						{:else}
-							{$footerThemeStore.presenceLoadingText}
+							{t('web.presence.loading')}
 						{/if}
 					</span>
 				</button>
@@ -197,9 +198,9 @@
 					</span>
 					<span class="text-[10px] font-mono">
 						{#if presenceConnected}
-							{formatPresenceText($footerThemeStore.presenceConnectedText, onlineCount)}
+							{formatPresenceText(t('web.presence.text'), onlineCount)}
 						{:else}
-							{$footerThemeStore.presenceLoadingText}
+							{t('web.presence.loading')}
 						{/if}
 					</span>
 				</button>

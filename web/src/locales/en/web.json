@@ -104,6 +104,7 @@
 	"web.owner.unknown_app": "Unknown app",
 	"web.owner.using": "Using {app}",
 	"web.posts.subtitle": "Words are thought's anchor",
+	"web.presence.loading": "Syncing online status...",
 	"web.presence.online_pages": "Online Pages",
 	"web.presence.text": "{count} visitors are here right now",
 	"web.search.clear_input": "Clear search",
@@ -190,5 +191,6 @@
 	"web.ui.zoom": "Zoom",
 	"web.ui.zoom_in_title": "Zoom In (+)",
 	"web.ui.zoom_out_title": "Zoom Out (-)",
-	"web.ui.zoom_reset_title": "Reset (0)"
+	"web.ui.zoom_reset_title": "Reset (0)",
+	"web.uptime.text": "Running {days}d {hours}h {minutes}m {seconds}s"
 }
