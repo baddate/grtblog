@@ -1,8 +1,7 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
-	import Sidebar from '$lib/ui/layout/sidebar/Sidebar.svelte';
-	import MobileNavBar from '$lib/ui/layout/sidebar/MobileNavBar.svelte';
+	import BottomNav from '$lib/ui/layout/BottomNav.svelte';
 	import { initTheme, startThemeSync, themeManager } from '$lib/shared/theme/theme.svelte.js';
 	import { onMount } from 'svelte';
 	import { consoleLogInfo } from '$lib/features/console-info/index';
@@ -434,14 +433,11 @@
 	</script>
 </svelte:head>
 
-<div class="hidden md:block">
-	<Sidebar menuTree={data.navMenus ?? []} />
-</div>
-<MobileNavBar menuTree={data.navMenus ?? []} />
+<BottomNav />
 <!-- noise background -->
 <div class="bg-noise" aria-hidden="true"></div>
 
-<div class="md:pl-24 transition-[padding] duration-300 relative overflow-x-clip">
+<div class="transition-[padding] duration-300 relative overflow-x-clip">
 	{#if $detailHeroBgSrc}
 		<DetailHeroBg src={$detailHeroBgSrc} />
 	{/if}
