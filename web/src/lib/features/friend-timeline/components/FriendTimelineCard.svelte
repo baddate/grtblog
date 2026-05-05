@@ -14,7 +14,7 @@
 	};
 </script>
 
-<div class="timeline-item relative pl-6 sm:pl-12 py-4 group w-full">
+<div class="theme-card timeline-item relative pl-6 sm:pl-12 py-4 group w-full">
 	<!-- Timeline Vertical Line -->
 	<div
 		class="absolute left-2.5 sm:left-[23px] top-0 bottom-0 w-[2px] bg-ink-100 dark:bg-ink-800 group-last:bg-gradient-to-b group-last:from-ink-100 group-last:to-transparent dark:group-last:from-ink-800 dark:group-last:to-transparent transition-colors"
@@ -88,7 +88,7 @@
 
 			<!-- Title -->
 			<h2
-				class="font-serif text-base sm:text-lg font-medium text-ink-900 dark:text-ink-100 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors duration-300 mb-2 leading-snug line-clamp-2"
+				class="text-gradient-fx font-serif text-base sm:text-lg font-medium text-ink-900 dark:text-ink-100 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors duration-300 mb-2 leading-snug line-clamp-2"
 			>
 				{item.title}
 			</h2>

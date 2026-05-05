@@ -31,7 +31,7 @@
 
 <a
 	href={resolvePath(buildPostPath(post.shortUrl), page.data.lang)}
-	class="home-item-card article-item group w-full px-4 py-4 outline-none focus-visible:ring-2 focus-visible:ring-accent-500/30"
+	class="theme-card home-item-card article-item group w-full px-4 py-4 outline-none focus-visible:ring-2 focus-visible:ring-accent-500/30"
 	onmousemove={handleMouseMove}
 	onmouseleave={handleMouseLeave}
 	data-hovered={isHovered}
@@ -39,7 +39,7 @@
 >
 	<div class="home-item-content flex min-w-0 items-center justify-between gap-3">
 		<h3
-			class="home-item-title flex min-w-0 items-center gap-1.5 font-serif text-[15px] font-medium text-ink-900 dark:text-ink-100"
+			class="text-gradient-fx home-item-title flex min-w-0 items-center gap-1.5 font-serif text-[15px] font-medium text-ink-900 dark:text-ink-100"
 		>
 			{#if post.isTop}
 				<span

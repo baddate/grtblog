@@ -27,7 +27,7 @@
 
 <div
 	id="thinking-{item.id}"
-	class="flex gap-6 py-10 border-b border-ink-100 dark:border-ink-800/40 last:border-0 hover:bg-white/50 dark:hover:bg-white/5 transition-colors group px-6 -mx-6 rounded-sm"
+	class="theme-card flex gap-6 py-10 border-b border-ink-100 dark:border-ink-800/40 last:border-0 hover:bg-white/50 dark:hover:bg-white/5 transition-colors group px-6 -mx-6 rounded-sm"
 >
 	<!-- Date Column -->
 	<div class="flex-shrink-0 w-20 pt-1 border-r border-accent-500/20 pr-4 text-right">

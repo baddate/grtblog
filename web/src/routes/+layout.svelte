@@ -102,7 +102,9 @@
 		});
 	});
 
-	import '@fontsource/google-sans/400.css';
+	import '@fontsource/jost/400.css';
+	import '@fontsource/jost/500.css';
+	import '@fontsource/jost/600.css';
 	import '@fontsource/noto-serif-sc/400.css';
 	import '@fontsource/noto-serif-sc/500.css';
 	import '@fontsource/noto-serif-sc/600.css';

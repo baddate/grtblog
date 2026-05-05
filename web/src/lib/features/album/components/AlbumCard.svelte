@@ -17,7 +17,7 @@
 
 <a
 	href={albumUrl}
-	class="group relative block overflow-hidden rounded-[3px] transition-all duration-500 hover:-translate-y-1.5 hover:shadow-float"
+	class="theme-card group relative block overflow-hidden rounded-[3px] transition-all duration-500 hover:-translate-y-1.5 hover:shadow-float"
 >
 	<!-- Cover -->
 	<div class="aspect-[4/3] overflow-hidden bg-ink-100 dark:bg-ink-900">
@@ -47,7 +47,7 @@
 	<!-- Info overlay (bottom) -->
 	<div class="absolute inset-x-0 bottom-0 p-4 sm:p-5">
 		<h3
-			class="font-serif text-base font-medium leading-snug tracking-wide text-white/95 sm:text-lg"
+			class="text-gradient-fx font-serif text-base font-medium leading-snug tracking-wide text-white/95 sm:text-lg"
 		>
 			{album.title}
 		</h3>

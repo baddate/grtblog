@@ -31,11 +31,11 @@
 
 <a
 	href={resolvePath(buildPostPath(post.shortUrl), page.data.lang)}
-	class="group relative flex flex-col gap-3 px-4 py-4 sm:px-6 sm:py-6 border-b border-ink-100/50 dark:border-ink-800/50 last:border-0 w-full outline-none"
+	class="theme-card group relative flex flex-col gap-3 px-4 py-4 sm:px-6 sm:py-6 border-b border-ink-100/50 dark:border-ink-800/50 last:border-0 w-full outline-none"
 >
 	<!-- Title -->
 	<h2
-		class="font-serif text-xl sm:text-2xl font-medium text-ink-900 dark:text-ink-100 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors duration-200"
+		class="text-gradient-fx font-serif text-xl sm:text-2xl font-medium text-ink-900 dark:text-ink-100 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors duration-200"
 	>
 		<span>{post.title}</span>
 		{#if post.isTop}

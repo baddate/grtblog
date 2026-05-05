@@ -9,7 +9,7 @@
 	href={friend.url}
 	target="_blank"
 	rel="noopener noreferrer"
-	class="group relative flex flex-col p-6 rounded-default border border-ink-200/60 bg-white/40 dark:border-ink-800 dark:bg-ink-900/40 backdrop-blur-sm transition-all duration-500 hover:border-accent-500/40 hover:shadow-[8px_8px_0px_rgba(20,184,166,0.08)] dark:hover:shadow-[8px_8px_0px_rgba(20,184,166,0.03)] noise-surface overflow-hidden"
+	class="theme-card group relative flex flex-col p-6 rounded-default border border-ink-200/60 bg-white/40 dark:border-ink-800 dark:bg-ink-900/40 backdrop-blur-sm transition-all duration-500 hover:border-accent-500/40 hover:shadow-[8px_8px_0px_rgba(20,184,166,0.08)] dark:hover:shadow-[8px_8px_0px_rgba(20,184,166,0.03)] noise-surface overflow-hidden"
 >
 	<!-- Corner Decoration -->
 	<div
@@ -34,7 +34,7 @@
 		</div>
 		<div class="min-w-0">
 			<h3
-				class="font-bold text-ink-900 dark:text-ink-100 text-sm tracking-wide truncate group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors"
+				class="text-gradient-fx font-bold text-ink-900 dark:text-ink-100 text-sm tracking-wide truncate group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors"
 			>
 				{friend.name}
 			</h3>

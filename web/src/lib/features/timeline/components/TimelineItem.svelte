@@ -30,7 +30,7 @@
 </script>
 
 <div
-	class="timeline-item group relative flex w-[200px] shrink-0 flex-col items-center justify-center {aspectRatio} snap-center transition-all duration-700 ease-out sm:w-[240px]"
+	class="theme-card timeline-item group relative flex w-[200px] shrink-0 flex-col items-center justify-center {aspectRatio} snap-center transition-all duration-700 ease-out sm:w-[240px]"
 	style="--bg-image: url('{item.image || '/noise.png'}');"
 >
 	<!-- Card Container -->

@@ -44,6 +44,6 @@
 	});
 </script>
 
-<div class="markdown-preview w-full break-words [overflow-wrap:anywhere]">
+<div class="content markdown-preview w-full break-words [overflow-wrap:anywhere]">
 	<SvmdChildren {nodes} {components} {renderOptions} />
 </div>

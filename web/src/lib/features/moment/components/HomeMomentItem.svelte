@@ -31,7 +31,7 @@
 
 <a
 	href={resolvePath(buildMomentPath(moment.shortUrl, moment.createdAt), page.data.lang)}
-	class="home-item-card moment-item group w-full px-4 py-4 outline-none focus-visible:ring-2 focus-visible:ring-error-500/30"
+	class="theme-card home-item-card moment-item group w-full px-4 py-4 outline-none focus-visible:ring-2 focus-visible:ring-error-500/30"
 	onmousemove={handleMouseMove}
 	onmouseleave={handleMouseLeave}
 	data-hovered={isHovered}

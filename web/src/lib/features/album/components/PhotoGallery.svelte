@@ -152,7 +152,7 @@
 				{#each group.items as { photo, index } (photo.id)}
 					<a
 						href={resolvePath(`/albums/${albumSlug}/photo/${photo.id}`, page.data.lang)}
-						class="group relative block w-full overflow-hidden rounded-[3px] break-inside-avoid transition-shadow duration-300 hover:shadow-float"
+						class="theme-card group relative block w-full overflow-hidden rounded-[3px] break-inside-avoid transition-shadow duration-300 hover:shadow-float"
 						style="background-color: {photo.exif?.dominantColor || '#1c1917'};"
 						data-photo-card
 						data-photo-id={photo.id}

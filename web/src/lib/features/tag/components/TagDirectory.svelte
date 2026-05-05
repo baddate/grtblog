@@ -65,7 +65,7 @@
 				{#each tags as tag, index (tag.id)}
 					<button
 						onclick={() => openTagContents(tag)}
-						class="group relative overflow-hidden rounded-default border border-ink-200/80 bg-ink-50/85 px-3 py-2.5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-accent-500/55 hover:bg-accent-50/70 dark:border-ink-800/80 dark:bg-ink-900/40 dark:hover:border-accent-500/45 dark:hover:bg-accent-900/20"
+						class="theme-card group relative overflow-hidden rounded-default border border-ink-200/80 bg-ink-50/85 px-3 py-2.5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-accent-500/55 hover:bg-accent-50/70 dark:border-ink-800/80 dark:bg-ink-900/40 dark:hover:border-accent-500/45 dark:hover:bg-accent-900/20"
 					>
 						<div
 							class="absolute left-0 top-0 h-full bg-accent-500/9 transition-all duration-500 group-hover:bg-accent-500/16 dark:bg-accent-400/8 dark:group-hover:bg-accent-400/14"
@@ -74,7 +74,7 @@
 						<div class="relative flex items-start justify-between gap-3">
 							<div class="min-w-0 space-y-0.5">
 								<p
-									class="truncate font-serif text-[14px] text-ink-800 transition-colors group-hover:text-accent-700 dark:text-ink-200 dark:group-hover:text-accent-300"
+									class="text-gradient-fx-constant truncate font-serif text-[14px] text-ink-800 transition-colors group-hover:text-accent-700 dark:text-ink-200 dark:group-hover:text-accent-300"
 								>
 									#{tag.name}
 								</p>
