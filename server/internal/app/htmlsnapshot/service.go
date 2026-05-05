@@ -28,7 +28,7 @@ const (
 	pageSize       = 100
 	listPageSize   = 10
 
-	depsHeader = "x-grt-deps"
+	depsHeader = "x-mks-deps"
 
 	defaultRecentActivityLimit = 200
 )

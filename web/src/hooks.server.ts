@@ -4,7 +4,7 @@ import { loadTranslations, createTranslateFn } from '$lib/i18n/server';
 import { setLangCookie } from '$lib/i18n/locale';
 import { DEFAULT_LANG, SUPPORTED_LANGS, NON_DEFAULT_LANG_RE } from '$lib/i18n/languages';
 
-const STATIC_FALLBACK_HEADER = 'x-grt-static-fallback';
+const STATIC_FALLBACK_HEADER = 'x-mks-static-fallback';
 const STATIC_MISS_WARN_TTL_MS = 5 * 60 * 1000;
 const recentStaticMissWarnAt = new Map<string, number>();
 
