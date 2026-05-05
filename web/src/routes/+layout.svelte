@@ -3,6 +3,8 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import BottomNav from '$lib/ui/layout/BottomNav.svelte';
 	import { initTheme, startThemeSync, themeManager } from '$lib/shared/theme/theme.svelte.js';
+	import { defaultThemePalette } from '$lib/shared/theme/palette';
+	import { generateThemeFromPalette, cssConverter } from '$lib/shared/theme/theme';
 	import { onMount } from 'svelte';
 	import { consoleLogInfo } from '$lib/features/console-info/index';
 	import Toaster from '$lib/ui/primitives/toaster/Toaster.svelte';
@@ -370,6 +372,9 @@
 </script>
 
 <svelte:head>
+		<style data-theme-ssr>
+			{@html themeCssVars}
+		</style>
 	{#if avatarOrigin}
 		<link rel="preconnect" href={avatarOrigin} crossorigin="anonymous" />
 		<link rel="dns-prefetch" href={avatarOrigin} />
