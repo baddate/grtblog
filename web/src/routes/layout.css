@@ -21,6 +21,35 @@
 	--color-heading: var(--heading);
 	--color-border: var(--border-color);
 
+		/* Colors: Neutral (aliased to xypnox CSS vars for backward compatibility) */
+		--color-ink-0: #ffffff;
+		--color-ink-50: var(--background);
+		--color-ink-100: var(--surface);
+		--color-ink-200: var(--border-color);
+		--color-ink-300: var(--border-color);
+		--color-ink-400: var(--fadeText);
+		--color-ink-500: var(--fadeText);
+		--color-ink-600: var(--fadeText);
+		--color-ink-700: var(--text);
+		--color-ink-750: var(--heading);
+		--color-ink-800: var(--text);
+		--color-ink-900: var(--text);
+		--color-ink-950: var(--text);
+
+		/* Colors: Accent (aliased to xypnox primary) */
+		--color-accent-50: var(--background);
+		--color-accent-100: var(--surface);
+		--color-accent-200: var(--border-color);
+		--color-accent-300: var(--border-color);
+		--color-accent-400: var(--primary-color);
+		--color-accent-500: var(--primary-color);
+		--color-accent-600: var(--primary-color);
+		--color-accent-700: var(--primary-color);
+		--color-accent-800: var(--primary-color);
+		--color-accent-900: var(--primary-color);
+		--color-accent-950: var(--primary-color);
+
+
 	/* Colors: Functional */
 	--color-error-50: #fef2f2;
 	--color-error-100: #fce8e8;
