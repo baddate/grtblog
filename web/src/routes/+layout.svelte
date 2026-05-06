@@ -38,6 +38,8 @@ import ThemeCustomizer from '$lib/features/theme-customizer/components/ThemeCust
 	import { createTranslateFn } from '$lib/i18n/server';
 	import { LANGUAGES, ANY_LANG_RE } from '$lib/i18n';
 
+	const themeCssVars = cssConverter(generateThemeFromPalette(defaultThemePalette));
+
 	function logClientRuntimeError(
 		kind: 'error' | 'unhandledrejection',
 		message: string,
