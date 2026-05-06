@@ -32,6 +32,7 @@
 	import { getProfile } from '$lib/features/auth/api';
 	import { userStore } from '$lib/shared/stores/userStore';
 	import { get } from 'svelte/store';
+import ThemeCustomizer from '$lib/features/theme-customizer/components/ThemeCustomizer.svelte';
 
 	import { t } from '$lib/i18n/client';
 	import { createTranslateFn } from '$lib/i18n/server';
@@ -516,6 +517,7 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <Toaster />
+<ThemeCustomizer />
 {#snippet globalNotificationFallback()}
 	<div></div>
 {/snippet}

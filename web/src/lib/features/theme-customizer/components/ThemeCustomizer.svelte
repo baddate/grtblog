@@ -29,6 +29,14 @@
 		}
 	}
 
+	function handleFontChange(e: Event) {
+		const target = e.target as HTMLSelectElement;
+		paletteStore.update({
+			...paletteStore.current,
+			base: { ...paletteStore.current.base, font: { family: target.value } }
+		});
+	}
+
 	function handleReset() {
 		paletteStore.resetToDefault();
 	}
@@ -76,6 +84,19 @@
 			{#if editorLoaded && CardStyleSelector}
 				<CardStyleSelector />
 			{/if}
+
+			<div class="font-selector">
+				<label for="font-select">Font</label>
+				<select
+					id="font-select"
+					value={paletteStore.current.base.font.family}
+					onchange={handleFontChange}
+				>
+					<option value="Jost">Jost</option>
+					<option value="Inter">Inter</option>
+					<option value="'Helvetica Neue', Arial, sans-serif">System UI</option>
+				</select>
+			</div>
 		</div>
 
 		<footer class="theme-customizer-footer">
@@ -165,6 +186,28 @@
 		display: flex;
 		flex-direction: column;
 		gap: 1.5rem;
+	}
+
+	.font-selector {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.font-selector label {
+		font-size: var(--font-size-sm);
+		color: var(--fadeText);
+		font-weight: 500;
+	}
+
+	.font-selector select {
+		padding: 0.4rem 0.6rem;
+		border: 1px solid var(--border-color);
+		border-radius: var(--border-radius);
+		background: var(--surface);
+		color: var(--text);
+		font-size: var(--font-size-sm);
+		cursor: pointer;
 	}
 
 	.theme-customizer-footer {
