@@ -1,48 +1,46 @@
 <script lang="ts">
 	import { paletteStore } from '$lib/shared/theme/paletteStore.svelte';
 	import { onMount } from 'svelte';
+	import type { Component } from 'svelte';
 
 	let open = $state(false);
+	let hiding = $state(false);
 	let editorLoaded = $state(false);
 
-	let PaletteEditor: any = $state(null);
-	let PresetSelector: any = $state(null);
-	let CardStyleSelector: any = $state(null);
+	let PaletteEditor = $state<Component | null>(null);
+	let ThemeList = $state<Component | null>(null);
+	let ModeSwitcher = $state<Component | null>(null);
 
 	async function loadEditor() {
 		if (editorLoaded) return;
-		const [paletteMod, presetMod, cardMod] = await Promise.all([
+		const [paletteMod, listMod, modeMod] = await Promise.all([
 			import('./PaletteEditor.svelte'),
-			import('./PresetSelector.svelte'),
-			import('./CardStyleSelector.svelte')
+			import('./ThemeList.svelte'),
+			import('./ModeSwitcher.svelte')
 		]);
 		PaletteEditor = paletteMod.default;
-		PresetSelector = presetMod.default;
-		CardStyleSelector = cardMod.default;
+		ThemeList = listMod.default;
+		ModeSwitcher = modeMod.default;
 		editorLoaded = true;
 	}
 
+	function show() {
+		open = true;
+		hiding = false;
+		if (!editorLoaded) loadEditor();
+	}
+
+	function hide() {
+		hiding = true;
+		setTimeout(() => {
+			open = false;
+			hiding = false;
+		}, 250);
+	}
+
 	function toggle() {
-		open = !open;
-		if (open && !editorLoaded) {
-			loadEditor();
-		}
-	}
-
-	function handleFontChange(e: Event) {
-		const target = e.target as HTMLSelectElement;
-		paletteStore.update({
-			...paletteStore.current,
-			base: { ...paletteStore.current.base, font: { family: target.value } }
-		});
-	}
-
-	function handleReset() {
-		paletteStore.resetToDefault();
-	}
-
-	function handleSaveCustom() {
-		paletteStore.saveCustom(paletteStore.current);
+		if (open) hide();
+		else show();
 	}
 
 	onMount(() => {
@@ -52,66 +50,58 @@
 
 <button
 	class="theme-customizer-fab"
-	aria-label="Customize theme"
+	aria-label={open ? 'Close Theme Manager' : 'Customize Theme'}
 	onclick={toggle}
 >
-	<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-		<circle cx="12" cy="12" r="10"/>
-		<path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10"/>
-		<path d="M2 12h20"/>
+	<svg
+		width="20"
+		height="20"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+	>
+		<circle cx="12" cy="12" r="10" />
+		<path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10" />
+		<path d="M2 12h20" />
 	</svg>
 </button>
 
 {#if open}
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
-	<div class="theme-customizer-backdrop" onclick={toggle}></div>
-	<div class="theme-customizer-panel">
-		<header class="theme-customizer-header">
-			<h2>Theme Customizer</h2>
-			<button class="theme-customizer-close" onclick={toggle} aria-label="Close">&#x2715;</button>
-		</header>
+	<div class="theme-customizer-backdrop" onclick={hide}></div>
 
-		{#if editorLoaded && PresetSelector}
-			<PresetSelector />
-		{/if}
+	<div class="theme-customizer-popup" class:hiding>
+		<div class="popup-content">
+			<header class="popup-header">
+				<h2>Customize</h2>
+				<button class="popup-close" onclick={hide} aria-label="Close">&#x2715;</button>
+			</header>
 
-		<div class="theme-customizer-body">
+			{#if editorLoaded && ThemeList}
+				<ThemeList />
+			{/if}
+
 			{#if editorLoaded && PaletteEditor}
 				<PaletteEditor />
 			{/if}
-
-			{#if editorLoaded && CardStyleSelector}
-				<CardStyleSelector />
-			{/if}
-
-			<div class="font-selector">
-				<label for="font-select">Font</label>
-				<select
-					id="font-select"
-					value={paletteStore.current.base.font.family}
-					onchange={handleFontChange}
-				>
-					<option value="Jost">Jost</option>
-					<option value="Inter">Inter</option>
-					<option value="'Helvetica Neue', Arial, sans-serif">System UI</option>
-				</select>
-			</div>
 		</div>
 
-		<footer class="theme-customizer-footer">
-			<button onclick={handleSaveCustom} disabled={paletteStore.customs.length >= 5}>
-				Save as Custom
-			</button>
-			<button onclick={handleReset}>Reset to Default</button>
-		</footer>
+		<div class="popup-footer">
+			{#if editorLoaded && ModeSwitcher}
+				<ModeSwitcher />
+			{/if}
+		</div>
 	</div>
 {/if}
 
 <style>
 	.theme-customizer-fab {
 		position: fixed;
-		bottom: 1.5rem;
+		bottom: 5rem;
 		right: 1.5rem;
 		z-index: 50;
 		width: 3rem;
@@ -125,7 +115,9 @@
 		align-items: center;
 		justify-content: center;
 		box-shadow: var(--shadow-small);
-		transition: transform 0.2s ease, box-shadow 0.2s ease;
+		transition:
+			transform 0.2s ease,
+			box-shadow 0.2s ease;
 	}
 
 	.theme-customizer-fab:hover {
@@ -140,108 +132,96 @@
 		background: rgba(0, 0, 0, 0.3);
 	}
 
-	.theme-customizer-panel {
+	.theme-customizer-popup {
 		position: fixed;
-		bottom: 0;
-		right: 0;
-		z-index: 52;
-		width: 100%;
-		max-width: 400px;
-		max-height: 85dvh;
-		overflow-y: auto;
+		bottom: 0.5rem;
+		right: 0.5rem;
+		z-index: 1001;
+		width: 400px;
+		max-width: calc(100vw - 1rem);
+		height: calc(100vh - 1rem);
+		max-height: 700px;
+		overflow: hidden;
 		background: var(--background);
-		border: 1px solid var(--border-color);
-		border-radius: 1rem 1rem 0 0;
-		padding: 1.5rem;
+		border: 2px solid var(--primary-color);
+		border-radius: calc(var(--border-radius) * 4);
 		box-shadow: var(--shadow-card);
-		animation: slideUp 0.25s ease-out;
+		display: flex;
+		flex-direction: column;
+		transform-origin: bottom right;
+		animation: zoomFadeIn 0.2s ease-in forwards;
 	}
 
-	@keyframes slideUp {
-		from { transform: translateY(20%); opacity: 0; }
-		to { transform: translateY(0); opacity: 1; }
+	.theme-customizer-popup.hiding {
+		animation: zoomFadeOut 0.2s ease-out forwards;
 	}
 
-	.theme-customizer-header {
+	@keyframes zoomFadeIn {
+		from {
+			transform: scale(0.9);
+			opacity: 0;
+		}
+		to {
+			transform: scale(1);
+			opacity: 1;
+		}
+	}
+
+	@keyframes zoomFadeOut {
+		from {
+			transform: scale(1);
+			opacity: 1;
+		}
+		to {
+			transform: scale(0.9);
+			opacity: 0;
+		}
+	}
+
+	.popup-content {
+		flex: 1;
+		overflow-y: auto;
+		padding: 1.5rem 1rem;
+		padding-bottom: calc(var(--layout-nav-height, 3rem) + 2rem);
+	}
+
+	.popup-header {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-bottom: 1rem;
+		margin-bottom: 1.5rem;
 	}
 
-	.theme-customizer-header h2 {
+	.popup-header h2 {
 		font-size: var(--font-size-md);
 		margin: 0;
 	}
 
-	.theme-customizer-close {
+	.popup-close {
 		background: none;
 		border: none;
 		color: var(--fadeText);
 		cursor: pointer;
 		font-size: 1.25rem;
+		line-height: 1;
+		padding: 0.25rem;
 	}
 
-	.theme-customizer-body {
-		display: flex;
-		flex-direction: column;
-		gap: 1.5rem;
-	}
-
-	.font-selector {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-
-	.font-selector label {
-		font-size: var(--font-size-sm);
-		color: var(--fadeText);
-		font-weight: 500;
-	}
-
-	.font-selector select {
-		padding: 0.4rem 0.6rem;
-		border: 1px solid var(--border-color);
-		border-radius: var(--border-radius);
-		background: var(--surface);
+	.popup-close:hover {
 		color: var(--text);
-		font-size: var(--font-size-sm);
-		cursor: pointer;
 	}
 
-	.theme-customizer-footer {
+	.popup-footer {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		padding: 0.75rem 1rem;
+		border-top: 1px solid var(--border-color);
+		background: var(--background);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
 		display: flex;
-		gap: 0.75rem;
-		margin-top: 1.5rem;
-	}
-
-	.theme-customizer-footer button {
-		flex: 1;
-		padding: 0.5rem 1rem;
-		border: 1px solid var(--border-color);
-		border-radius: var(--border-radius);
-		background: var(--surface);
-		color: var(--text);
-		cursor: pointer;
-		font-size: var(--font-size-sm);
-	}
-
-	.theme-customizer-footer button:hover {
-		background: var(--surface2);
-	}
-
-	.theme-customizer-footer button:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
-	}
-
-	@media (min-width: 768px) {
-		.theme-customizer-panel {
-			border-radius: 1rem;
-			bottom: 5rem;
-			right: 1.5rem;
-			max-height: 70dvh;
-		}
+		align-items: center;
 	}
 </style>

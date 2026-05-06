@@ -8,8 +8,8 @@
 @theme {
 	/* Fonts */
 	--font-sans:
-		'Jost', system-ui, -apple-system, PingFang SC, 'Microsoft YaHei', Segoe UI, Roboto,
-		Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+		'Jost', system-ui, -apple-system, PingFang SC, 'Microsoft YaHei', Segoe UI, Roboto, Helvetica,
+		Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 	--font-serif: 'Noto Serif SC', 'Georgia', serif;
 	--font-mono: 'Victor Mono Variable', 'JetBrains Mono', monospace;
 
@@ -21,34 +21,33 @@
 	--color-heading: var(--heading);
 	--color-border: var(--border-color);
 
-		/* Colors: Neutral (aliased to xypnox CSS vars for backward compatibility) */
-		--color-ink-0: #ffffff;
-		--color-ink-50: var(--background);
-		--color-ink-100: var(--surface);
-		--color-ink-200: var(--border-color);
-		--color-ink-300: var(--border-color);
-		--color-ink-400: var(--fadeText);
-		--color-ink-500: var(--fadeText);
-		--color-ink-600: var(--fadeText);
-		--color-ink-700: var(--text);
-		--color-ink-750: var(--heading);
-		--color-ink-800: var(--text);
-		--color-ink-900: var(--text);
-		--color-ink-950: var(--text);
+	/* Colors: Neutral (aliased to xypnox CSS vars for backward compatibility) */
+	--color-ink-0: #ffffff;
+	--color-ink-50: var(--ink-50);
+	--color-ink-100: var(--ink-100);
+	--color-ink-200: var(--ink-200);
+	--color-ink-300: var(--ink-300);
+	--color-ink-400: var(--ink-400);
+	--color-ink-500: var(--ink-500);
+	--color-ink-600: var(--ink-600);
+	--color-ink-700: var(--ink-700);
+	--color-ink-750: var(--heading);
+	--color-ink-800: var(--ink-800);
+	--color-ink-900: var(--ink-900);
+	--color-ink-950: var(--ink-950);
 
-		/* Colors: Accent (aliased to xypnox primary) */
-		--color-accent-50: var(--background);
-		--color-accent-100: var(--surface);
-		--color-accent-200: var(--border-color);
-		--color-accent-300: var(--border-color);
-		--color-accent-400: var(--primary-color);
-		--color-accent-500: var(--primary-color);
-		--color-accent-600: var(--primary-color);
-		--color-accent-700: var(--primary-color);
-		--color-accent-800: var(--primary-color);
-		--color-accent-900: var(--primary-color);
-		--color-accent-950: var(--primary-color);
-
+	/* Colors: Accent (aliased to xypnox primary) */
+	--color-accent-50: var(--background);
+	--color-accent-100: var(--surface);
+	--color-accent-200: var(--border-color);
+	--color-accent-300: var(--border-color);
+	--color-accent-400: var(--primary-color);
+	--color-accent-500: var(--primary-color);
+	--color-accent-600: var(--primary-color);
+	--color-accent-700: var(--primary-color);
+	--color-accent-800: var(--primary-color);
+	--color-accent-900: var(--primary-color);
+	--color-accent-950: var(--primary-color);
 
 	/* Colors: Functional */
 	--color-error-50: #fef2f2;

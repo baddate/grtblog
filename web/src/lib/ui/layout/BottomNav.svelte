@@ -1,7 +1,18 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { themeManager } from '$lib/shared/theme/theme.svelte';
-	import { Home, NotebookPen, Image, MessageCircle, Tags, Palette, Menu, X } from 'lucide-svelte';
+	import {
+		House,
+		NotebookPen,
+		Image,
+		MessageCircle,
+		Tags,
+		Menu,
+		X,
+		Sun,
+		Moon,
+		Monitor
+	} from 'lucide-svelte';
 	import { resolveHref } from '$lib/shared/utils/resolve-path';
 	import { DEFAULT_LANG } from '$lib/i18n/server';
 
@@ -15,7 +26,7 @@
 	let mobileMenuOpen = $state(false);
 
 	const navItems = [
-		{ href: '/', label: 'Home', icon: Home },
+		{ href: '/', label: 'Home', icon: House },
 		{ href: '/posts/', label: 'Posts', icon: NotebookPen },
 		{ href: '/albums/', label: 'Albums', icon: Image },
 		{ href: '/moments/', label: 'Moments', icon: MessageCircle },
@@ -27,6 +38,17 @@
 		const idx = order.indexOf(themeManager.current);
 		themeManager.set(order[(idx + 1) % order.length]);
 	}
+
+	const themeLabel = $derived.by(() => {
+		switch (themeManager.current) {
+			case 'light':
+				return 'Light mode';
+			case 'dark':
+				return 'Dark mode';
+			default:
+				return 'System theme';
+		}
+	});
 </script>
 
 <nav class="bottom-nav" aria-label="Main navigation">
@@ -36,20 +58,31 @@
 		</a>
 
 		<div class="nav-links">
-			{#each navItems as item}
+			{#each navItems as item (item)}
 				<a
 					href={resolveHref(item.href, currentLang)}
 					class="nav-link {isActive(item.href) ? 'active' : ''}"
 				>
-					<svelte:component this={item.icon} size={18} />
+					<item.icon size={18} />
 					<span>{item.label}</span>
 				</a>
 			{/each}
 		</div>
 
 		<div class="nav-actions">
-			<button onclick={cycleTheme} class="theme-btn" aria-label="Toggle theme">
-				<Palette size={20} />
+			<button
+				onclick={cycleTheme}
+				class="theme-btn"
+				aria-label={`Toggle theme, current: ${themeLabel}`}
+				title={themeLabel}
+			>
+				{#if themeManager.current === 'light'}
+					<Sun size={20} />
+				{:else if themeManager.current === 'dark'}
+					<Moon size={20} />
+				{:else}
+					<Monitor size={20} />
+				{/if}
 			</button>
 			<button
 				onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
@@ -67,13 +100,13 @@
 
 	{#if mobileMenuOpen}
 		<div class="mobile-menu">
-			{#each navItems as item}
+			{#each navItems as item (item)}
 				<a
 					href={resolveHref(item.href, currentLang)}
 					class="mobile-link {isActive(item.href) ? 'active' : ''}"
 					onclick={() => (mobileMenuOpen = false)}
 				>
-					<svelte:component this={item.icon} size={20} />
+					<item.icon size={20} />
 					<span>{item.label}</span>
 				</a>
 			{/each}
@@ -191,6 +224,16 @@
 	.theme-btn:hover {
 		color: var(--primary-color);
 		background: var(--surface2);
+	}
+
+	.theme-btn :global(svg) {
+		transition:
+			transform 0.2s ease,
+			opacity 0.2s ease;
+	}
+
+	.theme-btn:hover :global(svg) {
+		transform: scale(1.06);
 	}
 
 	.mobile-menu-toggle {

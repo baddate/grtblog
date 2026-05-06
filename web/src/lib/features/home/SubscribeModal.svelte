@@ -4,6 +4,7 @@
 	import { cubicOut } from 'svelte/easing';
 	import { subscribeEmail } from './api';
 	import type { HomeSubscriptionPreference, PublicEmailEventName } from './types';
+	import { t } from '$lib/i18n/client';
 
 	let { isOpen = $bindable(false) } = $props<{ isOpen: boolean }>();
 
@@ -131,10 +132,10 @@
 
 				<div class="flex items-center gap-3 mb-2 text-accent-600 dark:text-accent-400">
 					<BellRing size={24} />
-					<h3 class="text-xl font-serif font-medium">订阅更新</h3>
+					<h3 class="text-xl font-serif font-medium">{t('web.ui.subscribe_title')}</h3>
 				</div>
 				<p class="text-sm text-ink-500">
-					选择你感兴趣的内容，当有新产出时，我会第一时间发邮件通知你。
+					{t('web.ui.subscribe_desc')}
 				</p>
 			</div>
 
@@ -203,9 +204,9 @@
 							<div
 								class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
 							></div>
-							<span>正在处理...</span>
+							<span>{t('web.ui.subscribe_submitting')}</span>
 						{:else}
-							<span>订阅到邮箱</span>
+							<span>{t('web.ui.subscribe_done')}</span>
 						{/if}
 					</button>
 				</form>
@@ -216,8 +217,8 @@
 					>
 						<Check size={32} />
 					</div>
-					<h4 class="text-lg font-medium mb-2">好耶，订阅成功！</h4>
-					<p class="text-sm text-ink-500">感谢你的关注，请留意你的收件箱（可能在垃圾箱哦）。</p>
+					<h4 class="text-lg font-medium mb-2">{t('web.ui.subscribe_success_title')}</h4>
+					<p class="text-sm text-ink-500">{t('web.ui.subscribe_success_tips')}</p>
 				</div>
 			{/if}
 		</div>

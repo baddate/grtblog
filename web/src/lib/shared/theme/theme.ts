@@ -4,16 +4,20 @@ function isObject<T>(item: T) {
 	return item && typeof item === 'object' && !Array.isArray(item);
 }
 
-export const deepMerge = <T extends Record<string, any>, U extends Record<string, any>>(
+export const deepMerge = <T extends Record<string, unknown>, U extends Record<string, unknown>>(
 	theme1: T,
 	theme2: U
 ): T & U => {
-	let output = Object.assign({}, theme1) as T & U;
+	const output = Object.assign({}, theme1) as T & U;
 	if (isObject(theme1) && isObject(theme2)) {
 		Object.keys(theme2).forEach((key) => {
 			if (isObject(theme2[key])) {
 				if (!(key in theme1)) Object.assign(output, { [key]: theme2[key] });
-				else output[key as keyof T & U] = deepMerge(theme1[key], theme2[key]);
+				else
+					(output as Record<string, unknown>)[key] = deepMerge(
+						theme1[key] as Record<string, unknown>,
+						theme2[key] as Record<string, unknown>
+					);
 			} else {
 				Object.assign(output, { [key]: theme2[key] });
 			}
@@ -22,15 +26,15 @@ export const deepMerge = <T extends Record<string, any>, U extends Record<string
 	return output;
 };
 
-const forObjectReplace = <T extends Record<string, any>, Y>(
+const forObjectReplace = <T extends Record<string, unknown>, Y>(
 	obj: T,
-	replace: (keys: string[], value: any) => Y
+	replace: (keys: string[], value: unknown) => Y
 ): T => {
-	const generated: Record<string, any> = JSON.parse(JSON.stringify(obj));
-	const walk = (o: Record<string, any>, prefix: string[]) => {
+	const generated: Record<string, unknown> = JSON.parse(JSON.stringify(obj));
+	const walk = (o: Record<string, unknown>, prefix: string[]) => {
 		Object.keys(o).forEach((key) => {
-			if (typeof o[key] === 'object') {
-				walk(o[key], [...prefix, key]);
+			if (typeof o[key] === 'object' && o[key] !== null) {
+				walk(o[key] as Record<string, unknown>, [...prefix, key]);
 			} else {
 				o[key] = replace([...prefix, key], o[key]);
 			}
@@ -40,48 +44,62 @@ const forObjectReplace = <T extends Record<string, any>, Y>(
 	return generated as T;
 };
 
-const flattenObject = <T extends Record<string, any>>(
+const flattenObject = <T extends Record<string, unknown>>(
 	theme: T,
-	newKey: (keys: string[], value: any) => [string, any]
-): { [key: string]: any } => {
-	const flattened: Record<string, string> = {};
-	const walk = (obj: Record<string, any>, prefix: string[]) => {
+	newKey: (keys: string[], value: unknown) => [string, unknown]
+): Record<string, unknown> => {
+	const flattened: Record<string, unknown> = {};
+	const walk = (obj: Record<string, unknown>, prefix: string[]) => {
 		Object.keys(obj).forEach((key) => {
-			if (typeof obj[key] === 'object') {
-				walk(obj[key], [...prefix, key]);
+			if (typeof obj[key] === 'object' && obj[key] !== null) {
+				walk(obj[key] as Record<string, unknown>, [...prefix, key]);
 			} else {
 				const item = newKey([...prefix, key], obj[key]);
 				flattened[item[0]] = item[1];
 			}
 		});
 	};
-	walk(theme, []);
+	walk(theme as Record<string, unknown>, []);
 	return flattened;
 };
 
-const newKey = (keys: string[], value: any) => [`--${keys.join('-')}`, value] as [string, any];
+const newKey = (keys: string[], value: unknown): [string, unknown] => [
+	`--${keys.join('-')}`,
+	value
+];
 
-const joinVariables = (vars: Record<string, any>) =>
+const joinVariables = (vars: Record<string, unknown>) =>
 	Object.entries(vars)
 		.map(([k, v]) => `${k}: ${v};`)
 		.join('\n');
 
 export const cssConverter = (theme: UITheme) => {
 	const baseCssVars = flattenObject(theme.base, newKey);
-	const lightVars = flattenObject(theme.vars.light, newKey);
-	const darkVars = flattenObject(theme.vars.dark, newKey);
+	const modeVars = {
+		dark: flattenObject(theme.vars.dark, newKey),
+		light: flattenObject(theme.vars.light, newKey)
+	};
 
-	// :root includes base vars + light mode colors as the default.
-	// Dark mode overrides via @media query (system preference)
-	// and .dark-mode class (explicit user choice).
-	const baseStyles = `:root { ${joinVariables(baseCssVars)} ${joinVariables(lightVars)} }`;
+	// :root includes base vars only.
+	// Light/dark vars are applied via media queries (system preference)
+	// and explicit .light-mode / .dark-mode classes (user choice overrides).
+	const baseStyles = `:root { ${joinVariables(baseCssVars)} }`;
 
-	const darkMedia = `@media (prefers-color-scheme: dark) { :root { ${joinVariables(darkVars)} } }`;
+	const mediaVarsStyles = (['dark', 'light'] as const)
+		.map((key) => {
+			const value = modeVars[key];
+			return `@media (prefers-color-scheme: ${key}) { :root { ${joinVariables(value)} } }`;
+		})
+		.join('\n');
 
-	const darkModeClass = `.dark-mode { ${joinVariables(darkVars)} }`;
-	const lightModeClass = `.light-mode { ${joinVariables(lightVars)} }`;
+	const modeVarsStyles = (['dark', 'light'] as const)
+		.map((key) => {
+			const value = modeVars[key];
+			return `.${key}-mode { ${joinVariables(value)} }`;
+		})
+		.join('\n');
 
-	return `${baseStyles} ${darkMedia} ${darkModeClass} ${lightModeClass}`;
+	return `${baseStyles} ${mediaVarsStyles} ${modeVarsStyles}`;
 };
 
 const fontSizes = {
@@ -99,7 +117,8 @@ const layout = {
 	nav: { height: '3rem' }
 };
 
-export type CardType = 'gradient' | 'solid' | 'solid-border' | 'border' | 'transparent';
+export const CardTypes = ['gradient', 'solid', 'solid-border', 'border', 'transparent'] as const;
+export type CardType = (typeof CardTypes)[number];
 
 const getCard = (cardType: CardType) => {
 	if (cardType === 'gradient') {

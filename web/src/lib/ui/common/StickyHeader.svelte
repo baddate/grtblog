@@ -79,33 +79,35 @@
 
 {#if showHeader}
 	<header
-		class="fixed top-0 left-0 right-0 z-40 hidden h-14 border-b border-ink-100/50 bg-white/70 backdrop-blur-xl transition-all duration-500 dark:border-ink-800/40 dark:bg-ink-950/70 md:left-24 md:block"
+		class="sticky-header-shell fixed top-0 left-0 right-0 z-40 hidden h-14 transition-all duration-500 md:block"
 		in:fly={{ y: -100, duration: 600, easing: cubicOut }}
 		out:fade={{ duration: 300 }}
 	>
 		<!-- Progress Bar -->
 		<div
-			class="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-accent-400 to-accent-600 transition-all duration-150 ease-out dark:from-accent-500 dark:to-accent-700"
+			class="sticky-header-progress absolute bottom-0 left-0 h-[2px] transition-all duration-150 ease-out"
 			style="width: {progress}%"
 		></div>
 
-		<div class="mx-auto flex h-full max-w-[1400px] items-center justify-between px-4 lg:px-8">
+		<div
+			class="mx-auto flex h-full max-w-[1400px] items-center justify-between px-4 md:pl-28 lg:px-8 lg:pl-32"
+		>
 			<!-- Left Actions -->
 			<div class="flex flex-1 items-center gap-1 md:gap-2">
 				<Button
 					variant="ghost"
 					size="sm"
-					class="group !h-9 !w-9 !p-0 text-ink-500 hover:bg-ink-100/50 hover:text-ink-900 dark:text-ink-400 dark:hover:bg-ink-800/50 dark:hover:text-ink-100"
+					class="group !h-9 !w-9 !p-0 text-[color:var(--fadeText)] hover:bg-[var(--surface)] hover:text-[color:var(--heading)]"
 					onclick={goBack}
 					title="返回"
 				>
 					<ArrowLeft size={18} class="transition-transform group-hover:-translate-x-0.5" />
 				</Button>
-				<div class="hidden h-4 w-px bg-ink-100 sm:block dark:bg-ink-800/60"></div>
+				<div class="hidden h-4 w-px sm:block bg-[color:var(--border-color)]/70"></div>
 				<Button
 					variant="ghost"
 					size="sm"
-					class="group !h-9 !w-9 !p-0 text-ink-500 hover:bg-ink-100/50 hover:text-ink-900 dark:text-ink-400 dark:hover:bg-ink-800/50 dark:hover:text-ink-100"
+					class="group !h-9 !w-9 !p-0 text-[color:var(--fadeText)] hover:bg-[var(--surface)] hover:text-[color:var(--heading)]"
 					href={resolvePath('/', page.data.lang)}
 					title="首页"
 				>
@@ -120,7 +122,7 @@
 					onclick={scrollToTop}
 				>
 					<span
-						class="truncate font-serif text-[13px] font-medium tracking-wide text-ink-900 dark:text-ink-50 md:text-sm"
+						class="truncate font-serif text-[13px] font-medium tracking-wide text-[color:var(--heading)] md:text-sm"
 					>
 						{title}
 					</span>
@@ -134,7 +136,7 @@
 			<!-- Right Actions -->
 			<div class="flex flex-1 items-center justify-end gap-1 md:gap-2">
 				<div class="hidden items-center gap-1 pr-2 lg:flex">
-					<span class="font-mono text-[10px] font-bold text-ink-300 dark:text-ink-600">
+					<span class="font-mono text-[10px] font-bold text-[color:var(--fadeText)]">
 						{Math.round(progress)}%
 					</span>
 				</div>
@@ -143,7 +145,7 @@
 					<Button
 						variant="ghost"
 						size="sm"
-						class="!h-9 !w-9 !p-0 text-ink-500 hover:bg-ink-100/50 hover:text-ink-900 dark:text-ink-400 dark:hover:bg-ink-800/50 dark:hover:text-ink-100"
+						class="!h-9 !w-9 !p-0 text-[color:var(--fadeText)] hover:bg-[var(--surface)] hover:text-[color:var(--heading)]"
 						onclick={scrollToComments}
 						title="跳转评论"
 					>
@@ -154,14 +156,14 @@
 				<Button
 					variant="ghost"
 					size="sm"
-					class="!h-9 !w-9 !p-0 text-ink-500 hover:bg-ink-100/50 hover:text-accent-600 dark:text-ink-400 dark:hover:bg-ink-800/50 dark:hover:text-accent-400"
+					class="!h-9 !w-9 !p-0 text-[color:var(--fadeText)] hover:bg-[var(--surface)] hover:text-accent-600 dark:hover:text-accent-400"
 					onclick={handleShare}
 					title="分享文章"
 				>
 					<Share2 size={18} />
 				</Button>
 
-				<div class="h-4 w-px bg-ink-100 dark:bg-ink-800/60"></div>
+				<div class="h-4 w-px bg-[color:var(--border-color)]/70"></div>
 
 				<Button
 					variant="ghost"
@@ -178,15 +180,37 @@
 {/if}
 
 <style>
+	.sticky-header-shell {
+		border-bottom: 1px solid color-mix(in srgb, var(--border-color) 70%, transparent);
+		background: color-mix(in srgb, var(--background) 82%, transparent);
+		backdrop-filter: blur(20px);
+		-webkit-backdrop-filter: blur(20px);
+	}
+
+	.sticky-header-progress {
+		background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+		box-shadow: 0 0 16px color-mix(in srgb, var(--primary-color) 35%, transparent);
+	}
+
 	/* Subtle gradient for progress bar glow */
-	header::after {
+	.sticky-header-shell::after {
 		content: '';
 		position: absolute;
 		bottom: 0;
 		left: 0;
 		right: 0;
 		height: 1px;
-		background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.2), transparent);
+		background: linear-gradient(
+			90deg,
+			transparent,
+			color-mix(in srgb, var(--primary-color) 20%, transparent),
+			transparent
+		);
 		pointer-events: none;
+	}
+
+	:global(.dark) .sticky-header-shell {
+		background: color-mix(in srgb, var(--surface) 62%, var(--background) 38%);
+		border-bottom-color: color-mix(in srgb, var(--border-color) 82%, transparent);
 	}
 </style>

@@ -82,7 +82,12 @@
 
 	const onPageChange = (page: number) => {
 		const safePage = Number.isFinite(page) && page > 1 ? page : 1;
-		goto(resolvePath(safePage === 1 ? `${basePath}/` : `${basePath}/page/${safePage}/`, pageState.data.lang));
+		goto(
+			resolvePath(
+				safePage === 1 ? `${basePath}/` : `${basePath}/page/${safePage}/`,
+				pageState.data.lang
+			)
+		);
 	};
 </script>
 
@@ -136,8 +141,8 @@
 				<FileText size={48} class="relative text-ink-300 dark:text-ink-700" />
 			</div>
 			<div class="space-y-1">
-				<h3 class="font-serif text-lg font-medium text-ink-900 dark:text-ink-100">暂无内容</h3>
-				<p class="text-sm text-ink-500 dark:text-ink-500 max-w-xs mx-auto">
+				<h3 class="font-serif text-lg font-medium text-[color:var(--heading)]">暂无内容</h3>
+				<p class="max-w-xs mx-auto text-sm text-[color:var(--fadeText)]">
 					你似乎来到了一个没有知识的荒原，等待着第一篇文章的诞生。请稍后再来看看，或许很快就会有新的内容出现！
 				</p>
 			</div>

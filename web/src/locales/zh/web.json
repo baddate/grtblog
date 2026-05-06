@@ -192,5 +192,13 @@
 	"web.ui.zoom_in_title": "放大 (+)",
 	"web.ui.zoom_out_title": "缩小 (-)",
 	"web.ui.zoom_reset_title": "重置 (0)",
-	"web.uptime.text": "已运行 {days} 天 {hours} 小时 {minutes} 分 {seconds} 秒"
+	"web.uptime.text": "已运行 {days} 天 {hours} 小时 {minutes} 分 {seconds} 秒",
+	"web.ui.subscribe_title": "订阅更新",
+	"web.ui.subscribe_desc": "欢迎通过邮件或 RSS 订阅，第一时间获取最新文章和手记等内容的更新通知。",
+	"web.ui.subscribe_by_email": "邮件订阅",
+	"web.ui.subscribe_by_rss": "RSS 订阅",
+	"web.ui.subscribe_submitting": "正在处理...",
+	"web.ui.subscribe_done": "订阅到邮箱",
+	"web.ui.subscribe_success_title": "好耶，订阅成功！",
+	"web.ui.subscribe_success_tips": "感谢你的关注，请留意你的收件箱（可能在垃圾箱哦）。"
 }

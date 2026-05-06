@@ -26,7 +26,7 @@
 				{/if}
 
 				<h1
-					class="text-2xl md:text-3xl font-serif font-bold text-ink-900 dark:text-ink-50 tracking-[0.1em]"
+					class="text-2xl md:text-3xl font-serif font-bold tracking-[0.1em] text-[color:var(--heading)]"
 				>
 					{title}
 				</h1>
@@ -41,7 +41,7 @@
 
 			{#if subtitle}
 				<p
-					class="mt-6 font-serif italic text-base text-ink-700 dark:text-ink-200 opacity-90 tracking-wide"
+					class="mt-6 font-serif italic text-base opacity-90 tracking-wide text-[color:var(--text)]"
 				>
 					{subtitle}
 				</p>
@@ -51,7 +51,7 @@
 				<div class="mt-4 flex items-start gap-3 max-w-lg">
 					<span class="text-accent-500/40 font-serif text-lg leading-none">“</span>
 					<p
-						class="text-[13px] leading-relaxed text-ink-500 dark:text-ink-400 font-serif text-center italic"
+						class="text-[13px] leading-relaxed font-serif text-center italic text-[color:var(--fadeText)]"
 					>
 						{description}
 					</p>

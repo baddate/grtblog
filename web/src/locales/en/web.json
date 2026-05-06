@@ -192,5 +192,13 @@
 	"web.ui.zoom_in_title": "Zoom In (+)",
 	"web.ui.zoom_out_title": "Zoom Out (-)",
 	"web.ui.zoom_reset_title": "Reset (0)",
-	"web.uptime.text": "Running {days}d {hours}h {minutes}m {seconds}s"
+	"web.uptime.text": "Running {days}d {hours}h {minutes}m {seconds}s",
+	"web.ui.subscribe_title": "Subscribe to Updates",
+	"web.ui.subscribe_desc": "Subscribe via email or RSS to get notified of the latest articles, notes, and other updates.",
+	"web.ui.subscribe_by_email": "Email Subscription",
+	"web.ui.subscribe_by_rss": "RSS Subscription",
+	"web.ui.subscribe_submitting": "Processing...",
+	"web.ui.subscribe_done": "Subscribed to Email",
+	"web.ui.subscribe_success_title": "Awesome! Subscription successful.",
+	"web.ui.subscribe_success_tips": "Thanks for following. Please check your inbox (and maybe your spam folder)."
 }

@@ -1,3 +1,5 @@
+export const THEME_MANAGER_VERSION = 1;
+
 export interface ThemePalette {
 	name: string;
 	id: string;
@@ -50,8 +52,7 @@ export const defaultThemePalette: ThemePalette = {
 	}
 };
 
-export const defaultPalettes: ThemePalette[] = [defaultThemePalette];
-
+/** Built-in presets — always available, never deleted */
 export const presets: ThemePalette[] = [
 	defaultThemePalette,
 	{
@@ -119,5 +120,112 @@ export const presets: ThemePalette[] = [
 				text: '#ced4da'
 			}
 		}
+	},
+	{
+		name: 'Brutalist',
+		id: 'default_brutalist',
+		base: { border: { radius: '0px' }, font: { family: 'Inter' } },
+		card: 'border',
+		vars: {
+			light: {
+				primary: '#222',
+				secondary: '#6e6e6e',
+				background: '#f0f0f0',
+				surface: '#b8b8b844',
+				text: '#000000'
+			},
+			dark: {
+				primary: '#ffffff',
+				secondary: '#999999',
+				background: '#000000',
+				surface: '#ffffff14',
+				text: '#cccccc'
+			}
+		}
+	},
+	{
+		name: 'Royal',
+		id: 'default_royal_decree',
+		base: { border: { radius: '0.25rem' }, font: { family: 'Merriweather' } },
+		card: 'border',
+		vars: {
+			light: {
+				primary: '#a6581d',
+				secondary: '#c26125',
+				background: '#d9cfc4',
+				surface: '#a67f6c23',
+				text: '#453531'
+			},
+			dark: {
+				primary: '#cf833c',
+				secondary: '#ff5370',
+				background: '#0d0b14',
+				surface: '#6b52473f',
+				text: '#ab9b8a'
+			}
+		}
+	},
+	{
+		name: 'Sakura',
+		id: 'default_sakura',
+		base: { border: { radius: '0.5rem' }, font: { family: 'Nunito' } },
+		card: 'solid-border',
+		vars: {
+			light: {
+				primary: '#d45f7a',
+				secondary: '#f4a0b4',
+				background: '#fff0f4',
+				surface: '#ffd6e040',
+				text: '#3d1f28'
+			},
+			dark: {
+				primary: '#f48fa8',
+				secondary: '#c46070',
+				background: '#1a0d12',
+				surface: '#3d1f2840',
+				text: '#ffd6e0'
+			}
+		}
+	},
+	{
+		name: 'Ocean',
+		id: 'default_ocean',
+		base: { border: { radius: '0.4rem' }, font: { family: 'Inter' } },
+		card: 'solid',
+		vars: {
+			light: {
+				primary: '#0077b6',
+				secondary: '#00b4d8',
+				background: '#f0f8ff',
+				surface: '#caf0f820',
+				text: '#023e58'
+			},
+			dark: {
+				primary: '#48cae4',
+				secondary: '#0096c7',
+				background: '#03071e',
+				surface: '#023e5840',
+				text: '#caf0f8'
+			}
+		}
 	}
 ];
+
+export const defaultPalettes: ThemePalette[] = [defaultThemePalette];
+
+/** Font families available in the editor */
+export const SELECTED_FONTS = [
+	'Jost',
+	'Inter',
+	'Outfit',
+	'Poppins',
+	'Roboto',
+	'Nunito',
+	'Acme',
+	'Barlow',
+	'Merriweather',
+	'Space Grotesk',
+	'Crimson Text',
+	'Vollkorn',
+	"'Helvetica Neue', Arial, sans-serif"
+] as const;

@@ -18,7 +18,7 @@
 <div class="card-selector">
 	<h3 class="selector-label">Card Style</h3>
 	<div class="selector-options">
-		{#each cardStyles as style}
+		{#each cardStyles as style (style.value)}
 			<button
 				class="selector-btn"
 				class:selector-active={paletteStore.current.card === style.value}

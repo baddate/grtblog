@@ -2,9 +2,7 @@
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import BottomNav from '$lib/ui/layout/BottomNav.svelte';
-	import { initTheme, startThemeSync, themeManager } from '$lib/shared/theme/theme.svelte.js';
-	import { defaultThemePalette } from '$lib/shared/theme/palette';
-	import { generateThemeFromPalette, cssConverter } from '$lib/shared/theme/theme';
+	import { initTheme, startThemeSync } from '$lib/shared/theme/theme.svelte.js';
 	import { onMount } from 'svelte';
 	import { consoleLogInfo } from '$lib/features/console-info/index';
 	import Toaster from '$lib/ui/primitives/toaster/Toaster.svelte';
@@ -32,13 +30,11 @@
 	import { getProfile } from '$lib/features/auth/api';
 	import { userStore } from '$lib/shared/stores/userStore';
 	import { get } from 'svelte/store';
-import ThemeCustomizer from '$lib/features/theme-customizer/components/ThemeCustomizer.svelte';
+	import ThemeCustomizer from '$lib/features/theme-customizer/components/ThemeCustomizer.svelte';
 
 	import { t } from '$lib/i18n/client';
 	import { createTranslateFn } from '$lib/i18n/server';
 	import { LANGUAGES, ANY_LANG_RE } from '$lib/i18n';
-
-	const themeCssVars = cssConverter(generateThemeFromPalette(defaultThemePalette));
 
 	function logClientRuntimeError(
 		kind: 'error' | 'unhandledrejection',
@@ -283,9 +279,6 @@ import ThemeCustomizer from '$lib/features/theme-customizer/components/ThemeCust
 		})
 	);
 
-	// Initialize theme on mount
-	const theme = themeManager;
-
 	function openPresenceWindow() {
 		windowStore.open(t('web.presence.online_pages'), null, 'presence-pages');
 	}
@@ -310,7 +303,7 @@ import ThemeCustomizer from '$lib/features/theme-customizer/components/ThemeCust
 		window.addEventListener('error', handleWindowError);
 		window.addEventListener('unhandledrejection', handleUnhandledRejection);
 
-		initTheme(theme);
+		initTheme();
 		consoleLogInfo();
 		presenceStore.start();
 		ownerStatusStore.start();
@@ -341,7 +334,7 @@ import ThemeCustomizer from '$lib/features/theme-customizer/components/ThemeCust
 		};
 	});
 
-	startThemeSync(theme);
+	startThemeSync();
 
 	$effect(() => {
 		if (!browser) {
@@ -375,9 +368,9 @@ import ThemeCustomizer from '$lib/features/theme-customizer/components/ThemeCust
 </script>
 
 <svelte:head>
-		<style data-theme-ssr>
+	<style data-theme-ssr>
 			{@html themeCssVars}
-		</style>
+	</style>
 	{#if avatarOrigin}
 		<link rel="preconnect" href={avatarOrigin} crossorigin="anonymous" />
 		<link rel="dns-prefetch" href={avatarOrigin} />
@@ -419,9 +412,9 @@ import ThemeCustomizer from '$lib/features/theme-customizer/components/ThemeCust
 		{@const canonicalPathname = new URL(seoMeta.canonicalUrl).pathname}
 		{@const basePath = stripLangPrefix(canonicalPathname)}
 		{@const origin = page.url.origin}
-		{@const defaultLang = LANGUAGES.find(l => l.isDefault)!}
+		{@const defaultLang = LANGUAGES.find((l) => l.isDefault)!}
 		<link rel="alternate" hreflang="x-default" href={origin + basePath} />
-		{#each LANGUAGES as { code }}
+		{#each LANGUAGES as { code } (code)}
 			<link
 				rel="alternate"
 				hreflang={code}
@@ -430,16 +423,17 @@ import ThemeCustomizer from '$lib/features/theme-customizer/components/ThemeCust
 		{/each}
 	{/if}
 	<script>
-		// Inline script to prevent theme flas  h (fallback before Svelte hydrates)
+		// Inline script to prevent theme flash (fallback before Svelte hydrates)
 		(function () {
 			try {
-				const theme = localStorage.getItem('theme') || 'system';
+				const config = JSON.parse(localStorage.getItem('palette-config') || '{}');
+				const theme = config.mode || 'system';
 				const isDark =
 					theme === 'dark' ||
 					(theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 				document.documentElement.classList.toggle('dark', isDark);
-					document.documentElement.classList.toggle('dark-mode', isDark);
-					document.documentElement.classList.toggle('light-mode', !isDark);
+				document.documentElement.classList.toggle('dark-mode', isDark);
+				document.documentElement.classList.toggle('light-mode', !isDark);
 			} catch (e) {}
 		})();
 	</script>
@@ -449,7 +443,9 @@ import ThemeCustomizer from '$lib/features/theme-customizer/components/ThemeCust
 <!-- noise background -->
 <div class="bg-noise" aria-hidden="true"></div>
 
-<div class="transition-[padding] duration-300 relative overflow-x-clip">
+<div
+	class="relative overflow-x-clip pb-[calc(env(safe-area-inset-bottom)+5.5rem)] transition-[padding] duration-300 md:pb-24"
+>
 	{#if $detailHeroBgSrc}
 		<DetailHeroBg src={$detailHeroBgSrc} />
 	{/if}

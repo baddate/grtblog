@@ -47,14 +47,14 @@
 
 {#snippet backContent()}
 	<ArrowLeft size={14} class="group-hover:-translate-x-1 transition-transform" />
-	<span>{t("web.ui.go_back")}</span>
+	<span>{t('web.ui.go_back')}</span>
 {/snippet}
 
 <header class="max-w-4xl space-y-6">
 	<div class="flex items-center gap-4">
 		<Button
 			variant="ghost"
-			class="!h-auto !p-0 font-mono text-[10px] font-semibold tracking-[0.2em] text-ink-400 uppercase hover:!bg-transparent hover:text-ink-900 group"
+			class="!h-auto !p-0 font-mono text-[10px] font-semibold tracking-[0.2em] uppercase text-[color:var(--fadeText)] hover:!bg-transparent hover:text-[color:var(--heading)] group"
 			onclick={goBack}
 			content={backContent}
 		/>
@@ -63,23 +63,23 @@
 
 	<div class="space-y-4">
 		<div class="flex items-center gap-3">
-			<Badge variant="soft">{t("web.ui.article")}</Badge>
+			<Badge variant="soft">{t('web.ui.article')}</Badge>
 			{#if $categoryShortUrlStore}
 				<a
 					href={resolvePath(buildCategoryPath($categoryShortUrlStore), page.data.lang)}
-					class="font-mono text-[9px] tracking-[0.3em] text-ink-400 uppercase hover:text-accent-600 dark:hover:text-accent-400 transition-colors"
+					class="font-mono text-[9px] tracking-[0.3em] uppercase text-[color:var(--fadeText)] hover:text-accent-600 dark:hover:text-accent-400 transition-colors"
 				>
 					{categoryLabelStore}
 				</a>
 			{:else}
-				<span class="font-mono text-[9px] tracking-[0.3em] text-ink-400 uppercase"
+				<span class="font-mono text-[9px] tracking-[0.3em] uppercase text-[color:var(--fadeText)]"
 					>{categoryLabelStore}</span
 				>
 			{/if}
 		</div>
 
 		<h1
-			class="font-serif text-2xl leading-[1.2] font-medium tracking-tight text-ink-950 md:text-3xl lg:text-4xl dark:text-ink-50"
+			class="font-serif text-2xl leading-[1.2] font-medium tracking-tight md:text-3xl lg:text-4xl text-[color:var(--heading)]"
 		>
 			{$titleStore}
 		</h1>
@@ -97,20 +97,20 @@
 						class="!border-red-500/20 !bg-red-500/5 !text-red-600 dark:!text-red-400"
 						icon={hotIcon}
 					>
-						{t("web.ui.hot")}
+						{t('web.ui.hot')}
 					</Badge>
 				{/if}
 				<span class="flex items-center gap-1.5">
 					<Calendar size={12} />
 					{formatDateCN($createdAtStore)}{#if showUpdated}<span class="text-ink-400/70"
-							>（{t("web.ui.updated_at")} {formatDateCN($contentUpdatedAtStore)}）</span
+							>（{t('web.ui.updated_at')} {formatDateCN($contentUpdatedAtStore)}）</span
 						>{/if}
 				</span>
 				<span class="flex items-center gap-1.5"
 					><Clock size={12} /> {formatReadingTime(readingTime)}</span
 				>
 				<span class="flex items-center gap-1.5"
-					>{t("web.ui.views")} <RollingNumber value={$metricsStore?.views ?? 0} /></span
+					>{t('web.ui.views')} <RollingNumber value={$metricsStore?.views ?? 0} /></span
 				>
 				<span aria-hidden="true" class="opacity-40">·</span>
 				<ContentLikeButton
@@ -121,7 +121,7 @@
 				/>
 				<span aria-hidden="true" class="opacity-40">·</span>
 				<span class="flex items-center gap-1.5"
-					>{t("web.ui.comments")} <RollingNumber value={$metricsStore?.comments ?? 0} /></span
+					>{t('web.ui.comments')} <RollingNumber value={$metricsStore?.comments ?? 0} /></span
 				>
 			</div>
 

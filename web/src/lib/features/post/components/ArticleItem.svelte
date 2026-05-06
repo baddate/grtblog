@@ -35,7 +35,7 @@
 >
 	<!-- Title -->
 	<h2
-		class="text-gradient-fx font-serif text-xl sm:text-2xl font-medium text-ink-900 dark:text-ink-100 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors duration-200"
+		class="text-gradient-fx font-serif text-xl sm:text-2xl font-medium text-[color:var(--heading)] group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors duration-200"
 	>
 		<span>{post.title}</span>
 		{#if post.isTop}
@@ -48,13 +48,13 @@
 	</h2>
 
 	<!-- Excerpt -->
-	<p class="text-ink-500 dark:text-ink-400 text-xs sm:text-sm leading-relaxed line-clamp-2">
+	<p class="text-[color:var(--fadeText)] text-xs sm:text-sm leading-relaxed line-clamp-2">
 		{post.summary || t('web.ui.no_summary')}
 	</p>
 
 	<!-- Meta Row -->
 	<div
-		class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] sm:text-xs text-ink-400 dark:text-ink-500 font-mono sm:gap-x-6"
+		class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] sm:text-xs text-[color:var(--fadeText)] font-mono sm:gap-x-6"
 	>
 		<!-- Date -->
 		<div class="flex items-center gap-1.5">

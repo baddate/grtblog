@@ -6,6 +6,8 @@ import { trackISRDeps } from '$lib/server/isr-deps';
 import { fetchWebsiteInfo } from '$lib/features/website-info/api';
 import type { WebsiteInfoMap } from '$lib/features/website-info/types';
 import type { LayoutServerLoad } from './$types';
+import { cssConverter, generateThemeFromPalette } from '$lib/shared/theme/theme';
+import { defaultThemePalette } from '$lib/shared/theme/palette';
 
 const defaultInternalBaseURL = 'http://localhost:8080';
 
@@ -53,11 +55,16 @@ export const load: LayoutServerLoad = async (event) => {
 		// Ignore — default to healthy.
 	}
 
+	// Generate SSR theme CSS to prevent flash of unstyled content on reload
+	const uiTheme = generateThemeFromPalette(defaultThemePalette);
+	const themeCssVars = cssConverter(uiTheme);
+
 	return {
 		navMenus,
 		websiteInfo,
 		healthData,
 		lang: locals.lang,
-		translations: loadTranslations(locals.lang)
+		translations: loadTranslations(locals.lang),
+		themeCssVars
 	};
 };

@@ -3,6 +3,7 @@
 	import { SlideIn } from '$lib/ui/animation';
 	import { Mail, Rss } from 'lucide-svelte';
 	import SubscribeModal from './SubscribeModal.svelte';
+	import { t } from '$lib/i18n/client';
 
 	let isModalOpen = $state(false);
 </script>
@@ -14,10 +15,10 @@
 				<h2
 					class="text-base font-serif font-medium text-ink-900 dark:text-ink-100 flex items-center justify-center md:justify-start gap-2"
 				>
-					订阅更新
+					{t('web.ui.subscribe_title')}
 				</h2>
 				<p class="text-[11px] text-ink-400 font-mono">
-					欢迎通过邮件或 RSS 订阅，第一时间获取最新文章和手记等内容的更新通知。
+					{t('web.ui.subscribe_desc')}
 				</p>
 			</div>
 
@@ -27,7 +28,7 @@
 					class="px-5 py-2.5 text-xs font-medium bg-accent-600 dark:bg-accent-500 text-white rounded-default hover:bg-accent-700 dark:hover:bg-accent-400 transition-all shadow-sm shadow-accent-500/10 flex items-center gap-2 group"
 				>
 					<Mail size={13} class="group-hover:rotate-12 transition-transform" />
-					<span>邮件订阅</span>
+					<span>{t('web.ui.subscribe_by_email')}</span>
 				</button>
 
 				<a
@@ -36,7 +37,7 @@
 					class="px-5 py-2.5 text-xs font-medium bg-accent-50/50 dark:bg-accent-500/5 border border-accent-200/60 dark:border-accent-800/60 text-accent-700 dark:text-accent-300 rounded-default hover:border-accent-500/50 hover:text-accent-600 transition-all flex items-center gap-2 group"
 				>
 					<Rss size={13} class="group-hover:text-warning-500 transition-colors" />
-					<span>RSS 订阅</span>
+					<span>{t('web.ui.subscribe_by_rss')}</span>
 				</a>
 			</div>
 		</div>

@@ -39,7 +39,7 @@
 >
 	<div class="home-item-content flex min-w-0 items-center justify-between gap-3">
 		<h3
-			class="text-gradient-fx home-item-title flex min-w-0 items-center gap-1.5 font-serif text-[15px] font-medium text-ink-900 dark:text-ink-100"
+			class="text-gradient-fx home-item-title flex min-w-0 items-center gap-1.5 font-serif text-[15px] font-medium text-[color:var(--heading)]"
 		>
 			{#if post.isTop}
 				<span
@@ -52,7 +52,7 @@
 		</h3>
 
 		<div
-			class="flex shrink-0 items-center gap-2 text-[11px] font-mono text-ink-400 dark:text-ink-500"
+			class="flex shrink-0 items-center gap-2 text-[11px] font-mono text-[color:var(--fadeText)]"
 		>
 			<span>{formatRelativeTime(post.createdAt)}</span>
 			<span class="home-item-arrow">
