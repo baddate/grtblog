@@ -1,5 +1,6 @@
 <script module lang="ts">
 	import { SvelteSet } from 'svelte/reactivity';
+	import { t } from '$lib/i18n/client';
 
 	const loadedPhotoSrcSet = new SvelteSet<string>();
 	const PHOTO_ROUTE_TRANSITION_KEY = 'album-photo-route-transition';
@@ -126,7 +127,7 @@
 			const raw = photo.exif?.dateTimeOriginal || photo.createdAt;
 			const d = new Date(raw);
 			const key = isNaN(d.getTime())
-				? '未知时间'
+				? t('web.photo.unknown_time')
 				: d.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long' });
 			(groupedByLabel[key] ??= []).push({ photo, index });
 		});

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getTagContents } from '../api';
+	import { t } from '$lib/i18n/client';
 	import type { TagContents } from '../types';
 	import Loading from '$lib/ui/common/Loading.svelte';
 	import { formatDateDotted } from '$lib/shared/utils/date';
@@ -19,7 +20,7 @@
 				contents = res;
 			})
 			.catch((err) => {
-				error = err.message || '加载失败';
+				error = err.message || t('web.tag.load_failed');
 			})
 			.finally(() => {
 				loading = false;

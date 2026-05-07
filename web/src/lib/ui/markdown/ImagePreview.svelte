@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
+	import { t } from '$lib/i18n/client';
 	import { portal } from '$lib/shared/actions/portal';
 	import { ZoomIn, ZoomOut, RotateCw, Download, X, Minimize2 } from 'lucide-svelte';
 
@@ -299,19 +300,19 @@
 	class:ip-closing={closing}
 	role="dialog"
 	aria-modal="true"
-	aria-label="图片预览"
+	aria-label={t('web.md.image.preview')}
 >
 	<!-- Backdrop -->
 	<button
 		type="button"
 		class="ip-backdrop"
 		onclick={triggerClose}
-		aria-label="关闭图片预览背景"
-		title="关闭 (ESC)"
+		aria-label={t('web.md.image.close_bg')}
+		title={t('web.md.image.close')}
 	></button>
 
 	<!-- Close button -->
-	<button class="ip-close" onclick={triggerClose} title="关闭 (ESC)" aria-label="关闭">
+	<button class="ip-close" onclick={triggerClose} title={t('web.md.image.close')} aria-label={t('web.md.image.close')}>
 		<X size={16} />
 	</button>
 
@@ -327,7 +328,7 @@
 		class:ip-grab={scale > 1}
 		role="button"
 		tabindex="0"
-		aria-label="图片预览区域"
+		aria-label={t('web.md.image.preview')}
 		onmousedown={handleMouseDown}
 		onclick={handleStageClick}
 		onkeydown={handleStageKeydown}
@@ -352,26 +353,26 @@
 
 	<!-- Toolbar -->
 	<div class="ip-toolbar">
-		<button class="ip-tool" onclick={zoomOut} title="缩小 (-)">
+		<button class="ip-tool" onclick={zoomOut} title={t('web.md.image.zoom_out')}>
 			<ZoomOut size={14} />
 		</button>
 		<span class="ip-zoom-label">{zoomPercent}%</span>
-		<button class="ip-tool" onclick={zoomIn} title="放大 (+)">
+		<button class="ip-tool" onclick={zoomIn} title={t('web.md.image.zoom_in')}>
 			<ZoomIn size={14} />
 		</button>
 
 		<div class="ip-sep"></div>
 
-		<button class="ip-tool" onclick={rotate} title="旋转 (R)">
+		<button class="ip-tool" onclick={rotate} title={t('web.md.image.rotate')}>
 			<RotateCw size={14} />
 		</button>
-		<button class="ip-tool" onclick={resetView} title="重置 (0)">
+		<button class="ip-tool" onclick={resetView} title={t('web.md.image.reset')}>
 			<Minimize2 size={14} />
 		</button>
 
 		<div class="ip-sep"></div>
 
-		<button class="ip-tool" onclick={download} title="下载">
+		<button class="ip-tool" onclick={download} title={t('web.md.image.download')}>
 			<Download size={14} />
 		</button>
 	</div>

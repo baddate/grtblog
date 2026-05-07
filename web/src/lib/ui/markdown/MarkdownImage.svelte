@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
+	import { t } from '$lib/i18n/client';
 	import { imageLazy } from '$lib/shared/actions/image-lazy';
 	import { imageExtInfoCtx, type ImageExtInfoItem } from '$lib/shared/markdown/image-ext-info';
 	import { bindImageInteractions } from '$lib/shared/dom/image-interactions';
@@ -134,7 +135,7 @@
 		<span
 			class="md-caption block rounded-sm border border-ink-200/80 bg-ink-100/60 px-3 py-2 text-xs text-ink-600 dark:border-ink-700/70 dark:bg-ink-800/40 dark:text-ink-300"
 		>
-			图片地址不受支持，已拦截显示
+			{t('web.md.image.blocked')}
 		</span>
 	{/if}
 	{#if title}

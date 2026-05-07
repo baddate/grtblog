@@ -12,7 +12,7 @@ import (
 
 var bundle *i18n.Bundle
 
-// Init loads all locale files (server + common) into the i18n bundle.
+// Init loads all server locale files into the i18n bundle.
 // Must be called once at startup before any requests are processed.
 // baseDir is the server root directory (where go.mod lives).
 // NOTE: go-i18n v2 extracts the language tag from the filename, not the
@@ -33,23 +33,6 @@ func Init(baseDir string) error {
 		syntheticPath := lang + ".json"
 		if _, err := bundle.ParseMessageFileBytes(data, syntheticPath); err != nil {
 			return fmt.Errorf("i18n: parse server locales %s: %w", lang, err)
-		}
-	}
-
-	// Load shared common locale files from repo root
-	commonDir := filepath.Join(baseDir, "..", "locales")
-	for _, lang := range []string{"zh", "en"} {
-		diskPath := filepath.Join(commonDir, lang, "common.json")
-		data, err := os.ReadFile(diskPath)
-		if err != nil {
-			// Common files may not exist in production (only in dev)
-			// Log a warning but don't fail — server.json has the critical messages
-			fmt.Fprintf(os.Stderr, "i18n: warning: could not read common locales %s: %v\n", lang, err)
-			continue
-		}
-		syntheticPath := lang + ".json"
-		if _, err := bundle.ParseMessageFileBytes(data, syntheticPath); err != nil {
-			fmt.Fprintf(os.Stderr, "i18n: warning: could not parse common locales %s: %v\n", lang, err)
 		}
 	}
 

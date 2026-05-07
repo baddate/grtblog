@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from '$lib/i18n/client';
 	import type { Snippet } from 'svelte';
 	import type { SvmdComponentNode } from 'svmarkdown';
 
@@ -16,7 +17,7 @@
 	<span
 		class="md-component-fallback__label text-[11px] uppercase tracking-[0.08em] text-ink-500/90"
 	>
-		组件暂不支持
+		{t('web.md.fallback.unsupported')}
 	</span>
 	<span class="md-component-fallback__name text-sm font-semibold text-ink-900 dark:text-ink-50">
 		{node?.name || 'unknown'}

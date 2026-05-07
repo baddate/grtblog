@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { resolveTheme, themeManager, type Theme } from '$lib/shared/theme/theme.svelte';
 	import { Monitor, Moon, Sun } from 'lucide-svelte';
+	import { t } from '$lib/i18n/client';
 
 	const theme = themeManager;
 	const resolved = $derived.by(() => resolveTheme(theme.current));
@@ -18,10 +19,13 @@
 		return cycleOrder[(idx + 1) % cycleOrder.length];
 	};
 
-	const labelMap: Record<Theme, string> = {
-		light: '浅色模式',
-		dark: '深色模式',
-		system: '跟随系统'
+	const getLabel = (theme: Theme): string => {
+		switch (theme) {
+			case 'light': return t('web.theme.light');
+			case 'dark': return t('web.theme.dark');
+			case 'system': return t('web.theme.system');
+			default: return theme;
+		}
 	};
 
 	const toggleTheme = async (event: MouseEvent) => {
@@ -71,8 +75,8 @@
 <button
 	type="button"
 	data-theme={theme.current}
-	aria-label={labelMap[theme.current]}
-	title={labelMap[theme.current]}
+	aria-label={getLabel(theme.current)}
+	title={getLabel(theme.current)}
 	onclick={toggleTheme}
 	class="h-10 w-10 rounded-default text-ink-400 hover:bg-ink-100 hover:text-ink-900 dark:hover:bg-ink-800 dark:hover:text-ink-100 flex items-center justify-center"
 >

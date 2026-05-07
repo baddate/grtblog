@@ -3,6 +3,7 @@
 	import { websiteInfoCtx } from '$lib/features/website-info/context';
 	import { resolveHomeThemeConfig } from '$lib/features/home/theme';
 	import { resolvePath } from '$lib/shared/utils/resolve-path';
+	import { t } from '$lib/i18n/client';
 	import { page } from '$app/state';
 
 	const websiteInfoStore = websiteInfoCtx.selectModelData((m) => m ?? null);
@@ -16,7 +17,7 @@
 	let showDetails = $state(false);
 
 	const formatTimestamp = (timestamp?: number): string => {
-		if (!timestamp || !Number.isFinite(timestamp) || timestamp <= 0) return '未知';
+		if (!timestamp || !Number.isFinite(timestamp) || timestamp <= 0) return t('web.owner.unknown');
 		return new Date(timestamp * 1000).toLocaleString('zh-CN', { hour12: false });
 	};
 </script>
@@ -62,10 +63,10 @@
 			<div class="flex items-start justify-between gap-2">
 				<div class="flex flex-col">
 					<span class="text-sm font-serif font-semibold text-ink-900 dark:text-ink-100">
-						{isOnline ? '站长在线中' : '站长暂时离线'}
+						{isOnline ? t('web.owner.online') : t('web.owner.offline')}
 					</span>
 					<span class="text-[11px] text-ink-500 dark:text-ink-400">
-						最后活跃：{formatTimestamp(status.timestamp)}
+						{t('web.owner.last_active')}{formatTimestamp(status.timestamp)}
 					</span>
 				</div>
 				<span
@@ -73,7 +74,7 @@
 						? 'bg-accent-100 text-accent-700 dark:bg-accent-900/40 dark:text-accent-300'
 						: 'bg-ink-100 text-ink-500 dark:bg-ink-800 dark:text-ink-300'}"
 				>
-					Admin 面板{adminPanelOnline ? '在线' : '离线'}
+					{t('web.owner.admin_panel')}{adminPanelOnline ? t('web.admin.online') : t('web.admin.offline')}
 				</span>
 			</div>
 
@@ -83,10 +84,10 @@
 				<p class="text-xs leading-5 text-ink-700 dark:text-ink-300">
 					{#if isOnline}
 						正在使用 <span class="font-medium text-accent-700 dark:text-accent-300"
-							>{status.process || '未知应用'}</span
+							>{status.process || t('web.owner.unknown_app')}</span
 						>
 					{:else}
-						当前未上报实时活动
+						{t('web.owner.no_activity')}
 					{/if}
 				</p>
 				{#if status.extend}
@@ -106,7 +107,7 @@
 					<div class="min-w-0">
 						<p class="truncate text-xs font-medium text-ink-900 dark:text-ink-100">{media.title}</p>
 						<p class="truncate text-[11px] text-ink-500 dark:text-ink-400">
-							{media.artist || '未知艺术家'}
+							{media.artist || t('web.owner.unknown_artist')}
 						</p>
 					</div>
 				</div>

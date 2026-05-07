@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from '$lib/i18n/client';
 	import type { Snippet } from 'svelte';
 	import type { SvmdElementNode } from 'svmarkdown';
 	import { Hash, Check } from 'lucide-svelte';
@@ -64,7 +65,7 @@
 			class="heading-anchor-btn"
 			class:copied
 			onclick={handleAnchorClick}
-			aria-label="复制标题链接"
+			aria-label={t('web.md.heading.copy_link')}
 		>
 			{#if copied}
 				<Check size={iconSize} strokeWidth={2.5} />

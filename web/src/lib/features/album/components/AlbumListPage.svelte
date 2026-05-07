@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { t } from '$lib/i18n/client';
 	import { resolvePath } from '$lib/shared/utils/resolve-path';
 	import { page as pageState } from '$app/state';
 	import { albumListCtx } from '$lib/features/album/context';
@@ -39,10 +40,10 @@
 
 <div class="mx-auto w-full max-w-[1200px] px-3.5 py-8 sm:px-6 sm:py-14 md:px-0 md:py-16">
 	<PageHeader
-		title="相册"
+		title={t('web.album.title')}
 		tag="Gallery"
-		subtitle="光与影的私人收藏"
-		description="用镜头丈量世界，以快门定格时光。每一张都是某个瞬间的全部。"
+		subtitle={t('web.album.subtitle')}
+		description={t('web.album.description')}
 	/>
 
 	{#if $list.length > 0}

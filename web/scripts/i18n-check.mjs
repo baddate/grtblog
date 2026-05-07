@@ -6,19 +6,9 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
-const REPO_ROOT = join(ROOT, '..');
 
 const langs = ['zh', 'en'];
 let errors = 0;
-
-// Check common locale files exist
-for (const lang of langs) {
-  const commonPath = join(REPO_ROOT, 'locales', lang, 'common.json');
-  if (!existsSync(commonPath)) {
-    console.error(`[i18n-check] Missing: ${commonPath}`);
-    errors++;
-  }
-}
 
 // Check web locale files exist
 for (const lang of langs) {

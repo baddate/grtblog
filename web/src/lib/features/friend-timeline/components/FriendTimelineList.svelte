@@ -4,6 +4,7 @@
 	import Pagination from '$lib/ui/primitives/pagination/Pagination.svelte';
 	import StaggerList from '$lib/ui/animation/StaggerList.svelte';
 	import { Link2 } from 'lucide-svelte';
+	import { t } from '$lib/i18n/client';
 	import FriendTimelineCard from './FriendTimelineCard.svelte';
 	import { friendTimelineListCtx } from '$lib/features/friend-timeline/context';
 	import { goto } from '$app/navigation';
@@ -92,7 +93,7 @@
 			<div class="space-y-1">
 				<h3 class="font-serif text-lg font-medium text-ink-900 dark:text-ink-100">暂无动态</h3>
 				<p class="text-sm text-ink-500 dark:text-ink-500 max-w-xs mx-auto">
-					目前还没有收到任何好友的新鲜事，或许他们都在潜心创作呢。过段时间再来看看吧。
+					t('web.friends_timeline.empty')
 				</p>
 			</div>
 		</div>

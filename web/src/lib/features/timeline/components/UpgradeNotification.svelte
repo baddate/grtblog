@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { X, ArrowRight } from 'lucide-svelte';
+	import { t } from '$lib/i18n/client';
 	import { fly, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import { onMount } from 'svelte';
@@ -31,7 +32,7 @@
 		type="button"
 		class="fixed inset-0 z-[100] bg-ink-950/20 dark:bg-black/40 backdrop-blur-sm"
 		transition:fade={{ duration: 300 }}
-		aria-label="关闭提示"
+		aria-label={t('web.upgrade.dismiss')}
 		onclick={handleClose}
 	></button>
 
@@ -80,7 +81,7 @@
 				<h3
 					class="mb-3 font-serif text-2xl font-bold tracking-tight text-ink-900 dark:text-ink-100"
 				>
-					数据，升维进化
+					{t('web.upgrade.title')}
 				</h3>
 
 				<p class="mb-8 text-sm leading-relaxed text-ink-500 dark:text-ink-400">

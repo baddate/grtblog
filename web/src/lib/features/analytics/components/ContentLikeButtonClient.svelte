@@ -2,6 +2,7 @@
 	import { Heart } from 'lucide-svelte';
 	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 	import { toast } from 'svelte-sonner';
+	import { t } from '$lib/i18n/client';
 	import { trackContentLike } from '$lib/features/analytics/api';
 	import type { TrackLikeContentType } from '$lib/features/analytics/types';
 	import { getOrCreateVisitorId, syncVisitorId } from '$lib/shared/visitor/visitor-id';
@@ -41,13 +42,13 @@
 			liked = true;
 			if (result?.affected) {
 				likes += 1;
-				toast.success('点赞成功');
+				toast.success(t('web.like.success'));
 				return;
 			}
-			toast.info('你已经点过赞了');
+			toast.info(t('web.like.already'));
 		},
 		onError: () => {
-			toast.error('点赞失败，请稍后重试');
+			toast.error(t('web.like.failed'));
 		}
 	}));
 

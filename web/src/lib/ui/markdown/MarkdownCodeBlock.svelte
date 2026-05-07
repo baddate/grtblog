@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import { t } from '$lib/i18n/client';
 	import { highlightCode } from '$lib/shared/markdown/highlight';
 	import { toast } from 'svelte-sonner';
 	import { Copy, Check } from 'lucide-svelte';
@@ -83,7 +84,7 @@
 		if (!browser) return;
 		const value = text ?? '';
 		if (!value) {
-			toast.info('没有可复制的代码');
+			toast.info(t('web.md.code.no_code'));
 			return;
 		}
 
@@ -95,12 +96,12 @@
 			}
 
 			copied = true;
-			toast.success('代码已复制到剪贴板');
+			toast.success(t('web.md.code.copied'));
 			setTimeout(() => {
 				copied = false;
 			}, 1200);
 		} catch {
-			toast.error('复制失败，请手动复制');
+			toast.error(t('web.md.code.copy_failed'));
 		}
 	};
 </script>
@@ -125,8 +126,8 @@
 				type="button"
 				class="inline-flex items-center justify-center rounded-sm p-1 text-ink-500 transition-colors hover:text-ink-900 dark:text-ink-400 dark:hover:text-ink-100"
 				onclick={copyCode}
-				aria-label={copied ? '已复制' : '复制代码'}
-				title={copied ? '已复制' : '复制代码'}
+				aria-label={copied ? t('web.md.code.copied_label') : t('web.md.code.copy')}
+				title={copied ? t('web.md.code.copied_label') : t('web.md.code.copy')}
 			>
 				{#if copied}
 					<Check size={14} />
@@ -151,7 +152,7 @@
 						class="px-4 py-2 text-xs font-semibold tracking-[0.18em] uppercase text-ink-500 transition-colors hover:text-ink-900 dark:text-ink-400 dark:hover:text-ink-100"
 						onclick={toggleExpand}
 					>
-						{expanded ? '收起' : '展开'}
+						{expanded ? t('web.md.code.collapse') : t('web.md.code.expand')}
 					</button>
 				</div>
 			{/if}

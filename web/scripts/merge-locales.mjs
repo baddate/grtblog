@@ -4,7 +4,6 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
-const REPO_ROOT = join(ROOT, '..');
 const OUT_DIR = join(ROOT, 'src', 'lib', 'i18n', 'generated');
 
 // Source directory → BCP 47 language code for output filenames
@@ -16,10 +15,9 @@ function readJSON(path) {
 }
 
 function mergeLocales(srcDir) {
-	const common = readJSON(join(REPO_ROOT, 'locales', srcDir, 'common.json'));
 	const web = readJSON(join(ROOT, 'src', 'locales', srcDir, 'web.json'));
 	const code = LANG_SRC_MAP[srcDir];
-	return [code, { ...common, ...web }];
+	return [code, web];
 }
 
 function validateKeys(merged, codes) {
